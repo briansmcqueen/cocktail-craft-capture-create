@@ -8,6 +8,7 @@ import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Library = "all" | "classics" | "mine";
 
@@ -18,6 +19,8 @@ export default function Index() {
   const [editing, setEditing] = useState<Cocktail | null>(null);
   const [selected, setSelected] = useState<Cocktail | null>(null);
   const [userRecipes, setUserRecipes] = useState<Cocktail[]>(getUserRecipes());
+  const [copyDialogOpen, setCopyDialogOpen] = useState(false);
+  const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
 
   // Gather recipes to display
   let displayed: Cocktail[] = [];
@@ -55,6 +58,18 @@ export default function Index() {
     }
   }
 
+  function handleCopyFrom(recipe: Cocktail) {
+    // Open the form, pre-filled but with no id to ensure it's saved as a new recipe
+    setEditing({
+      ...recipe,
+      id: undefined,
+      name: recipe.name + " (Copy)",
+    } as Cocktail);
+    setShowForm(true);
+    setCopyDialogOpen(false);
+    setRecipeToCopy(null);
+  }
+
   // UI
   return (
     <div className="min-h-screen bg-background flex">
@@ -75,6 +90,13 @@ export default function Index() {
               ? "Classic Collection"
               : "My Creations"}
           </h2>
+          {library === "mine" && (
+            <div className="flex gap-2">
+              <Button variant="secondary" onClick={() => setCopyDialogOpen(true)}>
+                Copy from…
+              </Button>
+            </div>
+          )}
         </div>
         {displayed.length === 0 && (
           <div className="text-center text-muted-foreground mt-16">
@@ -84,6 +106,7 @@ export default function Index() {
             )}
           </div>
         )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {displayed.map((r) => (
             <RecipeCard
@@ -132,6 +155,39 @@ export default function Index() {
             </div>
           </div>
         )}
+
+        {/* Copy From Dialog */}
+        <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Copy Recipe Into My Creations</DialogTitle>
+            </DialogHeader>
+            <div className="max-h-72 overflow-y-auto flex flex-col gap-2">
+              {[...classicCocktails, ...userRecipes].map((rec) => (
+                <button
+                  key={rec.id}
+                  className="flex items-center gap-3 px-3 py-2 rounded hover:bg-accent transition text-left"
+                  onClick={() => handleCopyFrom(rec)}
+                >
+                  <img
+                    src={rec.image}
+                    alt={rec.name}
+                    className="h-10 w-10 object-cover rounded"
+                  />
+                  <div>
+                    <div className="font-medium">{rec.name}</div>
+                    <div className="text-xs text-muted-foreground line-clamp-1">{rec.origin ?? ""}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-end pt-2">
+              <Button variant="secondary" onClick={() => setCopyDialogOpen(false)}>
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
