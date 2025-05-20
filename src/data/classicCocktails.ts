@@ -1,8 +1,4 @@
 
-import classic1 from "/photo-1618160702438-9b02ab6515c9";
-import classic2 from "/photo-1721322800607-8c38375eef04";
-import classic3 from "/photo-1582562124811-c09040d0a901";
-
 export type Cocktail = {
   id: string;
   name: string;
@@ -17,7 +13,7 @@ export const classicCocktails: Cocktail[] = [
   {
     id: "1",
     name: "Negroni",
-    image: classic1,
+    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=400&q=80",
     ingredients: [
       "1 oz Gin",
       "1 oz Campari",
@@ -32,7 +28,7 @@ export const classicCocktails: Cocktail[] = [
   {
     id: "2",
     name: "Whiskey Sour",
-    image: classic2,
+    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&w=400&q=80",
     ingredients: [
       "2 oz Bourbon",
       "3/4 oz Lemon Juice",
@@ -48,7 +44,7 @@ export const classicCocktails: Cocktail[] = [
   {
     id: "3",
     name: "Margarita",
-    image: classic3,
+    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
     ingredients: [
       "2 oz Tequila",
       "1 oz Lime Juice",
@@ -63,4 +59,3 @@ export const classicCocktails: Cocktail[] = [
   },
   // Add more classics as needed...
 ];
-
