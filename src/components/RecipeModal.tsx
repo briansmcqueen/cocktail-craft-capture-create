@@ -3,6 +3,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
+import TagBadge from "./ui/tag";
 
 type Props = {
   open: boolean;
@@ -44,6 +45,13 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
               <div className="mb-2">
                 <div className="font-semibold">Notes</div>
                 <p className="text-sm text-muted-foreground">{recipe.notes}</p>
+              </div>
+            )}
+            {recipe.tags && recipe.tags.length > 0 && (
+              <div className="mb-2 flex flex-wrap gap-1">
+                {recipe.tags.map(tag => (
+                  <TagBadge key={tag}>{tag}</TagBadge>
+                ))}
               </div>
             )}
             {recipe.origin && (

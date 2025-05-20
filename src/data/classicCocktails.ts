@@ -7,6 +7,7 @@ export type Cocktail = {
   steps: string;
   notes?: string;
   origin?: string;
+  tags?: string[];
 };
 
 export const classicCocktails: Cocktail[] = [
@@ -24,6 +25,7 @@ export const classicCocktails: Cocktail[] = [
       "Add all ingredients to a mixing glass with ice and stir until chilled. Strain into a rocks glass with a large cube. Garnish with an orange peel.",
     notes: "The Negroni dates back to early-20th-century Florence.",
     origin: "Italy",
+    tags: ["bitter", "aperitif", "gin"]
   },
   {
     id: "2",
@@ -40,6 +42,7 @@ export const classicCocktails: Cocktail[] = [
       "Shake all ingredients without ice for 10 seconds (if using egg white), then add ice and shake again until well chilled. Strain into a rocks glass. Garnish with a cherry or lemon peel.",
     notes: "A classic sour with rich history.",
     origin: "USA",
+    tags: ["sour", "whiskey", "citrus"]
   },
   {
     id: "3",
@@ -56,6 +59,7 @@ export const classicCocktails: Cocktail[] = [
       "Rim glass with salt. Shake tequila, Cointreau, and lime juice with ice. Strain into a glass. Garnish with a lime wedge.",
     notes: "The quintessential Mexican classic.",
     origin: "Mexico",
+    tags: ["citrus", "sour", "tequila"]
   },
   // Add more classics as needed...
 ];

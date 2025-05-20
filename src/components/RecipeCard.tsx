@@ -2,6 +2,7 @@
 import { Edit } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
+import TagBadge from "./ui/tag";
 
 type RecipeCardProps = {
   recipe: Cocktail;
@@ -29,6 +30,11 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable }: Recip
         <div>
           <h2 className="font-bold text-lg mb-1">{recipe.name}</h2>
           <div className="text-sm text-muted-foreground mb-2">{recipe.origin || "No region"}</div>
+          <div className="flex flex-wrap gap-1 mb-2">
+            {(recipe.tags ?? []).map(tag => (
+              <TagBadge key={tag}>{tag}</TagBadge>
+            ))}
+          </div>
           <div className="text-xs text-gray-700 mb-2 line-clamp-2">{recipe.notes}</div>
         </div>
         {editable && (

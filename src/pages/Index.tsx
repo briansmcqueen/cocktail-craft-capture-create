@@ -9,8 +9,16 @@ import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storag
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import TagBadge from "@/components/ui/tag";
+import { Search } from "lucide-react";
 
 type Library = "all" | "classics" | "mine";
+
+function getAllTags(recipes: Cocktail[]): string[] {
+  const tags = new Set<string>();
+  recipes.forEach(r => (r.tags || []).forEach(tag => tags.add(tag)));
+  return Array.from(tags);
+}
 
 export default function Index() {
   // State
@@ -21,8 +29,10 @@ export default function Index() {
   const [userRecipes, setUserRecipes] = useState<Cocktail[]>(getUserRecipes());
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
   const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
+  const [ingredientQuery, setIngredientQuery] = useState("");
+  const [tagFilter, setTagFilter] = useState<string | null>(null);
 
-  // Gather recipes to display
+  // Gather recipes to display & filter by ingredient/tag
   let displayed: Cocktail[] = [];
   if (library === "all") {
     displayed = [...classicCocktails, ...userRecipes];
@@ -30,6 +40,18 @@ export default function Index() {
     displayed = [...classicCocktails];
   } else if (library === "mine") {
     displayed = [...userRecipes];
+  }
+
+  if (ingredientQuery.trim()) {
+    displayed = displayed.filter(recipe =>
+      recipe.ingredients.some(ing =>
+        ing.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+      )
+    );
+  }
+
+  if (tagFilter) {
+    displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
   }
 
   function handleSave(recipe: Cocktail) {
@@ -59,7 +81,6 @@ export default function Index() {
   }
 
   function handleCopyFrom(recipe: Cocktail) {
-    // Open the form, pre-filled but with no id to ensure it's saved as a new recipe
     setEditing({
       ...recipe,
       id: undefined,
@@ -70,12 +91,25 @@ export default function Index() {
     setRecipeToCopy(null);
   }
 
+  // Get all tags for the active visible library (used for tag filter selection)
+  const fullRecipes = library === "all"
+    ? [...classicCocktails, ...userRecipes]
+    : library === "classics"
+    ? classicCocktails
+    : userRecipes;
+
+  const allTags = getAllTags(fullRecipes);
+
   // UI
   return (
     <div className="min-h-screen bg-background flex">
       <Sidebar
         active={library}
-        onSelect={(id) => setLibrary(id as Library)}
+        onSelect={(id) => {
+          setLibrary(id as Library);
+          setIngredientQuery("");
+          setTagFilter(null);
+        }}
         onAdd={() => {
           setShowForm(true);
           setEditing(null);
@@ -95,6 +129,44 @@ export default function Index() {
               <Button variant="secondary" onClick={() => setCopyDialogOpen(true)}>
                 Copy from…
               </Button>
+            </div>
+          )}
+        </div>
+        {/* Search & Tag filter */}
+        <div className="flex flex-col md:flex-row md:items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 flex-1">
+            <div className="relative w-full">
+              <input
+                value={ingredientQuery}
+                onChange={e => setIngredientQuery(e.target.value)}
+                placeholder="Search by ingredient…"
+                className="border rounded px-3 py-2 w-full pl-9"
+              />
+              <Search className="absolute left-2 top-2.5 text-muted-foreground" size={16} />
+            </div>
+          </div>
+          {allTags.length > 0 && (
+            <div className="flex items-center flex-wrap gap-2">
+              {allTags.map(tag => (
+                <TagBadge
+                  key={tag}
+                  className={
+                    tagFilter === tag
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-foreground cursor-pointer"
+                  }
+                  onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {tag}
+                </TagBadge>
+              ))}
+              {tagFilter && 
+                <button
+                  onClick={() => setTagFilter(null)}
+                  className="ml-2 px-2 rounded text-xs bg-secondary text-secondary-foreground"
+                >Clear Tag</button>
+              }
             </div>
           )}
         </div>
