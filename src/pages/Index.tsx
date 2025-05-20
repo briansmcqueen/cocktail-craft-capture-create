@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -11,6 +10,20 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TagBadge from "@/components/ui/tag";
 import { Search } from "lucide-react";
+
+// New: Flavor profiles (you can adjust as needed)
+const FLAVOR_PROFILES = [
+  "bitter",
+  "sweet",
+  "sour",
+  "citrus",
+  "herbal",
+  "spicy",
+  "aperitif",
+  "gin",
+  "whiskey",
+  "tequila",
+];
 
 type Library = "all" | "classics" | "mine";
 
@@ -31,8 +44,10 @@ export default function Index() {
   const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
   const [ingredientQuery, setIngredientQuery] = useState("");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
+  const [searchType, setSearchType] = useState<"ingredient" | "tag">("ingredient");
+  const [flavorProfile, setFlavorProfile] = useState<string | null>(null);
 
-  // Gather recipes to display & filter by ingredient/tag
+  // Gather recipes to display & filter by ingredient/tag, flavor profile
   let displayed: Cocktail[] = [];
   if (library === "all") {
     displayed = [...classicCocktails, ...userRecipes];
@@ -42,16 +57,33 @@ export default function Index() {
     displayed = [...userRecipes];
   }
 
+  // Main search logic: by ingredient or tag
   if (ingredientQuery.trim()) {
-    displayed = displayed.filter(recipe =>
-      recipe.ingredients.some(ing =>
-        ing.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
-      )
-    );
+    if (searchType === "ingredient") {
+      displayed = displayed.filter(recipe =>
+        recipe.ingredients.some(ing =>
+          ing.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+        )
+      );
+    } else {
+      displayed = displayed.filter(recipe =>
+        recipe.tags && recipe.tags.some(tag =>
+          tag.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+        )
+      );
+    }
   }
 
+  // Tag badge filter
   if (tagFilter) {
     displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
+  }
+
+  // Flavor profile filter
+  if (flavorProfile) {
+    displayed = displayed.filter(recipe =>
+      recipe.tags && recipe.tags.map(tag => tag.toLowerCase()).includes(flavorProfile.toLowerCase())
+    );
   }
 
   function handleSave(recipe: Cocktail) {
@@ -132,19 +164,47 @@ export default function Index() {
             </div>
           )}
         </div>
-        {/* Search & Tag filter */}
+        {/* Enhanced Search & Filter Row */}
         <div className="flex flex-col md:flex-row md:items-center gap-2 mb-4">
           <div className="flex items-center gap-2 flex-1">
+            {/* New: Search type selector */}
+            <select
+              value={searchType}
+              onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
+              className="border rounded px-2 py-1 mr-2 bg-background text-foreground"
+              aria-label="Search by"
+            >
+              <option value="ingredient">Ingredient</option>
+              <option value="tag">Tag</option>
+            </select>
+            {/* Search bar */}
             <div className="relative w-full">
               <input
                 value={ingredientQuery}
                 onChange={e => setIngredientQuery(e.target.value)}
-                placeholder="Search by ingredient…"
+                placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
                 className="border rounded px-3 py-2 w-full pl-9"
               />
               <Search className="absolute left-2 top-2.5 text-muted-foreground" size={16} />
             </div>
           </div>
+
+          {/* New: Flavor profile dropdown */}
+          <div>
+            <select
+              className="border rounded px-2 py-2 bg-background text-foreground min-w-[150px]"
+              value={flavorProfile || ""}
+              onChange={e => setFlavorProfile(e.target.value || null)}
+              aria-label="Flavor profile"
+            >
+              <option value="">All Flavors</option>
+              {FLAVOR_PROFILES.map(f => (
+                <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Tag badge filter */}
           {allTags.length > 0 && (
             <div className="flex items-center flex-wrap gap-2">
               {allTags.map(tag => (
