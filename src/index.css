@@ -92,15 +92,43 @@
     scrollbar-color: var(--primary) var(--background);
   }
 
+  html {
+    /* Better mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     background-image: linear-gradient(102.3deg, rgba(147,39,143,0.03) 5.9%, rgba(234,172,232,0.06) 64%, rgba(246,219,245,0.01) 89%);
     min-height: 100vh;
-    font-family: 'Inter', 'Rubik', 'Nunito', 'system-ui', sans-serif;
+    /* Mobile-first typography with trendy fonts */
+    font-family: 'Poppins', 'Inter', 'system-ui', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
   }
 
+  /* Mobile-first responsive typography */
+  @media (min-width: 640px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  /* Smooth scrolling for better mobile experience */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Improved touch targets for mobile */
+  button, a, [role="button"] {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Better mobile scrollbars */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
@@ -110,11 +138,25 @@
   ::selection {
     background: #fde1d36c;
   }
+
+  /* Focus styles for accessibility and mobile */
+  *:focus-visible {
+    outline: 2px solid #9b87f5;
+    outline-offset: 2px;
+  }
 }
 
-/* Modern card "glass" style */
+/* Modern card "glass" style with mobile-first approach */
 .card-gradient {
   @apply bg-gradient-to-br from-card to-secondary/70 backdrop-blur-md;
+  /* Better shadow for mobile */
+  box-shadow: 0 4px 16px 0 rgba(170,137,255,0.08), 0 1px 4px 0 rgba(250,113,154,0.04);
+}
+
+@media (min-width: 768px) {
+  .card-gradient {
+    box-shadow: 0 8px 24px 0 rgba(170,137,255,0.12), 0 1.5px 10px 0 rgba(250,113,154,0.04);
+  }
 }
 
 /* Nice gradient background for hero, section, etc */
@@ -122,7 +164,7 @@
   background-image: linear-gradient(135deg, #fdfcfb 0%, #fde1d3 100%);
 }
 
-/* Sidebar polish */
+/* Sidebar polish with mobile considerations */
 .bg-sidebar {
   background: linear-gradient(120deg, #24243e 0%, #302b63 50%, #8466d4 100%);
   color: #D6BCFA;
@@ -137,6 +179,36 @@
 }
 
 .shadow-glass {
-  box-shadow: 0 8px 24px 0 rgba(170,137,255,0.12), 0 1.5px 10px 0 rgba(250,113,154,0.04);
+  /* Mobile-first shadows */
+  box-shadow: 0 4px 16px 0 rgba(170,137,255,0.08), 0 1px 4px 0 rgba(250,113,154,0.04);
 }
 
+@media (min-width: 768px) {
+  .shadow-glass {
+    box-shadow: 0 8px 24px 0 rgba(170,137,255,0.12), 0 1.5px 10px 0 rgba(250,113,154,0.04);
+  }
+}
+
+/* Mobile-first utility classes */
+.text-display {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.text-body {
+  font-family: 'Poppins', 'Inter', 'system-ui', sans-serif;
+  font-weight: 400;
+}
+
+/* Better mobile form styling */
+input, select, textarea {
+  font-size: 16px; /* Prevents zoom on iOS */
+}
+
+/* Mobile-first animations */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+}

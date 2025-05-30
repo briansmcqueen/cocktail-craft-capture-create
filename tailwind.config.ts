@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -12,12 +13,24 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: {
+				DEFAULT: '1rem',
+				sm: '2rem',
+				lg: '4rem',
+				xl: '5rem',
+				'2xl': '6rem',
+			},
 			screens: {
 				'2xl': '1400px'
 			}
 		},
 		extend: {
+			fontFamily: {
+				// Modern, trendy font stack
+				'sans': ['Inter', 'Poppins', 'system-ui', 'sans-serif'],
+				'display': ['Playfair Display', 'serif'],
+				'body': ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+			},
 			colors: {
 				// Cocktail/modern theme colors
 				background: 'hsl(var(--background))',
@@ -72,6 +85,10 @@ export default {
 				lg: "1rem",
 				md: "0.75rem",
 				sm: "0.5rem",
+			},
+			spacing: {
+				'18': '4.5rem',
+				'88': '22rem',
 			},
 			keyframes: {
 				'accordion-down': {
