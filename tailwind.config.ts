@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -32,7 +31,7 @@ export default {
 				'body': ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
 			},
 			colors: {
-				// Accessible cocktail theme colors with proper contrast
+				// Clean black and white theme
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -44,41 +43,41 @@ export default {
 					foreground: 'hsl(var(--popover-foreground))',
 				},
 				primary: {
-					// Deep purple with high contrast
-					DEFAULT: '#6B46C1',
-					foreground: '#FFFFFF',
+					// White for primary elements
+					DEFAULT: '#FFFFFF',
+					foreground: '#000000',
 				},
 				secondary: {
-					// Warm cream for elegant contrast
-					DEFAULT: '#F8F5F0',
-					foreground: '#1F2937',
+					// Dark gray for secondary elements
+					DEFAULT: '#1F1F1F',
+					foreground: '#FFFFFF',
 				},
 				accent: {
-					// Rich teal for accents
-					DEFAULT: '#0D9488',
+					// Medium gray for accents
+					DEFAULT: '#404040',
 					foreground: '#FFFFFF',
 				},
 				muted: {
-					DEFAULT: '#F3F4F6',
-					foreground: '#374151',
+					DEFAULT: '#2A2A2A',
+					foreground: '#A0A0A0',
 				},
 				destructive: {
-					DEFAULT: '#DC2626',
+					DEFAULT: '#FF4444',
 					foreground: '#FFFFFF',
 				},
-				border: '#E5E7EB',
-				input: '#F9FAFB',
-				ring: '#6B46C1',
-				// Elegant sidebar colors
+				border: '#333333',
+				input: '#1A1A1A',
+				ring: '#FFFFFF',
+				// Dark sidebar colors
 				sidebar: {
-					DEFAULT: '#1F2937',
-					foreground: '#F9FAFB',
-					primary: '#6B46C1',
-					'primary-foreground': '#FFFFFF',
-					accent: '#374151',
-					'accent-foreground': '#F9FAFB',
-					border: '#374151',
-					ring: '#6B46C1',
+					DEFAULT: '#0A0A0A',
+					foreground: '#FFFFFF',
+					primary: '#FFFFFF',
+					'primary-foreground': '#000000',
+					accent: '#1F1F1F',
+					'accent-foreground': '#FFFFFF',
+					border: '#333333',
+					ring: '#FFFFFF',
 				},
 			},
 			borderRadius: {
@@ -159,10 +158,10 @@ export default {
 					"fade-out 0.3s ease-out, scale-out 0.2s ease-out",
 			},
 			backgroundImage: {
-				// Elegant, accessible gradients
-				"cocktail": "linear-gradient(135deg, #6B46C1 0%, #8B5CF6 50%, #A78BFA 100%)",
-				"cocktail-light": "linear-gradient(135deg, #F8F5F0 0%, #FFFFFF 100%)",
-				"cocktail-dark": "linear-gradient(135deg, #1F2937 0%, #374151 100%)",
+				// Black gradient backgrounds
+				"cocktail": "linear-gradient(135deg, #000000 0%, #1A1A1A 50%, #2A2A2A 100%)",
+				"cocktail-light": "linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)",
+				"cocktail-dark": "linear-gradient(135deg, #000000 0%, #0A0A0A 100%)",
 			}
 		}
 	},
