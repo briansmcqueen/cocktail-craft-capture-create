@@ -9,7 +9,7 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TagBadge from "@/components/ui/tag";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, Martini } from "lucide-react";
 
 // New: Flavor profiles (you can adjust as needed)
 const FLAVOR_PROFILES = [
@@ -137,25 +137,28 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile header */}
-      <header className="lg:hidden bg-white/80 backdrop-blur-md border-b border-border sticky top-0 z-20 px-4 py-3">
+      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-border sticky top-0 z-20 px-4 py-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-secondary/50 rounded-lg transition-colors"
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
             aria-label="Open menu"
           >
             <Menu size={24} />
           </button>
-          <h1 className="text-lg font-display font-semibold text-gradient-primary">
-            Cocktail Craft
-          </h1>
+          <div className="flex items-center gap-2">
+            <Martini size={20} className="text-white" />
+            <h1 className="text-lg font-display font-semibold text-white">
+              Mixology Maven
+            </h1>
+          </div>
           <Button
             size="sm"
             onClick={() => {
               setShowForm(true);
               setEditing(null);
             }}
-            className="text-sm px-3"
+            className="text-sm px-3 bg-white text-black hover:bg-white/90"
           >
             Add
           </Button>
@@ -205,13 +208,21 @@ export default function Index() {
         <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0">
           {/* Desktop header - hidden on mobile */}
           <div className="hidden lg:flex items-center justify-between mb-6">
-            <h2 className="text-2xl xl:text-3xl font-display font-bold text-gradient-primary">
-              {library === "all"
-                ? "All Cocktails"
-                : library === "classics"
-                ? "Classic Collection"
-                : "My Creations"}
-            </h2>
+            <div className="flex items-center gap-3">
+              <Martini size={28} className="text-white" />
+              <div>
+                <h1 className="text-3xl xl:text-4xl font-display font-bold text-white mb-1">
+                  Mixology Maven
+                </h1>
+                <h2 className="text-xl xl:text-2xl font-display font-semibold text-white/80">
+                  {library === "all"
+                    ? "All Cocktails"
+                    : library === "classics"
+                    ? "Classic Collection"
+                    : "My Creations"}
+                </h2>
+              </div>
+            </div>
             {library === "mine" && (
               <Button variant="secondary" onClick={() => setCopyDialogOpen(true)}>
                 Copy from…
