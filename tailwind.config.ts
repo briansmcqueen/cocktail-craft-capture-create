@@ -32,7 +32,7 @@ export default {
 				'body': ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
 			},
 			colors: {
-				// Cocktail/modern theme colors
+				// Accessible cocktail theme colors with proper contrast
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -44,41 +44,41 @@ export default {
 					foreground: 'hsl(var(--popover-foreground))',
 				},
 				primary: {
-					// Vibrant purple with a touch of blue
-					DEFAULT: '#9b87f5',
-					foreground: '#fff',
+					// Deep purple with high contrast
+					DEFAULT: '#6B46C1',
+					foreground: '#FFFFFF',
 				},
 				secondary: {
-					// Pastel peach for complimenting elements
-					DEFAULT: '#fde1d3',
-					foreground: '#1A1F2C',
+					// Warm cream for elegant contrast
+					DEFAULT: '#F8F5F0',
+					foreground: '#1F2937',
 				},
 				accent: {
-					// Soft sky blue accent
-					DEFAULT: '#33C3F0',
-					foreground: '#fff',
+					// Rich teal for accents
+					DEFAULT: '#0D9488',
+					foreground: '#FFFFFF',
 				},
 				muted: {
-					DEFAULT: '#E5DEFF',
-					foreground: '#6E59A5',
+					DEFAULT: '#F3F4F6',
+					foreground: '#374151',
 				},
 				destructive: {
-					DEFAULT: '#FF719A',
-					foreground: '#fff',
+					DEFAULT: '#DC2626',
+					foreground: '#FFFFFF',
 				},
-				border: '#E5DEFF',
-				input: '#E5DEFF',
-				ring: '#A98ED7',
-				// Sidebar cocktail dark
+				border: '#E5E7EB',
+				input: '#F9FAFB',
+				ring: '#6B46C1',
+				// Elegant sidebar colors
 				sidebar: {
-					DEFAULT: '#24243e',
-					foreground: '#D6BCFA',
-					primary: '#7E69AB',
-					'primary-foreground': '#fff',
-					accent: '#fde1d3',
-					'accent-foreground': '#24243e',
-					border: '#392C56',
-					ring: '#A98ED7',
+					DEFAULT: '#1F2937',
+					foreground: '#F9FAFB',
+					primary: '#6B46C1',
+					'primary-foreground': '#FFFFFF',
+					accent: '#374151',
+					'accent-foreground': '#F9FAFB',
+					border: '#374151',
+					ring: '#6B46C1',
 				},
 			},
 			borderRadius: {
@@ -159,10 +159,10 @@ export default {
 					"fade-out 0.3s ease-out, scale-out 0.2s ease-out",
 			},
 			backgroundImage: {
-				// Cocktail themed gradients (for cards, backgrounds, etc.)
-				"cocktail": "linear-gradient(102.3deg, #93278F 5.9%, #EAACE8 64%, #F6DBF5 89%)",
-				"cocktail-light": "linear-gradient(135deg, #fdfcfb 0%, #fde1d3 100%)",
-				"cocktail-dark": "linear-gradient(120deg, #24243e 0%, #302b63 50%, #8466d4 100%)",
+				// Elegant, accessible gradients
+				"cocktail": "linear-gradient(135deg, #6B46C1 0%, #8B5CF6 50%, #A78BFA 100%)",
+				"cocktail-light": "linear-gradient(135deg, #F8F5F0 0%, #FFFFFF 100%)",
+				"cocktail-dark": "linear-gradient(135deg, #1F2937 0%, #374151 100%)",
 			}
 		}
 	},
