@@ -4,6 +4,8 @@ import { Cocktail } from "@/data/classicCocktails";
 import { Save, Image, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import TagInput from "./TagInput";
 
@@ -80,9 +82,8 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
       autoComplete="off"
     >
       <div>
-        <label className="font-medium mb-1 block">Recipe Name</label>
-        <input
-          className="w-full input input-bordered px-3 py-2 border rounded"
+        <label className="font-medium mb-1 block text-white">Recipe Name</label>
+        <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
@@ -90,7 +91,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         />
       </div>
       <div>
-        <label className="font-medium mb-1 block">Image</label>
+        <label className="font-medium mb-1 block text-white">Image</label>
         <div className="flex items-center gap-3">
           {image ? (
             <img
@@ -121,11 +122,10 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         </div>
       </div>
       <div>
-        <label className="font-medium mb-1 block">
+        <label className="font-medium mb-1 block text-white">
           Ingredients <span className="text-xs text-muted-foreground">(one per line)</span>
         </label>
-        <textarea
-          className="w-full px-3 py-2 border rounded min-h-[64px]"
+        <Textarea
           value={ingredients}
           onChange={(e) => setIngredients(e.target.value)}
           placeholder="2 oz Vodka&#10;1 oz Espresso&#10;1/2 oz Coffee Liqueur"
@@ -133,9 +133,8 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         />
       </div>
       <div>
-        <label className="font-medium mb-1 block">Steps</label>
-        <textarea
-          className="w-full px-3 py-2 border rounded min-h-[64px]"
+        <label className="font-medium mb-1 block text-white">Steps</label>
+        <Textarea
           value={steps}
           onChange={(e) => setSteps(e.target.value)}
           placeholder="Combine all ingredients in a shaker with ice. Shake well..."
@@ -143,28 +142,26 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         />
       </div>
       <div>
-        <label className="font-medium mb-1 block">
+        <label className="font-medium mb-1 block text-white">
           Tags <span className="text-xs text-muted-foreground">(keywords, separated)</span>
         </label>
         <TagInput value={tags} onChange={setTags} />
       </div>
       <div>
-        <label className="font-medium mb-1 block">
+        <label className="font-medium mb-1 block text-white">
           Notes <span className="text-xs text-muted-foreground">(optional)</span>
         </label>
-        <input
-          className="w-full input input-bordered px-3 py-2 border rounded"
+        <Input
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Invented at Soho Brasserie, London, 1980s"
         />
       </div>
       <div>
-        <label className="font-medium mb-1 block">
+        <label className="font-medium mb-1 block text-white">
           Region / Origin <span className="text-xs text-muted-foreground">(optional)</span>
         </label>
-        <input
-          className="w-full input input-bordered px-3 py-2 border rounded"
+        <Input
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="e.g. Italy"

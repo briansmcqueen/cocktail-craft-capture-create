@@ -3,13 +3,15 @@ import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeForm from "@/components/RecipeForm";
 import RecipeModal from "@/components/RecipeModal";
+import ShareRecipe from "@/components/ShareRecipe";
 import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TagBadge from "@/components/ui/tag";
-import { Search, Menu, X, Martini } from "lucide-react";
+import { Search, Menu, X, Martini, Share } from "lucide-react";
 
 // New: Flavor profiles (you can adjust as needed)
 const FLAVOR_PROFILES = [
@@ -47,6 +49,8 @@ export default function Index() {
   const [searchType, setSearchType] = useState<"ingredient" | "tag">("ingredient");
   const [flavorProfile, setFlavorProfile] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [recipeToShare, setRecipeToShare] = useState<Cocktail | null>(null);
 
   // Gather recipes to display & filter by ingredient/tag, flavor profile
   let displayed: Cocktail[] = [];
@@ -122,6 +126,11 @@ export default function Index() {
     setShowForm(true);
     setCopyDialogOpen(false);
     setRecipeToCopy(null);
+  }
+
+  function handleShareRecipe(recipe: Cocktail) {
+    setRecipeToShare(recipe);
+    setShareDialogOpen(true);
   }
 
   // Get all tags for the active visible library (used for tag filter selection)
@@ -259,7 +268,7 @@ export default function Index() {
               <select
                 value={searchType}
                 onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                className="border rounded-lg px-3 py-2 bg-background text-foreground text-sm min-w-[120px]"
+                className="border rounded-lg px-3 py-2 bg-white text-black text-sm min-w-[120px]"
                 aria-label="Search by"
               >
                 <option value="ingredient">Ingredient</option>
@@ -268,20 +277,20 @@ export default function Index() {
               
               {/* Search bar */}
               <div className="relative flex-1">
-                <input
+                <Input
                   value={ingredientQuery}
                   onChange={e => setIngredientQuery(e.target.value)}
                   placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
-                  className="border rounded-lg px-3 py-2 w-full pl-9 text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="pl-9"
                 />
-                <Search className="absolute left-2.5 top-2.5 text-muted-foreground" size={16} />
+                <Search className="absolute left-2.5 top-2.5 text-gray-500" size={16} />
               </div>
             </div>
 
             {/* Flavor profile dropdown */}
             <div className="sm:w-auto">
               <select
-                className="border rounded-lg px-3 py-2 bg-background text-foreground w-full sm:min-w-[150px] text-sm"
+                className="border rounded-lg px-3 py-2 bg-white text-black w-full sm:min-w-[150px] text-sm"
                 value={flavorProfile || ""}
                 onChange={e => setFlavorProfile(e.target.value || null)}
                 aria-label="Flavor profile"
@@ -340,17 +349,26 @@ export default function Index() {
           {/* Recipe grid - Mobile first responsive */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
             {displayed.map((r) => (
-              <RecipeCard
-                key={r.id}
-                recipe={r}
-                onSelect={() => handleRecipeClick(r)}
-                editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
-                onEdit={
-                  (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
-                    ? () => handleEditRecipe(r)
-                    : undefined
-                }
-              />
+              <div key={r.id} className="relative">
+                <RecipeCard
+                  recipe={r}
+                  onSelect={() => handleRecipeClick(r)}
+                  editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
+                  onEdit={
+                    (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
+                      ? () => handleEditRecipe(r)
+                      : undefined
+                  }
+                />
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="absolute top-2 right-2 p-2 bg-black/60 hover:bg-black/80 text-white"
+                  onClick={() => handleShareRecipe(r)}
+                >
+                  <Share size={14} />
+                </Button>
+              </div>
             ))}
           </div>
 
@@ -419,6 +437,18 @@ export default function Index() {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Share Recipe Dialog */}
+          {recipeToShare && (
+            <ShareRecipe
+              recipe={recipeToShare}
+              open={shareDialogOpen}
+              onOpenChange={(open) => {
+                setShareDialogOpen(open);
+                if (!open) setRecipeToShare(null);
+              }}
+            />
+          )}
         </main>
       </div>
     </div>

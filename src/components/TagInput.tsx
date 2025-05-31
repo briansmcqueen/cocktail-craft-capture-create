@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Tag } from "lucide-react";
 import TagBadge from "./ui/tag";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 type TagInputProps = {
   value: string[];
@@ -27,13 +29,24 @@ export default function TagInput({ value, onChange }: TagInputProps) {
     onChange(newTags);
   }
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const tag = input.trim().toLowerCase();
+      if (tag && !tags.includes(tag)) {
+        onChange([...tags, tag]);
+        setInput("");
+      }
+    }
+  }
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag, i) => (
           <TagBadge
-            key={tag}
-            className="bg-muted"
+            key={`${tag}-${i}`}
+            className="bg-muted text-white cursor-pointer"
             onClick={() => removeTag(i)}
             removable
           >
@@ -41,17 +54,18 @@ export default function TagInput({ value, onChange }: TagInputProps) {
           </TagBadge>
         ))}
       </div>
-      <form onSubmit={handleAdd} className="flex gap-2">
-        <input
-          className="px-2 py-1 border rounded flex-1"
+      <div className="flex gap-2">
+        <Input
           placeholder="Add tag and press enter"
           value={input}
           onChange={e => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="flex-1"
         />
-        <button type="submit" className="bg-primary text-white px-2 rounded">
+        <Button type="button" onClick={handleAdd} size="sm">
           <Tag size={16} />
-        </button>
-      </form>
+        </Button>
+      </div>
     </div>
   );
 }
