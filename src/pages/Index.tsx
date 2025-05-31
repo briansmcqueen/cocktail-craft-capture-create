@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -10,12 +9,13 @@ import Favorites from "@/components/Favorites";
 import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
 import { getFavoriteRecipes, toggleFavorite, isFavorite } from "@/utils/favorites";
+import { addLike, getLikeCount } from "@/utils/likes";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TagBadge from "@/components/ui/tag";
-import { Search, Menu, X, Heart, Share } from "lucide-react";
+import { Search, Menu, X, Heart, Share, ThumbsUp } from "lucide-react";
 
 // New: Flavor profiles (you can adjust as needed)
 const FLAVOR_PROFILES = [
@@ -158,6 +158,14 @@ export default function Index() {
     });
   }
 
+  function handleLike(recipe: Cocktail) {
+    const newCount = addLike(recipe.id);
+    toast({ 
+      title: "Recipe liked!", 
+      description: `${recipe.name} now has ${newCount} like${newCount === 1 ? '' : 's'}` 
+    });
+  }
+
   // Get all tags for the active visible library (used for tag filter selection)
   const fullRecipes = library === "all"
     ? allRecipes
@@ -180,21 +188,21 @@ export default function Index() {
     }
   };
 
-  // Mobile-first UI with neon dive bar aesthetic
+  // Mobile-first UI with NYT Cooking inspired aesthetic
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-black to-gray-900">
+    <div className="min-h-screen bg-white">
       {/* Mobile header */}
-      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-red-500/20 sticky top-0 z-20 px-4 py-3">
+      <header className="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-20 px-4 py-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-red-500/10 rounded-lg transition-colors text-red-400"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
             aria-label="Open menu"
           >
             <Menu size={24} />
           </button>
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-display font-bold text-red-400 tracking-wider neon-text">
+            <h1 className="text-lg font-display font-bold text-orange-600 tracking-wide">
               BARBOOK
             </h1>
           </div>
@@ -204,7 +212,7 @@ export default function Index() {
               setShowForm(true);
               setEditing(null);
             }}
-            className="text-sm px-3 bg-red-500 text-black hover:bg-red-400 border border-red-400"
+            className="text-sm px-3 bg-orange-600 text-white hover:bg-orange-700"
           >
             Add
           </Button>
@@ -215,7 +223,7 @@ export default function Index() {
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
           <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-30"
+            className="lg:hidden fixed inset-0 bg-black/20 z-30"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -229,7 +237,7 @@ export default function Index() {
           <div className="lg:hidden absolute top-4 right-4">
             <button
               onClick={() => setSidebarOpen(false)}
-              className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg"
+              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
             >
               <X size={20} />
             </button>
@@ -251,17 +259,17 @@ export default function Index() {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/30">
+        <main className="flex-1 px-4 lg:px-8 py-4 lg:py-8 min-w-0 bg-gray-50">
           {/* Mobile library title */}
           <div className="lg:hidden mb-4">
-            <h2 className="text-xl font-display font-semibold text-red-300">
+            <h2 className="text-xl font-display font-semibold text-gray-900">
               {getLibraryTitle()}
             </h2>
             {library === "mine" && (
               <Button 
                 variant="secondary" 
                 size="sm"
-                className="mt-2 bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700"
+                className="mt-2 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                 onClick={() => setCopyDialogOpen(true)}
               >
                 Copy from…
@@ -288,10 +296,10 @@ export default function Index() {
             />
           ) : (
             <>
-              {/* Desktop header with neon styling */}
+              {/* Desktop header with NYT styling */}
               <div className="hidden lg:flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-4xl xl:text-5xl font-display font-semibold text-red-300 mb-1 tracking-wider">
+                  <h2 className="text-3xl xl:text-4xl font-display font-light text-gray-900 mb-1 tracking-wide">
                     {getLibraryTitle()}
                   </h2>
                 </div>
@@ -299,14 +307,14 @@ export default function Index() {
                   <Button 
                     variant="secondary" 
                     onClick={() => setCopyDialogOpen(true)}
-                    className="bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700 hover:border-red-400"
+                    className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                   >
                     Copy from…
                   </Button>
                 )}
               </div>
 
-              {/* Enhanced Search & Filter - Mobile First */}
+              {/* Enhanced Search & Filter - NYT inspired */}
               <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
                 {/* Search section */}
                 <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
@@ -314,7 +322,7 @@ export default function Index() {
                   <select
                     value={searchType}
                     onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                    className="border border-red-500/30 rounded-lg px-3 py-2 bg-gray-900 text-red-300 text-sm min-w-[120px] focus:border-red-400 focus:ring-1 focus:ring-red-400"
+                    className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 text-sm min-w-[120px] focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                     aria-label="Search by"
                   >
                     <option value="ingredient">Ingredient</option>
@@ -327,16 +335,16 @@ export default function Index() {
                       value={ingredientQuery}
                       onChange={e => setIngredientQuery(e.target.value)}
                       placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
-                      className="pl-9 bg-gray-900 border-red-500/30 text-red-300 placeholder:text-red-500/50 focus:border-red-400"
+                      className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-orange-500"
                     />
-                    <Search className="absolute left-2.5 top-2.5 text-red-500/70" size={16} />
+                    <Search className="absolute left-2.5 top-2.5 text-gray-400" size={16} />
                   </div>
                 </div>
 
                 {/* Flavor profile dropdown */}
                 <div className="sm:w-auto">
                   <select
-                    className="border border-red-500/30 rounded-lg px-3 py-2 bg-gray-900 text-red-300 w-full sm:min-w-[150px] text-sm focus:border-red-400"
+                    className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 w-full sm:min-w-[150px] text-sm focus:border-orange-500"
                     value={flavorProfile || ""}
                     onChange={e => setFlavorProfile(e.target.value || null)}
                     aria-label="Flavor profile"
@@ -349,7 +357,7 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Tag filters - Mobile optimized */}
+              {/* Tag filters - NYT optimized */}
               {allTags.length > 0 && (
                 <div className="mb-6">
                   <div className="flex flex-wrap gap-2">
@@ -359,8 +367,8 @@ export default function Index() {
                         className={`
                           text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
                           ${tagFilter === tag
-                            ? "bg-red-500 text-black border-red-400 shadow-[0_0_10px_rgba(220,38,38,0.5)]"
-                            : "bg-gray-900 text-red-300 border-red-500/30 hover:bg-gray-800 hover:border-red-400"
+                            ? "bg-orange-600 text-white border-orange-600"
+                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                           }
                         `}
                         onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
@@ -371,7 +379,7 @@ export default function Index() {
                     {tagFilter && (
                       <button
                         onClick={() => setTagFilter(null)}
-                        className="text-xs px-3 py-1 rounded-md bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700 transition-colors"
+                        className="text-xs px-3 py-1 rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
                       >
                         Clear
                       </button>
@@ -382,12 +390,12 @@ export default function Index() {
 
               {/* Empty state */}
               {displayed.length === 0 && (
-                <div className="text-center text-red-400/70 mt-12 lg:mt-16 px-4">
+                <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
                   <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
                   {library !== "classics" && library !== "favorites" && (
                     <Button 
                       onClick={() => setShowForm(true)} 
-                      className="w-full sm:w-auto bg-red-500 text-black hover:bg-red-400"
+                      className="w-full sm:w-auto bg-orange-600 text-white hover:bg-orange-700"
                     >
                       Add Your First Recipe
                     </Button>
@@ -395,11 +403,11 @@ export default function Index() {
                 </div>
               )}
 
-              {/* Recipe grid - Mobile first responsive */}
+              {/* Recipe grid - NYT inspired cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                 {displayed.map((r) => (
                   <div key={r.id} className="relative group">
-                    <div className="relative overflow-hidden rounded-lg border border-red-500/20 hover:border-red-400/40 transition-all duration-300">
+                    <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
                       <RecipeCard
                         recipe={r}
                         onSelect={() => handleRecipeClick(r)}
@@ -410,8 +418,6 @@ export default function Index() {
                             : undefined
                         }
                       />
-                      {/* Gradient overlay on image */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                     </div>
                     
                     {/* Action buttons */}
@@ -419,8 +425,8 @@ export default function Index() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        className={`p-2 bg-black/70 hover:bg-black/90 border border-red-500/30 shadow-lg backdrop-blur-sm rounded-full hover:shadow-[0_0_15px_rgba(220,38,38,0.4)] ${
-                          isFavorite(r.id) ? 'text-red-400' : 'text-gray-400 hover:text-red-400'
+                        className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full ${
+                          isFavorite(r.id) ? 'text-orange-600' : 'text-gray-500 hover:text-orange-600'
                         }`}
                         onClick={() => handleToggleFavorite(r)}
                       >
@@ -429,7 +435,16 @@ export default function Index() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        className="p-2 bg-black/70 hover:bg-black/90 text-red-400 border border-red-500/30 shadow-lg backdrop-blur-sm rounded-full hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]"
+                        className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full flex items-center gap-1"
+                        onClick={() => handleLike(r)}
+                      >
+                        <ThumbsUp size={14} />
+                        <span className="text-xs">{getLikeCount(r.id)}</span>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
                         onClick={() => handleShareRecipe(r)}
                       >
                         <Share size={14} />
