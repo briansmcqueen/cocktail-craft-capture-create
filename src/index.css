@@ -90,7 +90,7 @@
   * {
     @apply border-border;
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) var(--background);
+    scrollbar-color: #ec4899 var(--background);
   }
 
   html {
@@ -101,8 +101,8 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    /* Black gradient background */
-    background-image: linear-gradient(135deg, #000000 0%, #1A1A1A 50%, #2A2A2A 100%);
+    /* Black gradient background with neon accents */
+    background-image: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #1a0a1a 50%, #0a0a0a 75%, #000000 100%);
     min-height: 100vh;
     /* Mobile-first typography with trendy fonts */
     font-family: 'Poppins', 'Inter', 'system-ui', sans-serif;
@@ -124,28 +124,28 @@
     touch-action: manipulation;
   }
 
-  /* Better mobile scrollbars */
+  /* Better mobile scrollbars with pink theme */
   ::-webkit-scrollbar {
     width: 6px;
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #FFFFFF;
+    background: #ec4899;
     border-radius: 100px;
   }
   ::selection {
-    background: rgba(255,255,255,0.2);
+    background: rgba(236, 72, 153, 0.3);
   }
 
   /* Focus styles for accessibility and mobile */
   *:focus-visible {
-    outline: 2px solid #FFFFFF;
+    outline: 2px solid #ec4899;
     outline-offset: 2px;
   }
 
-  /* Better dropdown arrow spacing */
+  /* Better dropdown arrow spacing with pink theme */
   select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ec4899' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 12px center;
     background-repeat: no-repeat;
     background-size: 16px 16px;
@@ -153,31 +153,79 @@
   }
 }
 
-/* Modern card style with black theme */
+/* Neon dive bar styling */
+.neon-text {
+  text-shadow: 
+    0 0 5px #ec4899,
+    0 0 10px #ec4899,
+    0 0 15px #ec4899,
+    0 0 20px #ec4899;
+  animation: neon-flicker 2s infinite alternate;
+}
+
+.neon-button {
+  box-shadow: 
+    0 0 5px #ec4899,
+    0 0 10px #ec4899,
+    0 0 15px #ec4899,
+    inset 0 0 5px rgba(236, 72, 153, 0.2);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  box-shadow: 
+    0 0 10px #ec4899,
+    0 0 20px #ec4899,
+    0 0 30px #ec4899,
+    inset 0 0 10px rgba(236, 72, 153, 0.3);
+}
+
+.neon-sidebar {
+  background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #1a0a1a 100%);
+  box-shadow: inset -1px 0 10px rgba(236, 72, 153, 0.1);
+}
+
+@keyframes neon-flicker {
+  0%, 100% {
+    text-shadow: 
+      0 0 5px #ec4899,
+      0 0 10px #ec4899,
+      0 0 15px #ec4899,
+      0 0 20px #ec4899;
+  }
+  50% {
+    text-shadow: 
+      0 0 2px #ec4899,
+      0 0 5px #ec4899,
+      0 0 8px #ec4899,
+      0 0 12px #ec4899;
+  }
+}
+
+/* Modern card style with neon theme */
 .card-gradient {
-  @apply bg-gradient-to-br from-card to-secondary/50 backdrop-blur-md;
-  /* Subtle shadow for dark theme */
-  box-shadow: 0 4px 16px 0 rgba(255,255,255,0.08), 0 1px 4px 0 rgba(255,255,255,0.04);
+  @apply bg-gradient-to-br from-gray-900 to-black backdrop-blur-md;
+  /* Subtle pink glow for dark theme */
+  box-shadow: 0 4px 16px 0 rgba(236, 72, 153, 0.1), 0 1px 4px 0 rgba(236, 72, 153, 0.05);
+  border: 1px solid rgba(236, 72, 153, 0.2);
 }
 
 @media (min-width: 768px) {
   .card-gradient {
-    box-shadow: 0 8px 24px 0 rgba(255,255,255,0.12), 0 1.5px 10px 0 rgba(255,255,255,0.04);
+    box-shadow: 0 8px 24px 0 rgba(236, 72, 153, 0.15), 0 1.5px 10px 0 rgba(236, 72, 153, 0.05);
   }
 }
 
-/* Black gradient background */
+/* ... keep existing code (remaining utility classes) */
 .bg-cocktail {
   background-image: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
 }
 
-/* Sidebar with black theme */
 .bg-sidebar {
   background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
   color: #FFFFFF;
 }
 
-/* Clean white text - no gradients for better accessibility */
 .text-gradient-primary {
   color: #FFFFFF;
   font-weight: 600;
@@ -185,17 +233,15 @@
 }
 
 .shadow-glass {
-  /* Mobile-first shadows for dark theme */
-  box-shadow: 0 4px 16px 0 rgba(255,255,255,0.08), 0 1px 4px 0 rgba(255,255,255,0.04);
+  box-shadow: 0 4px 16px 0 rgba(236, 72, 153, 0.1), 0 1px 4px 0 rgba(236, 72, 153, 0.05);
 }
 
 @media (min-width: 768px) {
   .shadow-glass {
-    box-shadow: 0 8px 24px 0 rgba(255,255,255,0.12), 0 1.5px 10px 0 rgba(255,255,255,0.04);
+    box-shadow: 0 8px 24px 0 rgba(236, 72, 153, 0.15), 0 1.5px 10px 0 rgba(236, 72, 153, 0.05);
   }
 }
 
-/* Mobile-first utility classes */
 .text-display {
   font-family: 'Playfair Display', serif;
   font-weight: 500;
@@ -207,12 +253,10 @@
   font-weight: 400;
 }
 
-/* Better mobile form styling */
 input, select, textarea {
-  font-size: 16px; /* Prevents zoom on iOS */
+  font-size: 16px;
 }
 
-/* Mobile-first animations */
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;

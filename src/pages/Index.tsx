@@ -142,23 +142,27 @@ export default function Index() {
 
   const allTags = getAllTags(fullRecipes);
 
-  // Mobile-first UI with responsive design
+  // Mobile-first UI with neon dive bar aesthetic
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-black to-gray-900">
       {/* Mobile header */}
-      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-border sticky top-0 z-20 px-4 py-3">
+      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-pink-500/20 sticky top-0 z-20 px-4 py-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
+            className="p-2 hover:bg-pink-500/10 rounded-lg transition-colors text-pink-400"
             aria-label="Open menu"
           >
             <Menu size={24} />
           </button>
-          <div className="flex items-center gap-2">
-            <Martini size={20} className="text-white" />
-            <h1 className="text-lg font-display font-semibold text-white">
-              Mixology Maven
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/0fbd9c77-fecf-48ea-8d31-580fb27e6206.png" 
+              alt="Barbook" 
+              className="w-8 h-8 filter drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]"
+            />
+            <h1 className="text-lg font-display font-bold text-pink-400 tracking-wider neon-text">
+              BARBOOK
             </h1>
           </div>
           <Button
@@ -167,7 +171,7 @@ export default function Index() {
               setShowForm(true);
               setEditing(null);
             }}
-            className="text-sm px-3 bg-white text-black hover:bg-white/90"
+            className="text-sm px-3 bg-pink-500 text-black hover:bg-pink-400 shadow-[0_0_20px_rgba(236,72,153,0.5)] border border-pink-400"
           >
             Add
           </Button>
@@ -192,7 +196,7 @@ export default function Index() {
           <div className="lg:hidden absolute top-4 right-4">
             <button
               onClick={() => setSidebarOpen(false)}
-              className="p-2 text-white hover:bg-white/10 rounded-lg"
+              className="p-2 text-pink-400 hover:bg-pink-500/10 rounded-lg"
             >
               <X size={20} />
             </button>
@@ -214,16 +218,20 @@ export default function Index() {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/20">
-          {/* Desktop header - hidden on mobile */}
-          <div className="hidden lg:flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <Martini size={28} className="text-white" />
+        <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/30">
+          {/* Desktop header with neon styling */}
+          <div className="hidden lg:flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <img 
+                src="/lovable-uploads/0fbd9c77-fecf-48ea-8d31-580fb27e6206.png" 
+                alt="Barbook" 
+                className="w-12 h-12 filter drop-shadow-[0_0_12px_rgba(236,72,153,0.8)]"
+              />
               <div>
-                <h1 className="text-3xl xl:text-4xl font-display font-bold text-white mb-1">
-                  Mixology Maven
+                <h1 className="text-4xl xl:text-5xl font-display font-bold text-pink-400 mb-1 tracking-wider neon-text">
+                  BARBOOK
                 </h1>
-                <h2 className="text-xl xl:text-2xl font-display font-semibold text-white/80">
+                <h2 className="text-xl xl:text-2xl font-display font-semibold text-pink-300/80">
                   {library === "all"
                     ? "All Cocktails"
                     : library === "classics"
@@ -233,7 +241,11 @@ export default function Index() {
               </div>
             </div>
             {library === "mine" && (
-              <Button variant="secondary" onClick={() => setCopyDialogOpen(true)}>
+              <Button 
+                variant="secondary" 
+                onClick={() => setCopyDialogOpen(true)}
+                className="bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700 hover:border-pink-400"
+              >
                 Copy from…
               </Button>
             )}
@@ -241,7 +253,7 @@ export default function Index() {
 
           {/* Mobile library title */}
           <div className="lg:hidden mb-4">
-            <h2 className="text-xl font-display font-semibold text-foreground">
+            <h2 className="text-xl font-display font-semibold text-pink-300">
               {library === "all"
                 ? "All Cocktails"
                 : library === "classics"
@@ -252,7 +264,7 @@ export default function Index() {
               <Button 
                 variant="secondary" 
                 size="sm"
-                className="mt-2"
+                className="mt-2 bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700"
                 onClick={() => setCopyDialogOpen(true)}
               >
                 Copy from…
@@ -268,7 +280,7 @@ export default function Index() {
               <select
                 value={searchType}
                 onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                className="border rounded-lg px-3 py-2 pr-8 bg-white text-black text-sm min-w-[120px]"
+                className="border border-pink-500/30 rounded-lg px-3 py-2 pr-8 bg-gray-900 text-pink-300 text-sm min-w-[120px] focus:border-pink-400 focus:ring-1 focus:ring-pink-400"
                 aria-label="Search by"
               >
                 <option value="ingredient">Ingredient</option>
@@ -281,16 +293,16 @@ export default function Index() {
                   value={ingredientQuery}
                   onChange={e => setIngredientQuery(e.target.value)}
                   placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
-                  className="pl-9"
+                  className="pl-9 bg-gray-900 border-pink-500/30 text-pink-300 placeholder:text-pink-500/50 focus:border-pink-400"
                 />
-                <Search className="absolute left-2.5 top-2.5 text-gray-500" size={16} />
+                <Search className="absolute left-2.5 top-2.5 text-pink-500/70" size={16} />
               </div>
             </div>
 
             {/* Flavor profile dropdown */}
             <div className="sm:w-auto">
               <select
-                className="border rounded-lg px-3 py-2 pr-8 bg-white text-black w-full sm:min-w-[150px] text-sm"
+                className="border border-pink-500/30 rounded-lg px-3 py-2 pr-8 bg-gray-900 text-pink-300 w-full sm:min-w-[150px] text-sm focus:border-pink-400"
                 value={flavorProfile || ""}
                 onChange={e => setFlavorProfile(e.target.value || null)}
                 aria-label="Flavor profile"
@@ -311,10 +323,10 @@ export default function Index() {
                   <TagBadge
                     key={tag}
                     className={`
-                      text-xs px-2 py-1 cursor-pointer transition-colors
+                      text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
                       ${tagFilter === tag
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-foreground hover:bg-muted/80"
+                        ? "bg-pink-500 text-black border-pink-400 shadow-[0_0_10px_rgba(236,72,153,0.5)]"
+                        : "bg-gray-900 text-pink-300 border-pink-500/30 hover:bg-gray-800 hover:border-pink-400"
                       }
                     `}
                     onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
@@ -325,7 +337,7 @@ export default function Index() {
                 {tagFilter && (
                   <button
                     onClick={() => setTagFilter(null)}
-                    className="text-xs px-2 py-1 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                    className="text-xs px-3 py-1 rounded-md bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700 transition-colors"
                   >
                     Clear
                   </button>
@@ -336,10 +348,13 @@ export default function Index() {
 
           {/* Empty state */}
           {displayed.length === 0 && (
-            <div className="text-center text-muted-foreground mt-12 lg:mt-16 px-4">
+            <div className="text-center text-pink-400/70 mt-12 lg:mt-16 px-4">
               <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
               {library !== "classics" && (
-                <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
+                <Button 
+                  onClick={() => setShowForm(true)} 
+                  className="w-full sm:w-auto bg-pink-500 text-black hover:bg-pink-400 shadow-[0_0_20px_rgba(236,72,153,0.5)]"
+                >
                   Add Your First Recipe
                 </Button>
               )}
@@ -350,7 +365,7 @@ export default function Index() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
             {displayed.map((r) => (
               <div key={r.id} className="relative group">
-                <div className="relative overflow-hidden rounded-lg">
+                <div className="relative overflow-hidden rounded-lg border border-pink-500/20 hover:border-pink-400/40 transition-all duration-300">
                   <RecipeCard
                     recipe={r}
                     onSelect={() => handleRecipeClick(r)}
@@ -362,12 +377,12 @@ export default function Index() {
                     }
                   />
                   {/* Gradient overlay on image */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="absolute top-3 right-3 p-2 bg-black/70 hover:bg-black/90 text-white border-none shadow-sm backdrop-blur-sm rounded-full"
+                  className="absolute top-3 right-3 p-2 bg-black/70 hover:bg-black/90 text-pink-400 border border-pink-500/30 shadow-lg backdrop-blur-sm rounded-full hover:shadow-[0_0_15px_rgba(236,72,153,0.4)]"
                   onClick={() => handleShareRecipe(r)}
                 >
                   <Share size={14} />
@@ -395,7 +410,7 @@ export default function Index() {
 
           {/* Recipe Form */}
           {showForm && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
+            <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-4">
               <div className="min-w-0 w-full max-w-lg">
                 <RecipeForm
                   initial={editing ?? undefined}
@@ -411,15 +426,15 @@ export default function Index() {
 
           {/* Copy From Dialog */}
           <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="max-w-lg bg-gray-900 border border-pink-500/30 text-pink-300">
               <DialogHeader>
-                <DialogTitle>Copy Recipe Into My Creations</DialogTitle>
+                <DialogTitle className="text-pink-400">Copy Recipe Into My Creations</DialogTitle>
               </DialogHeader>
               <div className="max-h-72 overflow-y-auto flex flex-col gap-2">
                 {[...classicCocktails, ...userRecipes].map((rec) => (
                   <button
                     key={rec.id}
-                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-accent transition text-left"
+                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 border border-pink-500/20 hover:border-pink-400/40 transition text-left"
                     onClick={() => handleCopyFrom(rec)}
                   >
                     <img
@@ -428,14 +443,18 @@ export default function Index() {
                       className="h-10 w-10 object-cover rounded"
                     />
                     <div>
-                      <div className="font-medium">{rec.name}</div>
-                      <div className="text-xs text-muted-foreground line-clamp-1">{rec.origin ?? ""}</div>
+                      <div className="font-medium text-pink-300">{rec.name}</div>
+                      <div className="text-xs text-pink-500/70 line-clamp-1">{rec.origin ?? ""}</div>
                     </div>
                   </button>
                 ))}
               </div>
               <div className="flex justify-end pt-2">
-                <Button variant="secondary" onClick={() => setCopyDialogOpen(false)}>
+                <Button 
+                  variant="secondary" 
+                  onClick={() => setCopyDialogOpen(false)}
+                  className="bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700"
+                >
                   Cancel
                 </Button>
               </div>
