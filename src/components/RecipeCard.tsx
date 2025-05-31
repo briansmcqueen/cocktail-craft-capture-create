@@ -10,11 +10,12 @@ type RecipeCardProps = {
   onSelect: () => void;
   onEdit?: () => void;
   editable?: boolean;
+  onTagClick?: (tag: string) => void;
 };
 
 const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=400&q=80";
 
-export default function RecipeCard({ recipe, onSelect, onEdit, editable }: RecipeCardProps) {
+export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick }: RecipeCardProps) {
   const likeCount = getLikeCount(recipe.id);
   
   return (
@@ -42,7 +43,16 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable }: Recip
           <div className="text-sm text-muted-foreground mb-2 line-clamp-1" title={recipe.origin || "No region"}>{recipe.origin || "No region"}</div>
           <div className="flex flex-wrap gap-1 mb-2 min-h-[20px]">
             {(recipe.tags ?? []).slice(0, 3).map(tag => (
-              <TagBadge key={tag} className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">{tag}</TagBadge>
+              <TagBadge 
+                key={tag} 
+                className={`bg-blue-100 text-blue-800 border border-blue-200 text-xs ${onTagClick ? 'cursor-pointer hover:bg-blue-200' : ''}`}
+                onClick={onTagClick ? (e) => {
+                  e.stopPropagation();
+                  onTagClick(tag);
+                } : undefined}
+              >
+                {tag}
+              </TagBadge>
             ))}
             {(recipe.tags ?? []).length > 3 && (
               <TagBadge className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">+{(recipe.tags ?? []).length - 3}</TagBadge>

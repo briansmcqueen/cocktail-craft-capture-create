@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -9,7 +10,7 @@ import Favorites from "@/components/Favorites";
 import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
 import { getFavoriteRecipes, toggleFavorite, isFavorite } from "@/utils/favorites";
-import { addLike, getLikeCount, toggleLike } from "@/utils/likes";
+import { addLike, getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,11 +57,13 @@ export default function Index() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [recipeToShare, setRecipeToShare] = useState<Cocktail | null>(null);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   // Listen for updates to favorites and likes
   useEffect(() => {
     const handleFavoritesUpdate = () => {
       setFavoriteIds(getFavoriteRecipes());
+      setForceUpdate(prev => prev + 1);
     };
 
     window.addEventListener('favorites-update', handleFavoritesUpdate);
@@ -289,6 +292,7 @@ export default function Index() {
           {/* Render Featured component for featured library */}
           {library === "featured" ? (
             <Featured
+              key={forceUpdate}
               recipes={allRecipes}
               onRecipeClick={handleRecipeClick}
               onEditRecipe={handleEditRecipe}
@@ -297,6 +301,7 @@ export default function Index() {
             />
           ) : library === "favorites" ? (
             <Favorites
+              key={forceUpdate}
               favoriteRecipes={favoriteRecipes}
               onRecipeClick={handleRecipeClick}
               onEditRecipe={handleEditRecipe}
@@ -415,7 +420,7 @@ export default function Index() {
               {/* Recipe grid - NYT inspired cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                 {displayed.map((r) => (
-                  <div key={r.id} className="relative group">
+                  <div key={`${r.id}-${forceUpdate}`} className="relative group">
                     <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
                       <RecipeCard
                         recipe={r}
@@ -432,7 +437,10 @@ export default function Index() {
                         className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
                           isFavorite(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                         }`}
-                        onClick={() => handleToggleFavorite(r)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleFavorite(r);
+                        }}
                       >
                         <Heart size={14} fill={isFavorite(r.id) ? 'currentColor' : 'none'} />
                       </Button>
@@ -440,17 +448,23 @@ export default function Index() {
                         size="sm"
                         variant="secondary"
                         className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                          getLikeCount(r.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                          isLiked(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                         }`}
-                        onClick={() => handleLike(r)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLike(r);
+                        }}
                       >
-                        <ThumbsUp size={14} fill={getLikeCount(r.id) > 0 ? 'currentColor' : 'none'} />
+                        <ThumbsUp size={14} fill={isLiked(r.id) ? 'currentColor' : 'none'} />
                       </Button>
                       <Button
                         size="sm"
                         variant="secondary"
                         className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                        onClick={() => handleShareRecipe(r)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShareRecipe(r);
+                        }}
                       >
                         <Share size={14} />
                       </Button>
