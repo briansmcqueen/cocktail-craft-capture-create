@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -480,7 +479,7 @@ export default function Index() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
+                        className="p-2 bg-white/90 hover:bg-white text-gray-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full hover:text-gray-800"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleShareRecipe(r);
