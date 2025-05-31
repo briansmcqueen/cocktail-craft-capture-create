@@ -1,17 +1,21 @@
+
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeForm from "@/components/RecipeForm";
 import RecipeModal from "@/components/RecipeModal";
 import ShareRecipe from "@/components/ShareRecipe";
+import Featured from "@/components/Featured";
+import Favorites from "@/components/Favorites";
 import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
+import { getFavoriteRecipes, toggleFavorite, isFavorite } from "@/utils/favorites";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TagBadge from "@/components/ui/tag";
-import { Search, Menu, X, Martini, Share } from "lucide-react";
+import { Search, Menu, X, Heart, Share } from "lucide-react";
 
 // New: Flavor profiles (you can adjust as needed)
 const FLAVOR_PROFILES = [
@@ -27,7 +31,7 @@ const FLAVOR_PROFILES = [
   "tequila",
 ];
 
-type Library = "all" | "classics" | "mine";
+type Library = "featured" | "all" | "classics" | "favorites" | "mine";
 
 function getAllTags(recipes: Cocktail[]): string[] {
   const tags = new Set<string>();
@@ -37,11 +41,12 @@ function getAllTags(recipes: Cocktail[]): string[] {
 
 export default function Index() {
   // State
-  const [library, setLibrary] = useState<Library>("all");
+  const [library, setLibrary] = useState<Library>("featured");
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Cocktail | null>(null);
   const [selected, setSelected] = useState<Cocktail | null>(null);
   const [userRecipes, setUserRecipes] = useState<Cocktail[]>(getUserRecipes());
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(getFavoriteRecipes());
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
   const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
   const [ingredientQuery, setIngredientQuery] = useState("");
@@ -54,41 +59,52 @@ export default function Index() {
 
   // Gather recipes to display & filter by ingredient/tag, flavor profile
   let displayed: Cocktail[] = [];
-  if (library === "all") {
-    displayed = [...classicCocktails, ...userRecipes];
+  const allRecipes = [...classicCocktails, ...userRecipes];
+  const favoriteRecipes = allRecipes.filter(recipe => favoriteIds.includes(recipe.id));
+  
+  if (library === "featured") {
+    // Featured page - handled by Featured component
+    displayed = [];
+  } else if (library === "all") {
+    displayed = allRecipes;
   } else if (library === "classics") {
     displayed = [...classicCocktails];
+  } else if (library === "favorites") {
+    displayed = favoriteRecipes;
   } else if (library === "mine") {
     displayed = [...userRecipes];
   }
 
-  // Main search logic: by ingredient or tag
-  if (ingredientQuery.trim()) {
-    if (searchType === "ingredient") {
+  // Apply filters only for non-featured libraries
+  if (library !== "featured") {
+    // Main search logic: by ingredient or tag
+    if (ingredientQuery.trim()) {
+      if (searchType === "ingredient") {
+        displayed = displayed.filter(recipe =>
+          recipe.ingredients.some(ing =>
+            ing.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+          )
+        );
+      } else {
+        displayed = displayed.filter(recipe =>
+          recipe.tags && recipe.tags.some(tag =>
+            tag.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+          )
+        );
+      }
+    }
+
+    // Tag badge filter
+    if (tagFilter) {
+      displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
+    }
+
+    // Flavor profile filter
+    if (flavorProfile) {
       displayed = displayed.filter(recipe =>
-        recipe.ingredients.some(ing =>
-          ing.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
-        )
-      );
-    } else {
-      displayed = displayed.filter(recipe =>
-        recipe.tags && recipe.tags.some(tag =>
-          tag.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
-        )
+        recipe.tags && recipe.tags.map(tag => tag.toLowerCase()).includes(flavorProfile.toLowerCase())
       );
     }
-  }
-
-  // Tag badge filter
-  if (tagFilter) {
-    displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
-  }
-
-  // Flavor profile filter
-  if (flavorProfile) {
-    displayed = displayed.filter(recipe =>
-      recipe.tags && recipe.tags.map(tag => tag.toLowerCase()).includes(flavorProfile.toLowerCase())
-    );
   }
 
   function handleSave(recipe: Cocktail) {
@@ -133,30 +149,52 @@ export default function Index() {
     setShareDialogOpen(true);
   }
 
+  function handleToggleFavorite(recipe: Cocktail) {
+    const added = toggleFavorite(recipe.id);
+    setFavoriteIds(getFavoriteRecipes());
+    toast({ 
+      title: added ? "Added to favorites!" : "Removed from favorites",
+      description: recipe.name 
+    });
+  }
+
   // Get all tags for the active visible library (used for tag filter selection)
   const fullRecipes = library === "all"
-    ? [...classicCocktails, ...userRecipes]
+    ? allRecipes
     : library === "classics"
     ? classicCocktails
+    : library === "favorites"
+    ? favoriteRecipes
     : userRecipes;
 
   const allTags = getAllTags(fullRecipes);
+
+  const getLibraryTitle = () => {
+    switch (library) {
+      case "featured": return "Featured";
+      case "all": return "All Cocktails";
+      case "classics": return "Classic Collection";
+      case "favorites": return "Your Favorites";
+      case "mine": return "My Creations";
+      default: return "Cocktails";
+    }
+  };
 
   // Mobile-first UI with neon dive bar aesthetic
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-black to-gray-900">
       {/* Mobile header */}
-      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-pink-500/20 sticky top-0 z-20 px-4 py-3">
+      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-red-500/20 sticky top-0 z-20 px-4 py-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-pink-500/10 rounded-lg transition-colors text-pink-400"
+            className="p-2 hover:bg-red-500/10 rounded-lg transition-colors text-red-400"
             aria-label="Open menu"
           >
             <Menu size={24} />
           </button>
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-display font-bold text-pink-400 tracking-wider neon-text">
+            <h1 className="text-lg font-display font-bold text-red-400 tracking-wider neon-text">
               BARBOOK
             </h1>
           </div>
@@ -166,7 +204,7 @@ export default function Index() {
               setShowForm(true);
               setEditing(null);
             }}
-            className="text-sm px-3 bg-pink-500 text-black hover:bg-pink-400 border border-pink-400"
+            className="text-sm px-3 bg-red-500 text-black hover:bg-red-400 border border-red-400"
           >
             Add
           </Button>
@@ -191,7 +229,7 @@ export default function Index() {
           <div className="lg:hidden absolute top-4 right-4">
             <button
               onClick={() => setSidebarOpen(false)}
-              className="p-2 text-pink-400 hover:bg-pink-500/10 rounded-lg"
+              className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg"
             >
               <X size={20} />
             </button>
@@ -214,52 +252,16 @@ export default function Index() {
 
         {/* Main content */}
         <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/30">
-          {/* Desktop header with neon styling */}
-          <div className="hidden lg:flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <img 
-                src="/lovable-uploads/0fbd9c77-fecf-48ea-8d31-580fb27e6206.png" 
-                alt="Barbook" 
-                className="w-12 h-12 filter drop-shadow-[0_0_12px_rgba(236,72,153,0.8)]"
-              />
-              <div>
-                <h1 className="text-4xl xl:text-5xl font-display font-bold text-pink-400 mb-1 tracking-wider neon-text">
-                  BARBOOK
-                </h1>
-                <h2 className="text-xl xl:text-2xl font-display font-semibold text-pink-300/80">
-                  {library === "all"
-                    ? "All Cocktails"
-                    : library === "classics"
-                    ? "Classic Collection"
-                    : "My Creations"}
-                </h2>
-              </div>
-            </div>
-            {library === "mine" && (
-              <Button 
-                variant="secondary" 
-                onClick={() => setCopyDialogOpen(true)}
-                className="bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700 hover:border-pink-400"
-              >
-                Copy from…
-              </Button>
-            )}
-          </div>
-
           {/* Mobile library title */}
           <div className="lg:hidden mb-4">
-            <h2 className="text-xl font-display font-semibold text-pink-300">
-              {library === "all"
-                ? "All Cocktails"
-                : library === "classics"
-                ? "Classic Collection"
-                : "My Creations"}
+            <h2 className="text-xl font-display font-semibold text-red-300">
+              {getLibraryTitle()}
             </h2>
             {library === "mine" && (
               <Button 
                 variant="secondary" 
                 size="sm"
-                className="mt-2 bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700"
+                className="mt-2 bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700"
                 onClick={() => setCopyDialogOpen(true)}
               >
                 Copy from…
@@ -267,124 +269,177 @@ export default function Index() {
             )}
           </div>
 
-          {/* Enhanced Search & Filter - Mobile First */}
-          <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
-            {/* Search section */}
-            <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
-              {/* Search type selector */}
-              <select
-                value={searchType}
-                onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                className="border border-pink-500/30 rounded-lg px-3 py-2 bg-gray-900 text-pink-300 text-sm min-w-[120px] focus:border-pink-400 focus:ring-1 focus:ring-pink-400"
-                aria-label="Search by"
-              >
-                <option value="ingredient">Ingredient</option>
-                <option value="tag">Tag</option>
-              </select>
-              
-              {/* Search bar */}
-              <div className="relative flex-1">
-                <Input
-                  value={ingredientQuery}
-                  onChange={e => setIngredientQuery(e.target.value)}
-                  placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
-                  className="pl-9 bg-gray-900 border-pink-500/30 text-pink-300 placeholder:text-pink-500/50 focus:border-pink-400"
-                />
-                <Search className="absolute left-2.5 top-2.5 text-pink-500/70" size={16} />
-              </div>
-            </div>
-
-            {/* Flavor profile dropdown */}
-            <div className="sm:w-auto">
-              <select
-                className="border border-pink-500/30 rounded-lg px-3 py-2 bg-gray-900 text-pink-300 w-full sm:min-w-[150px] text-sm focus:border-pink-400"
-                value={flavorProfile || ""}
-                onChange={e => setFlavorProfile(e.target.value || null)}
-                aria-label="Flavor profile"
-              >
-                <option value="">All Flavors</option>
-                {FLAVOR_PROFILES.map(f => (
-                  <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Tag filters - Mobile optimized */}
-          {allTags.length > 0 && (
-            <div className="mb-6">
-              <div className="flex flex-wrap gap-2">
-                {allTags.map(tag => (
-                  <TagBadge
-                    key={tag}
-                    className={`
-                      text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
-                      ${tagFilter === tag
-                        ? "bg-pink-500 text-black border-pink-400 shadow-[0_0_10px_rgba(236,72,153,0.5)]"
-                        : "bg-gray-900 text-pink-300 border-pink-500/30 hover:bg-gray-800 hover:border-pink-400"
-                      }
-                    `}
-                    onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
+          {/* Render Featured component for featured library */}
+          {library === "featured" ? (
+            <Featured
+              recipes={allRecipes}
+              onRecipeClick={handleRecipeClick}
+              onEditRecipe={handleEditRecipe}
+              onShareRecipe={handleShareRecipe}
+              userRecipes={userRecipes}
+            />
+          ) : library === "favorites" ? (
+            <Favorites
+              favoriteRecipes={favoriteRecipes}
+              onRecipeClick={handleRecipeClick}
+              onEditRecipe={handleEditRecipe}
+              onShareRecipe={handleShareRecipe}
+              userRecipes={userRecipes}
+            />
+          ) : (
+            <>
+              {/* Desktop header with neon styling */}
+              <div className="hidden lg:flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-4xl xl:text-5xl font-display font-semibold text-red-300 mb-1 tracking-wider">
+                    {getLibraryTitle()}
+                  </h2>
+                </div>
+                {library === "mine" && (
+                  <Button 
+                    variant="secondary" 
+                    onClick={() => setCopyDialogOpen(true)}
+                    className="bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700 hover:border-red-400"
                   >
-                    {tag}
-                  </TagBadge>
-                ))}
-                {tagFilter && (
-                  <button
-                    onClick={() => setTagFilter(null)}
-                    className="text-xs px-3 py-1 rounded-md bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700 transition-colors"
-                  >
-                    Clear
-                  </button>
+                    Copy from…
+                  </Button>
                 )}
               </div>
-            </div>
-          )}
 
-          {/* Empty state */}
-          {displayed.length === 0 && (
-            <div className="text-center text-pink-400/70 mt-12 lg:mt-16 px-4">
-              <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
-              {library !== "classics" && (
-                <Button 
-                  onClick={() => setShowForm(true)} 
-                  className="w-full sm:w-auto bg-pink-500 text-black hover:bg-pink-400"
-                >
-                  Add Your First Recipe
-                </Button>
-              )}
-            </div>
-          )}
-
-          {/* Recipe grid - Mobile first responsive */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-            {displayed.map((r) => (
-              <div key={r.id} className="relative group">
-                <div className="relative overflow-hidden rounded-lg border border-pink-500/20 hover:border-pink-400/40 transition-all duration-300">
-                  <RecipeCard
-                    recipe={r}
-                    onSelect={() => handleRecipeClick(r)}
-                    editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
-                    onEdit={
-                      (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
-                        ? () => handleEditRecipe(r)
-                        : undefined
-                    }
-                  />
-                  {/* Gradient overlay on image */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              {/* Enhanced Search & Filter - Mobile First */}
+              <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
+                {/* Search section */}
+                <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
+                  {/* Search type selector */}
+                  <select
+                    value={searchType}
+                    onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
+                    className="border border-red-500/30 rounded-lg px-3 py-2 bg-gray-900 text-red-300 text-sm min-w-[120px] focus:border-red-400 focus:ring-1 focus:ring-red-400"
+                    aria-label="Search by"
+                  >
+                    <option value="ingredient">Ingredient</option>
+                    <option value="tag">Tag</option>
+                  </select>
+                  
+                  {/* Search bar */}
+                  <div className="relative flex-1">
+                    <Input
+                      value={ingredientQuery}
+                      onChange={e => setIngredientQuery(e.target.value)}
+                      placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
+                      className="pl-9 bg-gray-900 border-red-500/30 text-red-300 placeholder:text-red-500/50 focus:border-red-400"
+                    />
+                    <Search className="absolute left-2.5 top-2.5 text-red-500/70" size={16} />
+                  </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="absolute top-3 right-3 p-2 bg-black/70 hover:bg-black/90 text-pink-400 border border-pink-500/30 shadow-lg backdrop-blur-sm rounded-full hover:shadow-[0_0_15px_rgba(236,72,153,0.4)]"
-                  onClick={() => handleShareRecipe(r)}
-                >
-                  <Share size={14} />
-                </Button>
+
+                {/* Flavor profile dropdown */}
+                <div className="sm:w-auto">
+                  <select
+                    className="border border-red-500/30 rounded-lg px-3 py-2 bg-gray-900 text-red-300 w-full sm:min-w-[150px] text-sm focus:border-red-400"
+                    value={flavorProfile || ""}
+                    onChange={e => setFlavorProfile(e.target.value || null)}
+                    aria-label="Flavor profile"
+                  >
+                    <option value="">All Flavors</option>
+                    {FLAVOR_PROFILES.map(f => (
+                      <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            ))}
-          </div>
+
+              {/* Tag filters - Mobile optimized */}
+              {allTags.length > 0 && (
+                <div className="mb-6">
+                  <div className="flex flex-wrap gap-2">
+                    {allTags.map(tag => (
+                      <TagBadge
+                        key={tag}
+                        className={`
+                          text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
+                          ${tagFilter === tag
+                            ? "bg-red-500 text-black border-red-400 shadow-[0_0_10px_rgba(220,38,38,0.5)]"
+                            : "bg-gray-900 text-red-300 border-red-500/30 hover:bg-gray-800 hover:border-red-400"
+                          }
+                        `}
+                        onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
+                      >
+                        {tag}
+                      </TagBadge>
+                    ))}
+                    {tagFilter && (
+                      <button
+                        onClick={() => setTagFilter(null)}
+                        className="text-xs px-3 py-1 rounded-md bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700 transition-colors"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Empty state */}
+              {displayed.length === 0 && (
+                <div className="text-center text-red-400/70 mt-12 lg:mt-16 px-4">
+                  <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
+                  {library !== "classics" && library !== "favorites" && (
+                    <Button 
+                      onClick={() => setShowForm(true)} 
+                      className="w-full sm:w-auto bg-red-500 text-black hover:bg-red-400"
+                    >
+                      Add Your First Recipe
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {/* Recipe grid - Mobile first responsive */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                {displayed.map((r) => (
+                  <div key={r.id} className="relative group">
+                    <div className="relative overflow-hidden rounded-lg border border-red-500/20 hover:border-red-400/40 transition-all duration-300">
+                      <RecipeCard
+                        recipe={r}
+                        onSelect={() => handleRecipeClick(r)}
+                        editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
+                        onEdit={
+                          (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
+                            ? () => handleEditRecipe(r)
+                            : undefined
+                        }
+                      />
+                      {/* Gradient overlay on image */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                    </div>
+                    
+                    {/* Action buttons */}
+                    <div className="absolute top-3 right-3 flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className={`p-2 bg-black/70 hover:bg-black/90 border border-red-500/30 shadow-lg backdrop-blur-sm rounded-full hover:shadow-[0_0_15px_rgba(220,38,38,0.4)] ${
+                          isFavorite(r.id) ? 'text-red-400' : 'text-gray-400 hover:text-red-400'
+                        }`}
+                        onClick={() => handleToggleFavorite(r)}
+                      >
+                        <Heart size={14} fill={isFavorite(r.id) ? 'currentColor' : 'none'} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="p-2 bg-black/70 hover:bg-black/90 text-red-400 border border-red-500/30 shadow-lg backdrop-blur-sm rounded-full hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]"
+                        onClick={() => handleShareRecipe(r)}
+                      >
+                        <Share size={14} />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Recipe Modal */}
           <RecipeModal
@@ -421,15 +476,15 @@ export default function Index() {
 
           {/* Copy From Dialog */}
           <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
-            <DialogContent className="max-w-lg bg-gray-900 border border-pink-500/30 text-pink-300">
+            <DialogContent className="max-w-lg bg-gray-900 border border-red-500/30 text-red-300">
               <DialogHeader>
-                <DialogTitle className="text-pink-400">Copy Recipe Into My Creations</DialogTitle>
+                <DialogTitle className="text-red-400">Copy Recipe Into My Creations</DialogTitle>
               </DialogHeader>
               <div className="max-h-72 overflow-y-auto flex flex-col gap-2">
-                {[...classicCocktails, ...userRecipes].map((rec) => (
+                {allRecipes.map((rec) => (
                   <button
                     key={rec.id}
-                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 border border-pink-500/20 hover:border-pink-400/40 transition text-left"
+                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 border border-red-500/20 hover:border-red-400/40 transition text-left"
                     onClick={() => handleCopyFrom(rec)}
                   >
                     <img
@@ -438,8 +493,8 @@ export default function Index() {
                       className="h-10 w-10 object-cover rounded"
                     />
                     <div>
-                      <div className="font-medium text-pink-300">{rec.name}</div>
-                      <div className="text-xs text-pink-500/70 line-clamp-1">{rec.origin ?? ""}</div>
+                      <div className="font-medium text-red-300">{rec.name}</div>
+                      <div className="text-xs text-red-500/70 line-clamp-1">{rec.origin ?? ""}</div>
                     </div>
                   </button>
                 ))}
@@ -448,7 +503,7 @@ export default function Index() {
                 <Button 
                   variant="secondary" 
                   onClick={() => setCopyDialogOpen(false)}
-                  className="bg-gray-800 text-pink-400 border border-pink-500/30 hover:bg-gray-700"
+                  className="bg-gray-800 text-red-400 border border-red-500/30 hover:bg-gray-700"
                 >
                   Cancel
                 </Button>
