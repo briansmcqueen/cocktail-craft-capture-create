@@ -4,7 +4,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
 import { TrendingUp, BookOpen, ThumbsUp, Heart, Share } from "lucide-react";
 import { Button } from "./ui/button";
-import { getTrendingRecipes, getLikeCount, addLike } from "@/utils/likes";
+import { getTrendingRecipes, getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { toggleFavorite, isFavorite } from "@/utils/favorites";
 import {
   Carousel,
@@ -69,11 +69,13 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
   const featuredRecipes = recipes.slice(0, 8);
 
   const handleLike = (recipe: Cocktail) => {
-    addLike(recipe.id);
+    toggleLike(recipe.id);
+    window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
     toggleFavorite(recipe.id);
+    window.dispatchEvent(new Event('favorites-update'));
   };
 
   return (
@@ -110,7 +112,10 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                       className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
                         isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                       }`}
-                      onClick={() => handleToggleFavorite(recipe)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleFavorite(recipe);
+                      }}
                     >
                       <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
                     </Button>
@@ -118,17 +123,23 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                       size="sm"
                       variant="secondary"
                       className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                        getLikeCount(recipe.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                        isLiked(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                       }`}
-                      onClick={() => handleLike(recipe)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike(recipe);
+                      }}
                     >
-                      <ThumbsUp size={14} fill={getLikeCount(recipe.id) > 0 ? 'currentColor' : 'none'} />
+                      <ThumbsUp size={14} fill={isLiked(recipe.id) ? 'currentColor' : 'none'} />
                     </Button>
                     <Button
                       size="sm"
                       variant="secondary"
                       className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                      onClick={() => onShareRecipe(recipe)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onShareRecipe(recipe);
+                      }}
                     >
                       <Share size={14} />
                     </Button>
@@ -179,7 +190,10 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                       className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
                         isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                       }`}
-                      onClick={() => handleToggleFavorite(recipe)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleFavorite(recipe);
+                      }}
                     >
                       <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
                     </Button>
@@ -187,17 +201,23 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                       size="sm"
                       variant="secondary"
                       className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                        getLikeCount(recipe.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                        isLiked(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                       }`}
-                      onClick={() => handleLike(recipe)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike(recipe);
+                      }}
                     >
-                      <ThumbsUp size={14} fill={getLikeCount(recipe.id) > 0 ? 'currentColor' : 'none'} />
+                      <ThumbsUp size={14} fill={isLiked(recipe.id) ? 'currentColor' : 'none'} />
                     </Button>
                     <Button
                       size="sm"
                       variant="secondary"
                       className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                      onClick={() => onShareRecipe(recipe)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onShareRecipe(recipe);
+                      }}
                     >
                       <Share size={14} />
                     </Button>
