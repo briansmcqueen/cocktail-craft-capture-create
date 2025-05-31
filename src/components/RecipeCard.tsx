@@ -4,6 +4,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
 import { getLikeCount } from "@/utils/likes";
+import { useState } from "react";
 
 type RecipeCardProps = {
   recipe: Cocktail;
@@ -17,6 +18,20 @@ const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?a
 
 export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick }: RecipeCardProps) {
   const likeCount = getLikeCount(recipe.id);
+  const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
+  const [imageError, setImageError] = useState(false);
+  
+  const handleImageError = () => {
+    if (!imageError && imageSrc !== fallback) {
+      setImageError(true);
+      setImageSrc(fallback);
+    }
+  };
+
+  const handleTagClick = (tag: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onTagClick?.(tag);
+  };
   
   return (
     <div
@@ -25,16 +40,11 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
     >
       <div className="h-40 w-full overflow-hidden">
         <img
-          src={recipe.image || fallback}
+          src={imageSrc}
           alt={recipe.name}
           className="h-full w-full object-cover group-hover:scale-105 transition-all"
           loading="lazy"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            if (target.src !== fallback) {
-              target.src = fallback;
-            }
-          }}
+          onError={handleImageError}
         />
       </div>
       <div className="p-4 flex-1 flex flex-col justify-between">
@@ -46,10 +56,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
               <TagBadge 
                 key={tag} 
                 className={`bg-blue-100 text-blue-800 border border-blue-200 text-xs ${onTagClick ? 'cursor-pointer hover:bg-blue-200' : ''}`}
-                onClick={onTagClick ? (e) => {
-                  e.stopPropagation();
-                  onTagClick(tag);
-                } : undefined}
+                onClick={onTagClick ? (e) => handleTagClick(tag, e) : undefined}
               >
                 {tag}
               </TagBadge>
