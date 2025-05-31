@@ -6,7 +6,6 @@ import { TrendingUp, BookOpen, ThumbsUp, Heart, Share } from "lucide-react";
 import { Button } from "./ui/button";
 import { getTrendingRecipes, getLikeCount, addLike } from "@/utils/likes";
 import { toggleFavorite, isFavorite } from "@/utils/favorites";
-import { toast } from "@/hooks/use-toast";
 
 type FeaturedProps = {
   recipes: Cocktail[];
@@ -51,26 +50,20 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
   const featuredRecipes = recipes.slice(0, 4);
 
   const handleLike = (recipe: Cocktail) => {
-    const newCount = addLike(recipe.id);
-    toast({ 
-      title: "Recipe liked!", 
-      description: `${recipe.name} now has ${newCount} like${newCount === 1 ? '' : 's'}` 
-    });
+    addLike(recipe.id);
+    // Remove toast notification
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
-    const added = toggleFavorite(recipe.id);
-    toast({ 
-      title: added ? "Added to favorites!" : "Removed from favorites",
-      description: recipe.name 
-    });
+    toggleFavorite(recipe.id);
+    // Remove toast notification
   };
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto">
       {/* Hero Featured Recipes */}
       <section>
-        <h2 className="text-3xl lg:text-4xl font-display font-light text-gray-900 mb-8 tracking-wide">
+        <h2 className="text-3xl lg:text-4xl font-serif font-normal text-gray-900 mb-8 tracking-wide">
           Featured Cocktails
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -94,8 +87,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <Button
                   size="sm"
                   variant="secondary"
-                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full ${
-                    isFavorite(recipe.id) ? 'text-orange-600' : 'text-gray-500 hover:text-orange-600'
+                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                    isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                   }`}
                   onClick={() => handleToggleFavorite(recipe)}
                 >
@@ -104,16 +97,17 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full flex items-center gap-1"
+                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                    getLikeCount(recipe.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                  }`}
                   onClick={() => handleLike(recipe)}
                 >
-                  <ThumbsUp size={14} />
-                  <span className="text-xs">{getLikeCount(recipe.id)}</span>
+                  <ThumbsUp size={14} fill={getLikeCount(recipe.id) > 0 ? 'currentColor' : 'none'} />
                 </Button>
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
+                  className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
                   onClick={() => onShareRecipe(recipe)}
                 >
                   <Share size={14} />
@@ -127,8 +121,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
       {/* Trending Section */}
       <section>
         <div className="flex items-center gap-3 mb-8">
-          <TrendingUp className="text-orange-600" size={28} />
-          <h2 className="text-2xl lg:text-3xl font-display font-light text-gray-900 tracking-wide">
+          <TrendingUp className="text-red-600" size={28} />
+          <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
             Trending Now
           </h2>
         </div>
@@ -153,8 +147,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <Button
                   size="sm"
                   variant="secondary"
-                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full ${
-                    isFavorite(recipe.id) ? 'text-orange-600' : 'text-gray-500 hover:text-orange-600'
+                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                    isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                   }`}
                   onClick={() => handleToggleFavorite(recipe)}
                 >
@@ -163,16 +157,17 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full flex items-center gap-1"
+                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                    getLikeCount(recipe.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                  }`}
                   onClick={() => handleLike(recipe)}
                 >
-                  <ThumbsUp size={14} />
-                  <span className="text-xs">{getLikeCount(recipe.id)}</span>
+                  <ThumbsUp size={14} fill={getLikeCount(recipe.id) > 0 ? 'currentColor' : 'none'} />
                 </Button>
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
+                  className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
                   onClick={() => onShareRecipe(recipe)}
                 >
                   <Share size={14} />
@@ -186,8 +181,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
       {/* How-To Section - NYT Cooking Style */}
       <section>
         <div className="flex items-center gap-3 mb-8">
-          <BookOpen className="text-orange-600" size={28} />
-          <h2 className="text-2xl lg:text-3xl font-display font-light text-gray-900 tracking-wide">
+          <BookOpen className="text-red-600" size={28} />
+          <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
             Essential Techniques
           </h2>
         </div>
@@ -206,7 +201,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
               <div className="p-6">
-                <h3 className="font-display font-medium text-gray-900 mb-3 text-lg leading-tight">
+                <h3 className="font-serif font-medium text-gray-900 mb-3 text-lg leading-tight">
                   {article.title}
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">

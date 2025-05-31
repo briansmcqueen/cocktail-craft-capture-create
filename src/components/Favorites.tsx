@@ -6,7 +6,6 @@ import { Heart, ThumbsUp, Share } from "lucide-react";
 import { Button } from "./ui/button";
 import { getLikeCount, addLike } from "@/utils/likes";
 import { toggleFavorite, isFavorite } from "@/utils/favorites";
-import { toast } from "@/hooks/use-toast";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -18,26 +17,20 @@ type FavoritesProps = {
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
   const handleLike = (recipe: Cocktail) => {
-    const newCount = addLike(recipe.id);
-    toast({ 
-      title: "Recipe liked!", 
-      description: `${recipe.name} now has ${newCount} like${newCount === 1 ? '' : 's'}` 
-    });
+    addLike(recipe.id);
+    // Remove toast notification
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
-    const added = toggleFavorite(recipe.id);
-    toast({ 
-      title: added ? "Added to favorites!" : "Removed from favorites",
-      description: recipe.name 
-    });
+    toggleFavorite(recipe.id);
+    // Remove toast notification
   };
 
   if (favoriteRecipes.length === 0) {
     return (
       <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
         <Heart className="mx-auto mb-4 text-gray-400" size={48} />
-        <h2 className="text-xl font-display font-light mb-2 text-gray-900">No favorites yet</h2>
+        <h2 className="text-xl font-serif font-normal mb-2 text-gray-900">No favorites yet</h2>
         <p className="mb-4 text-sm lg:text-base">
           Start favoriting recipes by clicking the heart icon on any cocktail you love!
         </p>
@@ -48,8 +41,8 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <Heart className="text-orange-600" size={24} />
-        <h2 className="text-2xl lg:text-3xl font-display font-light text-gray-900 tracking-wide">
+        <Heart className="text-red-600" size={24} />
+        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
           Your Favorite Cocktails
         </h2>
       </div>
@@ -75,8 +68,8 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
               <Button
                 size="sm"
                 variant="secondary"
-                className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full ${
-                  isFavorite(recipe.id) ? 'text-orange-600' : 'text-gray-500 hover:text-orange-600'
+                className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                  isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                 }`}
                 onClick={() => handleToggleFavorite(recipe)}
               >
@@ -85,16 +78,17 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
               <Button
                 size="sm"
                 variant="secondary"
-                className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full flex items-center gap-1"
+                className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                  getLikeCount(recipe.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                }`}
                 onClick={() => handleLike(recipe)}
               >
-                <ThumbsUp size={14} />
-                <span className="text-xs">{getLikeCount(recipe.id)}</span>
+                <ThumbsUp size={14} fill={getLikeCount(recipe.id) > 0 ? 'currentColor' : 'none'} />
               </Button>
               <Button
                 size="sm"
                 variant="secondary"
-                className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
+                className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
                 onClick={() => onShareRecipe(recipe)}
               >
                 <Share size={14} />

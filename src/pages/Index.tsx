@@ -152,18 +152,10 @@ export default function Index() {
   function handleToggleFavorite(recipe: Cocktail) {
     const added = toggleFavorite(recipe.id);
     setFavoriteIds(getFavoriteRecipes());
-    toast({ 
-      title: added ? "Added to favorites!" : "Removed from favorites",
-      description: recipe.name 
-    });
   }
 
   function handleLike(recipe: Cocktail) {
     const newCount = addLike(recipe.id);
-    toast({ 
-      title: "Recipe liked!", 
-      description: `${recipe.name} now has ${newCount} like${newCount === 1 ? '' : 's'}` 
-    });
   }
 
   // Get all tags for the active visible library (used for tag filter selection)
@@ -425,8 +417,8 @@ export default function Index() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full ${
-                          isFavorite(r.id) ? 'text-orange-600' : 'text-gray-500 hover:text-orange-600'
+                        className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                          isFavorite(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                         }`}
                         onClick={() => handleToggleFavorite(r)}
                       >
@@ -435,16 +427,17 @@ export default function Index() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full flex items-center gap-1"
+                        className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                          getLikeCount(r.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                        }`}
                         onClick={() => handleLike(r)}
                       >
-                        <ThumbsUp size={14} />
-                        <span className="text-xs">{getLikeCount(r.id)}</span>
+                        <ThumbsUp size={14} fill={getLikeCount(r.id) > 0 ? 'currentColor' : 'none'} />
                       </Button>
                       <Button
                         size="sm"
                         variant="secondary"
-                        className="p-2 bg-white/90 hover:bg-white text-orange-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
+                        className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
                         onClick={() => handleShareRecipe(r)}
                       >
                         <Share size={14} />
