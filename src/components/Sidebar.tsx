@@ -24,7 +24,7 @@ export default function Sidebar({ active, onSelect, onAdd }: SidebarProps) {
             alt="Barbook" 
             className="w-8 h-8 filter drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]"
           />
-          <h1 className="text-xl font-bold tracking-wider text-pink-400 neon-text">BARBOOK</h1>
+          <h1 className="text-xl font-display font-bold tracking-wider text-pink-400 neon-text">BARBOOK</h1>
         </div>
         <p className="text-pink-500/70 text-xs uppercase tracking-wide">Digital Dive Bar</p>
       </div>
@@ -47,7 +47,7 @@ export default function Sidebar({ active, onSelect, onAdd }: SidebarProps) {
       </nav>
       <div className="mt-auto px-6">
         <button
-          className="w-full bg-pink-500 text-black py-3 px-4 rounded flex items-center gap-2 justify-center hover:bg-pink-400 transition-all shadow-[0_0_20px_rgba(236,72,153,0.5)] font-semibold border border-pink-400 neon-button"
+          className="w-full bg-pink-500 text-black py-3 px-4 rounded flex items-center gap-2 justify-center hover:bg-pink-400 transition-all font-semibold border border-pink-400"
           onClick={onAdd}
         >
           <Plus size={18} /> <span>Add New Recipe</span>
