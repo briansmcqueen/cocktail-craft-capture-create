@@ -15,6 +15,48 @@ type FormProps = {
   onCancel: () => void;
 };
 
+// Common ingredients for autofill
+const COMMON_INGREDIENTS = [
+  "2 oz Vodka",
+  "2 oz Gin",
+  "2 oz Bourbon",
+  "2 oz Whiskey", 
+  "2 oz Rum",
+  "2 oz Tequila",
+  "1 oz Triple Sec",
+  "1 oz Cointreau",
+  "1 oz Grand Marnier",
+  "1 oz Lime juice",
+  "1 oz Lemon juice",
+  "1 oz Simple syrup",
+  "1/2 oz Simple syrup",
+  "1 dash Angostura bitters",
+  "2 dashes Orange bitters",
+  "1 oz Dry vermouth",
+  "1 oz Sweet vermouth",
+  "Club soda",
+  "Tonic water",
+  "Ginger beer",
+  "Cranberry juice",
+  "Orange juice",
+  "Pineapple juice",
+  "Fresh mint",
+  "Lime wheel",
+  "Lemon twist",
+  "Orange peel",
+  "Maraschino cherry"
+];
+
+// Common step templates
+const STEP_TEMPLATES = [
+  "Add all ingredients to a shaker filled with ice. Shake vigorously for 10-15 seconds. Strain into a chilled glass.",
+  "Build ingredients directly in glass over ice. Stir gently to combine.",
+  "Add spirits and mixers to a shaker with ice. Shake well and strain into a chilled coupe glass.",
+  "Muddle ingredients in the bottom of the glass. Add ice and remaining ingredients. Stir to combine.",
+  "Combine ingredients in a mixing glass with ice. Stir until well chilled. Strain into glass.",
+  "Layer ingredients by pouring slowly over the back of a bar spoon."
+];
+
 function makeId() {
   return (
     Date.now().toString(36) +
@@ -32,6 +74,8 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   const [notes, setNotes] = useState(initial?.notes || "");
   const [origin, setOrigin] = useState(initial?.origin || "");
   const [tags, setTags] = useState<string[]>(initial?.tags || []);
+  const [showIngredientSuggestions, setShowIngredientSuggestions] = useState(false);
+  const [showStepSuggestions, setShowStepSuggestions] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -46,6 +90,19 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const addIngredient = (ingredient: string) => {
+    const currentIngredients = ingredients.split('\n').filter(Boolean);
+    if (!currentIngredients.includes(ingredient)) {
+      setIngredients(prev => prev ? prev + '\n' + ingredient : ingredient);
+    }
+    setShowIngredientSuggestions(false);
+  };
+
+  const addStepTemplate = (template: string) => {
+    setSteps(template);
+    setShowStepSuggestions(false);
   };
 
   function handleSubmit(e: React.FormEvent) {
@@ -76,7 +133,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   return (
     <form
       className={cn(
-        "w-full max-w-lg p-6 rounded-2xl shadow bg-background space-y-4"
+        "w-full max-w-lg p-6 rounded-2xl shadow-2xl bg-black/95 backdrop-blur-md border border-white/20 space-y-4"
       )}
       onSubmit={handleSubmit}
       autoComplete="off"
@@ -121,9 +178,18 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           </Button>
         </div>
       </div>
-      <div>
+      <div className="relative">
         <label className="font-medium mb-1 block text-white">
           Ingredients <span className="text-xs text-muted-foreground">(one per line)</span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="ml-2 text-xs"
+            onClick={() => setShowIngredientSuggestions(!showIngredientSuggestions)}
+          >
+            Quick Add
+          </Button>
         </label>
         <Textarea
           value={ingredients}
@@ -131,15 +197,54 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           placeholder="2 oz Vodka&#10;1 oz Espresso&#10;1/2 oz Coffee Liqueur"
           required
         />
+        {showIngredientSuggestions && (
+          <div className="absolute z-10 mt-1 w-full bg-black border border-white/20 rounded-md shadow-lg max-h-48 overflow-y-auto">
+            {COMMON_INGREDIENTS.map((ingredient, i) => (
+              <button
+                key={i}
+                type="button"
+                className="w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors text-white"
+                onClick={() => addIngredient(ingredient)}
+              >
+                {ingredient}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
-      <div>
-        <label className="font-medium mb-1 block text-white">Steps</label>
+      <div className="relative">
+        <label className="font-medium mb-1 block text-white">
+          Steps
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="ml-2 text-xs"
+            onClick={() => setShowStepSuggestions(!showStepSuggestions)}
+          >
+            Templates
+          </Button>
+        </label>
         <Textarea
           value={steps}
           onChange={(e) => setSteps(e.target.value)}
           placeholder="Combine all ingredients in a shaker with ice. Shake well..."
           required
         />
+        {showStepSuggestions && (
+          <div className="absolute z-10 mt-1 w-full bg-black border border-white/20 rounded-md shadow-lg max-h-48 overflow-y-auto">
+            {STEP_TEMPLATES.map((template, i) => (
+              <button
+                key={i}
+                type="button"
+                className="w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors text-white border-b border-white/10 last:border-b-0"
+                onClick={() => addStepTemplate(template)}
+              >
+                {template}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div>
         <label className="font-medium mb-1 block text-white">

@@ -17,7 +17,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
 
   const shareUrl = `${window.location.origin}/?recipe=${encodeURIComponent(recipe.name)}`;
   
-  const shareText = `🍸 Check out this amazing ${recipe.name} recipe on Mixology Maven!\n\nIngredients:\n${recipe.ingredients.map(ing => `• ${ing}`).join('\n')}\n\nSteps: ${recipe.steps}\n\n${shareUrl}`;
+  const shareText = `🍸 Check out this ${recipe.name} recipe on Mixology Maven!\n\nIngredients:\n${recipe.ingredients.map(ing => `• ${ing}`).join('\n')}\n\nSteps: ${recipe.steps}\n\n${shareUrl}`;
 
   const handleCopyLink = async () => {
     try {
@@ -77,7 +77,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-3">
-              Share this recipe with friends and help Mixology Maven go viral! 🍹
+              Share this delicious recipe with friends and fellow cocktail enthusiasts! 🍹
             </p>
             
             <div className="flex flex-col gap-2">
@@ -102,7 +102,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
           
           <div className="border-t pt-4">
             <p className="text-xs text-muted-foreground">
-              💡 Tip: Tag us on social media when you share! The more viral recipes go, the more features we can add to make your mixology journey even better.
+              💡 Love discovering new recipes? Share your favorites to help others find great cocktails too.
             </p>
           </div>
         </div>

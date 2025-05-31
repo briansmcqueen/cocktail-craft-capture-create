@@ -144,7 +144,7 @@ export default function Index() {
 
   // Mobile-first UI with responsive design
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-black via-black to-gray-900">
       {/* Mobile header */}
       <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-border sticky top-0 z-20 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -214,7 +214,7 @@ export default function Index() {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0">
+        <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/20">
           {/* Desktop header - hidden on mobile */}
           <div className="hidden lg:flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -268,7 +268,7 @@ export default function Index() {
               <select
                 value={searchType}
                 onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                className="border rounded-lg px-3 py-2 bg-white text-black text-sm min-w-[120px]"
+                className="border rounded-lg px-3 py-2 pr-8 bg-white text-black text-sm min-w-[120px]"
                 aria-label="Search by"
               >
                 <option value="ingredient">Ingredient</option>
@@ -290,7 +290,7 @@ export default function Index() {
             {/* Flavor profile dropdown */}
             <div className="sm:w-auto">
               <select
-                className="border rounded-lg px-3 py-2 bg-white text-black w-full sm:min-w-[150px] text-sm"
+                className="border rounded-lg px-3 py-2 pr-8 bg-white text-black w-full sm:min-w-[150px] text-sm"
                 value={flavorProfile || ""}
                 onChange={e => setFlavorProfile(e.target.value || null)}
                 aria-label="Flavor profile"
@@ -349,21 +349,25 @@ export default function Index() {
           {/* Recipe grid - Mobile first responsive */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
             {displayed.map((r) => (
-              <div key={r.id} className="relative">
-                <RecipeCard
-                  recipe={r}
-                  onSelect={() => handleRecipeClick(r)}
-                  editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
-                  onEdit={
-                    (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
-                      ? () => handleEditRecipe(r)
-                      : undefined
-                  }
-                />
+              <div key={r.id} className="relative group">
+                <div className="relative overflow-hidden rounded-lg">
+                  <RecipeCard
+                    recipe={r}
+                    onSelect={() => handleRecipeClick(r)}
+                    editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
+                    onEdit={
+                      (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
+                        ? () => handleEditRecipe(r)
+                        : undefined
+                    }
+                  />
+                  {/* Gradient overlay on image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </div>
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="absolute top-2 right-2 p-2 bg-black/60 hover:bg-black/80 text-white"
+                  className="absolute top-3 right-3 p-2 bg-black/70 hover:bg-black/90 text-white border-none shadow-sm backdrop-blur-sm rounded-full"
                   onClick={() => handleShareRecipe(r)}
                 >
                   <Share size={14} />
@@ -391,8 +395,8 @@ export default function Index() {
 
           {/* Recipe Form */}
           {showForm && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-30">
-              <div className="min-w-0">
+            <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
+              <div className="min-w-0 w-full max-w-lg">
                 <RecipeForm
                   initial={editing ?? undefined}
                   onSave={handleSave}
