@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeForm from "@/components/RecipeForm";
@@ -57,6 +56,16 @@ export default function Index() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [recipeToShare, setRecipeToShare] = useState<Cocktail | null>(null);
+
+  // Listen for updates to favorites and likes
+  useEffect(() => {
+    const handleFavoritesUpdate = () => {
+      setFavoriteIds(getFavoriteRecipes());
+    };
+
+    window.addEventListener('favorites-update', handleFavoritesUpdate);
+    return () => window.removeEventListener('favorites-update', handleFavoritesUpdate);
+  }, []);
 
   // Gather recipes to display & filter by ingredient/tag, flavor profile
   let displayed: Cocktail[] = [];
@@ -153,10 +162,12 @@ export default function Index() {
   function handleToggleFavorite(recipe: Cocktail) {
     const added = toggleFavorite(recipe.id);
     setFavoriteIds(getFavoriteRecipes());
+    window.dispatchEvent(new Event('favorites-update'));
   }
 
   function handleLike(recipe: Cocktail) {
     const newCount = addLike(recipe.id);
+    window.dispatchEvent(new Event('favorites-update'));
   }
 
   // Get all tags for the active visible library (used for tag filter selection)

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
 import { Heart, ThumbsUp, Share } from "lucide-react";
@@ -16,15 +16,24 @@ type FavoritesProps = {
 };
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('favorites-update', handleUpdate);
+    return () => window.removeEventListener('favorites-update', handleUpdate);
+  }, []);
+
   const handleLike = (recipe: Cocktail) => {
     addLike(recipe.id);
-    // Force a re-render by updating the component state
     window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
     toggleFavorite(recipe.id);
-    // Force a re-render by updating the component state
     window.dispatchEvent(new Event('favorites-update'));
   };
 
@@ -51,7 +60,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {favoriteRecipes.map((recipe) => (
-          <div key={recipe.id} className="relative group">
+          <div key={`${recipe.id}-${forceUpdate}`} className="relative group">
             <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white shadow-sm hover:shadow-md">
               <RecipeCard
                 recipe={recipe}
@@ -60,7 +69,6 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
               />
             </div>
             
-            {/* Action buttons */}
             <div className="absolute top-3 right-3 flex flex-col gap-2">
               <Button
                 size="sm"
