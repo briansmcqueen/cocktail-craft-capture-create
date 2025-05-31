@@ -4,7 +4,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
 import { getLikeCount } from "@/utils/likes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type RecipeCardProps = {
   recipe: Cocktail;
@@ -19,18 +19,26 @@ const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?a
 export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick }: RecipeCardProps) {
   const likeCount = getLikeCount(recipe.id);
   const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
-  const [imageError, setImageError] = useState(false);
+  const [hasErrored, setHasErrored] = useState(false);
+  
+  // Reset image state when recipe changes
+  useEffect(() => {
+    setImageSrc(recipe.image || fallback);
+    setHasErrored(false);
+  }, [recipe.image, recipe.id]);
   
   const handleImageError = () => {
-    if (!imageError && imageSrc !== fallback) {
-      setImageError(true);
+    if (!hasErrored && recipe.image && imageSrc !== fallback) {
+      setHasErrored(true);
       setImageSrc(fallback);
     }
   };
 
-  const handleTagClick = (tag: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    onTagClick?.(tag);
+  const handleTagClick = (tag: string) => {
+    return (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onTagClick?.(tag);
+    };
   };
   
   return (
@@ -56,7 +64,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
               <TagBadge 
                 key={tag} 
                 className={`bg-blue-100 text-blue-800 border border-blue-200 text-xs ${onTagClick ? 'cursor-pointer hover:bg-blue-200' : ''}`}
-                onClick={onTagClick ? (e) => handleTagClick(tag, e) : undefined}
+                onClick={onTagClick ? handleTagClick(tag) : undefined}
               >
                 {tag}
               </TagBadge>

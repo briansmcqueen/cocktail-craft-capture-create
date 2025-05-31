@@ -133,32 +133,40 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   return (
     <form
       className={cn(
-        "w-full max-w-lg p-6 rounded-2xl shadow-2xl bg-black/95 backdrop-blur-md border border-white/20 space-y-4"
+        "w-full max-w-2xl p-6 rounded-lg shadow-lg bg-white border border-gray-200 space-y-4"
       )}
       onSubmit={handleSubmit}
       autoComplete="off"
     >
+      <div className="mb-4">
+        <h2 className="text-2xl font-serif font-normal text-gray-900 tracking-wide mb-2">
+          {initial?.id ? 'Edit Recipe' : 'Create New Recipe'}
+        </h2>
+      </div>
+
       <div>
-        <label className="font-medium mb-1 block text-white">Recipe Name</label>
+        <label className="font-medium mb-1 block text-gray-900">Recipe Name</label>
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
           required
+          className="bg-white border-gray-300 text-gray-700"
         />
       </div>
+      
       <div>
-        <label className="font-medium mb-1 block text-white">Image</label>
+        <label className="font-medium mb-1 block text-gray-900">Image</label>
         <div className="flex items-center gap-3">
           {image ? (
             <img
               src={image}
               alt="Cocktail"
-              className="h-16 w-16 object-cover rounded"
+              className="h-16 w-16 object-cover rounded border border-gray-200"
             />
           ) : (
-            <div className="h-16 w-16 bg-muted rounded flex items-center justify-center">
-              <Image size={24} />
+            <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center border border-gray-200">
+              <Image size={24} className="text-gray-400" />
             </div>
           )}
           <input
@@ -172,20 +180,21 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
             type="button"
             onClick={() => inputRef.current?.click()}
             variant="secondary"
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
           >
             <Image size={18} /> Upload Photo
           </Button>
         </div>
       </div>
+      
       <div className="relative">
-        <label className="font-medium mb-1 block text-white">
-          Ingredients <span className="text-xs text-muted-foreground">(one per line)</span>
+        <label className="font-medium mb-1 block text-gray-900">
+          Ingredients <span className="text-xs text-gray-500">(one per line)</span>
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            className="ml-2 text-xs"
+            className="ml-2 text-xs text-gray-600 hover:text-gray-900"
             onClick={() => setShowIngredientSuggestions(!showIngredientSuggestions)}
           >
             Quick Add
@@ -196,14 +205,15 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           onChange={(e) => setIngredients(e.target.value)}
           placeholder="2 oz Vodka&#10;1 oz Espresso&#10;1/2 oz Coffee Liqueur"
           required
+          className="bg-white border-gray-300 text-gray-700"
         />
         {showIngredientSuggestions && (
-          <div className="absolute z-10 mt-1 w-full bg-black border border-white/20 rounded-md shadow-lg max-h-48 overflow-y-auto">
+          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
             {COMMON_INGREDIENTS.map((ingredient, i) => (
               <button
                 key={i}
                 type="button"
-                className="w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors text-white"
+                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors text-gray-700 border-b border-gray-100 last:border-b-0"
                 onClick={() => addIngredient(ingredient)}
               >
                 {ingredient}
@@ -212,14 +222,15 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           </div>
         )}
       </div>
+      
       <div className="relative">
-        <label className="font-medium mb-1 block text-white">
+        <label className="font-medium mb-1 block text-gray-900">
           Steps
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            className="ml-2 text-xs"
+            className="ml-2 text-xs text-gray-600 hover:text-gray-900"
             onClick={() => setShowStepSuggestions(!showStepSuggestions)}
           >
             Templates
@@ -230,14 +241,15 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           onChange={(e) => setSteps(e.target.value)}
           placeholder="Combine all ingredients in a shaker with ice. Shake well..."
           required
+          className="bg-white border-gray-300 text-gray-700"
         />
         {showStepSuggestions && (
-          <div className="absolute z-10 mt-1 w-full bg-black border border-white/20 rounded-md shadow-lg max-h-48 overflow-y-auto">
+          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
             {STEP_TEMPLATES.map((template, i) => (
               <button
                 key={i}
                 type="button"
-                className="w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors text-white border-b border-white/10 last:border-b-0"
+                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors text-gray-700 border-b border-gray-100 last:border-b-0"
                 onClick={() => addStepTemplate(template)}
               >
                 {template}
@@ -246,38 +258,52 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           </div>
         )}
       </div>
+      
       <div>
-        <label className="font-medium mb-1 block text-white">
-          Tags <span className="text-xs text-muted-foreground">(keywords, separated)</span>
+        <label className="font-medium mb-1 block text-gray-900">
+          Tags <span className="text-xs text-gray-500">(keywords, separated)</span>
         </label>
         <TagInput value={tags} onChange={setTags} />
       </div>
+      
       <div>
-        <label className="font-medium mb-1 block text-white">
-          Notes <span className="text-xs text-muted-foreground">(optional)</span>
+        <label className="font-medium mb-1 block text-gray-900">
+          Notes <span className="text-xs text-gray-500">(optional)</span>
         </label>
         <Input
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Invented at Soho Brasserie, London, 1980s"
+          className="bg-white border-gray-300 text-gray-700"
         />
       </div>
+      
       <div>
-        <label className="font-medium mb-1 block text-white">
-          Region / Origin <span className="text-xs text-muted-foreground">(optional)</span>
+        <label className="font-medium mb-1 block text-gray-900">
+          Region / Origin <span className="text-xs text-gray-500">(optional)</span>
         </label>
         <Input
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="e.g. Italy"
+          className="bg-white border-gray-300 text-gray-700"
         />
       </div>
-      <div className="flex gap-2 justify-end pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel}>
+      
+      <div className="flex gap-2 justify-end pt-4 border-t border-gray-200">
+        <Button 
+          type="button" 
+          variant="secondary" 
+          onClick={onCancel}
+          className="bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
+        >
           Cancel
         </Button>
-        <Button type="submit" className="flex items-center gap-2">
-          <Save size={16} /> Save
+        <Button 
+          type="submit" 
+          className="flex items-center gap-2 bg-orange-600 text-white hover:bg-orange-700"
+        >
+          <Save size={16} /> Save Recipe
         </Button>
       </div>
     </form>
