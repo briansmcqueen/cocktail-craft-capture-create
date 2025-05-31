@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -80,7 +79,7 @@ export default function Index() {
     }
   }
 
-  // Tag badge filter - THIS WAS THE BUG, NOW FIXED
+  // Tag badge filter
   if (tagFilter) {
     displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
   }
@@ -143,22 +142,22 @@ export default function Index() {
 
   const allTags = getAllTags(fullRecipes);
 
-  // Mobile-first UI with Supabase-inspired design
+  // Mobile-first UI with responsive design
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-black via-black to-gray-900">
       {/* Mobile header */}
-      <header className="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-20 px-4 py-3 shadow-sm">
+      <header className="lg:hidden bg-black/90 backdrop-blur-md border-b border-border sticky top-0 z-20 px-4 py-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
             aria-label="Open menu"
           >
             <Menu size={24} />
           </button>
           <div className="flex items-center gap-2">
-            <Martini size={20} className="text-green-600" />
-            <h1 className="text-lg font-semibold text-gray-900">
+            <Martini size={20} className="text-white" />
+            <h1 className="text-lg font-display font-semibold text-white">
               Mixology Maven
             </h1>
           </div>
@@ -168,7 +167,7 @@ export default function Index() {
               setShowForm(true);
               setEditing(null);
             }}
-            className="text-sm px-3 bg-green-600 text-white hover:bg-green-700"
+            className="text-sm px-3 bg-white text-black hover:bg-white/90"
           >
             Add
           </Button>
@@ -179,7 +178,7 @@ export default function Index() {
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
           <div 
-            className="lg:hidden fixed inset-0 bg-black/20 z-30"
+            className="lg:hidden fixed inset-0 bg-black/50 z-30"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -193,7 +192,7 @@ export default function Index() {
           <div className="lg:hidden absolute top-4 right-4">
             <button
               onClick={() => setSidebarOpen(false)}
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-white hover:bg-white/10 rounded-lg"
             >
               <X size={20} />
             </button>
@@ -215,18 +214,16 @@ export default function Index() {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 px-4 lg:px-8 py-6 lg:py-8 min-w-0 bg-white">
+        <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/20">
           {/* Desktop header - hidden on mobile */}
-          <div className="hidden lg:flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-green-100 rounded-xl">
-                <Martini size={32} className="text-green-600" />
-              </div>
+          <div className="hidden lg:flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Martini size={28} className="text-white" />
               <div>
-                <h1 className="text-3xl xl:text-4xl font-bold text-gray-900 mb-1">
+                <h1 className="text-3xl xl:text-4xl font-display font-bold text-white mb-1">
                   Mixology Maven
                 </h1>
-                <h2 className="text-xl xl:text-2xl font-medium text-gray-600">
+                <h2 className="text-xl xl:text-2xl font-display font-semibold text-white/80">
                   {library === "all"
                     ? "All Cocktails"
                     : library === "classics"
@@ -236,33 +233,26 @@ export default function Index() {
               </div>
             </div>
             {library === "mine" && (
-              <Button 
-                variant="outline" 
-                onClick={() => setCopyDialogOpen(true)}
-                className="border-gray-300 text-gray-700 hover:bg-gray-50"
-              >
+              <Button variant="secondary" onClick={() => setCopyDialogOpen(true)}>
                 Copy from…
               </Button>
             )}
           </div>
 
           {/* Mobile library title */}
-          <div className="lg:hidden mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-1">
+          <div className="lg:hidden mb-4">
+            <h2 className="text-xl font-display font-semibold text-foreground">
               {library === "all"
                 ? "All Cocktails"
                 : library === "classics"
                 ? "Classic Collection"
                 : "My Creations"}
             </h2>
-            <p className="text-gray-600 text-sm">
-              {displayed.length} recipe{displayed.length !== 1 ? 's' : ''}
-            </p>
             {library === "mine" && (
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm"
-                className="mt-3 border-gray-300 text-gray-700 hover:bg-gray-50"
+                className="mt-2"
                 onClick={() => setCopyDialogOpen(true)}
               >
                 Copy from…
@@ -270,77 +260,74 @@ export default function Index() {
             )}
           </div>
 
-          {/* Enhanced Search & Filter - Supabase style */}
-          <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
-            <div className="space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4">
-              {/* Search section */}
-              <div className="flex flex-col sm:flex-row gap-3 lg:flex-1">
-                {/* Search type selector */}
-                <select
-                  value={searchType}
-                  onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                  className="border border-gray-300 rounded-lg px-3 py-2.5 bg-white text-gray-900 text-sm min-w-[130px] focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  aria-label="Search by"
-                >
-                  <option value="ingredient">Ingredient</option>
-                  <option value="tag">Tag</option>
-                </select>
-                
-                {/* Search bar */}
-                <div className="relative flex-1">
-                  <Input
-                    value={ingredientQuery}
-                    onChange={e => setIngredientQuery(e.target.value)}
-                    placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
-                    className="pl-10 border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  />
-                  <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
-                </div>
+          {/* Enhanced Search & Filter - Mobile First */}
+          <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
+            {/* Search section */}
+            <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
+              {/* Search type selector */}
+              <select
+                value={searchType}
+                onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
+                className="border rounded-lg px-3 py-2 pr-8 bg-white text-black text-sm min-w-[120px]"
+                aria-label="Search by"
+              >
+                <option value="ingredient">Ingredient</option>
+                <option value="tag">Tag</option>
+              </select>
+              
+              {/* Search bar */}
+              <div className="relative flex-1">
+                <Input
+                  value={ingredientQuery}
+                  onChange={e => setIngredientQuery(e.target.value)}
+                  placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
+                  className="pl-9"
+                />
+                <Search className="absolute left-2.5 top-2.5 text-gray-500" size={16} />
               </div>
+            </div>
 
-              {/* Flavor profile dropdown */}
-              <div className="sm:w-auto">
-                <select
-                  className="border border-gray-300 rounded-lg px-3 py-2.5 bg-white text-gray-900 w-full sm:min-w-[160px] text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  value={flavorProfile || ""}
-                  onChange={e => setFlavorProfile(e.target.value || null)}
-                  aria-label="Flavor profile"
-                >
-                  <option value="">All Flavors</option>
-                  {FLAVOR_PROFILES.map(f => (
-                    <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
-                  ))}
-                </select>
-              </div>
+            {/* Flavor profile dropdown */}
+            <div className="sm:w-auto">
+              <select
+                className="border rounded-lg px-3 py-2 pr-8 bg-white text-black w-full sm:min-w-[150px] text-sm"
+                value={flavorProfile || ""}
+                onChange={e => setFlavorProfile(e.target.value || null)}
+                aria-label="Flavor profile"
+              >
+                <option value="">All Flavors</option>
+                {FLAVOR_PROFILES.map(f => (
+                  <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Tag filters - Supabase style */}
+          {/* Tag filters - Mobile optimized */}
           {allTags.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Filter by tags</h3>
               <div className="flex flex-wrap gap-2">
                 {allTags.map(tag => (
-                  <button
+                  <TagBadge
                     key={tag}
                     className={`
-                      text-xs px-3 py-1.5 rounded-full border transition-all duration-200 font-medium
+                      text-xs px-2 py-1 cursor-pointer transition-colors
                       ${tagFilter === tag
-                        ? "bg-green-100 text-green-700 border-green-300 shadow-sm"
-                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-foreground hover:bg-muted/80"
                       }
                     `}
                     onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
                   >
                     {tag}
-                  </button>
+                  </TagBadge>
                 ))}
                 {tagFilter && (
                   <button
                     onClick={() => setTagFilter(null)}
-                    className="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 transition-colors font-medium"
+                    className="text-xs px-2 py-1 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
                   >
-                    Clear filters
+                    Clear
                   </button>
                 )}
               </div>
@@ -349,27 +336,21 @@ export default function Index() {
 
           {/* Empty state */}
           {displayed.length === 0 && (
-            <div className="text-center text-gray-500 mt-16 lg:mt-20 px-4">
-              <div className="bg-gray-50 rounded-xl p-8 max-w-md mx-auto">
-                <Martini size={48} className="text-gray-400 mx-auto mb-4" />
-                <p className="mb-4 text-gray-600">No recipes found matching your criteria.</p>
-                {library !== "classics" && (
-                  <Button 
-                    onClick={() => setShowForm(true)} 
-                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
-                  >
-                    Add Your First Recipe
-                  </Button>
-                )}
-              </div>
+            <div className="text-center text-muted-foreground mt-12 lg:mt-16 px-4">
+              <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
+              {library !== "classics" && (
+                <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
+                  Add Your First Recipe
+                </Button>
+              )}
             </div>
           )}
 
-          {/* Recipe grid - Supabase style cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {/* Recipe grid - Mobile first responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
             {displayed.map((r) => (
               <div key={r.id} className="relative group">
-                <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                <div className="relative overflow-hidden rounded-lg">
                   <RecipeCard
                     recipe={r}
                     onSelect={() => handleRecipeClick(r)}
@@ -380,16 +361,17 @@ export default function Index() {
                         : undefined
                     }
                   />
-                  {/* Share button */}
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white text-gray-700 border border-gray-200 shadow-sm backdrop-blur-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    onClick={() => handleShareRecipe(r)}
-                  >
-                    <Share size={14} />
-                  </Button>
+                  {/* Gradient overlay on image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="absolute top-3 right-3 p-2 bg-black/70 hover:bg-black/90 text-white border-none shadow-sm backdrop-blur-sm rounded-full"
+                  onClick={() => handleShareRecipe(r)}
+                >
+                  <Share size={14} />
+                </Button>
               </div>
             ))}
           </div>
@@ -413,7 +395,7 @@ export default function Index() {
 
           {/* Recipe Form */}
           {showForm && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 p-4">
+            <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
               <div className="min-w-0 w-full max-w-lg">
                 <RecipeForm
                   initial={editing ?? undefined}
@@ -429,35 +411,31 @@ export default function Index() {
 
           {/* Copy From Dialog */}
           <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
-            <DialogContent className="max-w-lg bg-white border-gray-200">
+            <DialogContent className="max-w-lg">
               <DialogHeader>
-                <DialogTitle className="text-gray-900">Copy Recipe Into My Creations</DialogTitle>
+                <DialogTitle>Copy Recipe Into My Creations</DialogTitle>
               </DialogHeader>
               <div className="max-h-72 overflow-y-auto flex flex-col gap-2">
                 {[...classicCocktails, ...userRecipes].map((rec) => (
                   <button
                     key={rec.id}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition text-left border border-gray-200"
+                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-accent transition text-left"
                     onClick={() => handleCopyFrom(rec)}
                   >
                     <img
                       src={rec.image}
                       alt={rec.name}
-                      className="h-10 w-10 object-cover rounded-lg"
+                      className="h-10 w-10 object-cover rounded"
                     />
                     <div>
-                      <div className="font-medium text-gray-900">{rec.name}</div>
-                      <div className="text-xs text-gray-500 line-clamp-1">{rec.origin ?? ""}</div>
+                      <div className="font-medium">{rec.name}</div>
+                      <div className="text-xs text-muted-foreground line-clamp-1">{rec.origin ?? ""}</div>
                     </div>
                   </button>
                 ))}
               </div>
               <div className="flex justify-end pt-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setCopyDialogOpen(false)}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
+                <Button variant="secondary" onClick={() => setCopyDialogOpen(false)}>
                   Cancel
                 </Button>
               </div>
