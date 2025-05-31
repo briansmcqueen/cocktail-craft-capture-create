@@ -51,12 +51,10 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
 
   const handleLike = (recipe: Cocktail) => {
     addLike(recipe.id);
-    // Remove toast notification
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
     toggleFavorite(recipe.id);
-    // Remove toast notification
   };
 
   return (
@@ -73,17 +71,12 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <RecipeCard
                   recipe={recipe}
                   onSelect={() => onRecipeClick(recipe)}
-                  editable={userRecipes.find((ur) => ur.id === recipe.id) !== undefined}
-                  onEdit={
-                    userRecipes.find((ur) => ur.id === recipe.id) !== undefined && onEditRecipe
-                      ? () => onEditRecipe(recipe)
-                      : undefined
-                  }
+                  editable={false}
                 />
               </div>
               
               {/* Action buttons */}
-              <div className="absolute top-3 right-3 flex gap-2">
+              <div className="absolute top-3 right-3 flex flex-col gap-2">
                 <Button
                   size="sm"
                   variant="secondary"
@@ -133,17 +126,12 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 <RecipeCard
                   recipe={recipe}
                   onSelect={() => onRecipeClick(recipe)}
-                  editable={userRecipes.find((ur) => ur.id === recipe.id) !== undefined}
-                  onEdit={
-                    userRecipes.find((ur) => ur.id === recipe.id) !== undefined && onEditRecipe
-                      ? () => onEditRecipe(recipe)
-                      : undefined
-                  }
+                  editable={false}
                 />
               </div>
               
               {/* Action buttons */}
-              <div className="absolute top-3 right-3 flex gap-2">
+              <div className="absolute top-3 right-3 flex flex-col gap-2">
                 <Button
                   size="sm"
                   variant="secondary"

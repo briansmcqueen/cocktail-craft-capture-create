@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -165,7 +166,9 @@ export default function Index() {
     ? classicCocktails
     : library === "favorites"
     ? favoriteRecipes
-    : userRecipes;
+    : library === "mine"
+    ? userRecipes
+    : allRecipes;
 
   const allTags = getAllTags(fullRecipes);
 
@@ -403,12 +406,7 @@ export default function Index() {
                       <RecipeCard
                         recipe={r}
                         onSelect={() => handleRecipeClick(r)}
-                        editable={library === "mine" || (userRecipes.find((ur) => ur.id === r.id) !== undefined)}
-                        onEdit={
-                          (library === "mine" || userRecipes.find((ur) => ur.id === r.id) !== undefined)
-                            ? () => handleEditRecipe(r)
-                            : undefined
-                        }
+                        editable={false}
                       />
                     </div>
                     

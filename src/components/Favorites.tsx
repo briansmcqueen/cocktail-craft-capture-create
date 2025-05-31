@@ -18,12 +18,10 @@ type FavoritesProps = {
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
   const handleLike = (recipe: Cocktail) => {
     addLike(recipe.id);
-    // Remove toast notification
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
     toggleFavorite(recipe.id);
-    // Remove toast notification
   };
 
   if (favoriteRecipes.length === 0) {
@@ -54,17 +52,12 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
               <RecipeCard
                 recipe={recipe}
                 onSelect={() => onRecipeClick(recipe)}
-                editable={userRecipes.find((ur) => ur.id === recipe.id) !== undefined}
-                onEdit={
-                  userRecipes.find((ur) => ur.id === recipe.id) !== undefined && onEditRecipe
-                    ? () => onEditRecipe(recipe)
-                    : undefined
-                }
+                editable={false}
               />
             </div>
             
             {/* Action buttons */}
-            <div className="absolute top-3 right-3 flex gap-2">
+            <div className="absolute top-3 right-3 flex flex-col gap-2">
               <Button
                 size="sm"
                 variant="secondary"
