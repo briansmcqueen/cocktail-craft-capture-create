@@ -466,7 +466,6 @@ export default function Index() {
                 }
               : undefined
           }
-          onShare={selected ? () => handleShareRecipe(selected) : undefined}
         />
 
         {/* Recipe Form */}

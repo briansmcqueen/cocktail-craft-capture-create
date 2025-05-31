@@ -1,5 +1,5 @@
 
-import { Edit } from "lucide-react";
+import { Edit, ThumbsUp } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
@@ -12,23 +12,30 @@ type RecipeCardProps = {
   editable?: boolean;
 };
 
-const fallback =
-  "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80";
+const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=400&q=80";
 
 export default function RecipeCard({ recipe, onSelect, onEdit, editable }: RecipeCardProps) {
   const likeCount = getLikeCount(recipe.id);
   
   return (
     <div
-      className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition group relative h-full flex flex-col"
+      className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition group relative h-80 flex flex-col"
       onClick={onSelect}
     >
-      <img
-        src={recipe.image || fallback}
-        alt={recipe.name}
-        className="h-40 w-full object-cover group-hover:scale-105 transition-all"
-        loading="lazy"
-      />
+      <div className="h-40 w-full overflow-hidden">
+        <img
+          src={recipe.image || fallback}
+          alt={recipe.name}
+          className="h-full w-full object-cover group-hover:scale-105 transition-all"
+          loading="lazy"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            if (target.src !== fallback) {
+              target.src = fallback;
+            }
+          }}
+        />
+      </div>
       <div className="p-4 flex-1 flex flex-col justify-between">
         <div className="flex-1">
           <h2 className="font-bold text-lg mb-1 line-clamp-1" title={recipe.name}>{recipe.name}</h2>
@@ -43,11 +50,14 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable }: Recip
           </div>
           <div className="text-xs text-gray-700 mb-3 line-clamp-2" title={recipe.notes}>{recipe.notes}</div>
         </div>
-        {likeCount > 0 && (
-          <div className="text-xs text-gray-500 mt-auto">
-            {likeCount} like{likeCount === 1 ? '' : 's'}
-          </div>
-        )}
+        <div className="h-5 flex items-center justify-start">
+          {likeCount > 0 && (
+            <div className="text-xs text-gray-500 flex items-center gap-1">
+              <ThumbsUp size={12} />
+              <span>{likeCount} like{likeCount === 1 ? '' : 's'}</span>
+            </div>
+          )}
+        </div>
       </div>
       {editable && (
         <button

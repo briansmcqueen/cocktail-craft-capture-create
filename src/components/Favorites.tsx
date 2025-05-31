@@ -18,10 +18,14 @@ type FavoritesProps = {
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
   const handleLike = (recipe: Cocktail) => {
     addLike(recipe.id);
+    // Force a re-render by updating the component state
+    window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
     toggleFavorite(recipe.id);
+    // Force a re-render by updating the component state
+    window.dispatchEvent(new Event('favorites-update'));
   };
 
   if (favoriteRecipes.length === 0) {
