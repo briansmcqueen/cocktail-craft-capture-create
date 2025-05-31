@@ -156,12 +156,7 @@ export default function Index() {
             <Menu size={24} />
           </button>
           <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/0fbd9c77-fecf-48ea-8d31-580fb27e6206.png" 
-              alt="Barbook" 
-              className="w-8 h-8 filter drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]"
-            />
-            <h1 className="text-lg font-display font-bold text-pink-400 tracking-wider neon-text">
+            <h1 className="text-lg font-display font-bold text-pink-400 tracking-wider">
               BARBOOK
             </h1>
           </div>
@@ -171,7 +166,7 @@ export default function Index() {
               setShowForm(true);
               setEditing(null);
             }}
-            className="text-sm px-3 bg-pink-500 text-black hover:bg-pink-400 shadow-[0_0_20px_rgba(236,72,153,0.5)] border border-pink-400"
+            className="text-sm px-3 bg-pink-500 text-black hover:bg-pink-400 border border-pink-400"
           >
             Add
           </Button>
@@ -219,26 +214,16 @@ export default function Index() {
 
         {/* Main content */}
         <main className="flex-1 px-4 lg:px-6 py-4 lg:py-8 min-w-0 bg-gradient-to-b from-transparent to-gray-900/30">
-          {/* Desktop header with neon styling */}
+          {/* Desktop header with subtle styling */}
           <div className="hidden lg:flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <img 
-                src="/lovable-uploads/0fbd9c77-fecf-48ea-8d31-580fb27e6206.png" 
-                alt="Barbook" 
-                className="w-12 h-12 filter drop-shadow-[0_0_12px_rgba(236,72,153,0.8)]"
-              />
-              <div>
-                <h1 className="text-4xl xl:text-5xl font-display font-bold text-pink-400 mb-1 tracking-wider neon-text">
-                  BARBOOK
-                </h1>
-                <h2 className="text-xl xl:text-2xl font-display font-semibold text-pink-300/80">
-                  {library === "all"
-                    ? "All Cocktails"
-                    : library === "classics"
-                    ? "Classic Collection"
-                    : "My Creations"}
-                </h2>
-              </div>
+            <div>
+              <h2 className="text-xl xl:text-2xl font-display font-semibold text-pink-300/80">
+                {library === "all"
+                  ? "All Cocktails"
+                  : library === "classics"
+                  ? "Classic Collection"
+                  : "My Creations"}
+              </h2>
             </div>
             {library === "mine" && (
               <Button 
@@ -280,7 +265,7 @@ export default function Index() {
               <select
                 value={searchType}
                 onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                className="border border-pink-500/30 rounded-lg px-3 py-2 pr-8 bg-gray-900 text-pink-300 text-sm min-w-[120px] focus:border-pink-400 focus:ring-1 focus:ring-pink-400"
+                className="border border-pink-500/30 rounded-lg px-3 py-2 bg-gray-900 text-pink-300 text-sm min-w-[120px] focus:border-pink-400 focus:ring-1 focus:ring-pink-400"
                 aria-label="Search by"
               >
                 <option value="ingredient">Ingredient</option>
@@ -302,7 +287,7 @@ export default function Index() {
             {/* Flavor profile dropdown */}
             <div className="sm:w-auto">
               <select
-                className="border border-pink-500/30 rounded-lg px-3 py-2 pr-8 bg-gray-900 text-pink-300 w-full sm:min-w-[150px] text-sm focus:border-pink-400"
+                className="border border-pink-500/30 rounded-lg px-3 py-2 bg-gray-900 text-pink-300 w-full sm:min-w-[150px] text-sm focus:border-pink-400"
                 value={flavorProfile || ""}
                 onChange={e => setFlavorProfile(e.target.value || null)}
                 aria-label="Flavor profile"
@@ -353,7 +338,7 @@ export default function Index() {
               {library !== "classics" && (
                 <Button 
                   onClick={() => setShowForm(true)} 
-                  className="w-full sm:w-auto bg-pink-500 text-black hover:bg-pink-400 shadow-[0_0_20px_rgba(236,72,153,0.5)]"
+                  className="w-full sm:w-auto bg-pink-500 text-black hover:bg-pink-400"
                 >
                   Add Your First Recipe
                 </Button>
