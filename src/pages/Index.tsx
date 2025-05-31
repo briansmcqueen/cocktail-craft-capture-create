@@ -9,7 +9,7 @@ import Favorites from "@/components/Favorites";
 import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
 import { getFavoriteRecipes, toggleFavorite, isFavorite } from "@/utils/favorites";
-import { addLike, getLikeCount } from "@/utils/likes";
+import { addLike, getLikeCount, toggleLike } from "@/utils/likes";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -166,7 +166,7 @@ export default function Index() {
   }
 
   function handleLike(recipe: Cocktail) {
-    const newCount = addLike(recipe.id);
+    toggleLike(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   }
 

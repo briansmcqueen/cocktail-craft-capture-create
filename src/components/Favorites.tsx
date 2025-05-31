@@ -4,7 +4,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
 import { Heart, ThumbsUp, Share } from "lucide-react";
 import { Button } from "./ui/button";
-import { getLikeCount, addLike } from "@/utils/likes";
+import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { toggleFavorite, isFavorite } from "@/utils/favorites";
 
 type FavoritesProps = {
@@ -27,14 +27,21 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
     return () => window.removeEventListener('favorites-update', handleUpdate);
   }, []);
 
-  const handleLike = (recipe: Cocktail) => {
-    addLike(recipe.id);
+  const handleLike = (e: React.MouseEvent, recipe: Cocktail) => {
+    e.stopPropagation();
+    toggleLike(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   };
 
-  const handleToggleFavorite = (recipe: Cocktail) => {
+  const handleToggleFavorite = (e: React.MouseEvent, recipe: Cocktail) => {
+    e.stopPropagation();
     toggleFavorite(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
+  };
+
+  const handleShare = (e: React.MouseEvent, recipe: Cocktail) => {
+    e.stopPropagation();
+    onShareRecipe(recipe);
   };
 
   if (favoriteRecipes.length === 0) {
@@ -76,7 +83,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
                 className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
                   isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                 }`}
-                onClick={() => handleToggleFavorite(recipe)}
+                onClick={(e) => handleToggleFavorite(e, recipe)}
               >
                 <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
               </Button>
@@ -84,17 +91,17 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
                 size="sm"
                 variant="secondary"
                 className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                  getLikeCount(recipe.id) > 0 ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                  isLiked(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
                 }`}
-                onClick={() => handleLike(recipe)}
+                onClick={(e) => handleLike(e, recipe)}
               >
-                <ThumbsUp size={14} fill={getLikeCount(recipe.id) > 0 ? 'currentColor' : 'none'} />
+                <ThumbsUp size={14} fill={isLiked(recipe.id) ? 'currentColor' : 'none'} />
               </Button>
               <Button
                 size="sm"
                 variant="secondary"
                 className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                onClick={() => onShareRecipe(recipe)}
+                onClick={(e) => handleShare(e, recipe)}
               >
                 <Share size={14} />
               </Button>

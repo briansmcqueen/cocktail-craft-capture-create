@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Edit, Heart, ThumbsUp, X } from "lucide-react";
 import TagBadge from "./ui/tag";
-import { getLikeCount, addLike } from "@/utils/likes";
+import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { isFavorite, toggleFavorite } from "@/utils/favorites";
 
 type Props = {
@@ -19,7 +19,7 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
   if (!recipe) return null;
 
   const handleLike = () => {
-    addLike(recipe.id);
+    toggleLike(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   };
 
@@ -30,6 +30,7 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
 
   const likeCount = getLikeCount(recipe.id);
   const isRecipeFavorited = isFavorite(recipe.id);
+  const isRecipeLiked = isLiked(recipe.id);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -103,12 +104,12 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
             <Button
               variant="secondary"
               className={`flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors ${
-                likeCount > 0 ? 'text-red-600 border-red-200 bg-red-50 hover:bg-red-100' : 'text-gray-500 hover:text-red-600'
+                isRecipeLiked ? 'text-red-600 border-red-200 bg-red-50 hover:bg-red-100' : 'text-gray-500 hover:text-red-600'
               }`}
               onClick={handleLike}
             >
-              <ThumbsUp size={16} fill={likeCount > 0 ? 'currentColor' : 'none'} />
-              Like
+              <ThumbsUp size={16} fill={isRecipeLiked ? 'currentColor' : 'none'} />
+              {isRecipeLiked ? 'Liked' : 'Like'}
             </Button>
           </div>
           <div className="flex gap-2">

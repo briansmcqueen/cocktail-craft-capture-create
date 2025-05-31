@@ -5,6 +5,7 @@ export interface RecipeLikes {
   [recipeId: string]: {
     count: number;
     timestamps: number[];
+    userLiked: boolean;
   };
 }
 
@@ -18,19 +19,51 @@ export function getLikeCount(recipeId: string): number {
   return likes[recipeId]?.count || 0;
 }
 
+export function isLiked(recipeId: string): boolean {
+  const likes = getRecipeLikes();
+  return likes[recipeId]?.userLiked || false;
+}
+
 export function addLike(recipeId: string): number {
   const likes = getRecipeLikes();
   const now = Date.now();
   
   if (!likes[recipeId]) {
-    likes[recipeId] = { count: 0, timestamps: [] };
+    likes[recipeId] = { count: 0, timestamps: [], userLiked: false };
   }
   
   likes[recipeId].count += 1;
   likes[recipeId].timestamps.push(now);
+  likes[recipeId].userLiked = true;
   
   localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
   return likes[recipeId].count;
+}
+
+export function removeLike(recipeId: string): number {
+  const likes = getRecipeLikes();
+  
+  if (!likes[recipeId]) {
+    return 0;
+  }
+  
+  likes[recipeId].count = Math.max(0, likes[recipeId].count - 1);
+  likes[recipeId].userLiked = false;
+  
+  localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
+  return likes[recipeId].count;
+}
+
+export function toggleLike(recipeId: string): boolean {
+  const liked = isLiked(recipeId);
+  
+  if (liked) {
+    removeLike(recipeId);
+    return false;
+  } else {
+    addLike(recipeId);
+    return true;
+  }
 }
 
 export function getTrendingRecipes(allRecipes: any[]): any[] {
