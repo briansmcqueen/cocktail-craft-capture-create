@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Share, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 
 type ShareRecipeProps = {
@@ -31,7 +31,8 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
     } catch (err) {
       toast({
         title: "Failed to copy link",
-        description: "Please try again"
+        description: "Please try again",
+        variant: "destructive"
       });
     }
   };
@@ -41,24 +42,45 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
       try {
         await navigator.share({
           title: `${recipe.name} Recipe - Mixology Maven`,
-          text: shareText,
+          text: `Check out this delicious ${recipe.name} recipe!`,
           url: shareUrl,
         });
-      } catch (err) {
-        console.log('Share cancelled or failed');
+        toast({
+          title: "Recipe shared!",
+          description: "Thanks for sharing this recipe"
+        });
+      } catch (err: any) {
+        if (err.name !== 'AbortError') {
+          console.error('Share failed:', err);
+          // Fallback to copy text
+          try {
+            await navigator.clipboard.writeText(shareText);
+            toast({
+              title: "Recipe details copied!",
+              description: "Paste it anywhere to share"
+            });
+          } catch (clipboardErr) {
+            toast({
+              title: "Sharing failed",
+              description: "Please try copying the link instead",
+              variant: "destructive"
+            });
+          }
+        }
       }
     } else {
       // Fallback to copy text
       try {
         await navigator.clipboard.writeText(shareText);
         toast({
-          title: "Recipe copied!",
+          title: "Recipe details copied!",
           description: "Paste it anywhere to share"
         });
       } catch (err) {
         toast({
           title: "Sharing not supported",
-          description: "Please copy the link manually"
+          description: "Please copy the link manually",
+          variant: "destructive"
         });
       }
     }
@@ -72,32 +94,29 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
             <Share size={20} />
             Share {recipe.name}
           </DialogTitle>
+          <DialogDescription>
+            Share this delicious recipe with friends and fellow cocktail enthusiasts! 🍹
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
-          <div>
-            <p className="text-sm text-muted-foreground mb-3">
-              Share this delicious recipe with friends and fellow cocktail enthusiasts! 🍹
-            </p>
+          <div className="flex flex-col gap-2">
+            <Button 
+              onClick={handleShareNative}
+              className="w-full flex items-center gap-2"
+            >
+              <Share size={16} />
+              {navigator.share ? 'Share Recipe' : 'Copy Recipe Details'}
+            </Button>
             
-            <div className="flex flex-col gap-2">
-              <Button 
-                onClick={handleShareNative}
-                className="w-full flex items-center gap-2"
-              >
-                <Share size={16} />
-                Share Recipe
-              </Button>
-              
-              <Button 
-                variant="outline"
-                onClick={handleCopyLink}
-                className="w-full flex items-center gap-2"
-              >
-                {copied ? <Check size={16} /> : <Copy size={16} />}
-                {copied ? "Copied!" : "Copy Link"}
-              </Button>
-            </div>
+            <Button 
+              variant="outline"
+              onClick={handleCopyLink}
+              className="w-full flex items-center gap-2"
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+              {copied ? "Copied!" : "Copy Link"}
+            </Button>
           </div>
           
           <div className="border-t pt-4">

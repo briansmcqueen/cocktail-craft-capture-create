@@ -59,6 +59,25 @@ export default function Index() {
   const [recipeToShare, setRecipeToShare] = useState<Cocktail | null>(null);
   const [forceUpdate, setForceUpdate] = useState(0);
 
+  // Check for shared recipe in URL on page load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedRecipeName = urlParams.get('recipe');
+    
+    if (sharedRecipeName) {
+      const allRecipes = [...classicCocktails, ...getUserRecipes()];
+      const sharedRecipe = allRecipes.find(recipe => 
+        recipe.name.toLowerCase() === decodeURIComponent(sharedRecipeName).toLowerCase()
+      );
+      
+      if (sharedRecipe) {
+        setSelected(sharedRecipe);
+        // Clear the URL parameter after opening
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }, []);
+
   // Listen for updates to favorites and likes
   useEffect(() => {
     const handleFavoritesUpdate = () => {
