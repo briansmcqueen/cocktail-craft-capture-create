@@ -411,7 +411,7 @@ export default function Index() {
                     </div>
                     
                     {/* Action buttons */}
-                    <div className="absolute top-3 right-3 flex gap-2">
+                    <div className="absolute top-3 right-3 flex flex-col gap-2">
                       <Button
                         size="sm"
                         variant="secondary"
@@ -462,6 +462,9 @@ export default function Index() {
                   }
                 : undefined
             }
+            onToggleFavorite={selected ? () => handleToggleFavorite(selected) : undefined}
+            onLike={selected ? () => handleLike(selected) : undefined}
+            onShare={selected ? () => handleShareRecipe(selected) : undefined}
           />
 
           {/* Recipe Form */}
