@@ -46,10 +46,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
               <TagBadge 
                 key={tag} 
                 className={`bg-blue-100 text-blue-800 border border-blue-200 text-xs ${onTagClick ? 'cursor-pointer hover:bg-blue-200' : ''}`}
-                onClick={onTagClick ? (e) => {
-                  e.stopPropagation();
-                  onTagClick(tag);
-                } : undefined}
+                onClick={onTagClick ? () => onTagClick(tag) : undefined}
               >
                 {tag}
               </TagBadge>

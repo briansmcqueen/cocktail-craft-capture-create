@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeCard from "@/components/RecipeCard";
@@ -426,6 +425,7 @@ export default function Index() {
                         recipe={r}
                         onSelect={() => handleRecipeClick(r)}
                         editable={false}
+                        onTagClick={(tag) => setTagFilter(tag)}
                       />
                     </div>
                     
