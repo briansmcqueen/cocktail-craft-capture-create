@@ -143,9 +143,8 @@
     outline-offset: 2px;
   }
 
-  /* Better dropdown arrow styling - remove double arrows */
+  /* Better dropdown arrow spacing with pink theme */
   select {
-    appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ec4899' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 12px center;
     background-repeat: no-repeat;
@@ -154,10 +153,53 @@
   }
 }
 
-/* Subtle dive bar styling - toned down */
+/* Neon dive bar styling */
+.neon-text {
+  text-shadow: 
+    0 0 5px #ec4899,
+    0 0 10px #ec4899,
+    0 0 15px #ec4899,
+    0 0 20px #ec4899;
+  animation: neon-flicker 2s infinite alternate;
+}
+
+.neon-button {
+  box-shadow: 
+    0 0 5px #ec4899,
+    0 0 10px #ec4899,
+    0 0 15px #ec4899,
+    inset 0 0 5px rgba(236, 72, 153, 0.2);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  box-shadow: 
+    0 0 10px #ec4899,
+    0 0 20px #ec4899,
+    0 0 30px #ec4899,
+    inset 0 0 10px rgba(236, 72, 153, 0.3);
+}
+
 .neon-sidebar {
   background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #1a0a1a 100%);
   box-shadow: inset -1px 0 10px rgba(236, 72, 153, 0.1);
+}
+
+@keyframes neon-flicker {
+  0%, 100% {
+    text-shadow: 
+      0 0 5px #ec4899,
+      0 0 10px #ec4899,
+      0 0 15px #ec4899,
+      0 0 20px #ec4899;
+  }
+  50% {
+    text-shadow: 
+      0 0 2px #ec4899,
+      0 0 5px #ec4899,
+      0 0 8px #ec4899,
+      0 0 12px #ec4899;
+  }
 }
 
 /* Modern card style with neon theme */
