@@ -35,9 +35,10 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
   };
 
   const handleTagClick = (tag: string) => {
+    if (!onTagClick) return undefined;
     return (e: React.MouseEvent) => {
       e.stopPropagation();
-      onTagClick?.(tag);
+      onTagClick(tag);
     };
   };
   
@@ -64,7 +65,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
               <TagBadge 
                 key={tag} 
                 className={`bg-blue-100 text-blue-800 border border-blue-200 text-xs ${onTagClick ? 'cursor-pointer hover:bg-blue-200' : ''}`}
-                onClick={onTagClick ? handleTagClick(tag) : undefined}
+                onClick={handleTagClick(tag)}
               >
                 {tag}
               </TagBadge>
