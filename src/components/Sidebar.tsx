@@ -1,4 +1,3 @@
-
 import { Book, Plus, Edit, Star, TrendingUp, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +17,7 @@ const nav = [
 
 export default function Sidebar({ active, onSelect, onAdd }: SidebarProps) {
   return (
-    <aside className="bg-white border-r border-gray-200 w-60 min-h-screen flex flex-col py-6 gap-2 fixed top-0 left-0 z-20">
+    <aside className="bg-white border-r border-gray-200 w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0">
       <div className="px-6 mb-8">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-xl font-serif font-bold text-orange-600 tracking-wide">BARBOOK</h1>
