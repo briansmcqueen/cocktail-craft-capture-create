@@ -85,7 +85,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
         <h2 className="text-3xl lg:text-4xl font-serif font-normal text-gray-900 mb-12 tracking-wide text-center">
           Featured Cocktails
         </h2>
-        <div className="relative px-12">
+        <div className="relative px-16 lg:px-20">
           <Carousel
             opts={{
               align: "start",
@@ -149,8 +149,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
-            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselPrevious className="absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselNext className="absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
           </Carousel>
         </div>
       </section>
@@ -163,7 +163,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
             Trending Now
           </h2>
         </div>
-        <div className="relative px-12">
+        <div className="relative px-16 lg:px-20">
           <Carousel
             opts={{
               align: "start",
@@ -227,8 +227,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
-            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselPrevious className="absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselNext className="absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
           </Carousel>
         </div>
       </section>
@@ -241,7 +241,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
             Essential Techniques
           </h2>
         </div>
-        <div className="relative px-12">
+        <div className="relative px-16 lg:px-20">
           <Carousel
             opts={{
               align: "start",
@@ -273,8 +273,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
-            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselPrevious className="absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselNext className="absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
           </Carousel>
         </div>
       </section>
