@@ -3,11 +3,11 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 type SearchFiltersProps = {
-  searchType: "ingredient" | "tag" | "name" | "location" | "all";
-  setSearchType: (type: "ingredient" | "tag" | "name" | "location" | "all") => void;
+  searchType: "ingredient" | "tag" | "name" | "location" | "everything";
+  setSearchType: (type: "ingredient" | "tag" | "name" | "location" | "everything") => void;
   ingredientQuery: string;
   setIngredientQuery: (query: string) => void;
   flavorProfile: string | null;
@@ -36,7 +36,7 @@ export default function SearchFilters({
       case "tag": return "Search by tag…";
       case "name": return "Search by recipe name…";
       case "location": return "Search by location/origin…";
-      case "all": return "Search everything…";
+      case "everything": return "Search everything…";
       default: return "Search…";
     }
   };
@@ -50,15 +50,15 @@ export default function SearchFilters({
           {/* Search type selector */}
           <select
             value={searchType}
-            onChange={e => setSearchType(e.target.value as "ingredient" | "tag" | "name" | "location" | "all")}
+            onChange={e => setSearchType(e.target.value as "ingredient" | "tag" | "name" | "location" | "everything")}
             className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 text-sm min-w-[140px] focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
             aria-label="Search by"
           >
-            <option value="all">Everything</option>
             <option value="ingredient">Ingredient</option>
             <option value="name">Name</option>
             <option value="location">Location</option>
             <option value="tag">Tag</option>
+            <option value="everything">Everything</option>
           </select>
           
           {/* Search bar */}
@@ -80,10 +80,10 @@ export default function SearchFilters({
           <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Flavor Profile:</h3>
           <div className="flex flex-wrap gap-2">
             {flavorProfiles.map(profile => (
-              <TagBadge
+              <button
                 key={profile}
                 className={`
-                  text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
+                  relative text-xs px-3 py-1 rounded-md cursor-pointer transition-all duration-200 border
                   ${flavorProfile === profile
                     ? "bg-orange-600 text-white border-orange-600"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
@@ -92,16 +92,11 @@ export default function SearchFilters({
                 onClick={() => setFlavorProfile(flavorProfile === profile ? null : profile)}
               >
                 {profile.charAt(0).toUpperCase() + profile.slice(1)}
-              </TagBadge>
-            ))}
-            {flavorProfile && (
-              <button
-                onClick={() => setFlavorProfile(null)}
-                className="text-xs px-3 py-1 rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
-              >
-                Clear Filter
+                {flavorProfile === profile && (
+                  <X size={12} className="ml-1 inline-block" />
+                )}
               </button>
-            )}
+            ))}
           </div>
         </div>
       )}
@@ -112,10 +107,10 @@ export default function SearchFilters({
           <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {allTags.map(tag => (
-              <TagBadge
+              <button
                 key={tag}
                 className={`
-                  text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
+                  relative text-xs px-3 py-1 rounded-md cursor-pointer transition-all duration-200 border
                   ${tagFilter === tag
                     ? "bg-orange-600 text-white border-orange-600"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
@@ -124,16 +119,11 @@ export default function SearchFilters({
                 onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
               >
                 {tag}
-              </TagBadge>
-            ))}
-            {tagFilter && (
-              <button
-                onClick={() => setTagFilter(null)}
-                className="text-xs px-3 py-1 rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
-              >
-                Clear Filter
+                {tagFilter === tag && (
+                  <X size={12} className="ml-1 inline-block" />
+                )}
               </button>
-            )}
+            ))}
           </div>
         </div>
       )}

@@ -52,7 +52,7 @@ export default function Index() {
   const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
   const [ingredientQuery, setIngredientQuery] = useState("");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
-  const [searchType, setSearchType] = useState<"ingredient" | "tag" | "name" | "location" | "all">("all");
+  const [searchType, setSearchType] = useState<"ingredient" | "tag" | "name" | "location" | "everything">("ingredient");
   const [flavorProfile, setFlavorProfile] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -109,7 +109,7 @@ export default function Index() {
 
   // Apply filters only for non-featured libraries
   if (library !== "featured") {
-    // Main search logic: by ingredient, name, location, tag, or all
+    // Main search logic: by ingredient, name, location, tag, or everything
     if (ingredientQuery.trim()) {
       const query = ingredientQuery.trim().toLowerCase();
       
@@ -133,12 +133,13 @@ export default function Index() {
         displayed = displayed.filter(recipe =>
           recipe.origin && recipe.origin.toLowerCase().includes(query)
         );
-      } else if (searchType === "all") {
+      } else if (searchType === "everything") {
         displayed = displayed.filter(recipe =>
           recipe.name.toLowerCase().includes(query) ||
           recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
           (recipe.origin && recipe.origin.toLowerCase().includes(query)) ||
-          (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query)))
+          (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query))) ||
+          (recipe.notes && recipe.notes.toLowerCase().includes(query))
         );
       }
     }
@@ -148,7 +149,7 @@ export default function Index() {
       displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
     }
 
-    // Flavor profile filter - fix the logic
+    // Flavor profile filter
     if (flavorProfile) {
       displayed = displayed.filter(recipe =>
         recipe.tags && recipe.tags.some(tag => tag.toLowerCase() === flavorProfile.toLowerCase())
@@ -221,6 +222,13 @@ export default function Index() {
     : allRecipes;
 
   const allTags = getAllTags(fullRecipes);
+
+  // Filter flavor profiles to only show those that exist in the current recipe set
+  const availableFlavorProfiles = FLAVOR_PROFILES.filter(profile => 
+    fullRecipes.some(recipe => 
+      recipe.tags && recipe.tags.some(tag => tag.toLowerCase() === profile.toLowerCase())
+    )
+  );
 
   // Mobile-first UI with NYT Cooking inspired aesthetic
   return (
@@ -316,7 +324,7 @@ export default function Index() {
                   tagFilter={tagFilter}
                   setTagFilter={setTagFilter}
                   allTags={allTags}
-                  flavorProfiles={FLAVOR_PROFILES}
+                  flavorProfiles={availableFlavorProfiles}
                 />
 
                 <RecipeGrid
