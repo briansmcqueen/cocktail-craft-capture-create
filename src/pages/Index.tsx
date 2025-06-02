@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeForm from "@/components/RecipeForm";
@@ -17,20 +18,6 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
-
-// New: Flavor profiles (you can adjust as needed)
-const FLAVOR_PROFILES = [
-  "bitter",
-  "sweet",
-  "sour",
-  "citrus",
-  "herbal",
-  "spicy",
-  "aperitif",
-  "gin",
-  "whiskey",
-  "tequila",
-];
 
 type Library = "featured" | "all" | "classics" | "favorites" | "mine";
 
@@ -53,7 +40,6 @@ export default function Index() {
   const [ingredientQuery, setIngredientQuery] = useState("");
   const [tagFilters, setTagFilters] = useState<string[]>([]);
   const [searchType, setSearchType] = useState<"ingredient" | "tag" | "name" | "location" | "everything">("ingredient");
-  const [flavorProfile, setFlavorProfile] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [recipeToShare, setRecipeToShare] = useState<Cocktail | null>(null);
@@ -150,13 +136,15 @@ export default function Index() {
         tagFilters.every(tag => recipe.tags && recipe.tags.includes(tag))
       );
     }
+  }
 
-    // Flavor profile filter
-    if (flavorProfile) {
-      displayed = displayed.filter(recipe =>
-        recipe.tags && recipe.tags.some(tag => tag.toLowerCase() === flavorProfile.toLowerCase())
-      );
-    }
+  // Tag filter toggle function
+  function handleTagFilterToggle(tag: string) {
+    setTagFilters(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
   }
 
   function handleSave(recipe: Cocktail) {
@@ -225,13 +213,6 @@ export default function Index() {
 
   const allTags = getAllTags(fullRecipes);
 
-  // Filter flavor profiles to only show those that exist in the current recipe set
-  const availableFlavorProfiles = FLAVOR_PROFILES.filter(profile => 
-    fullRecipes.some(recipe => 
-      recipe.tags && recipe.tags.some(tag => tag.toLowerCase() === profile.toLowerCase())
-    )
-  );
-
   // Mobile-first UI with NYT Cooking inspired aesthetic
   return (
     <div className="min-h-screen bg-white">
@@ -275,7 +256,6 @@ export default function Index() {
                 setLibrary(id as Library);
                 setIngredientQuery("");
                 setTagFilters([]);
-                setFlavorProfile(null);
                 setSidebarOpen(false);
               }}
               onAdd={() => {
@@ -323,7 +303,7 @@ export default function Index() {
                   setIngredientQuery={setIngredientQuery}
                   tagFilters={tagFilters}
                   onTagFilterToggle={handleTagFilterToggle}
-                  allTags={availableTags}
+                  allTags={allTags}
                 />
 
                 <RecipeGrid
