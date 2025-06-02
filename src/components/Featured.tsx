@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
@@ -150,20 +149,20 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
               ))}
             </CarouselContent>
             
-            {/* Custom navigation positioned under cards, aligned left - Made bigger and closer */}
+            {/* Custom navigation positioned under cards, aligned left - Made 200% bigger and removed white hover */}
             <div className="flex items-center gap-2 mt-3 justify-start">
-              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-gray-50 border-0 shadow-none p-0">
+              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-24 w-24 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
                 <img 
                   src="/lovable-uploads/f9fc9f68-2c1c-4752-894b-9ab298d67509.png" 
                   alt="Previous" 
-                  className="w-10 h-10 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               </CarouselPrevious>
-              <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-gray-50 border-0 shadow-none p-0">
+              <CarouselNext className="relative right-0 top-0 translate-y-0 h-24 w-24 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
                 <img 
                   src="/lovable-uploads/40b40a9e-b05b-49cd-87c5-0da66e3ceb65.png" 
                   alt="Next" 
-                  className="w-10 h-10 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               </CarouselNext>
             </div>
@@ -244,20 +243,20 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
               ))}
             </CarouselContent>
             
-            {/* Custom navigation positioned under cards, aligned left - Made bigger and closer */}
+            {/* Custom navigation positioned under cards, aligned left - Made 200% bigger and removed white hover */}
             <div className="flex items-center gap-2 mt-3 justify-start">
-              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-gray-50 border-0 shadow-none p-0">
+              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-24 w-24 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
                 <img 
                   src="/lovable-uploads/f9fc9f68-2c1c-4752-894b-9ab298d67509.png" 
                   alt="Previous" 
-                  className="w-10 h-10 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               </CarouselPrevious>
-              <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-gray-50 border-0 shadow-none p-0">
+              <CarouselNext className="relative right-0 top-0 translate-y-0 h-24 w-24 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
                 <img 
                   src="/lovable-uploads/40b40a9e-b05b-49cd-87c5-0da66e3ceb65.png" 
                   alt="Next" 
-                  className="w-10 h-10 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               </CarouselNext>
             </div>
@@ -306,20 +305,20 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
               ))}
             </CarouselContent>
             
-            {/* Custom navigation positioned under cards, aligned left - Made bigger and closer */}
+            {/* Custom navigation positioned under cards, aligned left - Made 200% bigger and removed white hover */}
             <div className="flex items-center gap-2 mt-3 justify-start">
-              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-gray-50 border-0 shadow-none p-0">
+              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-24 w-24 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
                 <img 
                   src="/lovable-uploads/f9fc9f68-2c1c-4752-894b-9ab298d67509.png" 
                   alt="Previous" 
-                  className="w-10 h-10 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               </CarouselPrevious>
-              <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-gray-50 border-0 shadow-none p-0">
+              <CarouselNext className="relative right-0 top-0 translate-y-0 h-24 w-24 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
                 <img 
                   src="/lovable-uploads/40b40a9e-b05b-49cd-87c5-0da66e3ceb65.png" 
                   alt="Next" 
-                  className="w-10 h-10 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               </CarouselNext>
             </div>
