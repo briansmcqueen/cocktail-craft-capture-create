@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";
 import { Search, X } from "lucide-react";
+import { Cocktail } from "@/data/classicCocktails";
 
 type SearchFiltersProps = {
   searchType: "ingredient" | "tag" | "name" | "location" | "everything";
@@ -13,6 +14,7 @@ type SearchFiltersProps = {
   tagFilters: string[];
   onTagFilterToggle: (tag: string) => void;
   allTags: string[];
+  recipes: Cocktail[];
 };
 
 export default function SearchFilters({
@@ -22,7 +24,8 @@ export default function SearchFilters({
   setIngredientQuery,
   tagFilters,
   onTagFilterToggle,
-  allTags
+  allTags,
+  recipes
 }: SearchFiltersProps) {
   const getPlaceholderText = () => {
     switch (searchType) {
@@ -34,6 +37,70 @@ export default function SearchFilters({
       default: return "Search…";
     }
   };
+
+  // Filter tags to only show those that will have results
+  const getAvailableTags = () => {
+    if (tagFilters.length === 0) {
+      return allTags;
+    }
+
+    // Find recipes that match current filters
+    let filteredRecipes = [...recipes];
+
+    // Apply search query filter first
+    if (ingredientQuery.trim()) {
+      const query = ingredientQuery.trim().toLowerCase();
+      
+      if (searchType === "ingredient") {
+        filteredRecipes = filteredRecipes.filter(recipe =>
+          recipe.ingredients.some(ing =>
+            ing.toLowerCase().includes(query)
+          )
+        );
+      } else if (searchType === "tag") {
+        filteredRecipes = filteredRecipes.filter(recipe =>
+          recipe.tags && recipe.tags.some(tag =>
+            tag.toLowerCase().includes(query)
+          )
+        );
+      } else if (searchType === "name") {
+        filteredRecipes = filteredRecipes.filter(recipe =>
+          recipe.name.toLowerCase().includes(query)
+        );
+      } else if (searchType === "location") {
+        filteredRecipes = filteredRecipes.filter(recipe =>
+          recipe.origin && recipe.origin.toLowerCase().includes(query)
+        );
+      } else if (searchType === "everything") {
+        filteredRecipes = filteredRecipes.filter(recipe =>
+          recipe.name.toLowerCase().includes(query) ||
+          recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
+          (recipe.origin && recipe.origin.toLowerCase().includes(query)) ||
+          (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query))) ||
+          (recipe.notes && recipe.notes.toLowerCase().includes(query))
+        );
+      }
+    }
+
+    // Apply current tag filters
+    if (tagFilters.length > 0) {
+      filteredRecipes = filteredRecipes.filter(recipe => 
+        tagFilters.every(tag => recipe.tags && recipe.tags.includes(tag))
+      );
+    }
+
+    // Get all tags from the filtered recipes
+    const availableTags = new Set<string>();
+    filteredRecipes.forEach(recipe => {
+      if (recipe.tags) {
+        recipe.tags.forEach(tag => availableTags.add(tag));
+      }
+    });
+
+    return Array.from(availableTags);
+  };
+
+  const availableTags = getAvailableTags();
 
   return (
     <>
@@ -69,11 +136,11 @@ export default function SearchFilters({
       </div>
 
       {/* Tag filters with multi-select and reduced padding */}
-      {allTags.length > 0 && (
+      {availableTags.length > 0 && (
         <div className="mb-6">
           <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Tags:</h3>
           <div className="flex flex-wrap gap-2">
-            {allTags.map(tag => (
+            {availableTags.map(tag => (
               <button
                 key={tag}
                 className={`

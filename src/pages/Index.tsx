@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import RecipeForm from "@/components/RecipeForm";
@@ -304,6 +303,7 @@ export default function Index() {
                   tagFilters={tagFilters}
                   onTagFilterToggle={handleTagFilterToggle}
                   allTags={allTags}
+                  recipes={fullRecipes}
                 />
 
                 <RecipeGrid
