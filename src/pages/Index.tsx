@@ -52,7 +52,7 @@ export default function Index() {
   const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
   const [ingredientQuery, setIngredientQuery] = useState("");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
-  const [searchType, setSearchType] = useState<"ingredient" | "tag">("ingredient");
+  const [searchType, setSearchType] = useState<"ingredient" | "tag" | "name" | "location" | "all">("all");
   const [flavorProfile, setFlavorProfile] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -109,19 +109,36 @@ export default function Index() {
 
   // Apply filters only for non-featured libraries
   if (library !== "featured") {
-    // Main search logic: by ingredient or tag
+    // Main search logic: by ingredient, name, location, tag, or all
     if (ingredientQuery.trim()) {
+      const query = ingredientQuery.trim().toLowerCase();
+      
       if (searchType === "ingredient") {
         displayed = displayed.filter(recipe =>
           recipe.ingredients.some(ing =>
-            ing.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+            ing.toLowerCase().includes(query)
           )
         );
-      } else {
+      } else if (searchType === "tag") {
         displayed = displayed.filter(recipe =>
           recipe.tags && recipe.tags.some(tag =>
-            tag.toLowerCase().includes(ingredientQuery.trim().toLowerCase())
+            tag.toLowerCase().includes(query)
           )
+        );
+      } else if (searchType === "name") {
+        displayed = displayed.filter(recipe =>
+          recipe.name.toLowerCase().includes(query)
+        );
+      } else if (searchType === "location") {
+        displayed = displayed.filter(recipe =>
+          recipe.origin && recipe.origin.toLowerCase().includes(query)
+        );
+      } else if (searchType === "all") {
+        displayed = displayed.filter(recipe =>
+          recipe.name.toLowerCase().includes(query) ||
+          recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
+          (recipe.origin && recipe.origin.toLowerCase().includes(query)) ||
+          (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query)))
         );
       }
     }
@@ -131,10 +148,10 @@ export default function Index() {
       displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
     }
 
-    // Flavor profile filter
+    // Flavor profile filter - fix the logic
     if (flavorProfile) {
       displayed = displayed.filter(recipe =>
-        recipe.tags && recipe.tags.map(tag => tag.toLowerCase()).includes(flavorProfile.toLowerCase())
+        recipe.tags && recipe.tags.some(tag => tag.toLowerCase() === flavorProfile.toLowerCase())
       );
     }
   }
@@ -248,6 +265,7 @@ export default function Index() {
                 setLibrary(id as Library);
                 setIngredientQuery("");
                 setTagFilter(null);
+                setFlavorProfile(null);
                 setSidebarOpen(false);
               }}
               onAdd={() => {

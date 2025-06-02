@@ -6,8 +6,8 @@ import TagBadge from "@/components/ui/tag";
 import { Search } from "lucide-react";
 
 type SearchFiltersProps = {
-  searchType: "ingredient" | "tag";
-  setSearchType: (type: "ingredient" | "tag") => void;
+  searchType: "ingredient" | "tag" | "name" | "location" | "all";
+  setSearchType: (type: "ingredient" | "tag" | "name" | "location" | "all") => void;
   ingredientQuery: string;
   setIngredientQuery: (query: string) => void;
   flavorProfile: string | null;
@@ -30,6 +30,17 @@ export default function SearchFilters({
   allTags,
   flavorProfiles
 }: SearchFiltersProps) {
+  const getPlaceholderText = () => {
+    switch (searchType) {
+      case "ingredient": return "Search by ingredient…";
+      case "tag": return "Search by tag…";
+      case "name": return "Search by recipe name…";
+      case "location": return "Search by location/origin…";
+      case "all": return "Search everything…";
+      default: return "Search…";
+    }
+  };
+
   return (
     <>
       {/* Enhanced Search & Filter - NYT inspired */}
@@ -39,11 +50,14 @@ export default function SearchFilters({
           {/* Search type selector */}
           <select
             value={searchType}
-            onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-            className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 text-sm min-w-[120px] focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+            onChange={e => setSearchType(e.target.value as "ingredient" | "tag" | "name" | "location" | "all")}
+            className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 text-sm min-w-[140px] focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
             aria-label="Search by"
           >
+            <option value="all">Everything</option>
             <option value="ingredient">Ingredient</option>
+            <option value="name">Name</option>
+            <option value="location">Location</option>
             <option value="tag">Tag</option>
           </select>
           
@@ -52,26 +66,11 @@ export default function SearchFilters({
             <Input
               value={ingredientQuery}
               onChange={e => setIngredientQuery(e.target.value)}
-              placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
+              placeholder={getPlaceholderText()}
               className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-orange-500"
             />
             <Search className="absolute left-2.5 top-2.5 text-gray-400" size={16} />
           </div>
-        </div>
-
-        {/* Flavor profile dropdown */}
-        <div className="sm:w-auto">
-          <select
-            className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 w-full sm:min-w-[150px] text-sm focus:border-orange-500"
-            value={flavorProfile || ""}
-            onChange={e => setFlavorProfile(e.target.value || null)}
-            aria-label="Flavor profile"
-          >
-            <option value="">All Flavors</option>
-            {flavorProfiles.map(f => (
-              <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
-            ))}
-          </select>
         </div>
       </div>
 
