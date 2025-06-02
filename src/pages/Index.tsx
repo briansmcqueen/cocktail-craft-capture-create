@@ -224,7 +224,7 @@ export default function Index() {
         }}
       />
 
-      <div className="flex">
+      <div className="flex h-screen pt-16 lg:pt-0">
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
           <div 
@@ -233,12 +233,11 @@ export default function Index() {
           />
         )}
         
-        {/* Sidebar - Fixed */}
+        {/* Sidebar - Fixed on desktop */}
         <div className={`
-          lg:relative lg:translate-x-0 lg:bg-transparent
+          lg:relative lg:translate-x-0 lg:bg-transparent lg:flex-shrink-0
           fixed top-0 left-0 h-full z-40 transition-transform duration-300
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:flex-shrink-0
         `}>
           <div className="lg:hidden absolute top-4 right-4">
             <button
@@ -248,26 +247,24 @@ export default function Index() {
               <X size={20} />
             </button>
           </div>
-          <div className="h-screen overflow-y-auto">
-            <Sidebar
-              active={library}
-              onSelect={(id) => {
-                setLibrary(id as Library);
-                setIngredientQuery("");
-                setTagFilters([]);
-                setSidebarOpen(false);
-              }}
-              onAdd={() => {
-                setShowForm(true);
-                setEditing(null);
-                setSidebarOpen(false);
-              }}
-            />
-          </div>
+          <Sidebar
+            active={library}
+            onSelect={(id) => {
+              setLibrary(id as Library);
+              setIngredientQuery("");
+              setTagFilters([]);
+              setSidebarOpen(false);
+            }}
+            onAdd={() => {
+              setShowForm(true);
+              setEditing(null);
+              setSidebarOpen(false);
+            }}
+          />
         </div>
 
-        {/* Main content - Mobile optimized */}
-        <main className="flex-1 min-w-0 bg-gray-50 min-h-screen pt-16 lg:pt-0">
+        {/* Main content - Scrollable area */}
+        <main className="flex-1 min-w-0 bg-gray-50 overflow-y-auto">
           <div className="px-4 lg:px-8 py-4 lg:py-8">
             <LibraryHeader
               library={library}
@@ -338,6 +335,7 @@ export default function Index() {
               }
             : undefined
         }
+        onShareRecipe={handleShareRecipe}
       />
 
       {/* Recipe Form - Improved modal with click-outside-to-close */}
@@ -345,7 +343,6 @@ export default function Index() {
         <div 
           className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-4"
           onClick={(e) => {
-            // Close modal when clicking the backdrop (not on mobile)
             if (e.target === e.currentTarget && window.innerWidth >= 1024) {
               setShowForm(false);
               setEditing(null);
