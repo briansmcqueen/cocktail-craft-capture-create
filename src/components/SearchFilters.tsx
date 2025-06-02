@@ -75,9 +75,42 @@ export default function SearchFilters({
         </div>
       </div>
 
+      {/* Flavor Profile Filter Tags */}
+      {flavorProfiles.length > 0 && (
+        <div className="mb-4">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Flavor Profile:</h3>
+          <div className="flex flex-wrap gap-2">
+            {flavorProfiles.map(profile => (
+              <TagBadge
+                key={profile}
+                className={`
+                  text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
+                  ${flavorProfile === profile
+                    ? "bg-orange-600 text-white border-orange-600"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                  }
+                `}
+                onClick={() => setFlavorProfile(flavorProfile === profile ? null : profile)}
+              >
+                {profile.charAt(0).toUpperCase() + profile.slice(1)}
+              </TagBadge>
+            ))}
+            {flavorProfile && (
+              <button
+                onClick={() => setFlavorProfile(null)}
+                className="text-xs px-3 py-1 rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                Clear Filter
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Tag filters - NYT optimized */}
       {allTags.length > 0 && (
         <div className="mb-6">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {allTags.map(tag => (
               <TagBadge
@@ -99,7 +132,7 @@ export default function SearchFilters({
                 onClick={() => setTagFilter(null)}
                 className="text-xs px-3 py-1 rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
               >
-                Clear
+                Clear Filter
               </button>
             )}
           </div>
