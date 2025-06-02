@@ -2,7 +2,7 @@
 import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Edit, Heart, ThumbsUp, X } from "lucide-react";
+import { Edit, Heart, ThumbsUp, X, Share } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { isFavorite, toggleFavorite } from "@/utils/favorites";
@@ -13,9 +13,10 @@ type Props = {
   recipe: Cocktail | null;
   onEdit?: () => void;
   editable?: boolean;
+  onShareRecipe?: (recipe: Cocktail) => void;
 };
 
-export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editable }: Props) {
+export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editable, onShareRecipe }: Props) {
   if (!recipe) return null;
 
   const handleLike = () => {
@@ -26,6 +27,12 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
   const handleToggleFavorite = () => {
     toggleFavorite(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
+  };
+
+  const handleShare = () => {
+    if (onShareRecipe) {
+      onShareRecipe(recipe);
+    }
   };
 
   const likeCount = getLikeCount(recipe.id);
@@ -111,6 +118,16 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
               <ThumbsUp size={16} fill={isRecipeLiked ? 'currentColor' : 'none'} />
               {isRecipeLiked ? 'Liked' : 'Like'}
             </Button>
+            {onShareRecipe && (
+              <Button
+                variant="secondary"
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors text-gray-500 hover:text-red-600"
+                onClick={handleShare}
+              >
+                <Share size={16} />
+                Share
+              </Button>
+            )}
           </div>
           <div className="flex gap-2">
             {editable && (
