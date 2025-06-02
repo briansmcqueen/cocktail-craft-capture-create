@@ -58,7 +58,7 @@ export default function RecipeGrid({
             />
           </div>
           
-          {/* Action buttons */}
+          {/* Action buttons - Only favorite button visible */}
           <div className="absolute top-3 right-3 flex flex-col gap-2">
             <Button
               size="sm"
@@ -73,6 +73,7 @@ export default function RecipeGrid({
             >
               <Heart size={14} fill={isFavorite(r.id) ? 'currentColor' : 'none'} />
             </Button>
+            {/* Commented out like button
             <Button
               size="sm"
               variant="secondary"
@@ -86,6 +87,8 @@ export default function RecipeGrid({
             >
               <ThumbsUp size={14} fill={isLiked(r.id) ? 'currentColor' : 'none'} />
             </Button>
+            */}
+            {/* Commented out share button
             <Button
               size="sm"
               variant="secondary"
@@ -97,6 +100,7 @@ export default function RecipeGrid({
             >
               <Share size={14} />
             </Button>
+            */}
           </div>
         </div>
       ))}
