@@ -22,9 +22,8 @@ export default function MobileHeader({ onSidebarOpen, onAddRecipe }: Props) {
             <Menu size={20} />
           </Button>
           
-          {/* Text-only logo */}
-          <h1 className="text-xl font-serif font-normal text-gray-900 tracking-wide">
-            Barbook
+          <h1 className="text-xl font-serif font-bold text-orange-600 tracking-wide">
+            BARBOOK
           </h1>
         </div>
         

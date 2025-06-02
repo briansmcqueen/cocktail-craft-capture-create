@@ -21,12 +21,7 @@ export default function Sidebar({ active, onSelect, onAdd }: SidebarProps) {
     <aside className="bg-white border-r border-gray-200 w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0">
       <div className="px-6 mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <img 
-            src="/lovable-uploads/0fbd9c77-fecf-48ea-8d31-580fb27e6206.png" 
-            alt="Barbook" 
-            className="w-8 h-8"
-          />
-          <h1 className="text-xl font-display font-light tracking-wide text-orange-600">BARBOOK</h1>
+          <h1 className="text-xl font-serif font-bold text-orange-600 tracking-wide">BARBOOK</h1>
         </div>
       </div>
       <nav className="flex flex-col gap-1 grow">
