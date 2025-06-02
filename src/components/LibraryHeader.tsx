@@ -21,6 +21,11 @@ function getLibraryTitle(library: Library): string {
 }
 
 export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHeaderProps) {
+  // Don't render anything for the featured page since it has its own section headings
+  if (library === "featured") {
+    return null;
+  }
+
   return (
     <>
       {/* Mobile library title */}
