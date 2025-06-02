@@ -1,35 +1,40 @@
 
 import React from "react";
+import { Menu, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
 
-type MobileHeaderProps = {
+type Props = {
   onSidebarOpen: () => void;
   onAddRecipe: () => void;
 };
 
-export default function MobileHeader({ onSidebarOpen, onAddRecipe }: MobileHeaderProps) {
+export default function MobileHeader({ onSidebarOpen, onAddRecipe }: Props) {
   return (
-    <header className="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-20 px-4 py-3 w-full">
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
       <div className="flex items-center justify-between">
-        <button
-          onClick={onSidebarOpen}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
-          aria-label="Open menu"
-        >
-          <Menu size={24} />
-        </button>
         <div className="flex items-center gap-3">
-          <h1 className="text-lg font-display font-bold text-orange-600 tracking-wide">
-            BARBOOK
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onSidebarOpen}
+            className="p-2"
+          >
+            <Menu size={20} />
+          </Button>
+          
+          {/* Text-only logo */}
+          <h1 className="text-xl font-serif font-normal text-gray-900 tracking-wide">
+            Barbook
           </h1>
         </div>
+        
         <Button
-          size="sm"
           onClick={onAddRecipe}
-          className="text-sm px-3 bg-orange-600 text-white hover:bg-orange-700"
+          size="sm"
+          className="flex items-center gap-2 bg-orange-600 text-white hover:bg-orange-700"
         >
-          Add
+          <Plus size={16} />
+          <span className="hidden sm:inline">Add Recipe</span>
         </Button>
       </div>
     </header>

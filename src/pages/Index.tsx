@@ -340,10 +340,19 @@ export default function Index() {
         }
       />
 
-      {/* Recipe Form */}
+      {/* Recipe Form - Improved modal with click-outside-to-close */}
       {showForm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-4">
-          <div className="min-w-0 w-full max-w-lg">
+        <div 
+          className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-4"
+          onClick={(e) => {
+            // Close modal when clicking the backdrop (not on mobile)
+            if (e.target === e.currentTarget && window.innerWidth >= 1024) {
+              setShowForm(false);
+              setEditing(null);
+            }
+          }}
+        >
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <RecipeForm
               initial={editing ?? undefined}
               onSave={handleSave}
@@ -356,7 +365,7 @@ export default function Index() {
         </div>
       )}
 
-      {/* Copy From Dialog */}
+      {/* Copy From Dialog - Updated with standardized close button styling */}
       <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
         <DialogContent className="max-w-lg bg-gray-900 border border-red-500/30 text-red-300">
           <DialogHeader>

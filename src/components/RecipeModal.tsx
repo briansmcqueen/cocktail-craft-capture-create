@@ -127,7 +127,7 @@ export default function RecipeModal({ open, onOpenChange, recipe, onEdit, editab
               onClick={() => onOpenChange(false)}
               className="flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
             >
-              <X size={16} /> Close
+              <X size={16} className="text-gray-700" /> Close
             </Button>
           </div>
         </DialogFooter>
