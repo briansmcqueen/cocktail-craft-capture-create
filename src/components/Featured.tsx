@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
@@ -82,7 +81,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
     <div className="space-y-12 max-w-7xl mx-auto">
       {/* Hero Featured Recipes Carousel */}
       <section>
-        <h2 className="text-3xl lg:text-4xl font-serif font-normal text-gray-900 mb-8 tracking-wide">
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1.4rem]">
           Featured Cocktails
         </h2>
         <Carousel
@@ -104,49 +103,25 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                     />
                   </div>
                   
-                  {/* Action buttons - Only favorite button visible */}
-                  <div className="absolute top-3 right-3 flex flex-col gap-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                        isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                      }`}
+                  {/* Airbnb-style favorite button */}
+                  <div className="absolute top-3 right-3">
+                    <button
+                      className="p-2 rounded-full hover:scale-110 transition-transform duration-200"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(recipe);
                       }}
                     >
-                      <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
-                    </Button>
-                    {/* Commented out like button
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                        isLiked(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleLike(recipe);
-                      }}
-                    >
-                      <ThumbsUp size={14} fill={isLiked(recipe.id) ? 'currentColor' : 'none'} />
-                    </Button>
-                    */}
-                    {/* Commented out share button
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onShareRecipe(recipe);
-                      }}
-                    >
-                      <Share size={14} />
-                    </Button>
-                    */}
+                      <Heart 
+                        size={24} 
+                        className={`${
+                          isFavorite(recipe.id) 
+                            ? 'text-red-500 fill-red-500' 
+                            : 'text-white fill-black/20 stroke-2'
+                        } transition-colors duration-200`}
+                        strokeWidth={isFavorite(recipe.id) ? 1 : 2}
+                      />
+                    </button>
                   </div>
                 </div>
               </CarouselItem>
@@ -163,7 +138,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
       <section>
         <div className="flex items-center gap-3 mb-8">
           <TrendingUp className="text-red-600" size={28} />
-          <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
+          <h2 className="text-gray-900 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1.4rem]">
             Trending Now
           </h2>
         </div>
@@ -186,49 +161,25 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                     />
                   </div>
                   
-                  {/* Action buttons - Only favorite button visible */}
-                  <div className="absolute top-3 right-3 flex flex-col gap-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                        isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                      }`}
+                  {/* Airbnb-style favorite button */}
+                  <div className="absolute top-3 right-3">
+                    <button
+                      className="p-2 rounded-full hover:scale-110 transition-transform duration-200"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(recipe);
                       }}
                     >
-                      <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
-                    </Button>
-                    {/* Commented out like button
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                        isLiked(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleLike(recipe);
-                      }}
-                    >
-                      <ThumbsUp size={14} fill={isLiked(recipe.id) ? 'currentColor' : 'none'} />
-                    </Button>
-                    */}
-                    {/* Commented out share button
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onShareRecipe(recipe);
-                      }}
-                    >
-                      <Share size={14} />
-                    </Button>
-                    */}
+                      <Heart 
+                        size={24} 
+                        className={`${
+                          isFavorite(recipe.id) 
+                            ? 'text-red-500 fill-red-500' 
+                            : 'text-white fill-black/20 stroke-2'
+                        } transition-colors duration-200`}
+                        strokeWidth={isFavorite(recipe.id) ? 1 : 2}
+                      />
+                    </button>
                   </div>
                 </div>
               </CarouselItem>
@@ -245,7 +196,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
       <section>
         <div className="flex items-center gap-3 mb-8">
           <BookOpen className="text-red-600" size={28} />
-          <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
+          <h2 className="text-gray-900 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1.4rem]">
             Essential Techniques
           </h2>
         </div>

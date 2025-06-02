@@ -58,49 +58,25 @@ export default function RecipeGrid({
             />
           </div>
           
-          {/* Action buttons - Only favorite button visible */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                isFavorite(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-              }`}
+          {/* Airbnb-style favorite button */}
+          <div className="absolute top-3 right-3">
+            <button
+              className="p-2 rounded-full hover:scale-110 transition-transform duration-200"
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleFavorite(r);
               }}
             >
-              <Heart size={14} fill={isFavorite(r.id) ? 'currentColor' : 'none'} />
-            </Button>
-            {/* Commented out like button
-            <Button
-              size="sm"
-              variant="secondary"
-              className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                isLiked(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-              }`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onLike(r);
-              }}
-            >
-              <ThumbsUp size={14} fill={isLiked(r.id) ? 'currentColor' : 'none'} />
-            </Button>
-            */}
-            {/* Commented out share button
-            <Button
-              size="sm"
-              variant="secondary"
-              className="p-2 bg-white/90 hover:bg-white text-gray-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full hover:text-gray-800"
-              onClick={(e) => {
-                e.stopPropagation();
-                onShareRecipe(r);
-              }}
-            >
-              <Share size={14} />
-            </Button>
-            */}
+              <Heart 
+                size={24} 
+                className={`${
+                  isFavorite(r.id) 
+                    ? 'text-red-500 fill-red-500' 
+                    : 'text-white fill-black/20 stroke-2'
+                } transition-colors duration-200`}
+                strokeWidth={isFavorite(r.id) ? 1 : 2}
+              />
+            </button>
           </div>
         </div>
       ))}
