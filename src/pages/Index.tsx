@@ -51,7 +51,7 @@ export default function Index() {
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
   const [recipeToCopy, setRecipeToCopy] = useState<Cocktail | null>(null);
   const [ingredientQuery, setIngredientQuery] = useState("");
-  const [tagFilter, setTagFilter] = useState<string | null>(null);
+  const [tagFilters, setTagFilters] = useState<string[]>([]);
   const [searchType, setSearchType] = useState<"ingredient" | "tag" | "name" | "location" | "everything">("ingredient");
   const [flavorProfile, setFlavorProfile] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -145,8 +145,10 @@ export default function Index() {
     }
 
     // Tag badge filter
-    if (tagFilter) {
-      displayed = displayed.filter(recipe => recipe.tags && recipe.tags.includes(tagFilter));
+    if (tagFilters.length > 0) {
+      displayed = displayed.filter(recipe => 
+        tagFilters.every(tag => recipe.tags && recipe.tags.includes(tag))
+      );
     }
 
     // Flavor profile filter
@@ -272,7 +274,7 @@ export default function Index() {
               onSelect={(id) => {
                 setLibrary(id as Library);
                 setIngredientQuery("");
-                setTagFilter(null);
+                setTagFilters([]);
                 setFlavorProfile(null);
                 setSidebarOpen(false);
               }}
@@ -319,12 +321,9 @@ export default function Index() {
                   setSearchType={setSearchType}
                   ingredientQuery={ingredientQuery}
                   setIngredientQuery={setIngredientQuery}
-                  flavorProfile={flavorProfile}
-                  setFlavorProfile={setFlavorProfile}
-                  tagFilter={tagFilter}
-                  setTagFilter={setTagFilter}
-                  allTags={allTags}
-                  flavorProfiles={availableFlavorProfiles}
+                  tagFilters={tagFilters}
+                  onTagFilterToggle={handleTagFilterToggle}
+                  allTags={availableTags}
                 />
 
                 <RecipeGrid
@@ -333,7 +332,7 @@ export default function Index() {
                   onToggleFavorite={handleToggleFavorite}
                   onLike={handleLike}
                   onShareRecipe={handleShareRecipe}
-                  onTagClick={setTagFilter}
+                  onTagClick={handleTagFilterToggle}
                   onShowForm={() => setShowForm(true)}
                   forceUpdate={forceUpdate}
                   library={library}

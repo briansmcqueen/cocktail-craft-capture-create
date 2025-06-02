@@ -10,12 +10,9 @@ type SearchFiltersProps = {
   setSearchType: (type: "ingredient" | "tag" | "name" | "location" | "everything") => void;
   ingredientQuery: string;
   setIngredientQuery: (query: string) => void;
-  flavorProfile: string | null;
-  setFlavorProfile: (profile: string | null) => void;
-  tagFilter: string | null;
-  setTagFilter: (tag: string | null) => void;
+  tagFilters: string[];
+  onTagFilterToggle: (tag: string) => void;
   allTags: string[];
-  flavorProfiles: string[];
 };
 
 export default function SearchFilters({
@@ -23,12 +20,9 @@ export default function SearchFilters({
   setSearchType,
   ingredientQuery,
   setIngredientQuery,
-  flavorProfile,
-  setFlavorProfile,
-  tagFilter,
-  setTagFilter,
-  allTags,
-  flavorProfiles
+  tagFilters,
+  onTagFilterToggle,
+  allTags
 }: SearchFiltersProps) {
   const getPlaceholderText = () => {
     switch (searchType) {
@@ -74,34 +68,7 @@ export default function SearchFilters({
         </div>
       </div>
 
-      {/* Flavor Profile Filter Tags */}
-      {flavorProfiles.length > 0 && (
-        <div className="mb-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Flavor Profile:</h3>
-          <div className="flex flex-wrap gap-2">
-            {flavorProfiles.map(profile => (
-              <button
-                key={profile}
-                className={`
-                  relative text-xs px-3 py-1 rounded-md cursor-pointer transition-all duration-200 border
-                  ${flavorProfile === profile
-                    ? "bg-orange-600 text-white border-orange-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
-                  }
-                `}
-                onClick={() => setFlavorProfile(flavorProfile === profile ? null : profile)}
-              >
-                {profile.charAt(0).toUpperCase() + profile.slice(1)}
-                {flavorProfile === profile && (
-                  <X size={12} className="ml-1 inline-block" />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tag filters - NYT optimized */}
+      {/* Tag filters with multi-select and reduced padding */}
       {allTags.length > 0 && (
         <div className="mb-6">
           <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Tags:</h3>
@@ -110,16 +77,16 @@ export default function SearchFilters({
               <button
                 key={tag}
                 className={`
-                  relative text-xs px-3 py-1 rounded-md cursor-pointer transition-all duration-200 border
-                  ${tagFilter === tag
+                  relative text-xs px-3 py-0.5 rounded-md cursor-pointer transition-all duration-200 border
+                  ${tagFilters.includes(tag)
                     ? "bg-orange-600 text-white border-orange-600"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                   }
                 `}
-                onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
+                onClick={() => onTagFilterToggle(tag)}
               >
                 {tag}
-                {tagFilter === tag && (
+                {tagFilters.includes(tag) && (
                   <X size={12} className="ml-1 inline-block" />
                 )}
               </button>
