@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Heart, Share, ThumbsUp } from "lucide-react";
+import { Heart } from "lucide-react";
 import RecipeCard from "./RecipeCard";
 import { Cocktail } from "@/data/classicCocktails";
-import { isFavorite, isLiked } from "@/utils/favorites";
+import { isFavorite } from "@/utils/favorites";
 
 type RecipeGridProps = {
   recipes: Cocktail[];
@@ -59,9 +58,9 @@ export default function RecipeGrid({
           </div>
           
           {/* Airbnb-style favorite button */}
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-1 right-3">
             <button
-              className="p-2 rounded-full hover:scale-110 transition-transform duration-200"
+              className="p-1 rounded-full hover:scale-110 transition-transform duration-200"
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleFavorite(r);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
-import { TrendingUp, BookOpen, ThumbsUp, Heart, Share } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "./ui/button";
 import { getTrendingRecipes, getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { toggleFavorite, isFavorite } from "@/utils/favorites";
@@ -81,7 +81,7 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
     <div className="space-y-12 max-w-7xl mx-auto">
       {/* Hero Featured Recipes Carousel */}
       <section>
-        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1.4rem]">
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
           Featured Cocktails
         </h2>
         <Carousel
@@ -104,9 +104,9 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                   </div>
                   
                   {/* Airbnb-style favorite button */}
-                  <div className="absolute top-3 right-3">
+                  <div className="absolute top-1 right-3">
                     <button
-                      className="p-2 rounded-full hover:scale-110 transition-transform duration-200"
+                      className="p-1 rounded-full hover:scale-110 transition-transform duration-200"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(recipe);
@@ -136,12 +136,9 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
 
       {/* Trending Section Carousel */}
       <section>
-        <div className="flex items-center gap-3 mb-8">
-          <TrendingUp className="text-red-600" size={28} />
-          <h2 className="text-gray-900 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1.4rem]">
-            Trending Now
-          </h2>
-        </div>
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
+          Trending Now
+        </h2>
         <Carousel
           opts={{
             align: "start",
@@ -162,9 +159,9 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                   </div>
                   
                   {/* Airbnb-style favorite button */}
-                  <div className="absolute top-3 right-3">
+                  <div className="absolute top-1 right-3">
                     <button
-                      className="p-2 rounded-full hover:scale-110 transition-transform duration-200"
+                      className="p-1 rounded-full hover:scale-110 transition-transform duration-200"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(recipe);
@@ -194,12 +191,9 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
 
       {/* How-To Section Carousel - NYT Cooking Style */}
       <section>
-        <div className="flex items-center gap-3 mb-8">
-          <BookOpen className="text-red-600" size={28} />
-          <h2 className="text-gray-900 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1.4rem]">
-            Essential Techniques
-          </h2>
-        </div>
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
+          Essential Techniques
+        </h2>
         <Carousel
           opts={{
             align: "start",
