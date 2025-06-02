@@ -1,22 +1,23 @@
 
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
-import RecipeCard from "@/components/RecipeCard";
 import RecipeForm from "@/components/RecipeForm";
 import RecipeModal from "@/components/RecipeModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
+import MobileHeader from "@/components/MobileHeader";
+import LibraryHeader from "@/components/LibraryHeader";
+import SearchFilters from "@/components/SearchFilters";
+import RecipeGrid from "@/components/RecipeGrid";
 import { classicCocktails, Cocktail } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
 import { getFavoriteRecipes, toggleFavorite, isFavorite } from "@/utils/favorites";
 import { addLike, getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import TagBadge from "@/components/ui/tag";
-import { Search, Menu, X, Heart, Share, ThumbsUp } from "lucide-react";
+import { X } from "lucide-react";
 
 // New: Flavor profiles (you can adjust as needed)
 const FLAVOR_PROFILES = [
@@ -205,47 +206,17 @@ export default function Index() {
 
   const allTags = getAllTags(fullRecipes);
 
-  const getLibraryTitle = () => {
-    switch (library) {
-      case "featured": return "Featured";
-      case "all": return "All Cocktails";
-      case "classics": return "Classic Collection";
-      case "favorites": return "Your Favorites";
-      case "mine": return "My Creations";
-      default: return "Cocktails";
-    }
-  };
-
   // Mobile-first UI with NYT Cooking inspired aesthetic
   return (
     <div className="min-h-screen bg-white flex">
       {/* Mobile header */}
-      <header className="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-20 px-4 py-3 w-full">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
-            aria-label="Open menu"
-          >
-            <Menu size={24} />
-          </button>
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-display font-bold text-orange-600 tracking-wide">
-              BARBOOK
-            </h1>
-          </div>
-          <Button
-            size="sm"
-            onClick={() => {
-              setShowForm(true);
-              setEditing(null);
-            }}
-            className="text-sm px-3 bg-orange-600 text-white hover:bg-orange-700"
-          >
-            Add
-          </Button>
-        </div>
-      </header>
+      <MobileHeader
+        onSidebarOpen={() => setSidebarOpen(true)}
+        onAddRecipe={() => {
+          setShowForm(true);
+          setEditing(null);
+        }}
+      />
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
@@ -291,22 +262,10 @@ export default function Index() {
       {/* Main content - Scrollable */}
       <main className="flex-1 min-w-0 bg-gray-50 h-screen overflow-y-auto">
         <div className="px-4 lg:px-8 py-4 lg:py-8">
-          {/* Mobile library title */}
-          <div className="lg:hidden mb-4">
-            <h2 className="text-xl font-display font-semibold text-gray-900">
-              {getLibraryTitle()}
-            </h2>
-            {library === "mine" && (
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="mt-2 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-                onClick={() => setCopyDialogOpen(true)}
-              >
-                Copy from…
-              </Button>
-            )}
-          </div>
+          <LibraryHeader
+            library={library}
+            onCopyDialogOpen={() => setCopyDialogOpen(true)}
+          />
 
           {/* Render Featured component for featured library */}
           {library === "featured" ? (
@@ -329,169 +288,30 @@ export default function Index() {
             />
           ) : (
             <>
-              {/* Desktop header with NYT styling */}
-              <div className="hidden lg:flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-3xl xl:text-4xl font-display font-light text-gray-900 mb-1 tracking-wide">
-                    {getLibraryTitle()}
-                  </h2>
-                </div>
-                {library === "mine" && (
-                  <Button 
-                    variant="secondary" 
-                    onClick={() => setCopyDialogOpen(true)}
-                    className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-                  >
-                    Copy from…
-                  </Button>
-                )}
-              </div>
+              <SearchFilters
+                searchType={searchType}
+                setSearchType={setSearchType}
+                ingredientQuery={ingredientQuery}
+                setIngredientQuery={setIngredientQuery}
+                flavorProfile={flavorProfile}
+                setFlavorProfile={setFlavorProfile}
+                tagFilter={tagFilter}
+                setTagFilter={setTagFilter}
+                allTags={allTags}
+                flavorProfiles={FLAVOR_PROFILES}
+              />
 
-              {/* Enhanced Search & Filter - NYT inspired */}
-              <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
-                {/* Search section */}
-                <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
-                  {/* Search type selector */}
-                  <select
-                    value={searchType}
-                    onChange={e => setSearchType(e.target.value as "ingredient" | "tag")}
-                    className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 text-sm min-w-[120px] focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
-                    aria-label="Search by"
-                  >
-                    <option value="ingredient">Ingredient</option>
-                    <option value="tag">Tag</option>
-                  </select>
-                  
-                  {/* Search bar */}
-                  <div className="relative flex-1">
-                    <Input
-                      value={ingredientQuery}
-                      onChange={e => setIngredientQuery(e.target.value)}
-                      placeholder={searchType === "ingredient" ? "Search by ingredient…" : "Search by tag…"}
-                      className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-orange-500"
-                    />
-                    <Search className="absolute left-2.5 top-2.5 text-gray-400" size={16} />
-                  </div>
-                </div>
-
-                {/* Flavor profile dropdown */}
-                <div className="sm:w-auto">
-                  <select
-                    className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 w-full sm:min-w-[150px] text-sm focus:border-orange-500"
-                    value={flavorProfile || ""}
-                    onChange={e => setFlavorProfile(e.target.value || null)}
-                    aria-label="Flavor profile"
-                  >
-                    <option value="">All Flavors</option>
-                    {FLAVOR_PROFILES.map(f => (
-                      <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Tag filters - NYT optimized */}
-              {allTags.length > 0 && (
-                <div className="mb-6">
-                  <div className="flex flex-wrap gap-2">
-                    {allTags.map(tag => (
-                      <TagBadge
-                        key={tag}
-                        className={`
-                          text-xs px-3 py-1 cursor-pointer transition-all duration-200 border
-                          ${tagFilter === tag
-                            ? "bg-orange-600 text-white border-orange-600"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
-                          }
-                        `}
-                        onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
-                      >
-                        {tag}
-                      </TagBadge>
-                    ))}
-                    {tagFilter && (
-                      <button
-                        onClick={() => setTagFilter(null)}
-                        className="text-xs px-3 py-1 rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
-                      >
-                        Clear
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Empty state */}
-              {displayed.length === 0 && (
-                <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
-                  <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
-                  {library !== "classics" && library !== "favorites" && (
-                    <Button 
-                      onClick={() => setShowForm(true)} 
-                      className="w-full sm:w-auto bg-orange-600 text-white hover:bg-orange-700"
-                    >
-                      Add Your First Recipe
-                    </Button>
-                  )}
-                </div>
-              )}
-
-              {/* Recipe grid - NYT inspired cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-                {displayed.map((r) => (
-                  <div key={`${r.id}-${forceUpdate}`} className="relative group">
-                    <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
-                      <RecipeCard
-                        recipe={r}
-                        onSelect={() => handleRecipeClick(r)}
-                        editable={false}
-                        onTagClick={(tag) => setTagFilter(tag)}
-                      />
-                    </div>
-                    
-                    {/* Action buttons */}
-                    <div className="absolute top-3 right-3 flex flex-col gap-2">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                          isFavorite(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleFavorite(r);
-                        }}
-                      >
-                        <Heart size={14} fill={isFavorite(r.id) ? 'currentColor' : 'none'} />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                          isLiked(r.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleLike(r);
-                        }}
-                      >
-                        <ThumbsUp size={14} fill={isLiked(r.id) ? 'currentColor' : 'none'} />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="p-2 bg-white/90 hover:bg-white text-gray-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full hover:text-gray-800"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleShareRecipe(r);
-                        }}
-                      >
-                        <Share size={14} />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <RecipeGrid
+                recipes={displayed}
+                onRecipeClick={handleRecipeClick}
+                onToggleFavorite={handleToggleFavorite}
+                onLike={handleLike}
+                onShareRecipe={handleShareRecipe}
+                onTagClick={setTagFilter}
+                onShowForm={() => setShowForm(true)}
+                forceUpdate={forceUpdate}
+                library={library}
+              />
             </>
           )}
         </div>

@@ -24,3 +24,6 @@ export function isFavorite(recipeId: string): boolean {
   const favorites = getFavoriteRecipes();
   return favorites.includes(recipeId);
 }
+
+// Re-export from likes utility for convenience
+export { isLiked } from "./likes";
