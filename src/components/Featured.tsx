@@ -82,10 +82,10 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
     <div className="space-y-16 max-w-7xl mx-auto">
       {/* Hero Featured Recipes Carousel */}
       <section>
-        <h2 className="text-3xl lg:text-4xl font-serif font-normal text-gray-900 mb-12 tracking-wide text-left">
+        <h2 className="text-3xl lg:text-4xl font-serif font-normal text-gray-900 mb-12 tracking-wide text-center">
           Featured Cocktails
         </h2>
-        <div className="relative">
+        <div className="relative px-12">
           <Carousel
             opts={{
               align: "start",
@@ -149,37 +149,21 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 </CarouselItem>
               ))}
             </CarouselContent>
-            
-            {/* Custom navigation positioned under cards, aligned left - Made 36px wide */}
-            <div className="flex items-center gap-2 mt-3 justify-start">
-              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
-                <img 
-                  src="/lovable-uploads/f9fc9f68-2c1c-4752-894b-9ab298d67509.png" 
-                  alt="Previous" 
-                  className="w-9 h-9 object-contain"
-                />
-              </CarouselPrevious>
-              <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
-                <img 
-                  src="/lovable-uploads/40b40a9e-b05b-49cd-87c5-0da66e3ceb65.png" 
-                  alt="Next" 
-                  className="w-9 h-9 object-contain"
-                />
-              </CarouselNext>
-            </div>
+            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
           </Carousel>
         </div>
       </section>
 
       {/* Trending Section Carousel */}
       <section>
-        <div className="flex items-center justify-start gap-3 mb-12">
+        <div className="flex items-center justify-center gap-3 mb-12">
           <TrendingUp className="text-red-600" size={28} />
           <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
             Trending Now
           </h2>
         </div>
-        <div className="relative">
+        <div className="relative px-12">
           <Carousel
             opts={{
               align: "start",
@@ -243,37 +227,21 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 </CarouselItem>
               ))}
             </CarouselContent>
-            
-            {/* Custom navigation positioned under cards, aligned left - Made 36px wide */}
-            <div className="flex items-center gap-2 mt-3 justify-start">
-              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
-                <img 
-                  src="/lovable-uploads/f9fc9f68-2c1c-4752-894b-9ab298d67509.png" 
-                  alt="Previous" 
-                  className="w-9 h-9 object-contain"
-                />
-              </CarouselPrevious>
-              <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
-                <img 
-                  src="/lovable-uploads/40b40a9e-b05b-49cd-87c5-0da66e3ceb65.png" 
-                  alt="Next" 
-                  className="w-9 h-9 object-contain"
-                />
-              </CarouselNext>
-            </div>
+            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
           </Carousel>
         </div>
       </section>
 
       {/* How-To Section Carousel - NYT Cooking Style */}
       <section>
-        <div className="flex items-center justify-start gap-3 mb-12">
+        <div className="flex items-center justify-center gap-3 mb-12">
           <BookOpen className="text-red-600" size={28} />
           <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
             Essential Techniques
           </h2>
         </div>
-        <div className="relative">
+        <div className="relative px-12">
           <Carousel
             opts={{
               align: "start",
@@ -305,24 +273,8 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
                 </CarouselItem>
               ))}
             </CarouselContent>
-            
-            {/* Custom navigation positioned under cards, aligned left - Made 36px wide */}
-            <div className="flex items-center gap-2 mt-3 justify-start">
-              <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
-                <img 
-                  src="/lovable-uploads/f9fc9f68-2c1c-4752-894b-9ab298d67509.png" 
-                  alt="Previous" 
-                  className="w-9 h-9 object-contain"
-                />
-              </CarouselPrevious>
-              <CarouselNext className="relative right-0 top-0 translate-y-0 h-12 w-12 bg-transparent hover:bg-transparent border-0 shadow-none p-0">
-                <img 
-                  src="/lovable-uploads/40b40a9e-b05b-49cd-87c5-0da66e3ceb65.png" 
-                  alt="Next" 
-                  className="w-9 h-9 object-contain"
-                />
-              </CarouselNext>
-            </div>
+            <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
+            <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm rounded-full transition-all duration-200" />
           </Carousel>
         </div>
       </section>
