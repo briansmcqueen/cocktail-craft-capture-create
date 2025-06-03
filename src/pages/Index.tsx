@@ -228,7 +228,11 @@ export default function Index() {
           editable={false}
           onShareRecipe={handleShareRecipe}
         />
-        <ShareRecipe recipe={shareRecipe} onClose={handleCloseShare} />
+        <ShareRecipe 
+          recipe={shareRecipe} 
+          open={!!shareRecipe} 
+          onOpenChange={(open) => !open && setShareRecipe(null)} 
+        />
       </div>
     );
   }
@@ -243,21 +247,13 @@ export default function Index() {
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
         <div className="flex h-screen">
           <Sidebar
-            library={library}
-            onLibraryChange={setLibrary}
-            onNewRecipe={() => setShowForm(true)}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            selectedTags={selectedTags}
-            onTagsChange={setSelectedTags}
-            open={sidebarOpen}
-            onOpenChange={setSidebarOpen}
+            active={library}
+            onSelect={setLibrary}
+            onAdd={() => setShowForm(true)}
           />
 
           <div className="flex-1 flex flex-col overflow-hidden">
             <MobileHeader
-              library={library}
-              onLibraryChange={setLibrary}
               onMenuClick={() => setSidebarOpen(true)}
               onNewRecipe={() => setShowForm(true)}
             />
@@ -278,7 +274,7 @@ export default function Index() {
                 ) : (
                   <>
                     <LibraryHeader
-                      library={library}
+                      library={library as any}
                       onNewRecipe={() => setShowForm(true)}
                       userRecipes={userRecipes}
                       onDeleteRecipe={handleDeleteRecipe}
@@ -286,11 +282,14 @@ export default function Index() {
 
                     {!isMobile && (
                       <SearchFilters
-                        searchTerm={searchTerm}
-                        onSearchChange={setSearchTerm}
-                        selectedTags={selectedTags}
-                        onTagsChange={setSelectedTags}
-                        allRecipes={allRecipes}
+                        searchType="everything"
+                        setSearchType={() => {}}
+                        ingredientQuery={searchTerm}
+                        setIngredientQuery={setSearchTerm}
+                        tagFilters={selectedTags}
+                        onTagFilterToggle={handleTagClick}
+                        allTags={[]}
+                        recipes={allRecipes}
                       />
                     )}
 
@@ -339,7 +338,11 @@ export default function Index() {
           onShareRecipe={handleShareRecipe}
         />
 
-        <ShareRecipe recipe={shareRecipe} onClose={handleCloseShare} />
+        <ShareRecipe 
+          recipe={shareRecipe} 
+          open={!!shareRecipe} 
+          onOpenChange={(open) => !open && setShareRecipe(null)} 
+        />
       </div>
     </AuthenticatedApp>
   );
