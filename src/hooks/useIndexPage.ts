@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
+import { useAuth } from "@/hooks/useAuth";
 
 export function useIndexPage() {
+  const { user } = useAuth();
   const [selectedRecipe, setSelectedRecipe] = useState<Cocktail | null>(null);
   const [library, setLibrary] = useState("featured");
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +17,6 @@ export function useIndexPage() {
   const [forceUpdate, setForceUpdate] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [userRecipes, setUserRecipes] = useState<Cocktail[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -27,8 +28,10 @@ export function useIndexPage() {
   }, []);
 
   useEffect(() => {
-    setUserRecipes(getUserRecipes());
-  }, []);
+    if (user) {
+      setUserRecipes(getUserRecipes());
+    }
+  }, [user]);
 
   useEffect(() => {
     const handleUpdate = () => {
@@ -44,6 +47,7 @@ export function useIndexPage() {
   };
 
   const handleSaveRecipe = (recipe: Cocktail) => {
+    if (!user) return;
     saveUserRecipe(recipe);
     setUserRecipes(getUserRecipes());
     setShowForm(false);
@@ -51,11 +55,13 @@ export function useIndexPage() {
   };
 
   const handleDeleteRecipe = (id: string) => {
+    if (!user) return;
     deleteUserRecipe(id);
     setUserRecipes(getUserRecipes());
   };
 
   const handleEditRecipe = (recipe: Cocktail) => {
+    if (!user) return;
     setEditingRecipe(recipe);
     setShowForm(true);
   };
@@ -64,16 +70,18 @@ export function useIndexPage() {
     setShareRecipe(recipe);
   };
 
-  const handleCloseShare = () => {
-    setShareRecipe(null);
-  };
-
   const handleLike = (recipe: Cocktail) => {
+    if (!user) return;
     console.log('Like recipe:', recipe.name);
+    // Like functionality would be implemented here
+    window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
+    if (!user) return;
     console.log('Toggle favorite:', recipe.name);
+    // Favorite functionality would be implemented here
+    window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleTagClick = (tag: string) => {
@@ -85,13 +93,13 @@ export function useIndexPage() {
   };
 
   const allRecipes = [...classicCocktails, ...userRecipes];
-  const favoriteRecipes = allRecipes.filter(recipe => 
+  const favoriteRecipes = user ? allRecipes.filter(recipe => 
     localStorage.getItem('barbook_favorites')?.includes(recipe.id) || false
-  );
+  ) : [];
 
   const getFilteredRecipes = () => {
     let recipes = library === "classics" ? classicCocktails 
-                 : library === "user" ? userRecipes
+                 : library === "mine" ? userRecipes
                  : library === "favorites" ? favoriteRecipes
                  : allRecipes;
 
@@ -134,14 +142,11 @@ export function useIndexPage() {
     forceUpdate,
     isMobile,
     userRecipes,
-    sidebarOpen,
-    setSidebarOpen,
     handleRecipeClick,
     handleSaveRecipe,
     handleDeleteRecipe,
     handleEditRecipe,
     handleShareRecipe,
-    handleCloseShare,
     handleLike,
     handleToggleFavorite,
     handleTagClick,
