@@ -22,13 +22,18 @@ const InstagramIcon = ({ size = 18, className = "" }: { size?: number; className
 );
 
 type ShareRecipeProps = {
-  recipe: Cocktail;
+  recipe: Cocktail | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
 export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeProps) {
   const [copied, setCopied] = useState(false);
+
+  // Early return if recipe is null
+  if (!recipe) {
+    return null;
+  }
 
   const shareUrl = `${window.location.origin}/?recipe=${encodeURIComponent(recipe.name)}`;
   
