@@ -17,7 +17,8 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
 
@@ -34,6 +35,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
 
     try {
       if (mode === 'signup') {
+        const fullName = `${firstName} ${lastName}`.trim();
         const { error } = await signUp(email, password, fullName);
         if (error) {
           toast({
@@ -72,7 +74,8 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
   const resetForm = () => {
     setEmail('');
     setPassword('');
-    setFullName('');
+    setFirstName('');
+    setLastName('');
   };
 
   const switchMode = () => {
@@ -84,23 +87,35 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-center">
+          <DialogTitle className="text-2xl font-serif text-center text-white">
             {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'signup' && (
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+            </>
           )}
 
           <div className="space-y-2">

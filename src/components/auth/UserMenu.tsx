@@ -55,7 +55,7 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.user_metadata?.avatar_url} />
-            <AvatarFallback>{initials}</AvatarFallback>
+            <AvatarFallback className="bg-orange-600 text-white font-medium">{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
