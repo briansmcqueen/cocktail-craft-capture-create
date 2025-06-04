@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
@@ -126,15 +127,15 @@ export default function Index() {
                 <div className="flex gap-2">
                   <Button 
                     onClick={handleSignUpClick}
-                    variant="outline"
-                    className="gap-2 border-orange-600 text-orange-600 hover:bg-orange-50"
+                    variant="secondary"
+                    className="gap-2 bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
                   >
                     <User className="h-4 w-4" />
                     Create Account
                   </Button>
                   <Button 
                     onClick={handleSignInClick}
-                    className="gap-2 bg-orange-600 hover:bg-orange-700"
+                    className="gap-2 bg-orange-600 hover:bg-orange-700 text-white"
                   >
                     <LogIn className="h-4 w-4" />
                     Sign In
