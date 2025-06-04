@@ -10,15 +10,23 @@ import { toast } from '@/hooks/use-toast';
 interface AuthModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialMode?: 'signin' | 'signup';
 }
 
-export default function AuthModal({ open, onOpenChange }: AuthModalProps) {
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }: AuthModalProps) {
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
+
+  // Reset mode when modal opens with new initialMode
+  useState(() => {
+    if (open) {
+      setMode(initialMode);
+    }
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,7 +127,7 @@ export default function AuthModal({ open, onOpenChange }: AuthModalProps) {
           </div>
 
           <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700" disabled={loading}>
-            {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
+            {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
           </Button>
         </form>
 

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
@@ -19,6 +18,7 @@ import UserMenu from "@/components/auth/UserMenu";
 export default function Index() {
   const { user, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
   
   const {
     selectedRecipe,
@@ -77,6 +77,16 @@ export default function Index() {
     handleAuthenticatedAction(() => handleToggleFavorite(recipe));
   };
 
+  const handleSignInClick = () => {
+    setAuthModalMode('signin');
+    setShowAuthModal(true);
+  };
+
+  const handleSignUpClick = () => {
+    setAuthModalMode('signup');
+    setShowAuthModal(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -113,17 +123,28 @@ export default function Index() {
                   onFavoritesClick={() => setLibrary("favorites")}
                 />
               ) : (
-                <Button 
-                  onClick={() => setShowAuthModal(true)}
-                  className="gap-2 bg-orange-600 hover:bg-orange-700"
-                >
-                  <LogIn className="h-4 w-4" />
-                  Sign In
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleSignUpClick}
+                    variant="outline"
+                    className="gap-2 border-orange-600 text-orange-600 hover:bg-orange-50"
+                  >
+                    <User className="h-4 w-4" />
+                    Create Account
+                  </Button>
+                  <Button 
+                    onClick={handleSignInClick}
+                    className="gap-2 bg-orange-600 hover:bg-orange-700"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Sign In
+                  </Button>
+                </div>
               )}
             </div>
           </div>
 
+          {/* Main content */}
           <main className="flex-1 overflow-auto">
             <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-8">
               {showForm ? (
@@ -210,7 +231,11 @@ export default function Index() {
         </div>
       </div>
 
-      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
+      <AuthModal 
+        open={showAuthModal} 
+        onOpenChange={setShowAuthModal}
+        initialMode={authModalMode}
+      />
       <RecipeModal
         open={!!selectedRecipe}
         onOpenChange={(open) => !open && setSelectedRecipe(null)}
