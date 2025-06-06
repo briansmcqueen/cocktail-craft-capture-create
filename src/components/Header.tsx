@@ -10,9 +10,20 @@ interface HeaderProps {
   onSignInClick: () => void;
   onSignUpClick: () => void;
   onLibraryChange: (library: string) => void;
+  onProfileClick: () => void;
+  onMyRecipesClick: () => void;
+  onFavoritesClick: () => void;
 }
 
-export default function Header({ user, onSignInClick, onSignUpClick, onLibraryChange }: HeaderProps) {
+export default function Header({ 
+  user, 
+  onSignInClick, 
+  onSignUpClick, 
+  onLibraryChange,
+  onProfileClick,
+  onMyRecipesClick,
+  onFavoritesClick
+}: HeaderProps) {
   return (
     <div className="bg-white border-b border-gray-200 px-4 py-4">
       <div className="flex items-center justify-between">
@@ -26,9 +37,9 @@ export default function Header({ user, onSignInClick, onSignUpClick, onLibraryCh
         </div>
         {user ? (
           <UserMenu
-            onProfileClick={() => {}}
-            onMyRecipesClick={() => onLibraryChange("mine")}
-            onFavoritesClick={() => onLibraryChange("favorites")}
+            onProfileClick={onProfileClick}
+            onMyRecipesClick={onMyRecipesClick}
+            onFavoritesClick={onFavoritesClick}
           />
         ) : (
           <div className="flex gap-2">

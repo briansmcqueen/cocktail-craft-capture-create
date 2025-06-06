@@ -1,3 +1,4 @@
+
 import { Book, Plus, Edit, Star, TrendingUp, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -5,6 +6,7 @@ type SidebarProps = {
   active: string;
   onSelect: (id: string) => void;
   onAdd: () => void;
+  onCloseForm?: () => void;
 };
 
 const nav = [
@@ -15,7 +17,14 @@ const nav = [
   { id: "mine", label: "My Creations", icon: Edit },
 ];
 
-export default function Sidebar({ active, onSelect, onAdd }: SidebarProps) {
+export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: SidebarProps) {
+  const handleNavClick = (id: string) => {
+    if (onCloseForm) {
+      onCloseForm();
+    }
+    onSelect(id);
+  };
+
   return (
     <aside className="bg-white border-r border-gray-200 w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0">
       <div className="px-6 mb-8">
@@ -33,7 +42,7 @@ export default function Sidebar({ active, onSelect, onAdd }: SidebarProps) {
                 ? "bg-orange-50 text-orange-700 border border-orange-200" 
                 : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
             )}
-            onClick={() => onSelect(item.id)}
+            onClick={() => handleNavClick(item.id)}
           >
             <item.icon size={20} />
             <span>{item.label}</span>

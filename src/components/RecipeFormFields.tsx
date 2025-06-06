@@ -120,9 +120,9 @@ export default function RecipeFormFields({
           Ingredients <span className="text-xs text-gray-500">(one per line)</span>
           <Button
             type="button"
-            variant="ghost"
+            variant="secondary"
             size="sm"
-            className="ml-2 text-xs text-gray-600 hover:text-gray-900"
+            className="ml-2 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
             onClick={() => setShowIngredientSuggestions(!showIngredientSuggestions)}
           >
             Quick Add
@@ -156,9 +156,9 @@ export default function RecipeFormFields({
           Steps
           <Button
             type="button"
-            variant="ghost"
+            variant="secondary"
             size="sm"
-            className="ml-2 text-xs text-gray-600 hover:text-gray-900"
+            className="ml-2 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
             onClick={() => setShowStepSuggestions(!showStepSuggestions)}
           >
             Templates

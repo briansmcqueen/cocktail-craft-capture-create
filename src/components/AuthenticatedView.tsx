@@ -70,6 +70,11 @@ export default function AuthenticatedView({
   onFavoritesClick,
   forceUpdate
 }: AuthenticatedViewProps) {
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingRecipe(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="flex h-screen">
@@ -77,6 +82,7 @@ export default function AuthenticatedView({
           active={library}
           onSelect={setLibrary}
           onAdd={handleAddRecipe}
+          onCloseForm={handleCloseForm}
         />
 
         <div className="flex-1 flex flex-col overflow-hidden">
