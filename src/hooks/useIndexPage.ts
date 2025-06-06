@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
+import { toggleFavorite, getFavoriteRecipes } from "@/utils/favorites";
+import { toggleLike } from "@/utils/likes";
 import { useAuth } from "@/hooks/useAuth";
 
 export function useIndexPage() {
@@ -72,15 +74,13 @@ export function useIndexPage() {
 
   const handleLike = (recipe: Cocktail) => {
     if (!user) return;
-    console.log('Like recipe:', recipe.name);
-    // Like functionality would be implemented here
+    toggleLike(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleToggleFavorite = (recipe: Cocktail) => {
     if (!user) return;
-    console.log('Toggle favorite:', recipe.name);
-    // Favorite functionality would be implemented here
+    toggleFavorite(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   };
 
@@ -94,7 +94,7 @@ export function useIndexPage() {
 
   const allRecipes = [...classicCocktails, ...userRecipes];
   const favoriteRecipes = user ? allRecipes.filter(recipe => 
-    localStorage.getItem('barbook_favorites')?.includes(recipe.id) || false
+    getFavoriteRecipes().includes(recipe.id)
   ) : [];
 
   const getFilteredRecipes = () => {

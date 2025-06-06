@@ -6,6 +6,7 @@ import { Edit, Heart, ThumbsUp, X, Share, Copy } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { isFavorite, toggleFavorite } from "@/utils/favorites";
+import { getUserRecipes } from "@/utils/storage";
 
 type Props = {
   open: boolean;
@@ -27,6 +28,9 @@ export default function RecipeModal({
   onRemix 
 }: Props) {
   if (!recipe) return null;
+
+  const userRecipes = getUserRecipes();
+  const isUserRecipe = userRecipes.some(r => r.id === recipe.id);
 
   const handleLike = () => {
     toggleLike(recipe.id);
@@ -104,7 +108,7 @@ export default function RecipeModal({
                 ))}
               </div>
             )}
-            {likeCount > 0 && (
+            {likeCount > 0 && !isUserRecipe && (
               <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
                 <ThumbsUp size={12} />
                 <span>{likeCount} like{likeCount === 1 ? '' : 's'}</span>
@@ -124,16 +128,20 @@ export default function RecipeModal({
               <Heart size={16} fill={isRecipeFavorited ? 'currentColor' : 'none'} />
               {isRecipeFavorited ? 'Favorited' : 'Favorite'}
             </Button>
-            <Button
-              variant="secondary"
-              className={`flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors ${
-                isRecipeLiked ? 'text-red-600 border-red-200 bg-red-50 hover:bg-red-100' : 'text-gray-500 hover:text-red-600'
-              }`}
-              onClick={handleLike}
-            >
-              <ThumbsUp size={16} fill={isRecipeLiked ? 'currentColor' : 'none'} />
-              {isRecipeLiked ? 'Liked' : 'Like'}
-            </Button>
+            
+            {!isUserRecipe && (
+              <Button
+                variant="secondary"
+                className={`flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors ${
+                  isRecipeLiked ? 'text-red-600 border-red-200 bg-red-50 hover:bg-red-100' : 'text-gray-500 hover:text-red-600'
+                }`}
+                onClick={handleLike}
+              >
+                <ThumbsUp size={16} fill={isRecipeLiked ? 'currentColor' : 'none'} />
+                {isRecipeLiked ? 'Liked' : 'Like'}
+              </Button>
+            )}
+            
             {onShareRecipe && (
               <Button
                 variant="secondary"

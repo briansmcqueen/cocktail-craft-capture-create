@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { getTrendingRecipes } from "@/utils/likes";
 import FeaturedSection from "./FeaturedSection";
@@ -22,6 +22,17 @@ export default function Featured({
   userRecipes,
   onToggleFavorite 
 }: FeaturedProps) {
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('favorites-update', handleUpdate);
+    return () => window.removeEventListener('favorites-update', handleUpdate);
+  }, []);
+
   const trendingRecipes = getTrendingRecipes(recipes);
   const featuredRecipes = recipes.slice(0, 8);
 
@@ -32,6 +43,7 @@ export default function Featured({
         recipes={featuredRecipes}
         onRecipeClick={onRecipeClick}
         onToggleFavorite={onToggleFavorite}
+        forceUpdate={forceUpdate}
       />
 
       <FeaturedSection
@@ -39,6 +51,7 @@ export default function Featured({
         recipes={trendingRecipes}
         onRecipeClick={onRecipeClick}
         onToggleFavorite={onToggleFavorite}
+        forceUpdate={forceUpdate}
       />
 
       <TechniquesSection />

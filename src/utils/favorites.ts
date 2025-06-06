@@ -17,6 +17,10 @@ export function toggleFavorite(recipeId: string): boolean {
   }
   
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  
+  // Dispatch event to update UI
+  window.dispatchEvent(new Event('favorites-update'));
+  
   return index === -1; // Return true if added, false if removed
 }
 
