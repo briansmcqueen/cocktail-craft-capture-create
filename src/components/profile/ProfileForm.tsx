@@ -1,9 +1,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Save } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
 interface Profile {
   id: string;
@@ -31,11 +30,13 @@ export default function ProfileForm({
   return (
     <div className="space-y-4">
       <div>
-        <Label htmlFor="fullName">Full Name</Label>
+        <Label htmlFor="email">Email</Label>
         <Input
-          id="fullName"
-          value={profile.full_name || ''}
-          onChange={(e) => onProfileChange({ full_name: e.target.value })}
+          id="email"
+          type="email"
+          value={email || ''}
+          disabled
+          className="bg-gray-50"
         />
       </div>
 
@@ -45,7 +46,17 @@ export default function ProfileForm({
           id="username"
           value={profile.username || ''}
           onChange={(e) => onProfileChange({ username: e.target.value })}
-          placeholder="Choose a unique username"
+          placeholder="Choose a username"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="fullName">Full Name</Label>
+        <Input
+          id="fullName"
+          value={profile.full_name || ''}
+          onChange={(e) => onProfileChange({ full_name: e.target.value })}
+          placeholder="Your full name"
         />
       </div>
 
@@ -55,21 +66,16 @@ export default function ProfileForm({
           id="bio"
           value={profile.bio || ''}
           onChange={(e) => onProfileChange({ bio: e.target.value })}
-          placeholder="Tell us about yourself..."
+          placeholder="Tell us about yourself"
           rows={3}
         />
       </div>
 
-      <div>
-        <Label>Email</Label>
-        <Input value={email || ''} disabled />
-        <p className="text-sm text-muted-foreground mt-1">
-          Contact support to change your email address
-        </p>
-      </div>
-
-      <Button onClick={onSave} disabled={saving} className="w-full gap-2 bg-orange-600 hover:bg-orange-700">
-        <Save className="h-4 w-4" />
+      <Button 
+        onClick={onSave} 
+        disabled={saving}
+        className="bg-orange-600 hover:bg-orange-700 text-white"
+      >
         {saving ? 'Saving...' : 'Save Changes'}
       </Button>
     </div>

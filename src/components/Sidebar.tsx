@@ -1,5 +1,5 @@
 
-import { Book, Plus, Edit, Star, TrendingUp, Home } from "lucide-react";
+import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SidebarProps = {
@@ -12,7 +12,7 @@ type SidebarProps = {
 const nav = [
   { id: "featured", label: "Featured", icon: Home },
   { id: "all", label: "All", icon: Book },
-  { id: "classics", label: "Classics", icon: Book },
+  { id: "ingredients", label: "Find by Ingredients", icon: ChefHat },
   { id: "favorites", label: "Favorites", icon: Star },
   { id: "mine", label: "My Creations", icon: Edit },
 ];

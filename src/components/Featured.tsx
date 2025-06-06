@@ -43,7 +43,6 @@ export default function Featured({
         recipes={featuredRecipes}
         onRecipeClick={onRecipeClick}
         onToggleFavorite={onToggleFavorite}
-        forceUpdate={forceUpdate}
       />
 
       <FeaturedSection
@@ -51,7 +50,6 @@ export default function Featured({
         recipes={trendingRecipes}
         onRecipeClick={onRecipeClick}
         onToggleFavorite={onToggleFavorite}
-        forceUpdate={forceUpdate}
       />
 
       <TechniquesSection />

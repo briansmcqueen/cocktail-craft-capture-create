@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
-import { Heart, ThumbsUp, Share } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "./ui/button";
-import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { toggleFavorite, isFavorite } from "@/utils/favorites";
 import { getUserRecipes } from "@/utils/storage";
 
@@ -28,23 +27,10 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
     return () => window.removeEventListener('favorites-update', handleUpdate);
   }, []);
 
-  const userRecipesList = getUserRecipes();
-
-  const handleLike = (e: React.MouseEvent, recipe: Cocktail) => {
-    e.stopPropagation();
-    toggleLike(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
-  };
-
   const handleToggleFavorite = (e: React.MouseEvent, recipe: Cocktail) => {
     e.stopPropagation();
     toggleFavorite(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
-  };
-
-  const handleShare = (e: React.MouseEvent, recipe: Cocktail) => {
-    e.stopPropagation();
-    onShareRecipe(recipe);
   };
 
   if (favoriteRecipes.length === 0) {
@@ -69,56 +55,30 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-        {favoriteRecipes.map((recipe) => {
-          const isUserRecipe = userRecipesList.some(r => r.id === recipe.id);
-          
-          return (
-            <div key={`${recipe.id}-${forceUpdate}`} className="relative group">
-              <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white shadow-sm hover:shadow-md">
-                <RecipeCard
-                  recipe={recipe}
-                  onSelect={() => onRecipeClick(recipe)}
-                  editable={false}
-                />
-              </div>
-              
-              <div className="absolute top-3 right-3 flex flex-col gap-2">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                    isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                  }`}
-                  onClick={(e) => handleToggleFavorite(e, recipe)}
-                >
-                  <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
-                </Button>
-                
-                {!isUserRecipe && (
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                      isLiked(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                    }`}
-                    onClick={(e) => handleLike(e, recipe)}
-                  >
-                    <ThumbsUp size={14} fill={isLiked(recipe.id) ? 'currentColor' : 'none'} />
-                  </Button>
-                )}
-                
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="p-2 bg-white/90 hover:bg-white text-red-600 border border-gray-200 shadow-sm backdrop-blur-sm rounded-full"
-                  onClick={(e) => handleShare(e, recipe)}
-                >
-                  <Share size={14} />
-                </Button>
-              </div>
+        {favoriteRecipes.map((recipe) => (
+          <div key={`${recipe.id}-${forceUpdate}`} className="relative group">
+            <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white shadow-sm hover:shadow-md">
+              <RecipeCard
+                recipe={recipe}
+                onSelect={() => onRecipeClick(recipe)}
+                editable={false}
+              />
             </div>
-          );
-        })}
+            
+            <div className="absolute top-3 right-3">
+              <Button
+                size="sm"
+                variant="secondary"
+                className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
+                  isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
+                }`}
+                onClick={(e) => handleToggleFavorite(e, recipe)}
+              >
+                <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
+              </Button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

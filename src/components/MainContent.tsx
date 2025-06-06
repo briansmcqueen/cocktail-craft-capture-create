@@ -7,6 +7,7 @@ import SearchFilters from "@/components/SearchFilters";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
 import RecipeGrid from "@/components/RecipeGrid";
+import IngredientFilter from "@/components/IngredientFilter";
 import { Button } from "@/components/ui/button";
 import { User as UserIcon } from "lucide-react";
 
@@ -85,7 +86,7 @@ export default function MainContent({
         onCopyDialogOpen={() => {}}
       />
 
-      {!isMobile && (
+      {!isMobile && library !== "featured" && library !== "ingredients" && (
         <SearchFilters
           searchType="everything"
           setSearchType={() => {}}
@@ -106,6 +107,14 @@ export default function MainContent({
           onShareRecipe={handleShareRecipe}
           userRecipes={userRecipes}
           onToggleFavorite={handleFavoriteWithAuth}
+        />
+      ) : library === "ingredients" ? (
+        <IngredientFilter
+          recipes={allRecipes}
+          onRecipeClick={handleRecipeClick}
+          onToggleFavorite={handleFavoriteWithAuth}
+          onTagClick={handleTagClick}
+          forceUpdate={forceUpdate}
         />
       ) : library === "favorites" ? (
         user ? (

@@ -55,6 +55,12 @@ export default function AvatarUpload({
         .getPublicUrl(fileName);
 
       onAvatarChange(data.publicUrl);
+      
+      // Update the user's metadata to refresh the profile icon
+      await supabase.auth.updateUser({
+        data: { avatar_url: data.publicUrl }
+      });
+      
       toast({
         title: "Avatar uploaded",
         description: "Your profile picture has been updated.",
