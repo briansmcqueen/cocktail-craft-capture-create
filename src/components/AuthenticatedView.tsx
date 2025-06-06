@@ -32,6 +32,9 @@ interface AuthenticatedViewProps {
   setShowAuthModal: (show: boolean) => void;
   onSignInClick: () => void;
   onSignUpClick: () => void;
+  onProfileClick: () => void;
+  onMyRecipesClick: () => void;
+  onFavoritesClick: () => void;
   forceUpdate: number;
 }
 
@@ -62,6 +65,9 @@ export default function AuthenticatedView({
   setShowAuthModal,
   onSignInClick,
   onSignUpClick,
+  onProfileClick,
+  onMyRecipesClick,
+  onFavoritesClick,
   forceUpdate
 }: AuthenticatedViewProps) {
   return (
@@ -79,6 +85,9 @@ export default function AuthenticatedView({
             onSignInClick={onSignInClick}
             onSignUpClick={onSignUpClick}
             onLibraryChange={setLibrary}
+            onProfileClick={onProfileClick}
+            onMyRecipesClick={onMyRecipesClick}
+            onFavoritesClick={onFavoritesClick}
           />
 
           <main className="flex-1 overflow-auto">
