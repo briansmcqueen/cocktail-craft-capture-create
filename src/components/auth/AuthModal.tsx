@@ -87,7 +87,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-center text-white">
+          <DialogTitle className="text-2xl font-serif text-center text-gray-900">
             {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
         </DialogHeader>

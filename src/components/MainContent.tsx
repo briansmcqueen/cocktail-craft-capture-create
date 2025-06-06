@@ -105,6 +105,7 @@ export default function MainContent({
           onEditRecipe={handleEditRecipe}
           onShareRecipe={handleShareRecipe}
           userRecipes={userRecipes}
+          onToggleFavorite={handleFavoriteWithAuth}
         />
       ) : library === "favorites" ? (
         user ? (

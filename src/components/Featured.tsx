@@ -2,7 +2,6 @@
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { getTrendingRecipes } from "@/utils/likes";
-import { toggleFavorite } from "@/utils/favorites";
 import FeaturedSection from "./FeaturedSection";
 import TechniquesSection from "./TechniquesSection";
 
@@ -12,16 +11,19 @@ type FeaturedProps = {
   onEditRecipe?: (recipe: Cocktail) => void;
   onShareRecipe: (recipe: Cocktail) => void;
   userRecipes: Cocktail[];
+  onToggleFavorite: (recipe: Cocktail) => void;
 };
 
-export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FeaturedProps) {
+export default function Featured({ 
+  recipes, 
+  onRecipeClick, 
+  onEditRecipe, 
+  onShareRecipe, 
+  userRecipes,
+  onToggleFavorite 
+}: FeaturedProps) {
   const trendingRecipes = getTrendingRecipes(recipes);
   const featuredRecipes = recipes.slice(0, 8);
-
-  const handleToggleFavorite = (recipe: Cocktail) => {
-    toggleFavorite(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
-  };
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto">
@@ -29,14 +31,14 @@ export default function Featured({ recipes, onRecipeClick, onEditRecipe, onShare
         title="Featured Cocktails"
         recipes={featuredRecipes}
         onRecipeClick={onRecipeClick}
-        onToggleFavorite={handleToggleFavorite}
+        onToggleFavorite={onToggleFavorite}
       />
 
       <FeaturedSection
         title="Trending Now"
         recipes={trendingRecipes}
         onRecipeClick={onRecipeClick}
-        onToggleFavorite={handleToggleFavorite}
+        onToggleFavorite={onToggleFavorite}
       />
 
       <TechniquesSection />

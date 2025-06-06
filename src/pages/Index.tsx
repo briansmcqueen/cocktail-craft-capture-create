@@ -6,11 +6,13 @@ import AuthModal from "@/components/auth/AuthModal";
 import RecipeModal from "@/components/RecipeModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
+import ProfileSettings from "@/components/profile/ProfileSettings";
 
 export default function Index() {
   const { user, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
   
   const {
     selectedRecipe,
@@ -79,10 +81,47 @@ export default function Index() {
     setShowAuthModal(true);
   };
 
+  const handleProfileClick = () => {
+    setShowProfileSettings(true);
+  };
+
+  const handleMyRecipesClick = () => {
+    setLibrary("mine");
+  };
+
+  const handleFavoritesClick = () => {
+    setLibrary("favorites");
+  };
+
+  const handleRemixRecipe = (recipe: any) => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    setEditingRecipe({ ...recipe, id: undefined });
+    setShowForm(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  if (showProfileSettings) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <button
+            onClick={() => setShowProfileSettings(false)}
+            className="mb-4 text-orange-600 hover:text-orange-700 font-medium"
+          >
+            ← Back to recipes
+          </button>
+          <ProfileSettings />
+        </div>
       </div>
     );
   }
@@ -116,6 +155,9 @@ export default function Index() {
         setShowAuthModal={setShowAuthModal}
         onSignInClick={handleSignInClick}
         onSignUpClick={handleSignUpClick}
+        onProfileClick={handleProfileClick}
+        onMyRecipesClick={handleMyRecipesClick}
+        onFavoritesClick={handleFavoritesClick}
         forceUpdate={0}
       />
 
@@ -131,6 +173,7 @@ export default function Index() {
         onEdit={() => handleEditRecipe(selectedRecipe!)}
         editable={user && userRecipes.some(r => r.id === selectedRecipe?.id)}
         onShareRecipe={handleShareRecipe}
+        onRemix={handleRemixRecipe}
       />
       <ShareRecipe 
         recipe={shareRecipe} 

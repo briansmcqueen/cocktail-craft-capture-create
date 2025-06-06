@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";
 import { Search, X } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
@@ -27,17 +26,6 @@ export default function SearchFilters({
   allTags,
   recipes
 }: SearchFiltersProps) {
-  const getPlaceholderText = () => {
-    switch (searchType) {
-      case "ingredient": return "Search by ingredient…";
-      case "tag": return "Search by tag…";
-      case "name": return "Search by recipe name…";
-      case "location": return "Search by location/origin…";
-      case "everything": return "Search everything…";
-      default: return "Search…";
-    }
-  };
-
   // Filter tags to only show those that will have results
   const getAvailableTags = () => {
     if (tagFilters.length === 0) {
@@ -51,35 +39,13 @@ export default function SearchFilters({
     if (ingredientQuery.trim()) {
       const query = ingredientQuery.trim().toLowerCase();
       
-      if (searchType === "ingredient") {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.ingredients.some(ing =>
-            ing.toLowerCase().includes(query)
-          )
-        );
-      } else if (searchType === "tag") {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.tags && recipe.tags.some(tag =>
-            tag.toLowerCase().includes(query)
-          )
-        );
-      } else if (searchType === "name") {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.name.toLowerCase().includes(query)
-        );
-      } else if (searchType === "location") {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.origin && recipe.origin.toLowerCase().includes(query)
-        );
-      } else if (searchType === "everything") {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.name.toLowerCase().includes(query) ||
-          recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
-          (recipe.origin && recipe.origin.toLowerCase().includes(query)) ||
-          (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query))) ||
-          (recipe.notes && recipe.notes.toLowerCase().includes(query))
-        );
-      }
+      filteredRecipes = filteredRecipes.filter(recipe =>
+        recipe.name.toLowerCase().includes(query) ||
+        recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
+        (recipe.origin && recipe.origin.toLowerCase().includes(query)) ||
+        (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query))) ||
+        (recipe.notes && recipe.notes.toLowerCase().includes(query))
+      );
     }
 
     // Apply current tag filters
@@ -104,30 +70,16 @@ export default function SearchFilters({
 
   return (
     <>
-      {/* Enhanced Search & Filter - NYT inspired */}
+      {/* Enhanced Search - simplified */}
       <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
         {/* Search section */}
         <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
-          {/* Search type selector */}
-          <select
-            value={searchType}
-            onChange={e => setSearchType(e.target.value as "ingredient" | "tag" | "name" | "location" | "everything")}
-            className="border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700 text-sm min-w-[140px] focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
-            aria-label="Search by"
-          >
-            <option value="ingredient">Ingredient</option>
-            <option value="name">Name</option>
-            <option value="location">Location</option>
-            <option value="tag">Tag</option>
-            <option value="everything">Everything</option>
-          </select>
-          
           {/* Search bar */}
           <div className="relative flex-1">
             <Input
               value={ingredientQuery}
               onChange={e => setIngredientQuery(e.target.value)}
-              placeholder={getPlaceholderText()}
+              placeholder="Search by ingredient, name, tags, and more..."
               className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-orange-500"
             />
             <Search className="absolute left-2.5 top-2.5 text-gray-400" size={16} />
