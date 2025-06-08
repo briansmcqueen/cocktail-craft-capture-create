@@ -1,4 +1,3 @@
-
 import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -99,30 +98,31 @@ export default function RecipeModal({
             className="h-48 w-full md:w-56 object-cover rounded-lg border border-gray-200"
           />
           <div className="flex-1 flex flex-col">
-            {/* Custom Metric/Imperial Toggle */}
-            <div className="flex items-center justify-center mb-4">
-              <div className="relative">
-                <div className="toggle-button-cover">
-                  <div className="button-cover">
-                    <div className="button custom-toggle">
-                      <input 
-                        type="checkbox" 
-                        className="checkbox" 
-                        checked={isMetric}
-                        onChange={(e) => setIsMetric(e.target.checked)}
-                      />
-                      <div className="knobs">
-                        <span>{isMetric ? 'ML' : 'OZ'}</span>
+            <div className="mb-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                <div className="font-semibold text-gray-900 mb-2 md:mb-0">Ingredients</div>
+                {/* Custom Metric/Imperial Toggle */}
+                <div className="flex items-center justify-center md:justify-end">
+                  <div className="relative">
+                    <div className="toggle-button-cover">
+                      <div className="button-cover">
+                        <div className="button custom-toggle">
+                          <input 
+                            type="checkbox" 
+                            className="checkbox" 
+                            checked={isMetric}
+                            onChange={(e) => setIsMetric(e.target.checked)}
+                          />
+                          <div className="knobs">
+                            <span>{isMetric ? 'ML' : 'OZ'}</span>
+                          </div>
+                          <div className="layer"></div>
+                        </div>
                       </div>
-                      <div className="layer"></div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="mb-4">
-              <div className="font-semibold text-gray-900 mb-2">Ingredients</div>
               <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
                 {recipe.ingredients.map((ing, i) => (
                   <li key={i}>{convertMeasurement(ing)}</li>
