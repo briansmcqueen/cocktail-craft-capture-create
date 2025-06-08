@@ -1,7 +1,7 @@
+
 import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Edit, Heart, ThumbsUp, X, Share, Copy } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
@@ -99,21 +99,25 @@ export default function RecipeModal({
             className="h-48 w-full md:w-56 object-cover rounded-lg border border-gray-200"
           />
           <div className="flex-1 flex flex-col">
-            {/* Metric/Imperial Toggle */}
-            <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Units</span>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${!isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                  Imperial
-                </span>
-                <Switch
-                  checked={isMetric}
-                  onCheckedChange={setIsMetric}
-                  className="data-[state=checked]:bg-orange-600 scale-75"
-                />
-                <span className={`text-xs ${isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                  Metric
-                </span>
+            {/* Custom Metric/Imperial Toggle */}
+            <div className="flex items-center justify-center mb-4">
+              <div className="relative">
+                <div className="toggle-button-cover">
+                  <div className="button-cover">
+                    <div className="button custom-toggle">
+                      <input 
+                        type="checkbox" 
+                        className="checkbox" 
+                        checked={isMetric}
+                        onChange={(e) => setIsMetric(e.target.checked)}
+                      />
+                      <div className="knobs">
+                        <span>{isMetric ? 'ML' : 'OZ'}</span>
+                      </div>
+                      <div className="layer"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
