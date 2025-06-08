@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { ChefHat, X } from "lucide-react";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
 
@@ -21,21 +22,29 @@ export default function IngredientFilter({
   forceUpdate
 }: IngredientFilterProps) {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [isMetric, setIsMetric] = useState(false);
 
-  // Extract all unique ingredients from recipes
+  // Extract all unique ingredients from recipes with simplified names
   const allIngredients = useMemo(() => {
     const ingredientSet = new Set<string>();
     recipes.forEach(recipe => {
       recipe.ingredients.forEach(ingredient => {
-        // Extract the ingredient name (remove measurements and descriptions)
-        const cleanIngredient = ingredient
-          .replace(/^\d+[\s\w]*\s/, '') // Remove measurements like "2 oz", "1 dash"
-          .replace(/\s*\([^)]*\)/, '') // Remove parenthetical descriptions
-          .split(',')[0] // Take only the first part before comma
+        // Clean ingredient name by removing measurements, volumes, and extra descriptors
+        let cleanIngredient = ingredient
+          .replace(/^\d+[\s\w]*\s/, '') // Remove measurements like "2 oz", "1 dash", "1/2 cup"
+          .replace(/^\d+\/\d+[\s\w]*\s/, '') // Remove fractions like "1/2 oz"
+          .replace(/^\.\d+[\s\w]*\s/, '') // Remove decimal measurements like ".5 oz"
+          .replace(/\s*\([^)]*\)/g, '') // Remove all parenthetical descriptions
+          .replace(/,.*$/, '') // Remove everything after the first comma
+          .replace(/\s+(juice|syrup|bitters|liqueur|garnish|twist|peel|wedge|slice|wheel).*$/i, '') // Remove descriptors
+          .replace(/\s+(fresh|dried|simple|grenadine|maraschino).*$/i, '') // Remove modifiers
           .trim()
           .toLowerCase();
         
-        if (cleanIngredient) {
+        // Further simplification - take only the main ingredient name
+        cleanIngredient = cleanIngredient.split(' ')[0];
+        
+        if (cleanIngredient && cleanIngredient.length > 2) {
           ingredientSet.add(cleanIngredient);
         }
       });
@@ -78,6 +87,26 @@ export default function IngredientFilter({
       </div>
 
       <div className="bg-white p-6 rounded-lg border border-gray-200">
+        {/* Metric/Imperial Toggle */}
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium text-gray-700">Measurement Units</span>
+            <div className="flex items-center gap-3">
+              <span className={`text-sm ${!isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                Imperial
+              </span>
+              <Switch
+                checked={isMetric}
+                onCheckedChange={setIsMetric}
+                className="data-[state=checked]:bg-orange-600"
+              />
+              <span className={`text-sm ${isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                Metric
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium text-gray-900">
             Select ingredients you have:
