@@ -1,4 +1,3 @@
-
 import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -64,14 +63,14 @@ export default function RecipeModal({
     if (!isMetric) return ingredient;
     
     return ingredient
-      .replace(/(\d+(?:\.\d+)?)\s*oz/g, (match, num) => `${Math.round(parseFloat(num) * 29.5735)}ml`)
+      .replace(/(\d+(?:\.\d+)?)\s*oz/g, (match, num) => `${Math.round(parseFloat(num) * 30)}ml`)
       .replace(/(\d+(?:\/\d+)?)\s*oz/g, (match, frac) => {
         const decimal = frac.includes('/') ? eval(frac) : parseFloat(frac);
-        return `${Math.round(decimal * 29.5735)}ml`;
+        return `${Math.round(decimal * 30)}ml`;
       })
       .replace(/(\d+)\s*dash/g, '$1 dash')
-      .replace(/(\d+)\s*tsp/g, (match, num) => `${Math.round(parseFloat(num) * 4.93)}ml`)
-      .replace(/(\d+)\s*tbsp/g, (match, num) => `${Math.round(parseFloat(num) * 14.79)}ml`);
+      .replace(/(\d+)\s*tsp/g, (match, num) => `${Math.round(parseFloat(num) * 5)}ml`)
+      .replace(/(\d+)\s*tbsp/g, (match, num) => `${Math.round(parseFloat(num) * 15)}ml`);
   };
 
   const likeCount = getLikeCount(recipe.id);
