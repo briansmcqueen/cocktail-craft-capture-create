@@ -2,11 +2,13 @@
 import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Edit, Heart, ThumbsUp, X, Share, Copy } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { isFavorite, toggleFavorite } from "@/utils/favorites";
 import { getUserRecipes } from "@/utils/storage";
+import { useState } from "react";
 
 type Props = {
   open: boolean;
@@ -27,6 +29,8 @@ export default function RecipeModal({
   onShareRecipe,
   onRemix 
 }: Props) {
+  const [isMetric, setIsMetric] = useState(false);
+
   if (!recipe) return null;
 
   const userRecipes = getUserRecipes();
@@ -55,6 +59,21 @@ export default function RecipeModal({
     }
   };
 
+  // Convert measurements based on toggle
+  const convertMeasurement = (ingredient: string) => {
+    if (!isMetric) return ingredient;
+    
+    return ingredient
+      .replace(/(\d+(?:\.\d+)?)\s*oz/g, (match, num) => `${Math.round(parseFloat(num) * 29.5735)}ml`)
+      .replace(/(\d+(?:\/\d+)?)\s*oz/g, (match, frac) => {
+        const decimal = frac.includes('/') ? eval(frac) : parseFloat(frac);
+        return `${Math.round(decimal * 29.5735)}ml`;
+      })
+      .replace(/(\d+)\s*dash/g, '$1 dash')
+      .replace(/(\d+)\s*tsp/g, (match, num) => `${Math.round(parseFloat(num) * 4.93)}ml`)
+      .replace(/(\d+)\s*tbsp/g, (match, num) => `${Math.round(parseFloat(num) * 14.79)}ml`);
+  };
+
   const likeCount = getLikeCount(recipe.id);
   const isRecipeFavorited = isFavorite(recipe.id);
   const isRecipeLiked = isLiked(recipe.id);
@@ -81,11 +100,29 @@ export default function RecipeModal({
             className="h-48 w-full md:w-56 object-cover rounded-lg border border-gray-200"
           />
           <div className="flex-1 flex flex-col">
+            {/* Metric/Imperial Toggle */}
+            <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
+              <span className="text-sm font-medium text-gray-700">Units</span>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs ${!isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                  Imperial
+                </span>
+                <Switch
+                  checked={isMetric}
+                  onCheckedChange={setIsMetric}
+                  className="data-[state=checked]:bg-orange-600 scale-75"
+                />
+                <span className={`text-xs ${isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                  Metric
+                </span>
+              </div>
+            </div>
+
             <div className="mb-4">
               <div className="font-semibold text-gray-900 mb-2">Ingredients</div>
               <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
                 {recipe.ingredients.map((ing, i) => (
-                  <li key={i}>{ing}</li>
+                  <li key={i}>{convertMeasurement(ing)}</li>
                 ))}
               </ul>
             </div>

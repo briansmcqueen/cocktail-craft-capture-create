@@ -2,7 +2,6 @@
 import React, { useState, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { ChefHat, X } from "lucide-react";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
 
@@ -22,9 +21,8 @@ export default function IngredientFilter({
   forceUpdate
 }: IngredientFilterProps) {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [isMetric, setIsMetric] = useState(false);
 
-  // Extract all unique ingredients from recipes with simplified names
+  // Extract all unique ingredients from recipes with better standardization
   const allIngredients = useMemo(() => {
     const ingredientSet = new Set<string>();
     recipes.forEach(recipe => {
@@ -40,9 +38,51 @@ export default function IngredientFilter({
           .replace(/\s+(fresh|dried|simple|grenadine|maraschino).*$/i, '') // Remove modifiers
           .trim()
           .toLowerCase();
-        
-        // Further simplification - take only the main ingredient name
-        cleanIngredient = cleanIngredient.split(' ')[0];
+
+        // Better ingredient standardization
+        if (cleanIngredient.includes('vermouth')) {
+          if (cleanIngredient.includes('dry') || cleanIngredient.includes('blanc')) {
+            cleanIngredient = 'dry vermouth';
+          } else if (cleanIngredient.includes('sweet') || cleanIngredient.includes('red')) {
+            cleanIngredient = 'sweet vermouth';
+          } else {
+            cleanIngredient = 'vermouth';
+          }
+        } else if (cleanIngredient.includes('gin')) {
+          cleanIngredient = 'gin';
+        } else if (cleanIngredient.includes('vodka')) {
+          cleanIngredient = 'vodka';
+        } else if (cleanIngredient.includes('rum')) {
+          cleanIngredient = 'rum';
+        } else if (cleanIngredient.includes('whiskey') || cleanIngredient.includes('whisky') || cleanIngredient.includes('bourbon') || cleanIngredient.includes('rye')) {
+          cleanIngredient = 'whiskey';
+        } else if (cleanIngredient.includes('tequila')) {
+          cleanIngredient = 'tequila';
+        } else if (cleanIngredient.includes('brandy') || cleanIngredient.includes('cognac')) {
+          cleanIngredient = 'brandy';
+        } else if (cleanIngredient.includes('lime')) {
+          cleanIngredient = 'lime';
+        } else if (cleanIngredient.includes('lemon')) {
+          cleanIngredient = 'lemon';
+        } else if (cleanIngredient.includes('orange')) {
+          cleanIngredient = 'orange';
+        } else if (cleanIngredient.includes('mint')) {
+          cleanIngredient = 'mint';
+        } else if (cleanIngredient.includes('triple sec') || cleanIngredient.includes('cointreau') || cleanIngredient.includes('orange liqueur')) {
+          cleanIngredient = 'triple sec';
+        } else if (cleanIngredient.includes('sugar') || cleanIngredient.includes('syrup')) {
+          cleanIngredient = 'simple syrup';
+        } else if (cleanIngredient.includes('angostura') || cleanIngredient.includes('bitter')) {
+          cleanIngredient = 'bitters';
+        } else {
+          // Take only the first meaningful word and filter out numbers/measurements
+          const words = cleanIngredient.split(' ').filter(word => 
+            !word.match(/^\d/) && // No words starting with numbers
+            !word.match(/^(one|two|three|four|five|six|seven|eight|nine|ten|half|quarter)$/) && // No spelled out numbers
+            word.length > 2 // No very short words
+          );
+          cleanIngredient = words[0] || '';
+        }
         
         if (cleanIngredient && cleanIngredient.length > 2) {
           ingredientSet.add(cleanIngredient);
@@ -87,26 +127,6 @@ export default function IngredientFilter({
       </div>
 
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        {/* Metric/Imperial Toggle */}
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-gray-700">Measurement Units</span>
-            <div className="flex items-center gap-3">
-              <span className={`text-sm ${!isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                Imperial
-              </span>
-              <Switch
-                checked={isMetric}
-                onCheckedChange={setIsMetric}
-                className="data-[state=checked]:bg-orange-600"
-              />
-              <span className={`text-sm ${isMetric ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                Metric
-              </span>
-            </div>
-          </div>
-        </div>
-
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium text-gray-900">
             Select ingredients you have:
