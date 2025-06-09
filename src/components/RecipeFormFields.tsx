@@ -2,9 +2,10 @@
 import React, { useRef, ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Image } from "lucide-react";
 import TagInput from "./TagInput";
+import IngredientInput from "./IngredientInput";
+import StepsInput from "./StepsInput";
 
 type RecipeFormFieldsProps = {
   name: string;
@@ -21,12 +22,6 @@ type RecipeFormFieldsProps = {
   setOrigin: (value: string) => void;
   tags: string[];
   setTags: (value: string[]) => void;
-  showIngredientSuggestions: boolean;
-  setShowIngredientSuggestions: (value: boolean) => void;
-  showStepSuggestions: boolean;
-  setShowStepSuggestions: (value: boolean) => void;
-  addIngredient: (ingredient: string) => void;
-  addStepTemplate: (template: string) => void;
   commonIngredients: string[];
   stepTemplates: string[];
 };
@@ -46,12 +41,6 @@ export default function RecipeFormFields({
   setOrigin,
   tags,
   setTags,
-  showIngredientSuggestions,
-  setShowIngredientSuggestions,
-  showStepSuggestions,
-  setShowStepSuggestions,
-  addIngredient,
-  addStepTemplate,
   commonIngredients,
   stepTemplates,
 }: RecipeFormFieldsProps) {
@@ -115,77 +104,19 @@ export default function RecipeFormFields({
         </div>
       </div>
       
-      <div className="relative">
-        <label className="font-medium mb-1 block text-gray-900">
-          Ingredients <span className="text-xs text-gray-500">(one per line)</span>
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            className="ml-2 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
-            onClick={() => setShowIngredientSuggestions(!showIngredientSuggestions)}
-          >
-            Quick Add
-          </Button>
-        </label>
-        <Textarea
-          value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
-          placeholder="2 oz Vodka&#10;1 oz Espresso&#10;1/2 oz Coffee Liqueur"
-          required
-          className="bg-white border-gray-300 text-gray-700"
-        />
-        {showIngredientSuggestions && (
-          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
-            {commonIngredients.map((ingredient, i) => (
-              <button
-                key={i}
-                type="button"
-                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors text-gray-700 border-b border-gray-100 last:border-b-0"
-                onClick={() => addIngredient(ingredient)}
-              >
-                {ingredient}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      <IngredientInput
+        value={ingredients}
+        onChange={setIngredients}
+        placeholder="2 oz Vodka&#10;1 oz Espresso&#10;1/2 oz Coffee Liqueur"
+        commonIngredients={commonIngredients}
+      />
       
-      <div className="relative">
-        <label className="font-medium mb-1 block text-gray-900">
-          Steps
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            className="ml-2 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
-            onClick={() => setShowStepSuggestions(!showStepSuggestions)}
-          >
-            Templates
-          </Button>
-        </label>
-        <Textarea
-          value={steps}
-          onChange={(e) => setSteps(e.target.value)}
-          placeholder="Combine all ingredients in a shaker with ice. Shake well..."
-          required
-          className="bg-white border-gray-300 text-gray-700"
-        />
-        {showStepSuggestions && (
-          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
-            {stepTemplates.map((template, i) => (
-              <button
-                key={i}
-                type="button"
-                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors text-gray-700 border-b border-gray-100 last:border-b-0"
-                onClick={() => addStepTemplate(template)}
-              >
-                {template}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      <StepsInput
+        value={steps}
+        onChange={setSteps}
+        placeholder="Combine all ingredients in a shaker with ice. Shake well..."
+        stepTemplates={stepTemplates}
+      />
       
       <div>
         <label className="font-medium mb-1 block text-gray-900">

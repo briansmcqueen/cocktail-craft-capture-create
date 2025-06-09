@@ -25,7 +25,9 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   }, []);
 
   const handleToggleFavorite = (recipe: Cocktail) => {
-    // This will be handled by RecipeCardWithFavorite
+    // Import and use the toggleFavorite function from utils
+    const { toggleFavorite } = require('@/utils/favorites');
+    toggleFavorite(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   };
 

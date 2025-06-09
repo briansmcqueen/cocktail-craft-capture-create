@@ -48,21 +48,6 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   const [notes, setNotes] = useState(initial?.notes || "");
   const [origin, setOrigin] = useState(initial?.origin || "");
   const [tags, setTags] = useState<string[]>(initial?.tags || []);
-  const [showIngredientSuggestions, setShowIngredientSuggestions] = useState(false);
-  const [showStepSuggestions, setShowStepSuggestions] = useState(false);
-
-  const addIngredient = (ingredient: string) => {
-    const currentIngredients = ingredients.split('\n').filter(Boolean);
-    if (!currentIngredients.includes(ingredient)) {
-      setIngredients(prev => prev ? prev + '\n' + ingredient : ingredient);
-    }
-    setShowIngredientSuggestions(false);
-  };
-
-  const addStepTemplate = (template: string) => {
-    setSteps(template);
-    setShowStepSuggestions(false);
-  };
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -118,12 +103,6 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         setOrigin={setOrigin}
         tags={tags}
         setTags={setTags}
-        showIngredientSuggestions={showIngredientSuggestions}
-        setShowIngredientSuggestions={setShowIngredientSuggestions}
-        showStepSuggestions={showStepSuggestions}
-        setShowStepSuggestions={setShowStepSuggestions}
-        addIngredient={addIngredient}
-        addStepTemplate={addStepTemplate}
         commonIngredients={COMMON_INGREDIENTS}
         stepTemplates={STEP_TEMPLATES}
       />

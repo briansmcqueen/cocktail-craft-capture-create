@@ -64,14 +64,38 @@ export default function CategorizedIngredientFilter({
           cleanIngredient = 'lime juice';
         } else if (cleanIngredient.includes('lemon')) {
           cleanIngredient = 'lemon juice';
-        } else if (cleanIngredient.includes('orange')) {
+        } else if (cleanIngredient.includes('orange') && cleanIngredient.includes('juice')) {
           cleanIngredient = 'orange juice';
+        } else if (cleanIngredient.includes('grapefruit')) {
+          cleanIngredient = 'grapefruit juice';
+        } else if (cleanIngredient.includes('cranberry')) {
+          cleanIngredient = 'cranberry juice';
+        } else if (cleanIngredient.includes('pineapple')) {
+          cleanIngredient = 'pineapple juice';
         } else if (cleanIngredient.includes('mint')) {
           cleanIngredient = 'mint';
         } else if (cleanIngredient.includes('triple sec') || cleanIngredient.includes('cointreau') || cleanIngredient.includes('orange liqueur')) {
           cleanIngredient = 'triple sec';
+        } else if (cleanIngredient.includes('amaretto')) {
+          cleanIngredient = 'amaretto';
+        } else if (cleanIngredient.includes('kahlua') || cleanIngredient.includes('coffee liqueur')) {
+          cleanIngredient = 'coffee liqueur';
+        } else if (cleanIngredient.includes('baileys') || cleanIngredient.includes('irish cream')) {
+          cleanIngredient = 'irish cream';
+        } else if (cleanIngredient.includes('champagne') || cleanIngredient.includes('prosecco') || cleanIngredient.includes('sparkling wine')) {
+          cleanIngredient = 'sparkling wine';
+        } else if (cleanIngredient.includes('white wine')) {
+          cleanIngredient = 'white wine';
+        } else if (cleanIngredient.includes('red wine')) {
+          cleanIngredient = 'red wine';
         } else if (cleanIngredient.includes('sugar') || cleanIngredient.includes('syrup')) {
           cleanIngredient = 'simple syrup';
+        } else if (cleanIngredient.includes('grenadine')) {
+          cleanIngredient = 'grenadine';
+        } else if (cleanIngredient.includes('honey')) {
+          cleanIngredient = 'honey';
+        } else if (cleanIngredient.includes('agave')) {
+          cleanIngredient = 'agave syrup';
         } else if (cleanIngredient.includes('angostura') || cleanIngredient.includes('bitter')) {
           cleanIngredient = 'bitters';
         } else {
@@ -100,17 +124,33 @@ export default function CategorizedIngredientFilter({
       ['lime juice', 'lemon juice', 'orange juice', 'grapefruit juice'].includes(ing)
     );
     
+    const fruit = allIngredients.filter(ing => 
+      ['cranberry juice', 'pineapple juice', 'apple juice', 'peach', 'strawberry', 'raspberry', 'blackberry', 'cherry', 'mint'].includes(ing)
+    );
+    
+    const wine = allIngredients.filter(ing => 
+      ['sparkling wine', 'white wine', 'red wine', 'champagne', 'prosecco'].includes(ing)
+    );
+    
+    const liqueurs = allIngredients.filter(ing => 
+      ['triple sec', 'amaretto', 'coffee liqueur', 'irish cream', 'cointreau', 'grand marnier', 'sambuca', 'frangelico'].includes(ing)
+    );
+    
     const sweeteners = allIngredients.filter(ing => 
-      ['simple syrup', 'triple sec', 'grenadine', 'honey', 'agave'].includes(ing)
+      ['simple syrup', 'grenadine', 'honey', 'agave syrup', 'maple syrup'].includes(ing)
     );
     
     const others = allIngredients.filter(ing => 
-      !spirits.includes(ing) && !citrus.includes(ing) && !sweeteners.includes(ing)
+      !spirits.includes(ing) && !citrus.includes(ing) && !sweeteners.includes(ing) && 
+      !fruit.includes(ing) && !wine.includes(ing) && !liqueurs.includes(ing)
     );
 
     return {
       spirits: spirits.sort(),
       citrus: citrus.sort(),
+      fruit: fruit.sort(),
+      wine: wine.sort(),
+      liqueurs: liqueurs.sort(),
       sweeteners: sweeteners.sort(),
       others: others.sort()
     };
@@ -197,6 +237,9 @@ export default function CategorizedIngredientFilter({
         
         {renderIngredientCategory("Spirits", categorizedIngredients.spirits)}
         {renderIngredientCategory("Citrus", categorizedIngredients.citrus)}
+        {renderIngredientCategory("Fruit", categorizedIngredients.fruit)}
+        {renderIngredientCategory("Wine", categorizedIngredients.wine)}
+        {renderIngredientCategory("Liqueurs", categorizedIngredients.liqueurs)}
         {renderIngredientCategory("Sweeteners", categorizedIngredients.sweeteners)}
         {renderIngredientCategory("Others", categorizedIngredients.others)}
 
