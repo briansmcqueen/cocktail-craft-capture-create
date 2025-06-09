@@ -66,22 +66,24 @@ export default function MainContent({
 }: MainContentProps) {
   if (showForm) {
     return (
-      <div className="flex justify-center scrollable-content min-h-screen p-6">
-        <RecipeForm
-          initial={editingRecipe || undefined}
-          onSave={handleSaveRecipe}
-          onCancel={() => {
-            setShowForm(false);
-            setEditingRecipe(null);
-          }}
-        />
+      <div className="flex justify-center min-h-screen p-4 lg:p-6">
+        <div className="w-full max-w-2xl">
+          <RecipeForm
+            initial={editingRecipe || undefined}
+            onSave={handleSaveRecipe}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingRecipe(null);
+            }}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="scrollable-content min-h-screen">
-      <div className="p-6">
+    <div className="min-h-screen">
+      <div className="space-y-4 lg:space-y-6">
         <LibraryHeader
           library={library as any}
           onCopyDialogOpen={() => {}}

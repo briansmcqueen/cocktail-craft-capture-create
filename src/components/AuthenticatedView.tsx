@@ -76,14 +76,17 @@ export default function AuthenticatedView({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+    <div className="min-h-screen bg-white">
       <div className="flex h-screen">
-        <Sidebar
-          active={library}
-          onSelect={setLibrary}
-          onAdd={handleAddRecipe}
-          onCloseForm={handleCloseForm}
-        />
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <Sidebar
+            active={library}
+            onSelect={setLibrary}
+            onAdd={handleAddRecipe}
+            onCloseForm={handleCloseForm}
+          />
+        )}
 
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header
