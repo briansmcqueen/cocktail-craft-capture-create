@@ -143,6 +143,12 @@
     background-size: 1.5em 1.5em;
     padding-right: 2.5rem;
   }
+
+  /* New gradient background for scrollable content sections */
+  .scrollable-content {
+    background: #FFF7ED;
+    background: linear-gradient(97deg, rgba(255, 247, 237, 1) 13%, rgba(255, 203, 120, 1) 84%, rgba(255, 247, 237, 1) 100%);
+  }
 }
 
 /* Text truncation utilities */

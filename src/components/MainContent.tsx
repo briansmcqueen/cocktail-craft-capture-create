@@ -66,7 +66,7 @@ export default function MainContent({
 }: MainContentProps) {
   if (showForm) {
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center scrollable-content min-h-screen p-6">
         <RecipeForm
           initial={editingRecipe || undefined}
           onSave={handleSaveRecipe}
@@ -80,80 +80,82 @@ export default function MainContent({
   }
 
   return (
-    <>
-      <LibraryHeader
-        library={library as any}
-        onCopyDialogOpen={() => {}}
-      />
+    <div className="scrollable-content min-h-screen">
+      <div className="p-6">
+        <LibraryHeader
+          library={library as any}
+          onCopyDialogOpen={() => {}}
+        />
 
-      {!isMobile && library !== "featured" && library !== "ingredients" && (
-        <SearchFilters
-          searchType="everything"
-          setSearchType={() => {}}
-          ingredientQuery={searchTerm}
-          setIngredientQuery={setSearchTerm}
-          tagFilters={selectedTags}
-          onTagFilterToggle={handleTagClick}
-          allTags={[]}
-          recipes={allRecipes}
-        />
-      )}
+        {!isMobile && library !== "featured" && library !== "ingredients" && (
+          <SearchFilters
+            searchType="everything"
+            setSearchType={() => {}}
+            ingredientQuery={searchTerm}
+            setIngredientQuery={setSearchTerm}
+            tagFilters={selectedTags}
+            onTagFilterToggle={handleTagClick}
+            allTags={[]}
+            recipes={allRecipes}
+          />
+        )}
 
-      {library === "featured" ? (
-        <Featured
-          recipes={allRecipes}
-          onRecipeClick={handleRecipeClick}
-          onEditRecipe={handleEditRecipe}
-          onShareRecipe={handleShareRecipe}
-          userRecipes={userRecipes}
-          onToggleFavorite={handleFavoriteWithAuth}
-        />
-      ) : library === "ingredients" ? (
-        <IngredientFilter
-          recipes={allRecipes}
-          onRecipeClick={handleRecipeClick}
-          onToggleFavorite={handleFavoriteWithAuth}
-          onTagClick={handleTagClick}
-          forceUpdate={forceUpdate}
-        />
-      ) : library === "favorites" ? (
-        user ? (
-          <Favorites
-            favoriteRecipes={favoriteRecipes}
+        {library === "featured" ? (
+          <Featured
+            recipes={allRecipes}
             onRecipeClick={handleRecipeClick}
             onEditRecipe={handleEditRecipe}
             onShareRecipe={handleShareRecipe}
             userRecipes={userRecipes}
+            onToggleFavorite={handleFavoriteWithAuth}
           />
+        ) : library === "ingredients" ? (
+          <IngredientFilter
+            recipes={allRecipes}
+            onRecipeClick={handleRecipeClick}
+            onToggleFavorite={handleFavoriteWithAuth}
+            onTagClick={handleTagClick}
+            forceUpdate={forceUpdate}
+          />
+        ) : library === "favorites" ? (
+          user ? (
+            <Favorites
+              favoriteRecipes={favoriteRecipes}
+              onRecipeClick={handleRecipeClick}
+              onEditRecipe={handleEditRecipe}
+              onShareRecipe={handleShareRecipe}
+              userRecipes={userRecipes}
+            />
+          ) : (
+            <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
+              <UserIcon className="mx-auto mb-4 text-gray-400" size={48} />
+              <h2 className="text-xl font-serif font-normal mb-2 text-gray-900">Sign in to view favorites</h2>
+              <p className="mb-4 text-sm lg:text-base">
+                Create an account or sign in to save your favorite cocktail recipes!
+              </p>
+              <Button 
+                onClick={() => setShowAuthModal(true)}
+                className="gap-2 bg-orange-600 hover:bg-orange-700 text-white"
+              >
+                <UserIcon className="h-4 w-4" />
+                Sign In
+              </Button>
+            </div>
+          )
         ) : (
-          <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
-            <UserIcon className="mx-auto mb-4 text-gray-400" size={48} />
-            <h2 className="text-xl font-serif font-normal mb-2 text-gray-900">Sign in to view favorites</h2>
-            <p className="mb-4 text-sm lg:text-base">
-              Create an account or sign in to save your favorite cocktail recipes!
-            </p>
-            <Button 
-              onClick={() => setShowAuthModal(true)}
-              className="gap-2 bg-orange-600 hover:bg-orange-700 text-white"
-            >
-              <UserIcon className="h-4 w-4" />
-              Sign In
-            </Button>
-          </div>
-        )
-      ) : (
-        <RecipeGrid
-          recipes={getFilteredRecipes()}
-          onRecipeClick={handleRecipeClick}
-          onToggleFavorite={handleFavoriteWithAuth}
-          onLike={handleLikeWithAuth}
-          onShareRecipe={handleShareRecipe}
-          onTagClick={handleTagClick}
-          onShowForm={handleAddRecipe}
-          forceUpdate={forceUpdate}
-          library={library}
-        />
-      )}
-    </>
+          <RecipeGrid
+            recipes={getFilteredRecipes()}
+            onRecipeClick={handleRecipeClick}
+            onToggleFavorite={handleFavoriteWithAuth}
+            onLike={handleLikeWithAuth}
+            onShareRecipe={handleShareRecipe}
+            onTagClick={handleTagClick}
+            onShowForm={handleAddRecipe}
+            forceUpdate={forceUpdate}
+            library={library}
+          />
+        )}
+      </div>
+    </div>
   );
 }
