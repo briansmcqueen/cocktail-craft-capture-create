@@ -7,7 +7,7 @@ import SearchFilters from "@/components/SearchFilters";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
 import RecipeGrid from "@/components/RecipeGrid";
-import IngredientFilter from "@/components/IngredientFilter";
+import CategorizedIngredientFilter from "@/components/CategorizedIngredientFilter";
 import { Button } from "@/components/ui/button";
 import { User as UserIcon } from "lucide-react";
 
@@ -110,7 +110,7 @@ export default function MainContent({
             onToggleFavorite={handleFavoriteWithAuth}
           />
         ) : library === "ingredients" ? (
-          <IngredientFilter
+          <CategorizedIngredientFilter
             recipes={allRecipes}
             onRecipeClick={handleRecipeClick}
             onToggleFavorite={handleFavoriteWithAuth}

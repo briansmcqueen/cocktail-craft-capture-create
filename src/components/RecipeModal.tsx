@@ -1,7 +1,8 @@
+
 import { Cocktail } from "@/data/classicCocktails";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Edit, Heart, ThumbsUp, X, Share, Copy } from "lucide-react";
+import { Edit, Heart, ThumbsUp, X, Share, Martini } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
 import { isFavorite, toggleFavorite } from "@/utils/favorites";
@@ -50,7 +51,7 @@ export default function RecipeModal({
     }
   };
 
-  const handleRemix = () => {
+  const handleRiff = () => {
     if (onRemix) {
       onRemix(recipe);
       onOpenChange(false);
@@ -196,10 +197,10 @@ export default function RecipeModal({
               <Button
                 variant="secondary"
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors text-gray-500 hover:text-red-600"
-                onClick={handleRemix}
+                onClick={handleRiff}
               >
-                <Copy size={16} />
-                Remix
+                <Martini size={16} />
+                Riff
               </Button>
             )}
           </div>

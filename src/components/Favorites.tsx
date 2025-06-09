@@ -1,11 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import RecipeCard from "./RecipeCard";
 import { Heart } from "lucide-react";
-import { Button } from "./ui/button";
-import { toggleFavorite, isFavorite } from "@/utils/favorites";
-import { getUserRecipes } from "@/utils/storage";
+import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -27,9 +24,8 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
     return () => window.removeEventListener('favorites-update', handleUpdate);
   }, []);
 
-  const handleToggleFavorite = (e: React.MouseEvent, recipe: Cocktail) => {
-    e.stopPropagation();
-    toggleFavorite(recipe.id);
+  const handleToggleFavorite = (recipe: Cocktail) => {
+    // This will be handled by RecipeCardWithFavorite
     window.dispatchEvent(new Event('favorites-update'));
   };
 
@@ -56,28 +52,13 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {favoriteRecipes.map((recipe) => (
-          <div key={`${recipe.id}-${forceUpdate}`} className="relative group">
-            <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white shadow-sm hover:shadow-md">
-              <RecipeCard
-                recipe={recipe}
-                onSelect={() => onRecipeClick(recipe)}
-                editable={false}
-              />
-            </div>
-            
-            <div className="absolute top-3 right-3">
-              <Button
-                size="sm"
-                variant="secondary"
-                className={`p-2 bg-white/90 hover:bg-white border border-gray-200 shadow-sm backdrop-blur-sm rounded-full transition-colors ${
-                  isFavorite(recipe.id) ? 'text-red-600' : 'text-gray-500 hover:text-red-600'
-                }`}
-                onClick={(e) => handleToggleFavorite(e, recipe)}
-              >
-                <Heart size={14} fill={isFavorite(recipe.id) ? 'currentColor' : 'none'} />
-              </Button>
-            </div>
-          </div>
+          <RecipeCardWithFavorite
+            key={`${recipe.id}-${forceUpdate}`}
+            recipe={recipe}
+            onRecipeClick={onRecipeClick}
+            onToggleFavorite={handleToggleFavorite}
+            forceUpdate={forceUpdate}
+          />
         ))}
       </div>
     </div>
