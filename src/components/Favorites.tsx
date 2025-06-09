@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
+import { toggleFavorite } from "@/utils/favorites";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -25,8 +26,6 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   }, []);
 
   const handleToggleFavorite = (recipe: Cocktail) => {
-    // Import and use the toggleFavorite function from utils
-    const { toggleFavorite } = require('@/utils/favorites');
     toggleFavorite(recipe.id);
     window.dispatchEvent(new Event('favorites-update'));
   };
