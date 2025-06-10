@@ -33,7 +33,7 @@ export default function RecipeCardWithFavorite({
       
       <div className="absolute top-1 right-3">
         <button
-          className="p-1 rounded-full hover:scale-110 transition-transform duration-200"
+          className="p-1 rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 touch-manipulation"
           onClick={(e) => {
             e.stopPropagation();
             onToggleFavorite(recipe);

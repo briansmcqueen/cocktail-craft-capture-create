@@ -41,14 +41,14 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
   
   return (
     <div
-      className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition group relative h-80 flex flex-col"
+      className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-200 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-105 sm:active:scale-100"
       onClick={onSelect}
     >
       <div className="h-40 w-full overflow-hidden">
         <img
           src={imageSrc}
           alt={recipe.name}
-          className="h-full w-full object-cover group-hover:scale-105 transition-all"
+          className="h-full w-full object-cover group-hover:scale-105 transition-all duration-300"
           loading="lazy"
           onError={handleImageError}
         />
@@ -84,7 +84,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
       </div>
       {editable && (
         <button
-          className="absolute top-2 right-2 z-10 bg-white/70 rounded-full p-1 shadow hover:bg-white"
+          className="absolute top-2 right-2 z-10 bg-white/70 rounded-full p-1 shadow hover:bg-white active:scale-95 transition-all duration-150"
           onClick={(e) => {
             e.stopPropagation();
             onEdit && onEdit();
