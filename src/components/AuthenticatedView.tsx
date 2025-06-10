@@ -1,4 +1,3 @@
-
 import { User } from "@supabase/supabase-js";
 import { Cocktail } from "@/data/classicCocktails";
 import Sidebar from "@/components/Sidebar";
@@ -97,6 +96,8 @@ export default function AuthenticatedView({
             onProfileClick={onProfileClick}
             onMyRecipesClick={onMyRecipesClick}
             onFavoritesClick={onFavoritesClick}
+            activeLibrary={library}
+            onAddRecipe={handleAddRecipe}
           />
 
           <main className="flex-1 overflow-auto">
