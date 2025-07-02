@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { ingredientDatabase, Ingredient } from "@/data/ingredients";
@@ -23,6 +23,7 @@ export function useMyBarData(forceUpdate: number) {
   const [myBar, setMyBar] = useState<MyBarInventory>({});
   const [customIngredients, setCustomIngredients] = useState<CustomIngredient[]>([]);
   const [loading, setLoading] = useState(false);
+  const pendingToggles = useRef<Set<string>>(new Set());
 
   // Load bar ingredients and custom ingredients from Supabase
   useEffect(() => {
@@ -50,19 +51,42 @@ export function useMyBarData(forceUpdate: number) {
 
     loadData();
 
-    // Set up real-time subscription
+    // Set up real-time subscription - optimize by updating local state instead of refetching
     const channel = supabase
       .channel('user-ingredients-changes')
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'INSERT',
           schema: 'public',
           table: 'user_ingredients',
           filter: `user_id=eq.${user.id}`
         },
-        () => {
-          loadData();
+        (payload) => {
+          if (payload.new?.ingredient_id) {
+            setMyBar(prev => ({
+              ...prev,
+              [payload.new.ingredient_id]: true
+            }));
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'user_ingredients',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.old?.ingredient_id) {
+            setMyBar(prev => {
+              const updated = { ...prev };
+              delete updated[payload.old.ingredient_id];
+              return updated;
+            });
+          }
         }
       )
       .subscribe();
@@ -100,7 +124,7 @@ export function useMyBarData(forceUpdate: number) {
   // Get current user's ingredients
   const myBarIngredients = Object.keys(myBar).filter(id => myBar[id]);
 
-  const toggleIngredient = async (ingredientId: string) => {
+  const toggleIngredient = useCallback(async (ingredientId: string) => {
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -110,6 +134,12 @@ export function useMyBarData(forceUpdate: number) {
       return;
     }
 
+    // Prevent duplicate toggles
+    if (pendingToggles.current.has(ingredientId)) {
+      return;
+    }
+
+    pendingToggles.current.add(ingredientId);
     const isSelected = myBar[ingredientId];
     
     // Optimistically update UI
@@ -151,8 +181,10 @@ export function useMyBarData(forceUpdate: number) {
         description: "Network error. Please try again.",
         variant: "destructive"
       });
+    } finally {
+      pendingToggles.current.delete(ingredientId);
     }
-  };
+  }, [user, myBar, ingredientMap, toast]);
 
   return {
     myBar,
