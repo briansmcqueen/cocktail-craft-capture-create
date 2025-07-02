@@ -25,13 +25,14 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				// Modern, trendy font stack
-				'sans': ['Inter', 'Poppins', 'system-ui', 'sans-serif'],
-				'display': ['Playfair Display', 'serif'],
-				'body': ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+				// Design System Typography: Satoshi + Inter
+				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'heading': ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
+				'display': ['Satoshi', 'serif'],
+				'body': ['Inter', 'system-ui', 'sans-serif'],
 			},
 			colors: {
-				// Clean black and white theme
+				// Design System Color Palette
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -43,51 +44,73 @@ export default {
 					foreground: 'hsl(var(--popover-foreground))',
 				},
 				primary: {
-					// White for primary elements
-					DEFAULT: '#FFFFFF',
-					foreground: '#000000',
+					DEFAULT: 'hsl(var(--primary))', /* Vibrant Teal */
+					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
-					// Dark gray for secondary elements
-					DEFAULT: '#1F1F1F',
-					foreground: '#FFFFFF',
-				},
-				accent: {
-					// Medium gray for accents
-					DEFAULT: '#404040',
-					foreground: '#FFFFFF',
+					DEFAULT: 'hsl(var(--secondary))', /* Midnight Slate */
+					foreground: 'hsl(var(--secondary-foreground))',
 				},
 				muted: {
-					DEFAULT: '#2A2A2A',
-					foreground: '#A0A0A0',
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))', /* Silver Haze */
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
 				},
 				destructive: {
-					DEFAULT: '#FF4444',
-					foreground: '#FFFFFF',
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))',
 				},
-				border: '#333333',
-				input: '#1A1A1A',
-				ring: '#FFFFFF',
-				// Dark sidebar colors
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
 				sidebar: {
-					DEFAULT: '#0A0A0A',
-					foreground: '#FFFFFF',
-					primary: '#FFFFFF',
-					'primary-foreground': '#000000',
-					accent: '#1F1F1F',
-					'accent-foreground': '#FFFFFF',
-					border: '#333333',
-					ring: '#FFFFFF',
+					DEFAULT: 'hsl(var(--sidebar-background))',
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))',
 				},
+				// Additional Design System Colors
+				'warm-amber': 'hsl(var(--warm-amber))', /* #FF9F1C */
+				'rich-magenta': 'hsl(var(--rich-magenta))', /* #F038FF */
+				'silver-haze': 'hsl(var(--silver-haze))', /* #A9A9A9 */
+				'nightfall-charcoal': 'hsl(var(--nightfall-charcoal))', /* #1A1A1D */
+				'midnight-slate': 'hsl(var(--midnight-slate))', /* #242629 */
+				'moonstone-white': 'hsl(var(--moonstone-white))', /* #F5F5F5 */
 			},
 			borderRadius: {
 				lg: "1rem",
-				md: "0.75rem",
-				sm: "0.5rem",
+				md: "0.75rem", /* 12px */
+				sm: "0.5rem", /* 8px */
 			},
 			spacing: {
+				// 8pt Grid System
+				'1': '8px',
+				'2': '16px',
+				'3': '24px',
+				'4': '32px',
+				'5': '40px',
+				'6': '48px',
+				'7': '56px',
+				'8': '64px',
 				'18': '4.5rem',
 				'88': '22rem',
+			},
+			fontSize: {
+				// Typography Scale from Design Document
+				'h1': ['28px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
+				'h2': ['20px', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '700' }],
+				'h3': ['16px', { lineHeight: '1.4', fontWeight: '500' }],
+				'body': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
+				'body-secondary': ['16px', { lineHeight: '1.6', fontWeight: '400' }],
+				'button': ['16px', { lineHeight: '1.4', fontWeight: '600' }],
+				'caption': ['12px', { lineHeight: '1.4', fontWeight: '400' }],
 			},
 			keyframes: {
 				'accordion-down': {
@@ -158,10 +181,10 @@ export default {
 					"fade-out 0.3s ease-out, scale-out 0.2s ease-out",
 			},
 			backgroundImage: {
-				// Black gradient backgrounds
-				"cocktail": "linear-gradient(135deg, #000000 0%, #1A1A1A 50%, #2A2A2A 100%)",
-				"cocktail-light": "linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)",
-				"cocktail-dark": "linear-gradient(135deg, #000000 0%, #0A0A0A 100%)",
+				// Dark theme gradients
+				"cocktail": "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
+				"cocktail-light": "linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%)",
+				"cocktail-dark": "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--nightfall-charcoal)) 100%)",
 			}
 		}
 	},
