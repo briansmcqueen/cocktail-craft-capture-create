@@ -3,12 +3,13 @@ import { Cocktail } from "@/data/classicCocktails";
 import { ingredientDatabase, Ingredient } from "@/data/ingredients";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChefHat, Search, X, Plus, TrendingUp, Star, ShoppingCart, Info } from "lucide-react";
+import { Search, X, Plus, Star, User } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
+import AddCustomIngredient from "./AddCustomIngredient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -16,6 +17,10 @@ import {
   addUserIngredient, 
   removeUserIngredient 
 } from "@/services/userIngredientsService";
+import { 
+  getUserCustomIngredients,
+  CustomIngredient 
+} from "@/services/customIngredientsService";
 import { 
   analyzeRecipes, 
   calculateIngredientValue, 
@@ -53,27 +58,34 @@ export default function MyBarEngine({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [myBar, setMyBar] = useState<MyBarInventory>({});
+  const [customIngredients, setCustomIngredients] = useState<CustomIngredient[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Load bar ingredients from Supabase
+  // Load bar ingredients and custom ingredients from Supabase
   useEffect(() => {
     if (!user) {
       setMyBar({});
+      setCustomIngredients([]);
       return;
     }
 
-    const loadIngredients = async () => {
+    const loadData = async () => {
       setLoading(true);
-      const ingredientIds = await getUserIngredients();
+      const [ingredientIds, customIngs] = await Promise.all([
+        getUserIngredients(),
+        getUserCustomIngredients()
+      ]);
+      
       const newMyBar: MyBarInventory = {};
       ingredientIds.forEach(id => {
         newMyBar[id] = true;
       });
       setMyBar(newMyBar);
+      setCustomIngredients(customIngs);
       setLoading(false);
     };
 
-    loadIngredients();
+    loadData();
 
     // Set up real-time subscription
     const channel = supabase
@@ -87,7 +99,7 @@ export default function MyBarEngine({
           filter: `user_id=eq.${user.id}`
         },
         () => {
-          loadIngredients();
+          loadData();
         }
       )
       .subscribe();
@@ -134,14 +146,30 @@ export default function MyBarEngine({
     setLoading(false);
   };
 
-  // Create ingredient lookup map for faster access
+  // Create combined ingredient lookup map (database + custom)
+  const allIngredients = useMemo(() => {
+    const combined = [...ingredientDatabase];
+    customIngredients.forEach(custom => {
+      combined.push({
+        id: custom.id,
+        name: custom.name,
+        category: custom.category as "Spirits" | "Liqueurs" | "Wines & Vermouths" | "Beers & Ciders" | "Mixers" | "Produce" | "Pantry",
+        subCategory: custom.sub_category,
+        aliases: custom.aliases,
+        description: custom.description || "",
+        isCustom: true
+      });
+    });
+    return combined;
+  }, [customIngredients]);
+
   const ingredientMap = useMemo(() => {
     const map: { [id: string]: Ingredient } = {};
-    ingredientDatabase.forEach(ingredient => {
+    allIngredients.forEach(ingredient => {
       map[ingredient.id] = ingredient;
     });
     return map;
-  }, []);
+  }, [allIngredients]);
 
   // Get current user's ingredients
   const myBarIngredients = Object.keys(myBar).filter(id => myBar[id]);
@@ -191,9 +219,9 @@ export default function MyBarEngine({
       .slice(0, 5);
   }, [recipes, myBarIngredients, myBar]);
 
-  // Filter ingredients for display
+  // Filter ingredients for display (including custom ones)
   const filteredIngredients = useMemo(() => {
-    let filtered = ingredientDatabase;
+    let filtered = allIngredients;
 
     if (selectedCategory !== "all") {
       filtered = filtered.filter(ing => ing.category.toLowerCase() === selectedCategory);
@@ -209,7 +237,7 @@ export default function MyBarEngine({
     }
 
     return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [selectedCategory, searchTerm]);
+  }, [selectedCategory, searchTerm, allIngredients]);
 
   const categories = ["all", "spirits", "liqueurs", "wines & vermouths", "mixers", "produce", "pantry"];
 
@@ -218,7 +246,7 @@ export default function MyBarEngine({
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <ChefHat className="h-6 w-6 text-primary" />
+          <User className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-serif font-bold">My Bar</h1>
         </div>
         <p className="text-muted-foreground">
@@ -238,6 +266,12 @@ export default function MyBarEngine({
               className="pl-10"
             />
           </div>
+          <AddCustomIngredient onIngredientAdded={() => {
+            // Trigger reload of custom ingredients
+            if (user) {
+              getUserCustomIngredients().then(setCustomIngredients);
+            }
+          }} />
         </div>
 
         {/* Category Tabs */}
@@ -288,7 +322,12 @@ export default function MyBarEngine({
               onClick={() => toggleIngredient(ingredient.id)}
             >
               <div className="flex-1">
-                <div className="font-medium text-sm">{ingredient.name}</div>
+                <div className="font-medium text-sm flex items-center gap-2">
+                  {ingredient.name}
+                  {ingredient.isCustom && (
+                    <Badge variant="secondary" className="text-xs">Custom</Badge>
+                  )}
+                </div>
                 <div className="text-xs text-muted-foreground">{ingredient.subCategory}</div>
               </div>
               <div className="ml-2">
@@ -313,7 +352,7 @@ export default function MyBarEngine({
           {whatToBuyNext.length > 0 && (
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-primary" />
+                <Plus className="h-5 w-5 text-primary" />
                 <h2 className="text-xl font-serif font-semibold">What to Buy Next</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -325,7 +364,7 @@ export default function MyBarEngine({
                     <CardContent className="space-y-3">
                       <p className="text-sm text-muted-foreground">{recommendation.ingredient.description}</p>
                       <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-primary" />
+                        <Star className="h-4 w-4 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}
                         </span>
@@ -411,9 +450,9 @@ export default function MyBarEngine({
           )}
 
           {/* Empty State */}
-          {recipesICanMake.length === 0 && recipesNeedingOneIngredient.length === 0 && (
+          {myBarIngredients.length === 0 && recipesNeedingOneIngredient.length === 0 && user && (
             <div className="text-center py-12 text-muted-foreground">
-              <ChefHat className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-medium mb-2">Your bar is just getting started!</h3>
               <p>Add a few more ingredients to unlock your first cocktails.</p>
             </div>
@@ -421,20 +460,12 @@ export default function MyBarEngine({
         </div>
       )}
 
-      {/* Initial Empty State */}
+      {/* Initial Empty States */}
       {myBarIngredients.length === 0 && !user && (
         <div className="text-center py-12 text-muted-foreground">
-          <ChefHat className="h-12 w-12 mx-auto mb-4 opacity-50" />
+          <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-medium mb-2">Sign in to build your bar</h3>
           <p>Create an account to save your ingredient inventory and discover cocktails you can make.</p>
-        </div>
-      )}
-
-      {myBarIngredients.length === 0 && user && (
-        <div className="text-center py-12 text-muted-foreground">
-          <ChefHat className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-medium mb-2">Start building your bar</h3>
-          <p>Select the ingredients you have available to discover what cocktails you can make.</p>
         </div>
       )}
     </div>

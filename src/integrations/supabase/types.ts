@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      custom_ingredients: {
+        Row: {
+          aliases: string[] | null
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          sub_category: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aliases?: string[] | null
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          sub_category: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aliases?: string[] | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          sub_category?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string | null
@@ -97,18 +133,51 @@ export type Database = {
         }
         Relationships: []
       }
+      recipe_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rating: number
+          recipe_id: string
+          review: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rating: number
+          recipe_id: string
+          review?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rating?: number
+          recipe_id?: string
+          review?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       recipes: {
         Row: {
           created_at: string | null
           description: string | null
           difficulty: string | null
+          difficulty_rating: number | null
           id: string
           image_url: string | null
           ingredients: string[]
           instructions: string
           is_public: boolean | null
           name: string
+          notes: string | null
           prep_time: number | null
+          rating: number | null
           tags: string[] | null
           updated_at: string | null
           user_id: string
@@ -117,13 +186,16 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           difficulty?: string | null
+          difficulty_rating?: number | null
           id?: string
           image_url?: string | null
           ingredients: string[]
           instructions: string
           is_public?: boolean | null
           name: string
+          notes?: string | null
           prep_time?: number | null
+          rating?: number | null
           tags?: string[] | null
           updated_at?: string | null
           user_id: string
@@ -132,13 +204,16 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           difficulty?: string | null
+          difficulty_rating?: number | null
           id?: string
           image_url?: string | null
           ingredients?: string[]
           instructions?: string
           is_public?: boolean | null
           name?: string
+          notes?: string | null
           prep_time?: number | null
+          rating?: number | null
           tags?: string[] | null
           updated_at?: string | null
           user_id?: string
@@ -164,6 +239,36 @@ export type Database = {
           created_at?: string
           id?: string
           ingredient_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          created_at: string
+          difficulty_preference: number | null
+          flavor_preferences: string[] | null
+          id: string
+          preferred_spirit_types: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty_preference?: number | null
+          flavor_preferences?: string[] | null
+          id?: string
+          preferred_spirit_types?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          difficulty_preference?: number | null
+          flavor_preferences?: string[] | null
+          id?: string
+          preferred_spirit_types?: string[] | null
           updated_at?: string
           user_id?: string
         }
