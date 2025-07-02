@@ -32,9 +32,12 @@ export async function addUserIngredient(ingredientId: string): Promise<boolean> 
 
   const { error } = await supabase
     .from('user_ingredients')
-    .insert({
+    .upsert({
       user_id: user.id,
       ingredient_id: ingredientId
+    }, {
+      onConflict: 'user_id,ingredient_id',
+      ignoreDuplicates: true
     });
 
   if (error) {

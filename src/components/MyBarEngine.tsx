@@ -119,31 +119,48 @@ export default function MyBarEngine({
       return;
     }
 
-    setLoading(true);
     const isSelected = myBar[ingredientId];
     
-    const success = isSelected 
-      ? await removeUserIngredient(ingredientId)
-      : await addUserIngredient(ingredientId);
-    
-    if (success) {
+    // Optimistically update UI
+    setMyBar(prev => ({
+      ...prev,
+      [ingredientId]: !isSelected
+    }));
+
+    try {
+      const success = isSelected 
+        ? await removeUserIngredient(ingredientId)
+        : await addUserIngredient(ingredientId);
+      
+      if (success) {
+        toast({
+          title: isSelected ? "Ingredient Removed" : "Ingredient Added",
+          description: `${ingredientMap[ingredientId]?.name} ${isSelected ? 'removed from' : 'added to'} your bar.`
+        });
+      } else {
+        // Revert on failure
+        setMyBar(prev => ({
+          ...prev,
+          [ingredientId]: isSelected
+        }));
+        toast({
+          title: "Error",
+          description: "Failed to update your bar. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      // Revert on error
       setMyBar(prev => ({
         ...prev,
-        [ingredientId]: !isSelected
+        [ingredientId]: isSelected
       }));
-      
-      toast({
-        title: isSelected ? "Ingredient Removed" : "Ingredient Added",
-        description: `${ingredientDatabase[ingredientId]?.name} ${isSelected ? 'removed from' : 'added to'} your bar.`
-      });
-    } else {
       toast({
         title: "Error",
-        description: "Failed to update your bar. Please try again.",
+        description: "Network error. Please try again.",
         variant: "destructive"
       });
     }
-    setLoading(false);
   };
 
   // Create combined ingredient lookup map (database + custom)
@@ -174,8 +191,9 @@ export default function MyBarEngine({
   // Get current user's ingredients
   const myBarIngredients = Object.keys(myBar).filter(id => myBar[id]);
 
-  // Analyze all recipes with intelligent matching
+  // Analyze all recipes with intelligent matching - memoize with dependency check
   const recipeAnalyses = useMemo(() => {
+    if (myBarIngredients.length === 0) return [];
     return analyzeRecipes(recipes, myBarIngredients);
   }, [recipes, myBarIngredients]);
 
@@ -196,8 +214,10 @@ export default function MyBarEngine({
       }));
   }, [recipeAnalyses]);
 
-  // Calculate what to buy next
+  // Calculate what to buy next - only if user has ingredients
   const whatToBuyNext = useMemo(() => {
+    if (myBarIngredients.length === 0) return [];
+    
     const ingredientValues: { [ingredientId: string]: RecommendedIngredient } = {};
     
     // Calculate value for each ingredient not in user's bar
