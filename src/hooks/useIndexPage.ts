@@ -2,13 +2,16 @@
 import { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
-import { getUserRecipes, saveUserRecipe, deleteUserRecipe } from "@/utils/storage";
-import { toggleFavorite, getFavoriteRecipes } from "@/utils/favorites";
-import { toggleLike } from "@/utils/likes";
+import { getUserRecipesFromDB, saveRecipeToDB, deleteRecipeFromDB } from "@/services/recipesService";
+import { getUserFavorites, toggleFavoriteInDB } from "@/services/favoritesService";
+import { toggleLikeInDB } from "@/services/likesService";
 import { useAuth } from "@/hooks/useAuth";
+import { useDataMigration } from "@/hooks/useDataMigration";
 
 export function useIndexPage() {
   const { user } = useAuth();
+  useDataMigration(); // Auto-migrate localStorage data
+  
   const [selectedRecipe, setSelectedRecipe] = useState<Cocktail | null>(null);
   const [library, setLibrary] = useState("featured");
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +34,13 @@ export function useIndexPage() {
 
   useEffect(() => {
     if (user) {
-      setUserRecipes(getUserRecipes());
+      const loadUserRecipes = async () => {
+        const recipes = await getUserRecipesFromDB();
+        setUserRecipes(recipes);
+      };
+      loadUserRecipes();
+    } else {
+      setUserRecipes([]);
     }
   }, [user]);
 
@@ -48,18 +57,24 @@ export function useIndexPage() {
     setSelectedRecipe(recipe);
   };
 
-  const handleSaveRecipe = (recipe: Cocktail) => {
+  const handleSaveRecipe = async (recipe: Cocktail) => {
     if (!user) return;
-    saveUserRecipe(recipe);
-    setUserRecipes(getUserRecipes());
-    setShowForm(false);
-    setEditingRecipe(null);
+    const success = await saveRecipeToDB(recipe);
+    if (success) {
+      const recipes = await getUserRecipesFromDB();
+      setUserRecipes(recipes);
+      setShowForm(false);
+      setEditingRecipe(null);
+    }
   };
 
-  const handleDeleteRecipe = (id: string) => {
+  const handleDeleteRecipe = async (id: string) => {
     if (!user) return;
-    deleteUserRecipe(id);
-    setUserRecipes(getUserRecipes());
+    const success = await deleteRecipeFromDB(id);
+    if (success) {
+      const recipes = await getUserRecipesFromDB();
+      setUserRecipes(recipes);
+    }
   };
 
   const handleEditRecipe = (recipe: Cocktail) => {
@@ -72,16 +87,16 @@ export function useIndexPage() {
     setShareRecipe(recipe);
   };
 
-  const handleLike = (recipe: Cocktail) => {
+  const handleLike = async (recipe: Cocktail) => {
     if (!user) return;
-    toggleLike(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
+    await toggleLikeInDB(recipe.id);
+    setForceUpdate(prev => prev + 1);
   };
 
-  const handleToggleFavorite = (recipe: Cocktail) => {
+  const handleToggleFavorite = async (recipe: Cocktail) => {
     if (!user) return;
-    toggleFavorite(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
+    await toggleFavoriteInDB(recipe.id);
+    setForceUpdate(prev => prev + 1);
   };
 
   const handleTagClick = (tag: string) => {
@@ -92,9 +107,23 @@ export function useIndexPage() {
     }
   };
 
+  const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      const loadFavorites = async () => {
+        const favorites = await getUserFavorites();
+        setFavoriteRecipeIds(favorites);
+      };
+      loadFavorites();
+    } else {
+      setFavoriteRecipeIds([]);
+    }
+  }, [user, forceUpdate]);
+
   const allRecipes = [...classicCocktails, ...userRecipes];
   const favoriteRecipes = user ? allRecipes.filter(recipe => 
-    getFavoriteRecipes().includes(recipe.id)
+    favoriteRecipeIds.includes(recipe.id)
   ) : [];
 
   const getFilteredRecipes = () => {
