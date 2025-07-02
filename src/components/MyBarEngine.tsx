@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { ingredientDatabase, Ingredient, findIngredientMatches } from "@/data/ingredients";
+import { ingredientDatabase, Ingredient } from "@/data/ingredients";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChefHat, Search, X, Plus, TrendingUp, Star, ShoppingCart } from "lucide-react";
+import { ChefHat, Search, X, Plus, TrendingUp, Star, ShoppingCart, Info } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,6 +16,11 @@ import {
   addUserIngredient, 
   removeUserIngredient 
 } from "@/services/userIngredientsService";
+import { 
+  analyzeRecipes, 
+  calculateIngredientValue, 
+  findSubstitutions 
+} from "@/services/ingredientMatchingService";
 import { supabase } from "@/integrations/supabase/client";
 
 type MyBarEngineProps = {
@@ -28,10 +35,10 @@ interface MyBarInventory {
   [ingredientId: string]: boolean;
 }
 
-interface WhatToBuyNext {
+interface RecommendedIngredient {
   ingredient: Ingredient;
-  newCocktailsUnlocked: number;
-  cocktailsUnlocked: Cocktail[];
+  newRecipesUnlocked: Cocktail[];
+  score: number;
 }
 
 export default function MyBarEngine({
@@ -127,41 +134,66 @@ export default function MyBarEngine({
     setLoading(false);
   };
 
+  // Create ingredient lookup map for faster access
+  const ingredientMap = useMemo(() => {
+    const map: { [id: string]: Ingredient } = {};
+    ingredientDatabase.forEach(ingredient => {
+      map[ingredient.id] = ingredient;
+    });
+    return map;
+  }, []);
+
   // Get current user's ingredients
   const myBarIngredients = Object.keys(myBar).filter(id => myBar[id]);
 
-  // Simple ingredient matching for recipes (basic implementation)
-  const getRecipeIngredientIds = (ingredients: string[]) => {
-    const foundIds: string[] = [];
-    ingredients.forEach(ingredient => {
-      const matches = findIngredientMatches(ingredient);
-      if (matches.length > 0) {
-        foundIds.push(matches[0].id);
+  // Analyze all recipes with intelligent matching
+  const recipeAnalyses = useMemo(() => {
+    return analyzeRecipes(recipes, myBarIngredients);
+  }, [recipes, myBarIngredients]);
+
+  // Get recipes user can make
+  const recipesICanMake = useMemo(() => {
+    return recipeAnalyses
+      .filter(analysis => analysis.canMake)
+      .map(analysis => analysis.recipe);
+  }, [recipeAnalyses]);
+
+  // Get recipes needing one ingredient
+  const recipesNeedingOneIngredient = useMemo(() => {
+    return recipeAnalyses
+      .filter(analysis => !analysis.canMake && analysis.missingCount === 1)
+      .map(analysis => ({
+        ...analysis.recipe,
+        missingIngredient: analysis.missingIngredients[0]?.ingredientId
+      }));
+  }, [recipeAnalyses]);
+
+  // Calculate what to buy next
+  const whatToBuyNext = useMemo(() => {
+    const ingredientValues: { [ingredientId: string]: RecommendedIngredient } = {};
+    
+    // Calculate value for each ingredient not in user's bar
+    ingredientDatabase.forEach(ingredient => {
+      if (!myBar[ingredient.id]) {
+        const value = calculateIngredientValue(ingredient.id, recipes, myBarIngredients);
+        if (value.score > 0) {
+          ingredientValues[ingredient.id] = {
+            ingredient,
+            newRecipesUnlocked: value.newRecipesUnlocked,
+            score: value.score
+          };
+        }
       }
     });
-    return foundIds;
-  };
 
-  // Find recipes that can be made with current ingredients
-  const recipesICanMake = useMemo(() => {
-    return recipes.filter(recipe => {
-      const requiredIngredientIds = getRecipeIngredientIds(recipe.ingredients);
-      return requiredIngredientIds.length > 0 && requiredIngredientIds.every(id => myBar[id]);
-    });
-  }, [recipes, myBar]);
-
-  // For now, show basic results without complex matching
-  const recipesNeedingOneIngredient = useMemo(() => {
-    return [];
-  }, []);
-
-  const whatToBuyNext = useMemo(() => {
-    return [];
-  }, []);
+    return Object.values(ingredientValues)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+  }, [recipes, myBarIngredients, myBar]);
 
   // Filter ingredients for display
   const filteredIngredients = useMemo(() => {
-    let filtered = Object.values(ingredientDatabase);
+    let filtered = ingredientDatabase;
 
     if (selectedCategory !== "all") {
       filtered = filtered.filter(ing => ing.category.toLowerCase() === selectedCategory);
@@ -224,21 +256,21 @@ export default function MyBarEngine({
           <div className="space-y-2">
             <h3 className="text-sm font-medium">My Bar ({myBarIngredients.length} ingredients)</h3>
             <div className="flex flex-wrap gap-2">
-              {myBarIngredients.map(ingredientId => {
-                const ingredient = ingredientDatabase[ingredientId];
-                if (!ingredient) return null;
-                return (
-                  <Badge 
-                    key={ingredientId} 
-                    variant="secondary" 
-                    className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                    onClick={() => toggleIngredient(ingredientId)}
-                  >
-                    {ingredient.name}
-                    <X className="ml-1 h-3 w-3" />
-                  </Badge>
-                );
-              })}
+        {myBarIngredients.map(ingredientId => {
+          const ingredient = ingredientMap[ingredientId];
+          if (!ingredient) return null;
+          return (
+            <Badge 
+              key={ingredientId} 
+              variant="secondary" 
+              className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
+              onClick={() => toggleIngredient(ingredientId)}
+            >
+              {ingredient.name}
+              <X className="ml-1 h-3 w-3" />
+            </Badge>
+          );
+        })}
             </div>
           </div>
         )}
@@ -286,14 +318,16 @@ export default function MyBarEngine({
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {whatToBuyNext.slice(0, 3).map((recommendation) => (
-                  <div key={recommendation.ingredient.id} className="p-4 border rounded-lg bg-card hover:bg-accent transition-colors">
-                    <div className="space-y-2">
-                      <h3 className="font-medium">{recommendation.ingredient.name}</h3>
+                  <Card key={recommendation.ingredient.id} className="hover:bg-accent transition-colors">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">{recommendation.ingredient.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
                       <p className="text-sm text-muted-foreground">{recommendation.ingredient.description}</p>
                       <div className="flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-primary" />
                         <span className="text-sm font-medium text-primary">
-                          Unlocks {recommendation.newCocktailsUnlocked} new cocktail{recommendation.newCocktailsUnlocked !== 1 ? 's' : ''}
+                          Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}
                         </span>
                       </div>
                       <Button 
@@ -301,12 +335,13 @@ export default function MyBarEngine({
                         size="sm" 
                         onClick={() => toggleIngredient(recommendation.ingredient.id)}
                         disabled={loading}
+                        className="w-full"
                       >
                         <Plus className="h-4 w-4 mr-1" />
                         Add to Bar
                       </Button>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </div>
@@ -354,11 +389,20 @@ export default function MyBarEngine({
                       onTagClick={onTagClick}
                     />
                     {recipe.missingIngredient && (
-                      <div className="absolute top-2 right-2">
-                        <Badge variant="outline" className="bg-background text-xs">
-                          Need: {ingredientDatabase[recipe.missingIngredient]?.name}
-                        </Badge>
-                      </div>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="absolute top-2 right-2">
+                              <Badge variant="outline" className="bg-background text-xs">
+                                Need: {ingredientMap[recipe.missingIngredient]?.name}
+                              </Badge>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Add {ingredientMap[recipe.missingIngredient]?.name} to make this cocktail</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     )}
                   </div>
                 ))}
