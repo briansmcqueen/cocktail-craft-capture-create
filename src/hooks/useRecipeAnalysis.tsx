@@ -21,11 +21,12 @@ export function useRecipeAnalysis(
   myBarIngredients: string[], 
   myBar: MyBarInventory
 ) {
-  // Analyze all recipes with intelligent matching - memoize with dependency check
+
+  // Analyze all recipes with intelligent matching - memoize with stable key
   const recipeAnalyses = useMemo(() => {
     if (myBarIngredients.length === 0) return [];
     return analyzeRecipes(recipes, myBarIngredients);
-  }, [recipes, myBarIngredients]);
+  }, [recipes, myBarIngredients.join(',')]); // Use join for stable comparison
 
   // Get recipes user can make
   const recipesICanMake = useMemo(() => {
@@ -67,7 +68,7 @@ export function useRecipeAnalysis(
     return Object.values(ingredientValues)
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
-  }, [recipes, myBarIngredients, myBar]);
+  }, [recipes, myBarIngredients.join(','), Object.keys(myBar).sort().join(',')]);
 
   return {
     recipesICanMake,

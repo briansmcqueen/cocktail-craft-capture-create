@@ -22,6 +22,12 @@ const ingredientByAlias = new Map<string, string>();
 const ingredientsByCategory = new Map<string, string[]>();
 const ingredientsBySubCategory = new Map<string, string[]>();
 
+// Cache for ingredient matches to avoid repeated computations
+const ingredientMatchCache = new Map<string, IngredientMatch[]>();
+
+// Cache for recipe analyses
+const recipeAnalysisCache = new Map<string, RecipeAnalysis>();
+
 // Initialize lookup maps
 ingredientDatabase.forEach(ingredient => {
   ingredientByName.set(ingredient.name.toLowerCase(), ingredient.id);
@@ -60,28 +66,36 @@ function normalizeIngredientText(text: string): string {
 // Find ingredient matches with confidence scoring
 export function findIngredientMatches(ingredientText: string): IngredientMatch[] {
   const normalized = normalizeIngredientText(ingredientText);
+  
+  // Check cache first
+  if (ingredientMatchCache.has(normalized)) {
+    return ingredientMatchCache.get(normalized)!;
+  }
+  
   const matches: IngredientMatch[] = [];
   
   // Exact name match
   const exactMatch = ingredientByName.get(normalized);
   if (exactMatch) {
-    matches.push({
+    const result = [{
       ingredientId: exactMatch,
       confidence: 1.0,
-      matchType: 'exact'
-    });
-    return matches; // Return early for exact matches
+      matchType: 'exact' as const
+    }];
+    ingredientMatchCache.set(normalized, result);
+    return result;
   }
   
   // Alias match
   const aliasMatch = ingredientByAlias.get(normalized);
   if (aliasMatch) {
-    matches.push({
+    const result = [{
       ingredientId: aliasMatch,
       confidence: 0.9,
-      matchType: 'alias'
-    });
-    return matches;
+      matchType: 'alias' as const
+    }];
+    ingredientMatchCache.set(normalized, result);
+    return result;
   }
   
   // Fuzzy matching
@@ -93,9 +107,13 @@ export function findIngredientMatches(ingredientText: string): IngredientMatch[]
   matches.push(...categoryMatches);
   
   // Sort by confidence and return top matches
-  return matches
+  const result = matches
     .sort((a, b) => b.confidence - a.confidence)
     .slice(0, 3); // Top 3 matches
+    
+  // Cache the result
+  ingredientMatchCache.set(normalized, result);
+  return result;
 }
 
 function findFuzzyMatches(normalized: string): IngredientMatch[] {
@@ -195,8 +213,17 @@ function calculateSimilarity(str1: string, str2: string): number {
 // Analyze recipes to determine what can be made
 export function analyzeRecipes(recipes: Cocktail[], userIngredients: string[]): RecipeAnalysis[] {
   const userIngredientSet = new Set(userIngredients);
+  const cacheKey = `${recipes.map(r => r.id).join(',')}-${userIngredients.sort().join(',')}`;
   
   return recipes.map(recipe => {
+    // Create a cache key for this specific recipe and user ingredients combination
+    const recipeCacheKey = `${recipe.id}-${userIngredients.sort().join(',')}`;
+    
+    // Check if we have this analysis cached
+    if (recipeAnalysisCache.has(recipeCacheKey)) {
+      return recipeAnalysisCache.get(recipeCacheKey)!;
+    }
+    
     const requiredMatches: IngredientMatch[] = [];
     
     // Find matches for each ingredient in the recipe
@@ -218,7 +245,7 @@ export function analyzeRecipes(recipes: Cocktail[], userIngredients: string[]): 
     
     const canMake = missingIngredients.length === 0 && requiredMatches.length > 0;
     
-    return {
+    const analysis: RecipeAnalysis = {
       recipe,
       requiredIngredients: requiredMatches,
       missingIngredients,
@@ -226,6 +253,11 @@ export function analyzeRecipes(recipes: Cocktail[], userIngredients: string[]): 
       canMake,
       missingCount: missingIngredients.length
     };
+    
+    // Cache the analysis
+    recipeAnalysisCache.set(recipeCacheKey, analysis);
+    
+    return analysis;
   });
 }
 
