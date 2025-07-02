@@ -93,8 +93,8 @@ export default function IngredientSelector({
               return (
                 <Badge 
                   key={ingredientId} 
-                  variant="secondary" 
-                  className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
                   onClick={() => toggleIngredient(ingredientId)}
                 >
                   {ingredient.name}
@@ -111,10 +111,10 @@ export default function IngredientSelector({
         {filteredIngredients.map((ingredient) => (
           <div
             key={ingredient.id}
-            className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all hover:bg-accent ${
+            className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all hover:bg-accent/50 ${
               myBar[ingredient.id] 
-                ? 'bg-primary/10 border-primary' 
-                : 'border-border hover:border-primary/50'
+                ? 'bg-accent/20 border-accent' 
+                : 'bg-card border-border hover:border-accent/50'
             }`}
             onClick={() => toggleIngredient(ingredient.id)}
           >
@@ -129,8 +129,8 @@ export default function IngredientSelector({
             </div>
             <div className="ml-2">
               {myBar[ingredient.id] ? (
-                <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-primary-foreground rounded-full" />
+                <div className="w-4 h-4 bg-accent rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-accent-foreground rounded-full" />
                 </div>
               ) : (
                 <div className="w-4 h-4 border-2 border-muted-foreground rounded-full" />
