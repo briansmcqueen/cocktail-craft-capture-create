@@ -28,6 +28,7 @@ export default function Index() {
     setEditingRecipe,
     shareRecipe,
     setShareRecipe,
+    forceUpdate,
     isMobile,
     userRecipes,
     handleRecipeClick,
@@ -158,7 +159,7 @@ export default function Index() {
         onProfileClick={handleProfileClick}
         onMyRecipesClick={handleMyRecipesClick}
         onFavoritesClick={handleFavoritesClick}
-        forceUpdate={0}
+        forceUpdate={forceUpdate}
       />
 
       <AuthModal 
