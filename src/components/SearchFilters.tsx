@@ -70,11 +70,11 @@ export default function SearchFilters({
 
   return (
     <>
-      {/* Enhanced Search - simplified */}
+      {/* Enhanced Search - visible on all screen sizes */}
       <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
         {/* Search section */}
         <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
-          {/* Search bar */}
+          {/* Search bar - always visible */}
           <div className="relative flex-1">
             <Input
               value={ingredientQuery}

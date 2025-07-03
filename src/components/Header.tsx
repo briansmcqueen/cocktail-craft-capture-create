@@ -51,8 +51,8 @@ export default function Header({
             Barbook
           </h1>
         </div>
-        {/* Desktop auth buttons - hidden on mobile */}
-        <div className="hidden lg:flex">
+        {/* Desktop/tablet auth buttons - hidden only on mobile */}
+        <div className="hidden md:flex">
           {user ? (
             <UserMenu
               onProfileClick={onProfileClick}

@@ -28,8 +28,8 @@ export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHead
 
   return (
     <>
-      {/* Mobile library title */}
-      <div className="lg:hidden mb-4">
+      {/* Mobile library title with consistent padding */}
+      <div className="lg:hidden mb-4 px-4 sm:px-0">
         <h2 className="text-xl font-display font-semibold text-gray-900">
           {getLibraryTitle(library)}
         </h2>
