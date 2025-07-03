@@ -164,12 +164,12 @@ export default function RecipeModal({
                 ))}
               </div>
             )}
-            {likeCount > 0 && !isUserRecipe && (
+            {/* {likeCount > 0 && !isUserRecipe && (
               <div className="text-xs text-gray-500 mb-2 flex items-center gap-1">
                 <ThumbsUp size={12} />
                 <span>{likeCount} like{likeCount === 1 ? '' : 's'}</span>
               </div>
-            )}
+            )} */}
           </div>
         </div>
         <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3 flex-wrap">
@@ -185,7 +185,7 @@ export default function RecipeModal({
               {isRecipeFavorited ? 'Favorited' : 'Favorite'}
             </Button>
             
-            {!isUserRecipe && (
+            {/* {!isUserRecipe && (
               <Button
                 variant="secondary"
                 className={`flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors ${
@@ -196,7 +196,7 @@ export default function RecipeModal({
                 <ThumbsUp size={16} fill={isRecipeLiked ? 'currentColor' : 'none'} />
                 {isRecipeLiked ? 'Liked' : 'Like'}
               </Button>
-            )}
+            )} */}
             
             {onShareRecipe && (
               <Button

@@ -27,7 +27,7 @@ export default function Featured({
   const featuredRecipes = recipes.slice(0, 8);
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto">
+    <div className="space-y-12 max-w-7xl mx-auto px-4 sm:px-0">
       <FeaturedSection
         title="Featured Cocktails"
         recipes={featuredRecipes}
