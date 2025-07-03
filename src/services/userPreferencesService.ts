@@ -43,6 +43,8 @@ export async function updateUserPreferences(preferences: Partial<Omit<UserPrefer
     .upsert({
       user_id: user.id,
       ...preferences
+    }, {
+      onConflict: 'user_id'
     });
 
   if (error) {

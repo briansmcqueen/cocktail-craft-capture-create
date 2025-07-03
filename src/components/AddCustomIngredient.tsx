@@ -110,9 +110,12 @@ export default function AddCustomIngredient({ onIngredientAdded }: AddCustomIngr
           Add Custom Ingredient
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" aria-describedby="add-ingredient-description">
         <DialogHeader>
           <DialogTitle>Add Custom Ingredient</DialogTitle>
+          <p id="add-ingredient-description" className="text-sm text-muted-foreground">
+            Create a custom ingredient to add to your bar inventory.
+          </p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

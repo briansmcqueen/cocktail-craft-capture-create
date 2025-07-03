@@ -127,9 +127,12 @@ export default function RecipeRating({ recipeId, recipeName, trigger }: RecipeRa
       <DialogTrigger asChild>
         {trigger || defaultTrigger}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" aria-describedby="rating-description">
         <DialogHeader>
           <DialogTitle>Rate {recipeName}</DialogTitle>
+          <p id="rating-description" className="text-sm text-muted-foreground">
+            Share your rating and review for this cocktail recipe.
+          </p>
         </DialogHeader>
         
         <div className="space-y-6">
