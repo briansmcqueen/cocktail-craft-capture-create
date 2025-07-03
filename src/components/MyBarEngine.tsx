@@ -40,9 +40,9 @@ export default function MyBarEngine({
   } = useRecipeAnalysis(recipes, myBarIngredients, myBar);
 
   return (
-    <div className="space-y-6 px-4 sm:px-0">
-      {/* Header - styled like Favorites/My Creations */}
-      <div className="flex items-center gap-3 mb-6">
+    <div className="space-y-6">
+      {/* Header - styled like Favorites/My Creations with consistent mobile padding */}
+      <div className="flex items-center gap-3 mb-6 px-4 sm:px-0">
         <User className="text-primary" size={24} />
         <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
           My Bar

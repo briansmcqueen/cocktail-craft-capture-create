@@ -87,7 +87,7 @@ export default function MainContent({
           onCopyDialogOpen={() => {}}
         />
 
-        {!isMobile && library !== "featured" && library !== "ingredients" && (
+        {library !== "featured" && library !== "ingredients" && (
           <SearchFilters
             searchType="everything"
             setSearchType={() => {}}
