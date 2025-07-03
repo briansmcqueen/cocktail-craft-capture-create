@@ -34,6 +34,12 @@ export default function AuthenticatedApp({
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user && userRecipes.length > 0) {
+      fetchFavoriteRecipes();
+    }
+  }, [userRecipes, recipes]);
+
   const fetchUserRecipes = async () => {
     if (!user) return;
 
@@ -70,10 +76,7 @@ export default function AuthenticatedApp({
 
     const { data, error } = await supabase
       .from('favorites')
-      .select(`
-        recipe_id,
-        recipes (*)
-      `)
+      .select('recipe_id')
       .eq('user_id', user.id);
 
     if (error) {
@@ -83,20 +86,14 @@ export default function AuthenticatedApp({
         variant: "destructive",
       });
     } else {
-      // Transform favorites to match Cocktail interface
-      const transformedFavorites = data
-        .filter(fav => fav.recipes)
-        .map(fav => ({
-          id: fav.recipes.id,
-          name: fav.recipes.name,
-          image: fav.recipes.image_url || "/placeholder.svg",
-          ingredients: fav.recipes.ingredients,
-          steps: fav.recipes.instructions,
-          notes: fav.recipes.description || "",
-          origin: fav.recipes.difficulty || "",
-          tags: fav.recipes.tags || [],
-        }));
-      setFavoriteRecipes(transformedFavorites);
+      // Get favorite recipe IDs
+      const favoriteIds = data.map(fav => fav.recipe_id);
+      
+      // Filter recipes from both classic cocktails and user recipes
+      const allRecipes = [...recipes, ...userRecipes];
+      const favoriteRecipes = allRecipes.filter(recipe => favoriteIds.includes(recipe.id));
+      
+      setFavoriteRecipes(favoriteRecipes);
     }
   };
 

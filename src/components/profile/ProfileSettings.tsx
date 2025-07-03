@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AvatarUpload from './AvatarUpload';
 import ProfileForm from './ProfileForm';
+import UserPreferencesForm from '../UserPreferencesForm';
 
 interface Profile {
   id: string;
@@ -96,7 +97,7 @@ export default function ProfileSettings() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-serif">Profile Settings</CardTitle>
@@ -119,6 +120,8 @@ export default function ProfileSettings() {
           />
         </CardContent>
       </Card>
+
+      <UserPreferencesForm />
     </div>
   );
 }

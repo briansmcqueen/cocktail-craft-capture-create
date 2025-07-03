@@ -64,15 +64,7 @@ export type Database = {
           recipe_id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "favorites_recipe_id_fkey"
-            columns: ["recipe_id"]
-            isOneToOne: false
-            referencedRelation: "recipes"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       likes: {
         Row: {
@@ -93,15 +85,7 @@ export type Database = {
           recipe_id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "likes_recipe_id_fkey"
-            columns: ["recipe_id"]
-            isOneToOne: false
-            referencedRelation: "recipes"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
