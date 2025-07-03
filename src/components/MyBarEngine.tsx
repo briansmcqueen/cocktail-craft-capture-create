@@ -40,7 +40,7 @@ export default function MyBarEngine({
   } = useRecipeAnalysis(recipes, myBarIngredients, myBar);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 sm:px-0">
       {/* Header - styled like Favorites/My Creations */}
       <div className="flex items-center gap-3 mb-6">
         <User className="text-primary" size={24} />
