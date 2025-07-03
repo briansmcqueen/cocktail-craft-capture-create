@@ -54,7 +54,7 @@ export default function MobileNavigation({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="lg:hidden">
+        <Button variant="ghost" size="icon" className="lg:hidden hover:bg-gray-100 transition-colors">
           <Menu className="h-6 w-6" />
         </Button>
       </SheetTrigger>

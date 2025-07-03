@@ -105,11 +105,11 @@ export default function MyBarResults({
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                         <div className="absolute top-2 right-2">
-                           <Badge variant="outline" className="bg-red-50 text-red-800 border-red-200 text-xs">
-                             Need: {ingredientMap[recipe.missingIngredient]?.name}
-                           </Badge>
-                         </div>
+                           <div className="absolute top-2 right-2">
+                            <Badge variant="outline" className="bg-red-50 text-red-800 border-red-200 text-xs hover:bg-red-100 transition-colors">
+                              Need: {ingredientMap[recipe.missingIngredient]?.name}
+                            </Badge>
+                          </div>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Add {ingredientMap[recipe.missingIngredient]?.name} to make this cocktail</p>

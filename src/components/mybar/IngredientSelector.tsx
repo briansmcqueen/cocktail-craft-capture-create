@@ -96,21 +96,23 @@ export default function IngredientSelector({
       {myBarIngredients.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium">My Bar ({myBarIngredients.length} ingredients)</h3>
-          <div className="flex overflow-x-auto gap-2 md:flex-wrap md:overflow-visible">
-            {myBarIngredients.map(ingredientId => {
-              const ingredient = ingredientMap[ingredientId];
-              if (!ingredient) return null;
-              return (
-                <span
-                  key={ingredientId}
-                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 flex-shrink-0 cursor-pointer hover:bg-blue-200 transition-colors"
-                  onClick={() => toggleIngredient(ingredientId)}
-                >
-                  {ingredient.name}
-                  <X className="ml-1 h-3 w-3" />
-                </span>
-              );
-            })}
+          <div className="overflow-x-auto md:overflow-visible">
+            <div className="flex gap-2 md:flex-wrap" style={{ minWidth: 'max-content' }}>
+              {myBarIngredients.map(ingredientId => {
+                const ingredient = ingredientMap[ingredientId];
+                if (!ingredient) return null;
+                return (
+                  <span
+                    key={ingredientId}
+                    className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 flex-shrink-0 cursor-pointer hover:bg-blue-200 transition-colors"
+                    onClick={() => toggleIngredient(ingredientId)}
+                  >
+                    {ingredient.name}
+                    <X className="ml-1 h-3 w-3" />
+                  </span>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

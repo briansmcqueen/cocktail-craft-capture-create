@@ -105,7 +105,7 @@ export default function AddCustomIngredient({ onIngredientAdded }: AddCustomIngr
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-colors">
           <Plus className="h-4 w-4 mr-1" />
           Add Custom Ingredient
         </Button>
