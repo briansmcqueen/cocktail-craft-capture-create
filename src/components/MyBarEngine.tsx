@@ -41,17 +41,15 @@ export default function MyBarEngine({
 
   return (
     <div className="space-y-6">
-      {/* Header moved to top right */}
-      <div className="flex justify-end">
-        <div className="text-right space-y-1">
-          <div className="flex items-center justify-end gap-2">
-            <User className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-serif font-bold">My Bar</h1>
-          </div>
-          <p className="text-muted-foreground text-sm">
-            Build your inventory and discover what cocktails you can make
-          </p>
-        </div>
+      {/* Header - left aligned to match other sections */}
+      <div className="space-y-2">
+        <h2 className="text-gray-900 mb-2 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem] flex items-center gap-2">
+          <User className="h-4 w-4 text-primary" />
+          My Bar
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          Build your inventory and discover what cocktails you can make
+        </p>
       </div>
 
       {/* Ingredient Selection */}

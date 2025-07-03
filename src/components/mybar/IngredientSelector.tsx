@@ -120,18 +120,19 @@ export default function IngredientSelector({
         {filteredIngredients.map((ingredient) => (
           <div
             key={ingredient.id}
-            className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all hover:bg-accent/50 ${
+            className={cn(
+              "flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm",
               myBar[ingredient.id] 
                 ? 'bg-accent/20 border-accent' 
-                : 'bg-card border-border hover:border-accent/50'
-            }`}
+                : 'bg-card border-border hover:border-accent/50 hover:bg-accent/5'
+            )}
             onClick={() => toggleIngredient(ingredient.id)}
           >
             <div className="flex-1">
               <div className="font-medium text-sm flex items-center gap-2">
                 {ingredient.name}
                 {ingredient.isCustom && (
-                  <Badge variant="secondary" className="text-xs">Custom</Badge>
+                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200">Custom</span>
                 )}
               </div>
               <div className="text-xs text-muted-foreground">{ingredient.subCategory}</div>
