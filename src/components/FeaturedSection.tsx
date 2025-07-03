@@ -3,7 +3,7 @@ import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
 import RecipeCard from "./RecipeCard";
-import { isFavorite } from "@/utils/favorites";
+import { useFavorites } from "@/hooks/useFavorites";
 import {
   Carousel,
   CarouselContent,
@@ -25,6 +25,7 @@ export default function FeaturedSection({
   onRecipeClick, 
   onToggleFavorite 
 }: FeaturedSectionProps) {
+  const { isFavorite } = useFavorites();
   return (
     <section>
       <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">

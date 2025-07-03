@@ -44,9 +44,26 @@ export function useFavorites() {
   const toggleFavorite = useCallback(async (recipeId: string) => {
     if (!user) return false;
     
+    // Optimistically update the UI immediately
+    setFavoriteIds(prev => {
+      if (prev.includes(recipeId)) {
+        return prev.filter(id => id !== recipeId);
+      } else {
+        return [...prev, recipeId];
+      }
+    });
+    
+    // Then sync with database
     const success = await toggleFavoriteInDB(recipeId);
-    if (success) {
-      window.dispatchEvent(new Event('favorites-update'));
+    if (!success) {
+      // Revert on failure
+      setFavoriteIds(prev => {
+        if (prev.includes(recipeId)) {
+          return prev.filter(id => id !== recipeId);
+        } else {
+          return [...prev, recipeId];
+        }
+      });
     }
     return success;
   }, [user]);
