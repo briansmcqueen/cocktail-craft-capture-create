@@ -3,7 +3,7 @@ import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
 import RecipeCard from "./RecipeCard";
-import { useFavorites } from "@/hooks/useFavorites";
+import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import {
   Carousel,
   CarouselContent,
@@ -16,16 +16,14 @@ type FeaturedSectionProps = {
   title: string;
   recipes: Cocktail[];
   onRecipeClick: (recipe: Cocktail) => void;
-  onToggleFavorite: (recipe: Cocktail) => void;
 };
 
 export default function FeaturedSection({ 
   title, 
   recipes, 
-  onRecipeClick, 
-  onToggleFavorite 
+  onRecipeClick 
 }: FeaturedSectionProps) {
-  const { isFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
   return (
     <section>
       <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
@@ -53,9 +51,9 @@ export default function FeaturedSection({
                 <div className="absolute top-1 right-3">
                   <button
                     className="p-1 rounded-full hover:scale-110 transition-transform duration-200"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
-                      onToggleFavorite(recipe);
+                      await toggleFavorite(recipe.id);
                     }}
                   >
                     <Heart 

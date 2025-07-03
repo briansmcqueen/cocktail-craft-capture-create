@@ -32,14 +32,12 @@ export default function Featured({
         title="Featured Cocktails"
         recipes={featuredRecipes}
         onRecipeClick={onRecipeClick}
-        onToggleFavorite={onToggleFavorite}
       />
 
       <FeaturedSection
         title="Trending Now"
         recipes={trendingRecipes}
         onRecipeClick={onRecipeClick}
-        onToggleFavorite={onToggleFavorite}
       />
 
       <TechniquesSection />
