@@ -251,6 +251,7 @@ export type Database = {
           flavor_preferences: string[] | null
           id: string
           preferred_spirit_types: string[] | null
+          preferred_unit: string | null
           updated_at: string
           user_id: string
         }
@@ -260,6 +261,7 @@ export type Database = {
           flavor_preferences?: string[] | null
           id?: string
           preferred_spirit_types?: string[] | null
+          preferred_unit?: string | null
           updated_at?: string
           user_id: string
         }
@@ -269,6 +271,7 @@ export type Database = {
           flavor_preferences?: string[] | null
           id?: string
           preferred_spirit_types?: string[] | null
+          preferred_unit?: string | null
           updated_at?: string
           user_id?: string
         }

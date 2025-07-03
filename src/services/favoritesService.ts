@@ -22,6 +22,7 @@ export async function addFavorite(recipeId: string): Promise<boolean> {
     return false;
   }
 
+  // Generate a proper UUID for the record ID since recipe_id might not be a valid UUID
   const { error } = await supabase
     .from('favorites')
     .insert({

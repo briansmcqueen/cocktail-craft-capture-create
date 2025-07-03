@@ -39,7 +39,7 @@ export default function WhatToBuyNext({
               <div className="font-medium text-base text-gray-900 mb-1">{recommendation.ingredient.name}</div>
               <p className="text-sm text-gray-600 mb-2">{recommendation.ingredient.description}</p>
               <div className="flex items-center gap-2 mb-2">
-                <Star className="h-4 w-4 text-primary" />
+                <Star className="h-4 w-4 text-gray-900" />
                 <span className="text-sm font-medium text-gray-900">
                   Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}
                 </span>

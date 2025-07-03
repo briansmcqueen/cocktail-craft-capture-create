@@ -21,6 +21,7 @@ export default function UserPreferencesForm() {
   const [preferredSpirits, setPreferredSpirits] = useState<string[]>([]);
   const [flavorPreferences, setFlavorPreferences] = useState<string[]>([]);
   const [difficultyPreference, setDifficultyPreference] = useState(3);
+  const [preferredUnit, setPreferredUnit] = useState<'oz' | 'ml'>('oz');
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const { toast } = useToast();
@@ -39,6 +40,7 @@ export default function UserPreferencesForm() {
         setPreferredSpirits(preferences.preferred_spirit_types || []);
         setFlavorPreferences(preferences.flavor_preferences || []);
         setDifficultyPreference(preferences.difficulty_preference || 3);
+        setPreferredUnit(preferences.preferred_unit || 'oz');
       }
     } catch (error) {
       console.error("Error loading preferences:", error);
@@ -55,7 +57,8 @@ export default function UserPreferencesForm() {
     const success = await updateUserPreferences({
       preferred_spirit_types: preferredSpirits,
       flavor_preferences: flavorPreferences,
-      difficulty_preference: difficultyPreference
+      difficulty_preference: difficultyPreference,
+      preferred_unit: preferredUnit
     });
 
     if (success) {
@@ -157,6 +160,26 @@ export default function UserPreferencesForm() {
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Beginner</span>
             <span>Expert</span>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Label>Preferred Unit for Recipes</Label>
+          <div className="flex gap-2">
+            <Badge
+              variant={preferredUnit === 'oz' ? "default" : "outline"}
+              className="cursor-pointer"
+              onClick={() => setPreferredUnit('oz')}
+            >
+              Ounces (oz)
+            </Badge>
+            <Badge
+              variant={preferredUnit === 'ml' ? "default" : "outline"}
+              className="cursor-pointer"
+              onClick={() => setPreferredUnit('ml')}
+            >
+              Milliliters (ml)
+            </Badge>
           </div>
         </div>
 

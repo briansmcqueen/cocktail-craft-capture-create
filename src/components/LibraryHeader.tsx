@@ -12,7 +12,7 @@ type LibraryHeaderProps = {
 function getLibraryTitle(library: Library): string {
   switch (library) {
     case "featured": return "Featured";
-    case "all": return "All Cocktails";
+    case "all": return "Recipes";
     case "classics": return "Classic Collection";
     case "favorites": return "Your Favorites";
     case "mine": return "My Creations";

@@ -6,6 +6,7 @@ export interface UserPreferences {
   preferred_spirit_types: string[];
   flavor_preferences: string[];
   difficulty_preference: number;
+  preferred_unit: 'oz' | 'ml';
   created_at: string;
   updated_at: string;
 }
@@ -26,7 +27,7 @@ export async function getUserPreferences(): Promise<UserPreferences | null> {
     return null;
   }
 
-  return data;
+  return data as UserPreferences;
 }
 
 export async function updateUserPreferences(preferences: Partial<Omit<UserPreferences, 'id' | 'user_id' | 'created_at' | 'updated_at'>>): Promise<boolean> {
