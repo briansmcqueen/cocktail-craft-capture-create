@@ -1504,5 +1504,572 @@ export const classicCocktails: Cocktail[] = [
     notes: "Created at Tommy's Mexican Restaurant (San Francisco, early 1990s) by Julio Bermejo. A modern Margarita variant that replaces orange liqueur with agave syrup.",
     origin: "USA",
     tags: ["citrus", "refreshing", "natural"]
+  },
+  {
+    id: "92",
+    name: "Harvey Wallbanger",
+    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz vodka",
+      "4 oz orange juice",
+      "0.5 oz Galliano L'Autentico",
+      "Orange slice for garnish"
+    ],
+    steps: "Combine vodka and orange juice in a tall glass with ice and stir. Float Galliano on top. Garnish with an orange slice.",
+    notes: "A popular disco-era cocktail, essentially a Screwdriver with a float of Galliano, an Italian herbal liqueur. The drink is credited to mixologist Donato 'Duke' Antone.",
+    origin: "USA",
+    tags: ["classic", "vodka", "orange", "highball", "1970s"]
+  },
+  {
+    id: "93",
+    name: "Horse's Neck",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz brandy or bourbon",
+      "4 oz ginger ale",
+      "1 dash Angostura bitters (optional)",
+      "Long spiral of lemon peel for garnish"
+    ],
+    steps: "Pour brandy and ginger ale directly into a highball glass with ice cubes. Stir gently. Garnish with a long spiral of lemon peel draped over the edge of the glass.",
+    notes: "An American cocktail recognized by the IBA, identifiable by its long, curling strip of lemon rind garnish. It is listed as a 'Contemporary Classic'.",
+    origin: "USA",
+    tags: ["classic", "highball", "brandy", "ginger-ale", "simple"]
+  },
+  {
+    id: "94",
+    name: "Imperial Fizz",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz blended whiskey",
+      "0.75 oz light rum",
+      "0.5 oz fresh lemon juice",
+      "0.5 oz sugar",
+      "Soda water to top"
+    ],
+    steps: "Shake whiskey, rum, lemon juice, and sugar with ice and strain into a highball glass over two ice cubes. Fill with soda water, stir, and serve.",
+    notes: "A classic fizz variation that combines both whiskey and rum for a more complex base spirit.",
+    origin: "Unknown",
+    tags: ["classic", "fizz", "highball", "whiskey", "rum"]
+  },
+  {
+    id: "95",
+    name: "John Collins",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz London dry gin",
+      "1 oz fresh lemon juice",
+      "0.5 oz simple syrup",
+      "2 oz soda water",
+      "Lemon slice and maraschino cherry for garnish"
+    ],
+    steps: "Pour all ingredients directly into a Collins glass filled with ice. Stir gently. Garnish with a lemon slice and a maraschino cherry.",
+    notes: "A classic long drink attested to in 1869, believed to have originated with a headwaiter of that name at Limmer's Old House in London. It is essentially a Tom Collins made with London Dry Gin instead of Old Tom Gin.",
+    origin: "UK",
+    tags: ["classic", "highball", "gin", "refreshing", "19th-century"]
+  },
+  {
+    id: "96",
+    name: "Kamikaze",
+    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz vodka",
+      "1 oz triple sec",
+      "1 oz fresh lime juice"
+    ],
+    steps: "Shake all ingredients together with ice. Strain into a chilled cocktail glass. Garnish with a lime wedge.",
+    notes: "A simple, sharp, and refreshing cocktail made of equal parts vodka, triple sec, and lime juice. It became popular in the 1970s during the rise of vodka.",
+    origin: "Japan/USA",
+    tags: ["modern-classic", "vodka", "sour", "shot", "1970s"]
+  },
+  {
+    id: "97",
+    name: "Kentucky Mule",
+    image: "https://images.unsplash.com/photo-1609119309844-ad5e8f74e2e1?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz Kentucky bourbon",
+      "0.5 oz fresh lime juice",
+      "4 oz ginger beer",
+      "Mint sprig and lime wheel for garnish"
+    ],
+    steps: "In a copper mug or highball glass, pour in the bourbon and lime juice. Add ice and top with ginger beer. Garnish with a sprig of fresh mint and a lime wheel.",
+    notes: "A popular variation on the Moscow Mule that substitutes bourbon for vodka, creating a spicier and more robust flavor profile.",
+    origin: "USA",
+    tags: ["modern-classic", "highball", "bourbon", "ginger-beer", "spicy"]
+  },
+  {
+    id: "98",
+    name: "Kir Royale",
+    image: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "0.5 oz crème de cassis",
+      "5 oz chilled Champagne or dry sparkling wine",
+      "Fresh raspberry for garnish (optional)"
+    ],
+    steps: "Pour the crème de cassis into a champagne flute, then top with chilled Champagne. Garnish with a fresh raspberry if desired.",
+    notes: "An elegant and celebratory French apéritif. It is a variation of the classic Kir (white wine and cassis), using Champagne instead of still wine.",
+    origin: "France",
+    tags: ["classic", "sparkling", "aperitif", "elegant", "two-ingredient"]
+  },
+  {
+    id: "99",
+    name: "Last Word",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "0.75 oz gin",
+      "0.75 oz green Chartreuse",
+      "0.75 oz maraschino liqueur",
+      "0.75 oz fresh lime juice"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass.",
+    notes: "A gin-based cocktail originating at the Detroit Athletic Club in the 1910s. It's a perfectly balanced, equal-parts cocktail known for its complex, pungent, and sharp flavor profile.",
+    origin: "USA",
+    tags: ["classic", "gin", "prohibition-era", "sour", "herbal", "equal-parts"]
+  },
+  {
+    id: "100",
+    name: "Martinez",
+    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Old Tom gin",
+      "1.5 oz sweet vermouth",
+      "1 barspoon maraschino liqueur",
+      "2 dashes orange bitters",
+      "Orange twist for garnish"
+    ],
+    steps: "Add all ingredients into a mixing glass with ice and stir until well-chilled. Strain into a chilled coupe glass. Garnish with an orange twist.",
+    notes: "Widely regarded as the direct precursor to the Martini. Early recipes varied, but the modern classic combines Old Tom Gin, sweet vermouth, maraschino liqueur, and bitters.",
+    origin: "USA",
+    tags: ["classic", "gin", "vermouth", "spirit-forward", "19th-century"]
+  },
+  {
+    id: "101",
+    name: "Mary Pickford",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz white rum",
+      "1.5 oz fresh pineapple juice",
+      "1 barspoon maraschino liqueur",
+      "1 barspoon grenadine"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass. Garnish with a maraschino cherry.",
+    notes: "A Prohibition-era cocktail created in the 1920s at the Hotel Nacional de Cuba for the silent movie star of the same name. It's a sweet, fruity, and refreshing rum drink.",
+    origin: "Cuba",
+    tags: ["classic", "rum", "fruity", "tropical", "prohibition-era"]
+  },
+  {
+    id: "102",
+    name: "Monkey Gland",
+    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz gin",
+      "1.5 oz orange juice",
+      "1 barspoon absinthe",
+      "1 barspoon grenadine"
+    ],
+    steps: "Shake all ingredients well with ice and strain into a chilled cocktail glass.",
+    notes: "Created in the 1920s by Harry MacElhone at Harry's New York Bar in Paris. The name refers to a controversial surgical procedure from the era.",
+    origin: "France",
+    tags: ["classic", "gin", "orange", "absinthe", "prohibition-era"]
+  },
+  {
+    id: "103",
+    name: "Naked & Famous",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "0.75 oz mezcal",
+      "0.75 oz Aperol",
+      "0.75 oz yellow Chartreuse",
+      "0.75 oz fresh lime juice"
+    ],
+    steps: "Shake all ingredients with ice and fine strain into a chilled coupe glass.",
+    notes: "A modern classic created in 2011 by Joaquín Simó. It's described as 'the bastard child born out of an illicit Oaxacan love affair between the classic Last Word and the Paper Plane'.",
+    origin: "USA",
+    tags: ["modern-classic", "mezcal", "bittersweet", "sour", "equal-parts"]
+  },
+  {
+    id: "104",
+    name: "Old Pal",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz rye whiskey",
+      "0.75 oz dry vermouth",
+      "0.75 oz Campari",
+      "Lemon twist for garnish"
+    ],
+    steps: "Stir all ingredients with ice, then strain into a chilled coupe glass. Garnish with a lemon twist.",
+    notes: "A rye whiskey-based version of the Boulevardier, first appearing in Harry MacElhone's 1927 'Barflies and Cocktails'. It uses dry vermouth instead of sweet, resulting in a drier, spicier profile.",
+    origin: "France",
+    tags: ["classic", "whiskey", "rye", "bittersweet", "spirit-forward"]
+  },
+  {
+    id: "105",
+    name: "Painkiller",
+    image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz Pusser's rum",
+      "4 oz pineapple juice",
+      "1 oz orange juice",
+      "1 oz cream of coconut",
+      "Freshly grated nutmeg for garnish"
+    ],
+    steps: "Add all liquid ingredients to a shaker with ice and shake vigorously. Pour into a hurricane glass or large goblet filled with crushed ice. Garnish with freshly grated nutmeg.",
+    notes: "A rich and fruity tiki cocktail created in the 1970s at the Soggy Dollar Bar in the British Virgin Islands. It is a trademarked cocktail that officially must be made with Pusser's Rum.",
+    origin: "British Virgin Islands",
+    tags: ["tiki", "classic", "rum", "tropical", "creamy", "1970s"]
+  },
+  {
+    id: "106",
+    name: "Paradise",
+    image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz gin",
+      "0.75 oz apricot brandy",
+      "0.75 oz fresh orange juice"
+    ],
+    steps: "Pour all ingredients into cocktail shaker, shake well with ice, strain into chilled cocktail glass.",
+    notes: "A classic apéritif cocktail that first appears in Harry Craddock's 1930 'The Savoy Cocktail Book'. It's a simple, fruity, and elegant gin drink.",
+    origin: "UK",
+    tags: ["classic", "gin", "fruity", "aperitif", "pre-prohibition"]
+  },
+  {
+    id: "107",
+    name: "Pegu Club",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz London dry gin",
+      "0.75 oz orange curaçao",
+      "0.75 oz fresh lime juice",
+      "1 dash Angostura bitters",
+      "1 dash orange bitters"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled coupe glass. Garnish with a lime wedge.",
+    notes: "The signature drink of the Pegu Club in Burma, a British colonial-era institution. It's a tart, dry, and refreshing gin sour with complex bitter notes.",
+    origin: "Burma (Myanmar)",
+    tags: ["classic", "gin-sour", "colonial-era", "refreshing", "tart"]
+  },
+  {
+    id: "108",
+    name: "Pink Gin",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz Plymouth gin",
+      "4 dashes Angostura bitters",
+      "Lemon peel for garnish"
+    ],
+    steps: "Chill a cocktail glass. Swirl the Angostura bitters around the inside of the chilled glass to coat it, discarding any excess. Add the chilled gin and stir. Garnish with a lemon peel.",
+    notes: "A classic British cocktail from the mid-19th century, consisting simply of gin and a dash of Angostura bitters, which gives the drink its signature pinkish hue.",
+    origin: "UK",
+    tags: ["classic", "gin", "simple", "spirit-forward", "19th-century"]
+  },
+  {
+    id: "109",
+    name: "Planter's Punch",
+    image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Jamaican rum",
+      "1 oz fresh lime juice",
+      "1 oz sugar cane juice",
+      "Pineapple slice and cherry for garnish"
+    ],
+    steps: "Pour all ingredients into a shaker filled with ice. Shake well. Pour into a large glass filled with fresh ice. Garnish with a pineapple slice and a cocktail cherry.",
+    notes: "An IBA Official Cocktail originating from Jamaica. The classic rhyme for the recipe is 'One of Sour, Two of Sweet, Three of Strong, Four of Weak'.",
+    origin: "Jamaica",
+    tags: ["classic", "tiki", "rum", "punch", "fruity"]
+  },
+  {
+    id: "110",
+    name: "Porto Flip",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "0.5 oz brandy",
+      "1.5 oz ruby port",
+      "0.33 oz egg yolk",
+      "Freshly grated nutmeg for garnish"
+    ],
+    steps: "Shake all ingredients vigorously with ice. Strain into a chilled cocktail glass. Garnish with freshly grated nutmeg.",
+    notes: "A classic 'flip' style cocktail (containing egg yolk) first recorded in Jerry Thomas's 1862 'The Bartender's Guide'. It's a rich, creamy, and comforting after-dinner drink.",
+    origin: "USA",
+    tags: ["classic", "flip", "dessert", "port", "brandy", "19th-century"]
+  },
+  {
+    id: "111",
+    name: "Rabo de Galo",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz cachaça",
+      "0.5 oz sweet vermouth",
+      "0.5 oz Cynar",
+      "Orange twist for garnish"
+    ],
+    steps: "Stir all ingredients with ice in a mixing glass. Strain into a rocks glass filled with fresh ice. Garnish with an orange twist.",
+    notes: "A classic Brazilian cocktail whose name literally translates to 'cock's tail'. It originated in the 1950s and typically combines cachaça with a bitter and a vermouth.",
+    origin: "Brazil",
+    tags: ["classic", "cachaca", "bittersweet", "spirit-forward", "aperitivo"]
+  },
+  {
+    id: "112",
+    name: "Ramos Gin Fizz",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "0.5 oz fresh lime juice",
+      "0.5 oz fresh lemon juice",
+      "1 oz heavy cream",
+      "1 egg white",
+      "1 tsp simple syrup",
+      "3 drops orange flower water",
+      "Club soda to top"
+    ],
+    steps: "Combine all ingredients except soda water in a shaker. Dry shake vigorously for at least 45 seconds. Add ice and shake again until well-chilled. Strain into a chilled Collins glass without ice. Slowly top with soda water, allowing the foam to rise above the rim of the glass.",
+    notes: "An iconic New Orleans cocktail created in 1888 by Henry C. Ramos. It is famously labor-intensive due to the long shaking time required to achieve its signature thick, frothy head.",
+    origin: "USA",
+    tags: ["classic", "new-orleans", "gin-fizz", "frothy", "creamy", "labor-intensive"]
+  },
+  {
+    id: "113",
+    name: "Rattlesnake",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz rye whiskey",
+      "0.75 oz fresh lemon juice",
+      "0.75 oz simple syrup",
+      "0.5 oz egg white",
+      "Absinthe to rinse",
+      "Angostura bitters for garnish"
+    ],
+    steps: "Rinse a chilled coupe glass with absinthe and set aside. Combine remaining ingredients in a shaker and dry shake for 10-12 seconds. Add ice and shake again until well-chilled. Fine-strain into the prepared glass. Garnish with a few drops of bitters on the foam.",
+    notes: "A classic whiskey sour variation with a hint of absinthe, first appearing in Harry Craddock's 1930 'The Savoy Cocktail Book'. The name is said to come from the idea that it could either cure a rattlesnake bite or make you see them.",
+    origin: "USA/UK",
+    tags: ["classic", "whiskey-sour", "rye", "absinthe", "frothy"]
+  },
+  {
+    id: "114",
+    name: "Remember the Maine",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz rye whiskey",
+      "0.75 oz sweet vermouth",
+      "2 tsp cherry liqueur (Cherry Heering)",
+      "0.5 tsp absinthe"
+    ],
+    steps: "Combine all ingredients in a mixing glass with ice and stir until well-chilled. Strain into a chilled coupe glass. Garnish with a cherry.",
+    notes: "A rich whiskey cocktail from Charles H. Baker, Jr.'s 1939 book 'The Gentleman's Companion'. It's a complex, Manhattan-like drink with herbal and cherry notes.",
+    origin: "USA/Cuba",
+    tags: ["classic", "whiskey", "rye", "spirit-forward", "prohibition-era"]
+  },
+  {
+    id: "115",
+    name: "Rusty Nail",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Scotch whisky",
+      "0.75 oz Drambuie",
+      "Lemon twist for garnish"
+    ],
+    steps: "Pour all ingredients directly into an old-fashioned glass filled with ice. Stir gently. Garnish with a lemon twist.",
+    notes: "A simple, two-ingredient cocktail made by mixing Scotch whisky and Drambuie, a Scotch-based liqueur flavored with honey and herbs.",
+    origin: "USA",
+    tags: ["classic", "scotch", "simple", "two-ingredient", "digestif"]
+  },
+  {
+    id: "116",
+    name: "Sazerac",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 sugar cube",
+      "3 dashes Peychaud's bitters",
+      "2 oz rye whiskey",
+      "0.25 oz absinthe",
+      "Lemon peel for garnish"
+    ],
+    steps: "Rinse a chilled old-fashioned glass with absinthe, discarding the excess, and set aside. In a mixing glass, muddle the sugar cube with the Peychaud's bitters. Add the rye whiskey, fill with ice, and stir until well-chilled. Strain into the prepared glass. Express the lemon peel over the drink and discard.",
+    notes: "The official cocktail of New Orleans, created in the mid-1800s. It's a potent and aromatic combination of rye whiskey, bitters, and an absinthe rinse.",
+    origin: "USA",
+    tags: ["classic", "new-orleans", "whiskey", "rye", "spirit-forward", "19th-century"]
+  },
+  {
+    id: "117",
+    name: "Screwdriver",
+    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz vodka",
+      "5 oz orange juice",
+      "Orange slice for garnish"
+    ],
+    steps: "Pour vodka and orange juice into a highball glass filled with ice. Stir well. Garnish with an orange slice.",
+    notes: "A simple highball of vodka and orange juice. It reportedly gets its name from American oil workers who originally stirred the drink with a screwdriver.",
+    origin: "USA",
+    tags: ["classic", "highball", "vodka", "simple", "brunch"]
+  },
+  {
+    id: "118",
+    name: "Sidecar",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz cognac",
+      "0.75 oz orange liqueur (Cointreau)",
+      "0.75 oz fresh lemon juice",
+      "Sugar for rim (optional)",
+      "Orange twist for garnish"
+    ],
+    steps: "Coat the rim of a coupe glass with sugar, if desired. Add all liquid ingredients to a shaker with ice and shake until well-chilled. Strain into the prepared glass. Garnish with an orange twist.",
+    notes: "A classic sour cocktail featuring cognac, orange liqueur, and lemon juice. It was likely invented around World War I in either London or Paris and is a direct descendant of the Brandy Crusta.",
+    origin: "France/UK",
+    tags: ["classic", "sour", "cognac", "brandy", "WWI-era"]
+  },
+  {
+    id: "119",
+    name: "Stinger",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz cognac",
+      "1 oz white crème de menthe",
+      "Mint sprig for garnish"
+    ],
+    steps: "Shake all ingredients with ice and strain into a glass filled with crushed ice. Garnish with a mint sprig.",
+    notes: "A classic duo cocktail made with brandy and crème de menthe. It was a popular high-society drink in the US from the 1890s through the 1970s.",
+    origin: "USA",
+    tags: ["classic", "digestif", "brandy", "mint", "two-ingredient"]
+  },
+  {
+    id: "120",
+    name: "Tipperary",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Irish whiskey",
+      "1 oz sweet vermouth",
+      "0.5 oz green Chartreuse",
+      "2 dashes Angostura bitters"
+    ],
+    steps: "Stir all ingredients with ice in a mixing glass until well-chilled. Strain into a chilled coupe glass. Garnish with an orange twist.",
+    notes: "A classic Irish whiskey cocktail that is a variation on the Bijou. The first recipe appeared in Hugo Ensslin's 1916 book. Modern versions often increase the proportion of whiskey.",
+    origin: "USA",
+    tags: ["classic", "irish-whiskey", "spirit-forward", "herbal"]
+  },
+  {
+    id: "121",
+    name: "Tom Collins",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz Old Tom gin",
+      "1 oz fresh lemon juice",
+      "0.5 oz simple syrup",
+      "Club soda to top",
+      "Lemon wheel and maraschino cherry for garnish"
+    ],
+    steps: "Combine gin, lemon juice, and simple syrup in a Collins glass with ice. Stir to combine. Top with club soda. Garnish with a lemon wheel and a maraschino cherry.",
+    notes: "A classic gin highball that is essentially a sparkling lemonade with gin. It is traditionally made with Old Tom Gin, a slightly sweeter style of gin popular in the 19th century.",
+    origin: "UK/USA",
+    tags: ["classic", "highball", "gin", "refreshing", "19th-century"]
+  },
+  {
+    id: "122",
+    name: "Tuxedo",
+    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Old Tom gin",
+      "1 oz dry vermouth",
+      "0.5 barspoon maraschino liqueur",
+      "1 barspoon absinthe",
+      "2 dashes orange bitters",
+      "Lemon twist and cherry for garnish"
+    ],
+    steps: "Stir all ingredients with ice in a mixing glass until well-chilled. Strain into a chilled coupe glass. Garnish with a skewered lemon twist and a cherry.",
+    notes: "A sophisticated variation on the Martini, named after the Tuxedo Club in New York. It's a complex, aromatic cocktail with multiple variations.",
+    origin: "USA",
+    tags: ["classic", "martini-variation", "gin", "spirit-forward", "19th-century"]
+  },
+  {
+    id: "123",
+    name: "Vieux Carré",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz rye whiskey",
+      "1 oz cognac",
+      "1 oz sweet vermouth",
+      "1 barspoon Bénédictine",
+      "2 dashes Peychaud's bitters",
+      "2 dashes Angostura bitters",
+      "Orange or lemon peel for garnish"
+    ],
+    steps: "Combine all ingredients in a mixing glass with ice and stir until well-chilled. Strain into a rocks glass over a large ice cube. Garnish with an orange or lemon peel.",
+    notes: "Meaning 'Old Square' in French, this cocktail was created in the 1930s at the Hotel Monteleone in New Orleans' French Quarter. It's a complex and warming blend of rye, cognac, and liqueurs.",
+    origin: "USA",
+    tags: ["classic", "new-orleans", "whiskey", "cognac", "spirit-forward", "prohibition-era"]
+  },
+  {
+    id: "124",
+    name: "Vodka Tonic",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz vodka",
+      "4 oz tonic water",
+      "Lime wedge for garnish"
+    ],
+    steps: "Fill a highball glass with ice. Add vodka and top with tonic water. Squeeze a lime wedge over the drink and drop it in.",
+    notes: "A simple, classic highball. The ratio of vodka to tonic can be adjusted to taste, but a 1:2 or 1:3 ratio is common. A generous squeeze of lime is essential.",
+    origin: "Global",
+    tags: ["classic", "highball", "vodka", "simple", "refreshing"]
+  },
+  {
+    id: "125",
+    name: "Ward 8",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz rye whiskey",
+      "0.5 oz fresh lemon juice",
+      "0.5 oz fresh orange juice",
+      "1 tsp grenadine"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass. Garnish with a cherry or orange slice.",
+    notes: "A classic whiskey sour variation originating in 1898 in Boston, Massachusetts, at the Locke-Ober Café. It was named in honor of a local political boss.",
+    origin: "USA",
+    tags: ["classic", "whiskey-sour", "rye", "fruity", "pre-prohibition"]
+  },
+  {
+    id: "126",
+    name: "White Lady",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "0.75 oz Cointreau",
+      "0.75 oz fresh lemon juice",
+      "0.5 oz egg white"
+    ],
+    steps: "Add all ingredients to a shaker and dry shake (without ice). Add ice and shake again until well-chilled. Fine strain into a chilled coupe glass. Garnish with a lemon twist.",
+    notes: "A classic gin sour, essentially a Sidecar made with gin instead of brandy. The recipe was popularized by Harry Craddock in his 1930 'The Savoy Cocktail Book'. The addition of egg white has become standard for a silky texture.",
+    origin: "UK/France",
+    tags: ["classic", "gin-sour", "frothy", "elegant", "prohibition-era"]
+  },
+  {
+    id: "127",
+    name: "Widow's Kiss",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Calvados",
+      "0.75 oz Bénédictine",
+      "0.75 oz yellow Chartreuse",
+      "2 dashes Angostura bitters",
+      "Cherry for garnish"
+    ],
+    steps: "Stir all ingredients with ice in a mixing glass until well-chilled. Strain into a chilled coupe glass. Garnish with a cherry.",
+    notes: "A potent, herbal, and complex cocktail from the late 19th century. It's a formidable drink featuring apple brandy and two classic French herbal liqueurs.",
+    origin: "USA",
+    tags: ["classic", "spirit-forward", "herbal", "apple-brandy", "digestif"]
+  },
+  {
+    id: "128",
+    name: "Yellow Bird",
+    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz white rum",
+      "0.5 oz Galliano",
+      "0.5 oz triple sec",
+      "0.5 oz fresh lime juice"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass.",
+    notes: "A tropical cocktail whose name may come from a popular Haitian tune. The IBA recipe is a simple sour, but other variations are more complex, often including pineapple and orange juice.",
+    origin: "Caribbean/USA",
+    tags: ["classic", "tiki", "rum", "fruity", "tropical"]
   }
 ];
