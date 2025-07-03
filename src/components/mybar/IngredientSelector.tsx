@@ -82,7 +82,7 @@ export default function IngredientSelector({
                 "inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-colors min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm capitalize",
                 selectedCategory === category
                   ? "bg-accent text-accent-foreground"
-                  : "bg-card border border-border text-muted-foreground hover:bg-accent/50"
+                  : "bg-card border border-border text-muted-foreground hover:bg-accent/50 hover:text-foreground"
               )}
               aria-label={`Filter by ${category === "recipes" ? "all ingredients" : category}`}
             >
@@ -103,7 +103,7 @@ export default function IngredientSelector({
               return (
                 <span
                   key={ingredientId}
-                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-lg bg-accent text-accent-foreground mr-1 cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 mr-1 cursor-pointer hover:bg-blue-200 transition-colors"
                   onClick={() => toggleIngredient(ingredientId)}
                 >
                   {ingredient.name}
