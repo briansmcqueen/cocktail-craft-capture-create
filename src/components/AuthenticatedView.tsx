@@ -25,7 +25,6 @@ interface AuthenticatedViewProps {
   handleEditRecipe: (recipe: Cocktail) => void;
   handleShareRecipe: (recipe: Cocktail) => void;
   handleLikeWithAuth: (recipe: Cocktail) => void;
-  handleFavoriteWithAuth: (recipe: Cocktail) => void;
   handleTagClick: (tag: string) => void;
   handleAddRecipe: () => void;
   setShowAuthModal: (show: boolean) => void;
@@ -58,7 +57,6 @@ export default function AuthenticatedView({
   handleEditRecipe,
   handleShareRecipe,
   handleLikeWithAuth,
-  handleFavoriteWithAuth,
   handleTagClick,
   handleAddRecipe,
   setShowAuthModal,
@@ -120,7 +118,6 @@ export default function AuthenticatedView({
                 handleEditRecipe={handleEditRecipe}
                 handleShareRecipe={handleShareRecipe}
                 handleLikeWithAuth={handleLikeWithAuth}
-                handleFavoriteWithAuth={handleFavoriteWithAuth}
                 handleTagClick={handleTagClick}
                 handleAddRecipe={handleAddRecipe}
                 setShowForm={setShowForm}

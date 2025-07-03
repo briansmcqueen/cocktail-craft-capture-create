@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Heart, ThumbsUp, X, Share, Martini } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
-import { useFavorites } from "@/hooks/useFavorites";
+import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { getUserRecipes } from "@/utils/storage";
 import { useState, useEffect } from "react";
 import { getUserPreferences } from "@/services/userPreferencesService";

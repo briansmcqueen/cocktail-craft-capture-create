@@ -3,7 +3,6 @@ import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
-import { useFavorites } from "@/hooks/useFavorites";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -14,11 +13,6 @@ type FavoritesProps = {
 };
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
-  const { toggleFavorite } = useFavorites();
-
-  const handleToggleFavorite = async (recipe: Cocktail) => {
-    await toggleFavorite(recipe.id);
-  };
 
   if (favoriteRecipes.length === 0) {
     return (
@@ -47,7 +41,6 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
             key={recipe.id}
             recipe={recipe}
             onRecipeClick={onRecipeClick}
-            onToggleFavorite={handleToggleFavorite}
           />
         ))}
       </div>

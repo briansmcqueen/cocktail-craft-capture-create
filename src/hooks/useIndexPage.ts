@@ -6,7 +6,7 @@ import { getUserRecipesFromDB, saveRecipeToDB, deleteRecipeFromDB } from "@/serv
 import { toggleLikeInDB } from "@/services/likesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useDataMigration } from "@/hooks/useDataMigration";
-import { useFavorites } from "@/hooks/useFavorites";
+import { useFavorites } from "@/hooks/useFavoritesRefactored";
 
 export function useIndexPage() {
   const { user } = useAuth();
@@ -86,11 +86,6 @@ export function useIndexPage() {
     setForceUpdate(prev => prev + 1);
   };
 
-  const handleToggleFavorite = async (recipe: Cocktail) => {
-    if (!user) return;
-    await toggleFavorite(recipe.id);
-  };
-
   const handleTagClick = (tag: string) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter(t => t !== tag));
@@ -155,7 +150,6 @@ export function useIndexPage() {
     handleEditRecipe,
     handleShareRecipe,
     handleLike,
-    handleToggleFavorite,
     handleTagClick,
     allRecipes,
     favoriteRecipes,

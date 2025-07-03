@@ -1,24 +1,27 @@
-
 import React from "react";
 import { Heart } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
-import { useFavorites } from "@/hooks/useFavorites";
+import { useFavorites } from "@/hooks/useFavoritesRefactored";
 
 type RecipeCardWithFavoriteProps = {
   recipe: Cocktail;
   onRecipeClick: (recipe: Cocktail) => void;
-  onToggleFavorite: (recipe: Cocktail) => void;
   onTagClick?: (tag: string) => void;
 };
 
 export default function RecipeCardWithFavorite({ 
   recipe, 
   onRecipeClick, 
-  onToggleFavorite, 
   onTagClick
 }: RecipeCardWithFavoriteProps) {
-  const { isFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggleFavorite(recipe.id);
+  };
+
   return (
     <div className="relative group">
       <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
@@ -33,10 +36,7 @@ export default function RecipeCardWithFavorite({
       <div className="absolute top-1 right-3">
         <button
           className="p-1 rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 touch-manipulation"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite(recipe);
-          }}
+          onClick={handleToggleFavorite}
         >
           <Heart 
             size={24} 

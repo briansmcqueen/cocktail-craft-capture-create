@@ -190,7 +190,6 @@ export default function IngredientFilter({
               key={`${recipe.id}-${forceUpdate}`}
               recipe={recipe}
               onRecipeClick={onRecipeClick}
-              onToggleFavorite={onToggleFavorite}
               onTagClick={onTagClick}
             />
           ))}

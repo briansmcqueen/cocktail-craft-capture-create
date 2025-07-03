@@ -271,7 +271,6 @@ export default function CategorizedIngredientFilter({
               key={`${recipe.id}-${forceUpdate}`}
               recipe={recipe}
               onRecipeClick={onRecipeClick}
-              onToggleFavorite={onToggleFavorite}
               onTagClick={onTagClick}
             />
           ))}

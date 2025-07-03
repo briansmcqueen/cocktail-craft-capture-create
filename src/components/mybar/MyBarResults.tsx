@@ -77,7 +77,6 @@ export default function MyBarResults({
                 key={recipe.id}
                 recipe={recipe}
                 onRecipeClick={onRecipeClick}
-                onToggleFavorite={onToggleFavorite}
                 onTagClick={onTagClick}
               />
             ))}
@@ -97,12 +96,11 @@ export default function MyBarResults({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {recipesNeedingOneIngredient.slice(0, 6).map((recipe) => (
               <div key={recipe.id} className="relative">
-                <RecipeCardWithFavorite
-                  recipe={recipe}
-                  onRecipeClick={onRecipeClick}
-                  onToggleFavorite={onToggleFavorite}
-                  onTagClick={onTagClick}
-                />
+              <RecipeCardWithFavorite
+                recipe={recipe}
+                onRecipeClick={onRecipeClick}
+                onTagClick={onTagClick}
+              />
                 {recipe.missingIngredient && (
                   <TooltipProvider>
                     <Tooltip>

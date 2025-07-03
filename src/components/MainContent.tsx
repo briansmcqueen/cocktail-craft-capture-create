@@ -29,7 +29,6 @@ interface MainContentProps {
   handleEditRecipe: (recipe: Cocktail) => void;
   handleShareRecipe: (recipe: Cocktail) => void;
   handleLikeWithAuth: (recipe: Cocktail) => void;
-  handleFavoriteWithAuth: (recipe: Cocktail) => void;
   handleTagClick: (tag: string) => void;
   handleAddRecipe: () => void;
   setShowForm: (show: boolean) => void;
@@ -56,7 +55,6 @@ export default function MainContent({
   handleEditRecipe,
   handleShareRecipe,
   handleLikeWithAuth,
-  handleFavoriteWithAuth,
   handleTagClick,
   handleAddRecipe,
   setShowForm,
@@ -109,13 +107,13 @@ export default function MainContent({
             onEditRecipe={handleEditRecipe}
             onShareRecipe={handleShareRecipe}
             userRecipes={userRecipes}
-            onToggleFavorite={handleFavoriteWithAuth}
+            onToggleFavorite={() => {}}
           />
         ) : library === "ingredients" ? (
           <MyBarEngine
             recipes={allRecipes}
             onRecipeClick={handleRecipeClick}
-            onToggleFavorite={handleFavoriteWithAuth}
+            onToggleFavorite={() => {}}
             onTagClick={handleTagClick}
             forceUpdate={forceUpdate}
           />
@@ -148,7 +146,7 @@ export default function MainContent({
           <RecipeGrid
             recipes={getFilteredRecipes()}
             onRecipeClick={handleRecipeClick}
-            onToggleFavorite={handleFavoriteWithAuth}
+            onToggleFavorite={() => {}}
             onLike={handleLikeWithAuth}
             onShareRecipe={handleShareRecipe}
             onTagClick={handleTagClick}

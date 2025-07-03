@@ -37,7 +37,6 @@ export default function Index() {
     handleEditRecipe,
     handleShareRecipe,
     handleLike,
-    handleToggleFavorite,
     handleTagClick,
     allRecipes,
     favoriteRecipes,
@@ -68,9 +67,6 @@ export default function Index() {
     handleAuthenticatedAction(() => handleLike(recipe));
   };
 
-  const handleFavoriteWithAuth = (recipe: any) => {
-    handleAuthenticatedAction(() => handleToggleFavorite(recipe));
-  };
 
   const handleSignInClick = () => {
     setAuthModalMode('signin');
@@ -150,7 +146,6 @@ export default function Index() {
         handleEditRecipe={handleEditRecipe}
         handleShareRecipe={handleShareRecipe}
         handleLikeWithAuth={handleLikeWithAuth}
-        handleFavoriteWithAuth={handleFavoriteWithAuth}
         handleTagClick={handleTagClick}
         handleAddRecipe={handleAddRecipe}
         setShowAuthModal={setShowAuthModal}
