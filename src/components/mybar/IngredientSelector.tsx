@@ -82,7 +82,7 @@ export default function IngredientSelector({
                 "inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-colors min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm capitalize",
                 selectedCategory === category
                   ? "bg-accent text-accent-foreground"
-                  : "bg-card border border-border text-foreground hover:border-accent"
+                  : "bg-card border border-border text-foreground hover:border-accent hover:text-foreground"
               )}
               aria-label={`Filter by ${category === "recipes" ? "all ingredients" : category}`}
             >

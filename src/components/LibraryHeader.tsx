@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-type Library = "featured" | "all" | "classics" | "favorites" | "mine";
+type Library = "featured" | "all" | "classics" | "favorites" | "mine" | "ingredients";
 
 type LibraryHeaderProps = {
   library: Library;
@@ -21,8 +21,8 @@ function getLibraryTitle(library: Library): string {
 }
 
 export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHeaderProps) {
-  // Don't render anything for the featured page since it has its own section headings
-  if (library === "featured") {
+  // Don't render anything for the featured page or ingredients page since they have their own section headings
+  if (library === "featured" || library === "ingredients") {
     return null;
   }
 
