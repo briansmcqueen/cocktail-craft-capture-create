@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
@@ -27,13 +27,13 @@ export default function IngredientSelector({
   setCustomIngredients
 }: IngredientSelectorProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("recipes");
 
   // Filter ingredients for display (including custom ones)
   const filteredIngredients = useMemo(() => {
     let filtered = allIngredients;
 
-    if (selectedCategory !== "all") {
+    if (selectedCategory !== "recipes") {
       filtered = filtered.filter(ing => ing.category.toLowerCase() === selectedCategory);
     }
 
@@ -49,7 +49,7 @@ export default function IngredientSelector({
     return filtered.sort((a, b) => a.name.localeCompare(b.name));
   }, [selectedCategory, searchTerm, allIngredients]);
 
-  const categories = ["all", "spirits", "liqueurs", "wines & vermouths", "mixers", "produce", "pantry"];
+  const categories = ["recipes", "spirits", "liqueurs", "wines & vermouths", "mixers", "produce", "pantry"];
 
   return (
     <div className="space-y-4">
@@ -71,21 +71,26 @@ export default function IngredientSelector({
         }} />
       </div>
 
-      {/* Category Tabs */}
-      <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7" role="tablist" aria-label="Filter ingredients by category">
+      {/* Category Filter */}
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
-            <TabsTrigger 
-              key={category} 
-              value={category} 
-              className="capitalize"
-              aria-label={`Filter by ${category === "all" ? "all ingredients" : category}`}
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={cn(
+                "inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-colors min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm capitalize",
+                selectedCategory === category
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:bg-accent/50"
+              )}
+              aria-label={`Filter by ${category === "recipes" ? "all ingredients" : category}`}
             >
-              {category === "all" ? "All" : category === "wines & vermouths" ? "Wines" : category}
-            </TabsTrigger>
+              {category === "recipes" ? "All" : category === "wines & vermouths" ? "Wines" : category}
+            </button>
           ))}
-        </TabsList>
-      </Tabs>
+        </div>
+      </div>
 
       {/* Selected Ingredients Pills */}
       {myBarIngredients.length > 0 && (
@@ -96,15 +101,14 @@ export default function IngredientSelector({
               const ingredient = ingredientMap[ingredientId];
               if (!ingredient) return null;
               return (
-                <Badge 
-                  key={ingredientId} 
-                  variant="outline" 
-                  className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
+                <span
+                  key={ingredientId}
+                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-lg bg-accent text-accent-foreground mr-1 cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
                   onClick={() => toggleIngredient(ingredientId)}
                 >
                   {ingredient.name}
                   <X className="ml-1 h-3 w-3" />
-                </Badge>
+                </span>
               );
             })}
           </div>
