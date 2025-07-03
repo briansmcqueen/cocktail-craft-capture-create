@@ -72,8 +72,8 @@ export default function FeaturedSection({
           ))}
         </CarouselContent>
         <div className="flex justify-center items-center gap-4 mt-6">
-          <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 border cursor-pointer transition-all hover:shadow-sm bg-card border-border hover:border-accent/50 hover:bg-accent/5 text-gray-600" />
-          <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 border cursor-pointer transition-all hover:shadow-sm bg-card border-border hover:border-accent/50 hover:bg-accent/5 text-gray-600" />
+          <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 border cursor-pointer transition-all hover:shadow-sm bg-card border-border hover:border-accent/50 hover:bg-accent/5 [&>svg]:text-gray-600" />
+          <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 border cursor-pointer transition-all hover:shadow-sm bg-card border-border hover:border-accent/50 hover:bg-accent/5 [&>svg]:text-gray-600" />
         </div>
       </Carousel>
     </section>

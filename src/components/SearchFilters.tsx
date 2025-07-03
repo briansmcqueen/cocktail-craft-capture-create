@@ -70,8 +70,8 @@ export default function SearchFilters({
 
   return (
     <>
-      {/* Enhanced Search - visible on all screen sizes */}
-      <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6">
+      {/* Enhanced Search - visible on all screen sizes with matching padding */}
+      <div className="space-y-3 lg:space-y-0 lg:flex lg:items-center lg:gap-4 mb-6 mx-4 sm:mx-0">
         {/* Search section */}
         <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
           {/* Search bar - always visible */}
@@ -89,7 +89,7 @@ export default function SearchFilters({
 
       {/* Tag filters with multi-select and reduced padding */}
       {availableTags.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-6 mx-4 sm:mx-0">
           <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {availableTags.map(tag => (
