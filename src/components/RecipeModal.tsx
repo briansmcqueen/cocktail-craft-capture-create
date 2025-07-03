@@ -94,7 +94,7 @@ export default function RecipeModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-white border border-gray-200 max-h-[90vh] overflow-y-auto w-[95vw] md:w-full">
+      <DialogContent className="max-w-2xl bg-white border border-gray-200 max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6">
         <DialogHeader>
           <DialogTitle className="text-2xl font-serif font-normal text-gray-900 tracking-wide text-left">
             {recipe.name}
@@ -107,18 +107,18 @@ export default function RecipeModal({
             </div>
           )}
         </DialogHeader>
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 min-w-0">
           <img
             src={recipe.image}
             alt={recipe.name}
-            className="h-48 w-full md:w-56 object-cover rounded-lg border border-gray-200"
+            className="h-48 w-full md:w-56 object-cover rounded-lg border border-gray-200 flex-shrink-0"
           />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             <div className="mb-4">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                <div className="font-semibold text-gray-900 mb-2 md:mb-0 text-left">Ingredients</div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                <div className="font-semibold text-gray-900 text-left">Ingredients</div>
                 {/* Custom Metric/Imperial Toggle */}
-                <div className="flex items-center justify-start md:justify-end">
+                <div className="flex items-center justify-start sm:justify-end flex-shrink-0">
                   <div className="relative">
                     <div className="toggle-button-cover">
                       <div className="button-cover">
@@ -139,7 +139,7 @@ export default function RecipeModal({
                   </div>
                 </div>
               </div>
-              <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
+              <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 break-words">
                 {recipe.ingredients.map((ing, i) => (
                   <li key={i}>{convertMeasurement(ing)}</li>
                 ))}
@@ -147,16 +147,16 @@ export default function RecipeModal({
             </div>
             <div className="mb-4">
               <div className="font-semibold text-gray-900 mb-2 text-left">Instructions</div>
-              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed text-left">{recipe.steps}</p>
+              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed text-left break-words">{recipe.steps}</p>
             </div>
             {recipe.notes && (
               <div className="mb-4">
                 <div className="font-semibold text-gray-900 mb-2 text-left">Notes</div>
-                <p className="text-sm text-gray-600 leading-relaxed text-left">{recipe.notes}</p>
+                <p className="text-sm text-gray-600 leading-relaxed text-left break-words">{recipe.notes}</p>
               </div>
             )}
             {recipe.tags && recipe.tags.length > 0 && (
-              <div className="mb-4 flex flex-wrap gap-2">
+              <div className="mb-4 flex flex-wrap gap-2 max-w-full">
                 {recipe.tags.map(tag => (
                   <TagBadge key={tag} className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">
                     {tag}
@@ -172,8 +172,8 @@ export default function RecipeModal({
             )}
           </div>
         </div>
-        <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3">
-          <div className="flex gap-2 flex-1">
+        <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3 flex-wrap">
+          <div className="flex gap-2 flex-1 flex-wrap min-w-0">
             <Button
               variant="secondary"
               className={`flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors ${
