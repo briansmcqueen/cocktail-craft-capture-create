@@ -9,18 +9,7 @@ import { getUserPreferences, updateUserPreferences } from "@/services/userPrefer
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
-const spiritTypes = [
-  "Whiskey", "Gin", "Vodka", "Rum", "Tequila", "Brandy", "Mezcal"
-];
-
-const flavorProfiles = [
-  "Sweet", "Sour", "Bitter", "Herbal", "Citrus", "Fruity", "Spicy", "Smoky", "Floral", "Tropical"
-];
-
 export default function UserPreferencesForm() {
-  const [preferredSpirits, setPreferredSpirits] = useState<string[]>([]);
-  const [flavorPreferences, setFlavorPreferences] = useState<string[]>([]);
-  const [difficultyPreference, setDifficultyPreference] = useState(3);
   const [preferredUnit, setPreferredUnit] = useState<'oz' | 'ml'>('oz');
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -37,9 +26,6 @@ export default function UserPreferencesForm() {
     try {
       const preferences = await getUserPreferences();
       if (preferences) {
-        setPreferredSpirits(preferences.preferred_spirit_types || []);
-        setFlavorPreferences(preferences.flavor_preferences || []);
-        setDifficultyPreference(preferences.difficulty_preference || 3);
         setPreferredUnit(preferences.preferred_unit || 'oz');
       }
     } catch (error) {
@@ -55,9 +41,6 @@ export default function UserPreferencesForm() {
     setLoading(true);
     
     const success = await updateUserPreferences({
-      preferred_spirit_types: preferredSpirits,
-      flavor_preferences: flavorPreferences,
-      difficulty_preference: difficultyPreference,
       preferred_unit: preferredUnit
     });
 
@@ -77,21 +60,6 @@ export default function UserPreferencesForm() {
     setLoading(false);
   };
 
-  const toggleSpirit = (spirit: string) => {
-    setPreferredSpirits(prev => 
-      prev.includes(spirit) 
-        ? prev.filter(s => s !== spirit)
-        : [...prev, spirit]
-    );
-  };
-
-  const toggleFlavor = (flavor: string) => {
-    setFlavorPreferences(prev => 
-      prev.includes(flavor) 
-        ? prev.filter(f => f !== flavor)
-        : [...prev, flavor]
-    );
-  };
 
   if (initialLoading) {
     return <div className="animate-pulse">Loading preferences...</div>;
@@ -104,82 +72,30 @@ export default function UserPreferencesForm() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
-          <Label>Preferred Spirits</Label>
-          <div className="flex flex-wrap gap-2">
-            {spiritTypes.map((spirit) => (
-              <Badge
-                key={spirit}
-                variant={preferredSpirits.includes(spirit) ? "default" : "outline"}
-                className="cursor-pointer"
-                onClick={() => toggleSpirit(spirit)}
-              >
-                {spirit}
-                {preferredSpirits.includes(spirit) && (
-                  <X className="ml-1 h-3 w-3" />
-                )}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <Label>Flavor Preferences</Label>
-          <div className="flex flex-wrap gap-2">
-            {flavorProfiles.map((flavor) => (
-              <Badge
-                key={flavor}
-                variant={flavorPreferences.includes(flavor) ? "default" : "outline"}
-                className="cursor-pointer"
-                onClick={() => toggleFlavor(flavor)}
-              >
-                {flavor}
-                {flavorPreferences.includes(flavor) && (
-                  <X className="ml-1 h-3 w-3" />
-                )}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <Label htmlFor="difficulty">Preferred Difficulty Level</Label>
-          <div className="flex items-center gap-4">
-            <Input
-              id="difficulty"
-              type="range"
-              min="1"
-              max="5"
-              value={difficultyPreference}
-              onChange={(e) => setDifficultyPreference(Number(e.target.value))}
-              className="flex-1"
-            />
-            <span className="text-sm font-medium w-16">
-              {difficultyPreference}/5
-            </span>
-          </div>
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Beginner</span>
-            <span>Expert</span>
-          </div>
-        </div>
-
-        <div className="space-y-3">
           <Label>Preferred Unit for Recipes</Label>
           <div className="flex gap-2">
-            <Badge
-              variant={preferredUnit === 'oz' ? "default" : "outline"}
-              className="cursor-pointer"
+            <button
+              type="button"
+              className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm ${
+                preferredUnit === 'oz'
+                  ? 'bg-accent/20 border-accent text-foreground'
+                  : 'bg-card border border-border text-foreground hover:border-accent/50 hover:bg-accent/5'
+              }`}
               onClick={() => setPreferredUnit('oz')}
             >
               Ounces (oz)
-            </Badge>
-            <Badge
-              variant={preferredUnit === 'ml' ? "default" : "outline"}
-              className="cursor-pointer"
+            </button>
+            <button
+              type="button"
+              className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm ${
+                preferredUnit === 'ml'
+                  ? 'bg-accent/20 border-accent text-foreground'
+                  : 'bg-card border border-border text-foreground hover:border-accent/50 hover:bg-accent/5'
+              }`}
               onClick={() => setPreferredUnit('ml')}
             >
               Milliliters (ml)
-            </Badge>
+            </button>
           </div>
         </div>
 

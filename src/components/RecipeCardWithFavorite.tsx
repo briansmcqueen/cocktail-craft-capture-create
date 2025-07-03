@@ -2,8 +2,8 @@
 import React from "react";
 import { Heart } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
-import { isFavorite } from "@/utils/favorites";
 import RecipeCard from "./RecipeCard";
+import { useFavorites } from "@/hooks/useFavorites";
 
 type RecipeCardWithFavoriteProps = {
   recipe: Cocktail;
@@ -20,6 +20,7 @@ export default function RecipeCardWithFavorite({
   onTagClick,
   forceUpdate 
 }: RecipeCardWithFavoriteProps) {
+  const { isFavorite } = useFavorites();
   return (
     <div key={`${recipe.id}-${forceUpdate}`} className="relative group">
       <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">

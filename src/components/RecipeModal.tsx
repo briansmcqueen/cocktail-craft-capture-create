@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Edit, Heart, ThumbsUp, X, Share, Martini } from "lucide-react";
 import TagBadge from "./ui/tag";
 import { getLikeCount, toggleLike, isLiked } from "@/utils/likes";
-import { isFavorite, toggleFavorite } from "@/utils/favorites";
+import { useFavorites } from "@/hooks/useFavorites";
 import { getUserRecipes } from "@/utils/storage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUserPreferences } from "@/services/userPreferencesService";
+import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
   open: boolean;
@@ -28,7 +30,22 @@ export default function RecipeModal({
   onShareRecipe,
   onRemix 
 }: Props) {
+  const { user } = useAuth();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [isMetric, setIsMetric] = useState(false);
+
+  // Load user's preferred unit when component mounts
+  useEffect(() => {
+    const loadUserPreferences = async () => {
+      if (user) {
+        const preferences = await getUserPreferences();
+        if (preferences?.preferred_unit) {
+          setIsMetric(preferences.preferred_unit === 'ml');
+        }
+      }
+    };
+    loadUserPreferences();
+  }, [user]);
 
   if (!recipe) return null;
 
@@ -40,9 +57,8 @@ export default function RecipeModal({
     window.dispatchEvent(new Event('favorites-update'));
   };
 
-  const handleToggleFavorite = () => {
-    toggleFavorite(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
+  const handleToggleFavorite = async () => {
+    await toggleFavorite(recipe.id);
   };
 
   const handleShare = () => {

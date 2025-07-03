@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
-import { toggleFavorite } from "@/utils/favorites";
+import { toggleFavoriteInDB } from "@/services/favoritesService";
+import { useAuth } from "@/hooks/useAuth";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -14,6 +15,7 @@ type FavoritesProps = {
 };
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
+  const { user } = useAuth();
   const [forceUpdate, setForceUpdate] = useState(0);
 
   useEffect(() => {
@@ -25,9 +27,11 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
     return () => window.removeEventListener('favorites-update', handleUpdate);
   }, []);
 
-  const handleToggleFavorite = (recipe: Cocktail) => {
-    toggleFavorite(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
+  const handleToggleFavorite = async (recipe: Cocktail) => {
+    if (user) {
+      await toggleFavoriteInDB(recipe.id);
+      window.dispatchEvent(new Event('favorites-update'));
+    }
   };
 
   if (favoriteRecipes.length === 0) {
