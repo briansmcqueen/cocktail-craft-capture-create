@@ -54,7 +54,6 @@ export default function RecipeModal({
 
   const handleLike = () => {
     toggleLike(recipe.id);
-    window.dispatchEvent(new Event('favorites-update'));
   };
 
   const handleToggleFavorite = async () => {

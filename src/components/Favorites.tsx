@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
 import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
-import { toggleFavoriteInDB } from "@/services/favoritesService";
-import { useAuth } from "@/hooks/useAuth";
+import { useFavorites } from "@/hooks/useFavorites";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -15,23 +14,10 @@ type FavoritesProps = {
 };
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
-  const { user } = useAuth();
-  const [forceUpdate, setForceUpdate] = useState(0);
-
-  useEffect(() => {
-    const handleUpdate = () => {
-      setForceUpdate(prev => prev + 1);
-    };
-
-    window.addEventListener('favorites-update', handleUpdate);
-    return () => window.removeEventListener('favorites-update', handleUpdate);
-  }, []);
+  const { toggleFavorite } = useFavorites();
 
   const handleToggleFavorite = async (recipe: Cocktail) => {
-    if (user) {
-      await toggleFavoriteInDB(recipe.id);
-      window.dispatchEvent(new Event('favorites-update'));
-    }
+    await toggleFavorite(recipe.id);
   };
 
   if (favoriteRecipes.length === 0) {
@@ -58,11 +44,10 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {favoriteRecipes.map((recipe) => (
           <RecipeCardWithFavorite
-            key={`${recipe.id}-${forceUpdate}`}
+            key={recipe.id}
             recipe={recipe}
             onRecipeClick={onRecipeClick}
             onToggleFavorite={handleToggleFavorite}
-            forceUpdate={forceUpdate}
           />
         ))}
       </div>

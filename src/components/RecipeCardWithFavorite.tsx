@@ -10,19 +10,17 @@ type RecipeCardWithFavoriteProps = {
   onRecipeClick: (recipe: Cocktail) => void;
   onToggleFavorite: (recipe: Cocktail) => void;
   onTagClick?: (tag: string) => void;
-  forceUpdate?: number;
 };
 
 export default function RecipeCardWithFavorite({ 
   recipe, 
   onRecipeClick, 
   onToggleFavorite, 
-  onTagClick,
-  forceUpdate 
+  onTagClick
 }: RecipeCardWithFavoriteProps) {
   const { isFavorite } = useFavorites();
   return (
-    <div key={`${recipe.id}-${forceUpdate}`} className="relative group">
+    <div className="relative group">
       <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
         <RecipeCard
           recipe={recipe}

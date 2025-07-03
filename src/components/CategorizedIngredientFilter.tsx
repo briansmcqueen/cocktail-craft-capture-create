@@ -273,7 +273,6 @@ export default function CategorizedIngredientFilter({
               onRecipeClick={onRecipeClick}
               onToggleFavorite={onToggleFavorite}
               onTagClick={onTagClick}
-              forceUpdate={forceUpdate}
             />
           ))}
         </div>

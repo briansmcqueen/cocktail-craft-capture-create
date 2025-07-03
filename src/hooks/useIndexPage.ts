@@ -3,14 +3,15 @@ import { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getUserRecipesFromDB, saveRecipeToDB, deleteRecipeFromDB } from "@/services/recipesService";
-import { getUserFavorites, toggleFavoriteInDB } from "@/services/favoritesService";
 import { toggleLikeInDB } from "@/services/likesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useDataMigration } from "@/hooks/useDataMigration";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export function useIndexPage() {
   const { user } = useAuth();
   useDataMigration(); // Auto-migrate localStorage data
+  const { favoriteIds, toggleFavorite } = useFavorites();
   
   const [selectedRecipe, setSelectedRecipe] = useState<Cocktail | null>(null);
   const [library, setLibrary] = useState("featured");
@@ -44,14 +45,6 @@ export function useIndexPage() {
     }
   }, [user]);
 
-  useEffect(() => {
-    const handleUpdate = () => {
-      setForceUpdate(prev => prev + 1);
-    };
-
-    window.addEventListener('favorites-update', handleUpdate);
-    return () => window.removeEventListener('favorites-update', handleUpdate);
-  }, []);
 
   const handleRecipeClick = (recipe: Cocktail) => {
     setSelectedRecipe(recipe);
@@ -95,8 +88,7 @@ export function useIndexPage() {
 
   const handleToggleFavorite = async (recipe: Cocktail) => {
     if (!user) return;
-    await toggleFavoriteInDB(recipe.id);
-    setForceUpdate(prev => prev + 1);
+    await toggleFavorite(recipe.id);
   };
 
   const handleTagClick = (tag: string) => {
@@ -107,23 +99,9 @@ export function useIndexPage() {
     }
   };
 
-  const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (user) {
-      const loadFavorites = async () => {
-        const favorites = await getUserFavorites();
-        setFavoriteRecipeIds(favorites);
-      };
-      loadFavorites();
-    } else {
-      setFavoriteRecipeIds([]);
-    }
-  }, [user, forceUpdate]);
-
   const allRecipes = [...classicCocktails, ...userRecipes];
   const favoriteRecipes = user ? allRecipes.filter(recipe => 
-    favoriteRecipeIds.includes(recipe.id)
+    favoriteIds.includes(recipe.id)
   ) : [];
 
   const getFilteredRecipes = () => {

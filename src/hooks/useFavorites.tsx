@@ -28,15 +28,6 @@ export function useFavorites() {
     loadFavorites();
   }, [loadFavorites]);
 
-  useEffect(() => {
-    const handleUpdate = () => {
-      loadFavorites();
-    };
-
-    window.addEventListener('favorites-update', handleUpdate);
-    return () => window.removeEventListener('favorites-update', handleUpdate);
-  }, [loadFavorites]);
-
   const isFavorite = useCallback((recipeId: string) => {
     return favoriteIds.includes(recipeId);
   }, [favoriteIds]);

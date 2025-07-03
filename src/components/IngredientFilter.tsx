@@ -192,7 +192,6 @@ export default function IngredientFilter({
               onRecipeClick={onRecipeClick}
               onToggleFavorite={onToggleFavorite}
               onTagClick={onTagClick}
-              forceUpdate={forceUpdate}
             />
           ))}
         </div>
