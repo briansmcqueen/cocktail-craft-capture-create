@@ -73,10 +73,15 @@ export default function IngredientSelector({
 
       {/* Category Tabs */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7" role="tablist" aria-label="Filter ingredients by category">
           {categories.map((category) => (
-            <TabsTrigger key={category} value={category} className="capitalize text-xs">
-              {category === "all" ? "All" : category}
+            <TabsTrigger 
+              key={category} 
+              value={category} 
+              className="capitalize"
+              aria-label={`Filter by ${category === "all" ? "all ingredients" : category}`}
+            >
+              {category === "all" ? "All" : category === "wines & vermouths" ? "Wines" : category}
             </TabsTrigger>
           ))}
         </TabsList>
