@@ -74,12 +74,12 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
           <div className="text-xs text-gray-700 mb-3 line-clamp-2" title={recipe.notes}>{recipe.notes}</div>
         </div>
         <div className="h-5 flex items-center justify-start">
-          {likeCount > 0 && (
+          {/* {likeCount > 0 && (
             <div className="text-xs text-gray-500 flex items-center gap-1">
               <ThumbsUp size={12} />
               <span>{likeCount} like{likeCount === 1 ? '' : 's'}</span>
             </div>
-          )}
+          )} */}
         </div>
       </div>
       {editable && (
