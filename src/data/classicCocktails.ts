@@ -13,6 +13,672 @@ export type Cocktail = {
 export const classicCocktails: Cocktail[] = [
   {
     id: "1",
+    name: "Adonis",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz fino sherry",
+      "1.5 oz sweet vermouth",
+      "2 dashes orange bitters",
+      "Orange peel for garnish"
+    ],
+    steps: "Combine sherry, sweet vermouth, and orange bitters in a mixing glass with ice. Stir until well-chilled. Strain into a chilled coupe or cocktail glass. Express the oils from an orange peel over the drink and discard.",
+    notes: "A brilliant vintage aperitivo from the late 19th century. It's an off-dry and aromatic cocktail that beautifully balances the mineral notes of fino sherry with rich vermouth and citrusy bitters.",
+    origin: "USA",
+    tags: ["classic", "aperitivo", "sherry", "vermouth", "stirred", "19th-century"]
+  },
+  {
+    id: "2",
+    name: "Affinity",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz blended Scotch whisky",
+      "0.75 oz sweet vermouth",
+      "0.75 oz dry vermouth",
+      "2 dashes Angostura bitters",
+      "Brandied cherry for garnish"
+    ],
+    steps: "Combine all ingredients in a mixing glass with ice. Stir until well-chilled. Strain into a chilled coupe glass and garnish with a brandied cherry.",
+    notes: "A spirituous aperitivo-style cocktail from the early 20th century. It's a sophisticated after-dinner sipper that showcases the harmony between Scotch and two types of vermouth.",
+    origin: "UK",
+    tags: ["classic", "scotch", "vermouth", "stirred", "spirit-forward"]
+  },
+  {
+    id: "3",
+    name: "Algonquin",
+    image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz rye whiskey",
+      "0.75 oz dry vermouth",
+      "0.75 oz pineapple juice",
+      "Pineapple wedge for garnish"
+    ],
+    steps: "Shake all ingredients with ice until well-chilled. Fine strain into a chilled coupe glass. Garnish with a pineapple wedge.",
+    notes: "A 1930s classic attributed to the famous Algonquin Hotel in New York City. The combination of spicy rye and sweet pineapple juice creates a uniquely balanced and refreshing cocktail.",
+    origin: "USA",
+    tags: ["classic", "whiskey", "rye", "pineapple", "shaken", "prohibition-era"]
+  },
+  {
+    id: "4",
+    name: "Alexander",
+    image: "https://images.unsplash.com/photo-1614313519322-2715307a513c?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz gin",
+      "0.75 oz white crème de cacao",
+      "0.75 oz fresh cream",
+      "Grated nutmeg for garnish"
+    ],
+    steps: "Shake gin, crème de cacao, and cream with ice until well-chilled. Strain into a chilled coupe glass. Garnish with freshly grated nutmeg.",
+    notes: "The original gin-based Alexander first appeared in Hugo Ensslin's 1916 'Recipes for Mixed Drinks'. It is the predecessor to the more famous Brandy Alexander.",
+    origin: "USA",
+    tags: ["creamy", "dessert", "classic", "prohibition-era", "shaken"]
+  },
+  {
+    id: "5",
+    name: "Americano",
+    image: "https://images.unsplash.com/photo-1599021459439-874a75d74245?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Campari",
+      "1.5 oz sweet vermouth",
+      "Soda water to top",
+      "Orange twist for garnish"
+    ],
+    steps: "Fill a highball glass with ice. Add Campari and sweet vermouth. Top with soda water and stir gently. Garnish with an orange twist.",
+    notes: "First served in the 1860s at Gaspare Campari's bar in Milan, this refreshing aperitivo is the direct precursor to the Negroni. Its name is believed to come from its popularity with American tourists during Prohibition.",
+    origin: "Italy",
+    tags: ["aperitivo", "bittersweet", "italian", "classic", "highball", "low-abv"]
+  },
+  {
+    id: "6",
+    name: "Angel Face",
+    image: "https://images.unsplash.com/photo-1608885998955-c4191f893870?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz gin",
+      "1 oz apricot brandy",
+      "1 oz Calvados (apple brandy)"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled coupe glass.",
+    notes: "A potent, equal-parts cocktail from Harry Craddock's 1930 'The Savoy Cocktail Book'. While the IBA specifies shaking, many modern bartenders prefer to stir this all-spirit drink for a silkier texture.",
+    origin: "UK",
+    tags: ["spirit-forward", "fruity", "prohibition-era", "classic", "equal-parts"]
+  },
+  {
+    id: "7",
+    name: "Appletini",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz vodka",
+      "0.5 oz apple schnapps or Calvados",
+      "0.5 oz Cointreau",
+      "Apple slice for garnish"
+    ],
+    steps: "Shake all ingredients with ice until well-chilled. Strain into a chilled cocktail glass. Garnish with a thin slice of apple.",
+    notes: "Also known as an Apple Martini, this cocktail is an icon of the 1990s. It's unashamedly fun and brash with a lurid green apple flavor at its core.",
+    origin: "USA",
+    tags: ["modern-classic", "fruity", "apple", "vodka", "sweet", "1990s"]
+  },
+  {
+    id: "8",
+    name: "Army & Navy",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "0.75 oz fresh lemon juice",
+      "0.5 oz orgeat syrup",
+      "1 dash Angostura bitters",
+      "Lemon twist for garnish"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled coupe glass. Garnish with a lemon twist.",
+    notes: "A classic gin sour with a nutty twist from orgeat syrup. The almond and lemon flavors create a subtle, citrusy, and fairly dry cocktail.",
+    origin: "USA",
+    tags: ["classic", "gin-sour", "orgeat", "almond", "shaken"]
+  },
+  {
+    id: "9",
+    name: "Artillery Punch",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz brandy",
+      "1 oz dark rum",
+      "1 oz rye whiskey",
+      "1 oz cold green tea",
+      "0.25 oz fresh lemon juice",
+      "0.25 oz turbinado sugar",
+      "2 oz Champagne or sparkling wine"
+    ],
+    steps: "Dissolve sugar in the green tea. Combine all ingredients except Champagne in a shaker with ice. Shake well and strain into a tall glass with fresh ice. Top with Champagne.",
+    notes: "A historic American punch with roots in the 18th century. This single-serving version balances three spirits with the tannins of tea and the brightness of Champagne.",
+    origin: "USA",
+    tags: ["classic", "punch", "rum", "brandy", "whiskey", "sparkling", "18th-century"]
+  },
+  {
+    id: "10",
+    name: "Aviation",
+    image: "https://images.unsplash.com/photo-1614313519322-2715307a513c?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "0.75 oz maraschino liqueur",
+      "0.5 oz fresh lemon juice",
+      "0.25 oz crème de violette",
+      "Brandied cherry for garnish"
+    ],
+    steps: "Shake all ingredients with ice until well-chilled. Double-strain into a chilled coupe glass. Garnish with a brandied cherry.",
+    notes: "A pre-Prohibition classic from Hugo Ensslin's 1916 book. For decades, it was made without its key ingredient, crème de violette, which was unavailable. The liqueur's revival in the 21st century restored the drink's signature floral notes and pale sky-blue color.",
+    origin: "USA",
+    tags: ["sour", "floral", "gin", "classic", "pre-prohibition"]
+  },
+  {
+    id: "11",
+    name: "B-52",
+    image: "https://images.unsplash.com/photo-1581984934376-7a6d37e48b04?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "0.5 oz coffee liqueur",
+      "0.5 oz Irish cream liqueur",
+      "0.5 oz orange liqueur (Grand Marnier)"
+    ],
+    steps: "Carefully layer the ingredients in a shot glass in the following order: coffee liqueur, then Irish cream, then orange liqueur. Pour each layer slowly over the back of a spoon to create distinct lines.",
+    notes: "A popular layered shot created in 1977 at the Banff Springs Hotel in Canada, named after the band The B-52s. The layers work due to the different specific gravities of the liqueurs.",
+    origin: "Canada",
+    tags: ["shot", "layered", "creamy", "coffee", "party-drink", "1970s"]
+  },
+  {
+    id: "12",
+    name: "Bacardi Cocktail",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz Bacardí Superior rum",
+      "0.75 oz fresh lime juice",
+      "0.5 oz grenadine"
+    ],
+    steps: "Shake all ingredients with ice until well-chilled. Strain into a chilled coupe glass.",
+    notes: "A classic Daiquiri variation featuring grenadine for a pink hue and sweeter profile. A 1936 New York Supreme Court ruling affirmed that a 'Bacardi Cocktail' must legally be made with Bacardí rum.",
+    origin: "Cuba/USA",
+    tags: ["daiquiri-variation", "classic", "rum", "fruity", "trademarked"]
+  },
+  {
+    id: "13",
+    name: "Batanga",
+    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz tequila blanco",
+      "0.5 oz fresh lime juice",
+      "4 oz cola",
+      "Salt for rim"
+    ],
+    steps: "Rim a highball glass with salt. Fill the glass with ice. Add tequila and lime juice, then top with cola and stir gently.",
+    notes: "Essentially a Cuba Libre made with tequila instead of rum. The salt rim is a crucial component that enhances the flavors.",
+    origin: "Mexico",
+    tags: ["highball", "tequila", "cola", "refreshing", "salty"]
+  },
+  {
+    id: "14",
+    name: "Between the Sheets",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz white rum",
+      "1 oz cognac",
+      "1 oz triple sec",
+      "0.75 oz fresh lemon juice"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass. Garnish with a lemon peel.",
+    notes: "A variation on the Sidecar, with rum added to the mix. It first appeared in print in Frank Shay's 1929 'Drawn From The Wood'. The IBA recipe calls for equal parts rum, cognac, and triple sec, with a smaller amount of lemon juice.",
+    origin: "France",
+    tags: ["sour", "spirit-forward", "classic", "prohibition-era"]
+  },
+  {
+    id: "15",
+    name: "Boulevardier",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.25 oz bourbon or rye whiskey",
+      "1 oz Campari",
+      "1 oz sweet vermouth",
+      "Orange twist for garnish"
+    ],
+    steps: "Add all ingredients into a mixing glass with ice and stir until well-chilled. Strain into a rocks glass over fresh ice. Garnish with an orange twist.",
+    notes: "A variation on the Negroni that substitutes whiskey for gin, creating a richer, warmer profile. It was created in Paris in the 1920s for American writer Erskine Gwynne.",
+    origin: "France",
+    tags: ["bittersweet", "boozy", "classic", "whiskey"]
+  },
+  {
+    id: "16",
+    name: "Brandy Crusta",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz brandy",
+      "0.25 oz orange curaçao",
+      "0.25 oz maraschino liqueur",
+      "0.5 oz fresh lemon juice",
+      "2 dashes Angostura bitters"
+    ],
+    steps: "Prepare a coupe glass by moistening the rim with a lemon wedge and dipping it in sugar. Carefully curl a long, wide lemon peel around the inside of the glass. Shake all ingredients with ice and strain into the prepared glass.",
+    notes: "A classic New Orleans cocktail created by Joseph Santini in the mid-1800s. It is considered a forerunner of the Sidecar and is known for its elaborate sugar-crusted rim and lemon peel garnish.",
+    origin: "USA",
+    tags: ["classic", "sour", "brandy", "19th-century", "new-orleans"]
+  },
+  {
+    id: "17",
+    name: "Brandy Flip",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz cognac or brandy",
+      "0.5 oz simple syrup (2:1)",
+      "1 whole fresh egg",
+      "Grated nutmeg for garnish"
+    ],
+    steps: "Add all ingredients to a shaker and dry shake (without ice) to emulsify. Add ice and shake again until well-chilled. Fine strain into a chilled coupe glass. Garnish with a dusting of freshly grated nutmeg.",
+    notes: "A forgotten classic from the 19th century. A flip is a category of cocktail that uses a whole egg, creating a rich and creamy texture. A serious alternative to advocaat for those without raw egg inhibitions.",
+    origin: "USA",
+    tags: ["classic", "flip", "dessert", "brandy", "creamy", "egg", "19th-century"]
+  },
+  {
+    id: "18",
+    name: "Brooklyn",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz rye whiskey",
+      "1 oz dry vermouth",
+      "0.25 oz maraschino liqueur",
+      "0.25 oz Picon or 2 dashes Angostura bitters",
+      "Maraschino cherry for garnish"
+    ],
+    steps: "Stir all ingredients with ice in a mixing glass until well-chilled. Strain into a chilled cocktail glass. Garnish with a maraschino cherry.",
+    notes: "One of the five cocktails named for the boroughs of New York City. It resembles a Manhattan but uses dry vermouth and maraschino liqueur. It fell into obscurity after Prohibition but saw a resurgence in the 1990s.",
+    origin: "USA",
+    tags: ["classic", "whiskey", "rye", "manhattan-variation", "spirit-forward", "prohibition-era"]
+  },
+  {
+    id: "19",
+    name: "Casino",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz Old Tom gin",
+      "0.25 oz maraschino liqueur",
+      "0.25 oz fresh lemon juice",
+      "2 dashes orange bitters"
+    ],
+    steps: "Shake all ingredients with ice and fine strain into a chilled cocktail glass. Garnish with a maraschino cherry.",
+    notes: "A classic cocktail that first appeared in Hugo Ensslin's 1916 'Recipes for Mixed Drinks'. It is essentially a stirred Aviation without the crème de violette.",
+    origin: "USA",
+    tags: ["classic", "gin", "pre-prohibition", "spirit-forward"]
+  },
+  {
+    id: "20",
+    name: "Clover Club",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz gin",
+      "0.5 oz dry vermouth",
+      "0.5 oz fresh lemon juice",
+      "0.5 oz raspberry syrup",
+      "0.5 oz egg white"
+    ],
+    steps: "Add all ingredients to a shaker and dry shake (without ice) to emulsify the egg white. Add ice and shake again until well-chilled. Double strain into a chilled coupe glass. Garnish with fresh raspberries.",
+    notes: "A pre-Prohibition classic from Philadelphia. When made properly with raspberry syrup and egg white, it is an exceptional drink with a beautiful pink hue and frothy texture.",
+    origin: "USA",
+    tags: ["classic", "gin-sour", "frothy", "pink", "pre-prohibition"]
+  },
+  {
+    id: "21",
+    name: "Coronation Cocktail No. 1",
+    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.75 oz dry vermouth",
+      "1.25 oz fino sherry",
+      "0.25 oz maraschino liqueur",
+      "2 dashes orange bitters",
+      "Green olive for garnish"
+    ],
+    steps: "Stir all ingredients with ice in a mixing glass. Strain into a chilled coupe glass. Garnish with a skewered olive.",
+    notes: "A dry and wonderfully aromatic cocktail with faint notes of almond from the fino sherry and delicately fruity maraschino.",
+    origin: "UK",
+    tags: ["classic", "vermouth", "sherry", "aperitif", "stirred"]
+  },
+  {
+    id: "22",
+    name: "Daiquiri",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz light rum",
+      "1 oz fresh lime juice",
+      "0.75 oz simple syrup",
+      "Lime twist for garnish"
+    ],
+    steps: "Shake rum, lime juice, and simple syrup with ice until well-chilled. Double-strain into a chilled coupe glass. Garnish with a lime twist.",
+    notes: "A cornerstone of mixology, invented in the late 1800s in Daiquiri, Cuba. It is a simple and perfect balance of rum, lime, and sugar, and serves as a true test of a bartender's skill.",
+    origin: "Cuba",
+    tags: ["sour", "classic", "refreshing", "cuban", "shaken", "rum"]
+  },
+  {
+    id: "23",
+    name: "Damn the Weather",
+    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz gin",
+      "0.75 oz sweet vermouth",
+      "0.75 oz orange juice",
+      "0.25 oz triple sec"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass.",
+    notes: "A Prohibition-era cocktail from Harry Craddock's 1930 'The Savoy Cocktail Book'. It was likely conceived to mask the flavor of poor-quality homemade spirits.",
+    origin: "USA",
+    tags: ["classic", "prohibition-era", "gin", "orange", "shaken"]
+  },
+  {
+    id: "24",
+    name: "Dirty Martini",
+    image: "https://i.pinimg.com/564x/49/7e/a5/497ea5909d94943924f721528c61452f.jpg",
+    ingredients: [
+      "2.5 oz gin or vodka",
+      "0.5 oz dry vermouth",
+      "0.5 oz olive brine",
+      "3 green olives for garnish"
+    ],
+    steps: "Add gin or vodka, dry vermouth, and olive brine to a shaker filled with ice. Shake until well-chilled. Strain into a chilled cocktail glass. Garnish with a skewer of olives.",
+    notes: "A savory variation of the classic Martini, the Dirty Martini includes olive brine for a salty, umami flavor. It was created by New York bartender John O'Connor in 1901.",
+    origin: "USA",
+    tags: ["savory", "boozy", "classic", "martini-variation"]
+  },
+  {
+    id: "25",
+    name: "Duke of Marlborough",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 part sherry",
+      "1 part sweet vermouth",
+      "1 part lime juice",
+      "2 dashes raspberry puree",
+      "1 dash orange bitters"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass.",
+    notes: "A lesser-known classic featuring a complex blend of sherry, vermouth, and fruit flavors.",
+    origin: "Unknown",
+    tags: ["sherry", "vermouth", "raspberry", "classic", "shaken"]
+  },
+  {
+    id: "26",
+    name: "Eclipse",
+    image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "12 fresh raspberries",
+      "2 oz bourbon whiskey",
+      "1 oz black raspberry liqueur (e.g., Chambord)",
+      "0.5 oz fresh lime juice",
+      "2 oz cranberry juice",
+      "Mint sprig for garnish"
+    ],
+    steps: "Muddle raspberries in the base of a shaker. Add the remaining liquid ingredients and ice. Shake well and fine strain into a Collins glass filled with crushed ice. Garnish with a mint sprig and more raspberries.",
+    notes: "A fruity summer cooler that is the signature cocktail at the Eclipse Bars in London, England.",
+    origin: "UK",
+    tags: ["modern", "fruity", "bourbon", "raspberry", "summer"]
+  },
+  {
+    id: "27",
+    name: "Edna's Lunchbox",
+    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "6 oz chilled light beer",
+      "1 oz amaretto",
+      "6 oz chilled orange juice"
+    ],
+    steps: "Combine the orange juice, beer, and amaretto in a frosted mug. Stir well and serve immediately.",
+    notes: "The famous signature drink of Edna's club and restaurant in Oklahoma City. It's a surprising and refreshing mix of beer, amaretto, and orange juice.",
+    origin: "USA",
+    tags: ["beer-cocktail", "amaretto", "orange-juice", "unusual", "refreshing"]
+  },
+  {
+    id: "28",
+    name: "El Presidente",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz aged rum",
+      "1.5 oz dry vermouth",
+      "0.125 oz orange curaçao",
+      "0.125 oz grenadine",
+      "Orange peel for garnish"
+    ],
+    steps: "Combine all ingredients in a mixing glass with ice and stir until well-chilled. Strain into a chilled coupe glass. Garnish with an orange peel.",
+    notes: "A classic Cuban cocktail that is essentially a rum-based Martini. Modern recipes often use a slightly sweeter blanc vermouth instead of dry vermouth.",
+    origin: "Cuba",
+    tags: ["classic", "rum", "spirit-forward", "pre-prohibition"]
+  },
+  {
+    id: "29",
+    name: "Emerald Cocktail",
+    image: "https://i.pinimg.com/564x/e7/87/84/e787840139e6962f3928e1d51a665249.jpg",
+    ingredients: [
+      "1.5 oz vodka",
+      "0.75 oz white crème de cacao",
+      "0.75 oz green crème de menthe",
+      "1 oz heavy cream"
+    ],
+    steps: "Fill a cocktail shaker with ice. Add all ingredients, cover, and shake well. Strain into a chilled coupe or cocktail glass.",
+    notes: "A creamy, mint-flavored cocktail with a vibrant green hue, perfect for St. Patrick's Day celebrations.",
+    origin: "USA",
+    tags: ["creamy", "mint", "vodka", "dessert", "green"]
+  },
+  {
+    id: "30",
+    name: "Envy Cocktail",
+    image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz silver tequila",
+      "0.75 oz blue curaçao",
+      "0.5 oz pineapple juice",
+      "Maraschino cherry for garnish"
+    ],
+    steps: "Add all ingredients to a shaker with ice and shake until well-chilled. Strain into a chilled cocktail glass. Garnish with a maraschino cherry.",
+    notes: "Known for its stunning blue-green color, the Envy is a simple and lively tropical cocktail.",
+    origin: "Unknown",
+    tags: ["tequila", "blue-curacao", "pineapple", "tropical", "blue"]
+  },
+  {
+    id: "31",
+    name: "Fallen Angel",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "0.5 oz fresh lime juice",
+      "2 dashes white crème de menthe",
+      "1 dash Angostura bitters",
+      "Mint sprig for garnish"
+    ],
+    steps: "Shake all ingredients with ice and strain into a chilled cocktail glass. Garnish with a mint sprig.",
+    notes: "A once-forgotten Prohibition-era classic from the 1930 'Savoy Cocktail Book'. It's a refreshing gin sour with a distinct minty character.",
+    origin: "UK",
+    tags: ["classic", "gin-sour", "mint", "prohibition-era"]
+  },
+  {
+    id: "32",
+    name: "Fancy Free",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz bourbon or rye whiskey",
+      "0.5 oz maraschino liqueur",
+      "1 dash Angostura bitters",
+      "2 dashes orange bitters",
+      "Orange twist for garnish"
+    ],
+    steps: "Stir all ingredients over ice, then strain into an Old Fashioned glass over a large ice cube. Express the orange twist over the drink and drop it in.",
+    notes: "An Old Fashioned variation where maraschino liqueur replaces sugar. First published in 1940, it's a surprisingly dry and complex sipper.",
+    origin: "USA",
+    tags: ["classic", "rye", "bourbon", "old-fashioned-variation", "spirit-forward"]
+  },
+  {
+    id: "33",
+    name: "Fernandito",
+    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.75 oz Fernet-Branca",
+      "Top with Coca-Cola",
+      "Lemon slice for garnish"
+    ],
+    steps: "Fill a highball glass with ice. Pour Fernet-Branca over the ice, then top with Coca-Cola. Stir gently and garnish with a lemon slice.",
+    notes: "An iconic cocktail from Argentina, also known as 'Fernet con Coca'. It became popular in the 1990s and is considered the country's unofficial national drink.",
+    origin: "Argentina",
+    tags: ["highball", "bitter", "herbal", "simple", "modern-classic"]
+  },
+  {
+    id: "34",
+    name: "Fish House Punch",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz cognac",
+      "1 oz Jamaican rum",
+      "0.75 oz peach liqueur",
+      "1 oz cold black tea",
+      "0.75 oz fresh lemon juice",
+      "0.5 oz simple syrup"
+    ],
+    steps: "Shake all ingredients with ice and strain into a Collins glass filled with fresh ice. Garnish with a lemon slice and grated nutmeg.",
+    notes: "A historic American punch dating back to the 18th century. Modern single-serving versions balance the rum and cognac with peach liqueur, lemon, and tea for a complex, fruity flavor.",
+    origin: "USA",
+    tags: ["punch", "classic", "rum", "cognac", "fruity", "18th-century"]
+  },
+  {
+    id: "35",
+    name: "Flamingo",
+    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz light rum",
+      "0.5 oz lime juice",
+      "0.5 oz pineapple juice",
+      "0.25 oz grenadine"
+    ],
+    steps: "Add all ingredients into a shaker with ice and shake for 10-15 seconds. Strain into a chilled coupe glass. Garnish with a pineapple wedge or lime wheel.",
+    notes: "A fruity, pink, rum-based cocktail. The name is likely inspired by the Flamingo Hotel in Las Vegas. Using fresh pineapple juice creates a better frothy head.",
+    origin: "USA",
+    tags: ["tiki", "rum", "pineapple", "pink", "fruity"]
+  },
+  {
+    id: "36",
+    name: "French Connection",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz cognac",
+      "1.5 oz amaretto liqueur"
+    ],
+    steps: "Pour all ingredients directly into an old fashioned glass filled with ice cubes. Stir gently.",
+    notes: "A simple and elegant after-dinner drink made with equal parts Cognac and Amaretto. The cocktail is named for the 1971 Gene Hackman film of the same name.",
+    origin: "USA",
+    tags: ["digestif", "simple", "two-ingredient", "classic", "sweet"]
+  },
+  {
+    id: "37",
+    name: "Gibson",
+    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2.5 oz gin",
+      "0.5 oz dry vermouth",
+      "Pickled cocktail onions for garnish"
+    ],
+    steps: "Stir gin and vermouth with ice in a mixing glass until well-chilled. Strain into a chilled cocktail glass. Garnish with one or two pickled onions.",
+    notes: "A variation on the classic Martini, the Gibson is distinguished by its pickled onion garnish instead of an olive or lemon twist. Early recipes differentiated it by the lack of bitters.",
+    origin: "USA",
+    tags: ["classic", "martini-variation", "savory", "spirit-forward"]
+  },
+  {
+    id: "38",
+    name: "Gimlet",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "1 oz fresh lime juice",
+      "0.75 oz simple syrup",
+      "Lime wheel for garnish"
+    ],
+    steps: "Shake all ingredients with ice until well-chilled. Strain into a chilled coupe glass. Garnish with a lime wheel.",
+    notes: "A classic cocktail allegedly created by British sailors to combat scurvy. The traditional recipe calls for gin and Rose's Lime Juice Cordial, but modern craft versions use fresh lime juice and simple syrup for a brighter flavor.",
+    origin: "UK",
+    tags: ["classic", "gin-sour", "refreshing", "simple"]
+  },
+  {
+    id: "39",
+    name: "Gin Fizz",
+    image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "2 oz gin",
+      "1 oz fresh lemon juice",
+      "0.75 oz simple syrup",
+      "1 egg white",
+      "Club soda to top"
+    ],
+    steps: "Add gin, lemon juice, simple syrup, and egg white to a shaker. Dry shake (without ice) vigorously. Add ice and shake again until well-chilled. Strain into a chilled Collins glass and top with club soda.",
+    notes: "A classic 19th-century cocktail from Jerry Thomas's 1876 guide. The egg white (which makes it a 'Silver Fizz') creates a silky texture and frothy head. It is closely related to the Tom Collins.",
+    origin: "USA",
+    tags: ["classic", "fizz", "gin-sour", "refreshing", "19th-century", "frothy"]
+  },
+  {
+    id: "40",
+    name: "Godfather",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.75 oz Scotch whisky",
+      "0.75 oz amaretto liqueur"
+    ],
+    steps: "Pour all ingredients directly into an old-fashioned glass filled with ice. Stir gently.",
+    notes: "A simple and popular after-dinner drink. The almond flavor of amaretto softens the bite of the scotch. Disaronno claims it was a favorite of actor Marlon Brando.",
+    origin: "USA",
+    tags: ["classic", "simple", "two-ingredient", "digestif", "whisky"]
+  },
+  {
+    id: "41",
+    name: "Godmother",
+    image: "https://images.unsplash.com/photo-1581984934376-7a6d37e48b04?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz vodka",
+      "0.75 oz amaretto"
+    ],
+    steps: "Pour vodka and amaretto into an old-fashioned glass over ice and stir.",
+    notes: "A variation of the Godfather, substituting vodka for Scotch whisky. It's a smooth, slightly sweet cocktail that is incredibly easy to make.",
+    origin: "USA",
+    tags: ["classic", "simple", "two-ingredient", "digestif", "vodka"]
+  },
+  {
+    id: "42",
+    name: "Golden Dream",
+    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1 oz Galliano L'Autentico",
+      "1 oz Cointreau",
+      "1 oz fresh orange juice",
+      "0.5 oz heavy cream"
+    ],
+    steps: "Combine all ingredients in a cocktail shaker half-filled with ice. Shake vigorously for at least 30 seconds. Strain into a chilled cocktail glass.",
+    notes: "A creamy, dessert-like cocktail popular in the 1960s and 70s. It was likely created by Raimundo Alvarez at the Old King Bar in Miami. It is an official IBA cocktail.",
+    origin: "USA",
+    tags: ["classic", "dessert", "creamy", "orange", "1960s"]
+  },
+  {
+    id: "43",
+    name: "Hanky Panky",
+    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz London dry gin",
+      "1.5 oz sweet vermouth",
+      "2 dashes Fernet-Branca"
+    ],
+    steps: "Add all ingredients into a mixing glass with ice and stir until well-chilled. Strain into a chilled cocktail glass. Garnish with an orange twist.",
+    notes: "Created by Ada 'Coley' Coleman, head bartender at the Savoy Hotel in London in the early 20th century. It's a variation on the Sweet Martini, made distinctive by the bitter Italian digestivo, Fernet-Branca.",
+    origin: "UK",
+    tags: ["classic", "gin", "vermouth", "bitter", "spirit-forward"]
+  },
+  {
+    id: "44",
+    name: "Harvey Wallbanger",
+    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    ingredients: [
+      "1.5 oz vodka",
+      "4 oz orange juice",
+      "0.5 oz Galliano L'Autentico",
+      "Orange slice for garnish"
+    ],
+    steps: "Build vodka and orange juice in a highball glass filled with ice. Float Galliano on top by slowly pouring over the back of a bar spoon. Garnish with an orange slice.",
+    notes: "A 1970s cocktail that became a cultural phenomenon. It's essentially a Screwdriver with a float of Galliano. The drink was popularized by a marketing campaign featuring a cartoon surfer character.",
+    origin: "USA",
+    tags: ["classic", "vodka", "orange", "1970s", "floating"]
+  },
+  {
+    id: "45",
     name: "Manhattan",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
