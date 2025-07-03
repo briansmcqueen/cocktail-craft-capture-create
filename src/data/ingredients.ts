@@ -415,6 +415,80 @@ export const ingredientDatabase: Ingredient[] = [
     aliases: ["Fresh Egg White", "Pasteurized Egg White"],
     description: "Creates a silky foam and smooth texture in sour cocktails like whiskey sours and ramos gin fizzes.",
     isCustom: false
+  },
+  
+  // Additional Modern Ingredients
+  {
+    id: "spirit_011",
+    name: "Japanese Whisky",
+    category: "Spirits",
+    subCategory: "Whiskey",
+    aliases: ["Japanese Whiskey"],
+    description: "A refined whisky with delicate floral and fruity notes, perfect for elevated cocktails.",
+    isCustom: false
+  },
+  {
+    id: "spirit_012",
+    name: "Pisco",
+    category: "Spirits",
+    subCategory: "Brandy",
+    aliases: ["Peruvian Pisco", "Chilean Pisco"],
+    description: "A South American brandy with bright, floral characteristics ideal for Pisco Sours.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_009",
+    name: "Elderflower Liqueur",
+    category: "Liqueurs",
+    subCategory: "Floral Liqueur",
+    aliases: ["St-Germain", "Elderflower"],
+    description: "A delicate floral liqueur that adds elegance to modern cocktails.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_010",
+    name: "Crème de Violette",
+    category: "Liqueurs",
+    subCategory: "Floral Liqueur",
+    aliases: ["Violet Liqueur"],
+    description: "A purple-hued floral liqueur essential for the Aviation cocktail.",
+    isCustom: false
+  },
+  {
+    id: "mixer_008",
+    name: "Grapefruit Juice",
+    category: "Mixers",
+    subCategory: "Fruit Juice",
+    aliases: ["Fresh Grapefruit"],
+    description: "Tart and bitter citrus juice perfect for Palomas and modern sours.",
+    isCustom: false
+  },
+  {
+    id: "produce_006",
+    name: "Grapefruit",
+    category: "Produce",
+    subCategory: "Citrus",
+    aliases: ["Grapefruit Peel", "Grapefruit Twist"],
+    description: "Provides bitter citrus notes and aromatic oils for cocktail garnishes.",
+    isCustom: false
+  },
+  {
+    id: "pantry_011",
+    name: "Vanilla Syrup",
+    category: "Pantry",
+    subCategory: "Syrups",
+    aliases: ["Vanilla Simple Syrup"],
+    description: "A sweetener infused with vanilla bean, adding warmth to cocktails.",
+    isCustom: false
+  },
+  {
+    id: "pantry_012",
+    name: "Lavender Syrup",
+    category: "Pantry",
+    subCategory: "Syrups",
+    aliases: ["Lavender Simple Syrup"],
+    description: "A floral syrup that adds sophistication to gin and vodka cocktails.",
+    isCustom: false
   }
 ];
 

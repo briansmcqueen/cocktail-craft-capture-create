@@ -95,7 +95,13 @@ export default function Index() {
       setShowAuthModal(true);
       return;
     }
-    setEditingRecipe({ ...recipe, id: undefined });
+    // Create a new recipe based on the original but with no ID
+    const remixedRecipe = { 
+      ...recipe, 
+      id: undefined,
+      name: `${recipe.name} (Remix)`
+    };
+    setEditingRecipe(remixedRecipe);
     setShowForm(true);
   };
 

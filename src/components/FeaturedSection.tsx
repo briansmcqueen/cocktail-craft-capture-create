@@ -39,8 +39,8 @@ export default function FeaturedSection({
         className="w-full"
       >
         <CarouselContent className="-ml-2 md:-ml-4">
-          {recipes.map((recipe) => (
-            <CarouselItem key={recipe.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+          {recipes.map((recipe, index) => (
+            <CarouselItem key={`${recipe.id}-${index}`} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
               <div className="relative group">
                 <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white shadow-sm hover:shadow-md">
                   <RecipeCard
