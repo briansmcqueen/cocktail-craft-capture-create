@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface IngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -96,23 +97,44 @@ export default function IngredientSelector({
       {myBarIngredients.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium">My Bar ({myBarIngredients.length} ingredients)</h3>
-          <div className="overflow-x-auto md:overflow-visible">
-            <div className="flex gap-2 md:flex-wrap" style={{ minWidth: 'max-content' }}>
-              {myBarIngredients.map(ingredientId => {
-                const ingredient = ingredientMap[ingredientId];
-                if (!ingredient) return null;
-                return (
-                  <span
-                    key={ingredientId}
-                    className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 flex-shrink-0 cursor-pointer hover:bg-blue-200 transition-colors"
-                    onClick={() => toggleIngredient(ingredientId)}
-                  >
-                    {ingredient.name}
-                    <X className="ml-1 h-3 w-3" />
-                  </span>
-                );
-              })}
-            </div>
+          {/* Mobile: Horizontal Carousel */}
+          <div className="md:hidden">
+            <Carousel className="w-full">
+              <CarouselContent className="-ml-2">
+                {myBarIngredients.map(ingredientId => {
+                  const ingredient = ingredientMap[ingredientId];
+                  if (!ingredient) return null;
+                  return (
+                    <CarouselItem key={ingredientId} className="pl-2 basis-auto">
+                      <span
+                        className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 cursor-pointer hover:bg-blue-200 transition-colors whitespace-nowrap"
+                        onClick={() => toggleIngredient(ingredientId)}
+                      >
+                        {ingredient.name}
+                        <X className="ml-1 h-3 w-3" />
+                      </span>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
+          </div>
+          {/* Desktop: Flex Wrap */}
+          <div className="hidden md:flex md:flex-wrap md:gap-2">
+            {myBarIngredients.map(ingredientId => {
+              const ingredient = ingredientMap[ingredientId];
+              if (!ingredient) return null;
+              return (
+                <span
+                  key={ingredientId}
+                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 cursor-pointer hover:bg-blue-200 transition-colors"
+                  onClick={() => toggleIngredient(ingredientId)}
+                >
+                  {ingredient.name}
+                  <X className="ml-1 h-3 w-3" />
+                </span>
+              );
+            })}
           </div>
         </div>
       )}
