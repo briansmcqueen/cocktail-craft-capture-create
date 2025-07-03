@@ -49,7 +49,7 @@ export default function WhatToBuyNext({
                 size="sm" 
                 onClick={() => onAddIngredient(recommendation.ingredient.id)}
                 disabled={loading}
-                className="w-full hover:bg-accent/50 hover:text-foreground"
+                className="w-full hover:bg-card hover:border-accent"
               >
                 <Plus className="h-4 w-4 mr-1" />
                 Add to Bar
