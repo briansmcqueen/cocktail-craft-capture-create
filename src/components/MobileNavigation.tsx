@@ -22,7 +22,7 @@ interface MobileNavigationProps {
 
 const nav = [
   { id: "featured", label: "Featured", icon: Home },
-  { id: "all", label: "All", icon: Book },
+  { id: "all", label: "Recipes", icon: Book },
   { id: "ingredients", label: "My Bar", icon: ChefHat },
   { id: "favorites", label: "Favorites", icon: Star },
   { id: "mine", label: "My Creations", icon: Edit },

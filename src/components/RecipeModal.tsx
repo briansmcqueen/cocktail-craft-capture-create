@@ -94,13 +94,13 @@ export default function RecipeModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-white border border-gray-200">
+      <DialogContent className="max-w-2xl bg-white border border-gray-200 max-h-[90vh] overflow-y-auto w-[95vw] md:w-full">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif font-normal text-gray-900 tracking-wide">
+          <DialogTitle className="text-2xl font-serif font-normal text-gray-900 tracking-wide text-left">
             {recipe.name}
           </DialogTitle>
           {recipe.origin && (
-            <div className="mt-2">
+            <div className="mt-2 text-left">
               <TagBadge className="bg-orange-100 text-orange-800 border border-orange-200 text-xs">
                 {recipe.origin}
               </TagBadge>
@@ -116,9 +116,9 @@ export default function RecipeModal({
           <div className="flex-1 flex flex-col">
             <div className="mb-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                <div className="font-semibold text-gray-900 mb-2 md:mb-0">Ingredients</div>
+                <div className="font-semibold text-gray-900 mb-2 md:mb-0 text-left">Ingredients</div>
                 {/* Custom Metric/Imperial Toggle */}
-                <div className="flex items-center justify-center md:justify-end">
+                <div className="flex items-center justify-start md:justify-end">
                   <div className="relative">
                     <div className="toggle-button-cover">
                       <div className="button-cover">
@@ -146,13 +146,13 @@ export default function RecipeModal({
               </ul>
             </div>
             <div className="mb-4">
-              <div className="font-semibold text-gray-900 mb-2">Instructions</div>
-              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">{recipe.steps}</p>
+              <div className="font-semibold text-gray-900 mb-2 text-left">Instructions</div>
+              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed text-left">{recipe.steps}</p>
             </div>
             {recipe.notes && (
               <div className="mb-4">
-                <div className="font-semibold text-gray-900 mb-2">Notes</div>
-                <p className="text-sm text-gray-600 leading-relaxed">{recipe.notes}</p>
+                <div className="font-semibold text-gray-900 mb-2 text-left">Notes</div>
+                <p className="text-sm text-gray-600 leading-relaxed text-left">{recipe.notes}</p>
               </div>
             )}
             {recipe.tags && recipe.tags.length > 0 && (

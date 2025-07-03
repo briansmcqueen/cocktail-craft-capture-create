@@ -53,7 +53,7 @@ export default function IngredientSelector({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
@@ -96,14 +96,14 @@ export default function IngredientSelector({
       {myBarIngredients.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium">My Bar ({myBarIngredients.length} ingredients)</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex overflow-x-auto gap-2 md:flex-wrap md:overflow-visible">
             {myBarIngredients.map(ingredientId => {
               const ingredient = ingredientMap[ingredientId];
               if (!ingredient) return null;
               return (
                 <span
                   key={ingredientId}
-                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 mr-1 cursor-pointer hover:bg-blue-200 transition-colors"
+                  className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 flex-shrink-0 cursor-pointer hover:bg-blue-200 transition-colors"
                   onClick={() => toggleIngredient(ingredientId)}
                 >
                   {ingredient.name}

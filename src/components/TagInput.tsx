@@ -62,7 +62,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
           onKeyDown={handleKeyDown}
           className="flex-1"
         />
-        <Button type="button" onClick={handleAdd} size="sm">
+        <Button type="button" onClick={handleAdd} size="sm" variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300">
           <Tag size={16} />
         </Button>
       </div>
