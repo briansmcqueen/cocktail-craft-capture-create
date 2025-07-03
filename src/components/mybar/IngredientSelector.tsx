@@ -129,13 +129,13 @@ export default function IngredientSelector({
             onClick={() => toggleIngredient(ingredient.id)}
           >
             <div className="flex-1">
-              <div className="font-medium text-sm flex items-center gap-2">
+              <div className="font-medium text-sm flex items-center gap-2 text-gray-900">
                 {ingredient.name}
                 {ingredient.isCustom && (
                   <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200">Custom</span>
                 )}
               </div>
-              <div className="text-xs text-muted-foreground">{ingredient.subCategory}</div>
+              <div className="text-xs text-gray-600">{ingredient.subCategory}</div>
             </div>
             <div className="ml-2">
               {myBar[ingredient.id] ? (
