@@ -19,6 +19,7 @@ type Props = {
   editable?: boolean;
   onShareRecipe?: (recipe: Cocktail) => void;
   onRemix?: (recipe: Cocktail) => void;
+  onShowAuthModal?: () => void;
 };
 
 export default function RecipeModal({ 
@@ -28,7 +29,8 @@ export default function RecipeModal({
   onEdit, 
   editable, 
   onShareRecipe,
-  onRemix 
+  onRemix,
+  onShowAuthModal
 }: Props) {
   const { user } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -57,7 +59,7 @@ export default function RecipeModal({
   };
 
   const handleToggleFavorite = async () => {
-    await toggleFavorite(recipe.id);
+    await toggleFavorite(recipe.id, onShowAuthModal);
   };
 
   const handleShare = () => {

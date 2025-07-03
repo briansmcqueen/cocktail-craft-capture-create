@@ -12,6 +12,7 @@ type FeaturedProps = {
   onShareRecipe: (recipe: Cocktail) => void;
   userRecipes: Cocktail[];
   onToggleFavorite: (recipe: Cocktail) => void;
+  onShowAuthModal?: () => void;
 };
 
 export default function Featured({ 
@@ -20,7 +21,8 @@ export default function Featured({
   onEditRecipe, 
   onShareRecipe, 
   userRecipes,
-  onToggleFavorite 
+  onToggleFavorite,
+  onShowAuthModal
 }: FeaturedProps) {
 
   const trendingRecipes = getTrendingRecipes(recipes);
@@ -32,12 +34,14 @@ export default function Featured({
         title="Featured Cocktails"
         recipes={featuredRecipes}
         onRecipeClick={onRecipeClick}
+        onShowAuthModal={onShowAuthModal}
       />
 
       <FeaturedSection
         title="Trending Now"
         recipes={trendingRecipes}
         onRecipeClick={onRecipeClick}
+        onShowAuthModal={onShowAuthModal}
       />
 
       <TechniquesSection />

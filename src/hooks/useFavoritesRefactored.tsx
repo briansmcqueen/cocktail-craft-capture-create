@@ -6,7 +6,7 @@ interface FavoritesContextType {
   favoriteIds: string[];
   loading: boolean;
   isFavorite: (recipeId: string) => boolean;
-  toggleFavorite: (recipeId: string) => Promise<boolean>;
+  toggleFavorite: (recipeId: string, onUnauthenticated?: () => void) => Promise<boolean>;
   refreshFavorites: () => Promise<void>;
 }
 
@@ -42,8 +42,11 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     return favoriteIds.includes(recipeId);
   }, [favoriteIds]);
 
-  const toggleFavorite = useCallback(async (recipeId: string) => {
-    if (!user) return false;
+  const toggleFavorite = useCallback(async (recipeId: string, onUnauthenticated?: () => void) => {
+    if (!user) {
+      onUnauthenticated?.();
+      return false;
+    }
     
     const wasLiked = favoriteIds.includes(recipeId);
     

@@ -16,12 +16,14 @@ type FeaturedSectionProps = {
   title: string;
   recipes: Cocktail[];
   onRecipeClick: (recipe: Cocktail) => void;
+  onShowAuthModal?: () => void;
 };
 
 export default function FeaturedSection({ 
   title, 
   recipes, 
-  onRecipeClick 
+  onRecipeClick,
+  onShowAuthModal
 }: FeaturedSectionProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   return (
@@ -53,7 +55,7 @@ export default function FeaturedSection({
                     className="p-1 rounded-full hover:scale-110 transition-transform duration-200"
                     onClick={async (e) => {
                       e.stopPropagation();
-                      await toggleFavorite(recipe.id);
+                      await toggleFavorite(recipe.id, onShowAuthModal);
                     }}
                   >
                     <Heart 

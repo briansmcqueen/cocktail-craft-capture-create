@@ -8,18 +8,20 @@ type RecipeCardWithFavoriteProps = {
   recipe: Cocktail;
   onRecipeClick: (recipe: Cocktail) => void;
   onTagClick?: (tag: string) => void;
+  onShowAuthModal?: () => void;
 };
 
 export default function RecipeCardWithFavorite({ 
   recipe, 
   onRecipeClick, 
-  onTagClick
+  onTagClick,
+  onShowAuthModal
 }: RecipeCardWithFavoriteProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await toggleFavorite(recipe.id);
+    await toggleFavorite(recipe.id, onShowAuthModal);
   };
 
   return (

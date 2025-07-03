@@ -108,6 +108,7 @@ export default function MainContent({
             onShareRecipe={handleShareRecipe}
             userRecipes={userRecipes}
             onToggleFavorite={() => {}}
+            onShowAuthModal={() => setShowAuthModal(true)}
           />
         ) : library === "ingredients" ? (
           <MyBarEngine
@@ -153,6 +154,7 @@ export default function MainContent({
             onShowForm={handleAddRecipe}
             forceUpdate={forceUpdate}
             library={library}
+            onShowAuthModal={() => setShowAuthModal(true)}
           />
         )}
       </div>

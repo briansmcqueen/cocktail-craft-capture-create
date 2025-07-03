@@ -14,6 +14,7 @@ type RecipeGridProps = {
   onShowForm: () => void;
   forceUpdate: number;
   library: string;
+  onShowAuthModal?: () => void;
 };
 
 export default function RecipeGrid({
@@ -25,7 +26,8 @@ export default function RecipeGrid({
   onTagClick,
   onShowForm,
   forceUpdate,
-  library
+  library,
+  onShowAuthModal
 }: RecipeGridProps) {
   if (recipes.length === 0) {
     return (
@@ -51,6 +53,7 @@ export default function RecipeGrid({
           recipe={recipe}
           onRecipeClick={onRecipeClick}
           onTagClick={onTagClick}
+          onShowAuthModal={onShowAuthModal}
         />
       ))}
     </div>

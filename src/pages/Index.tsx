@@ -170,6 +170,7 @@ export default function Index() {
         editable={user && userRecipes.some(r => r.id === selectedRecipe?.id)}
         onShareRecipe={handleShareRecipe}
         onRemix={handleRemixRecipe}
+        onShowAuthModal={() => setShowAuthModal(true)}
       />
       <ShareRecipe 
         recipe={shareRecipe} 
