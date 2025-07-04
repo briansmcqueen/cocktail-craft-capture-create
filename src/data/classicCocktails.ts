@@ -723,7 +723,7 @@ export const classicCocktails: Cocktail[] = [
     tags: ["dry", "boozy", "classic"]
   },
   {
-    id: "4",
+    id: "83",
     name: "Mojito",
     image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
     ingredients: [

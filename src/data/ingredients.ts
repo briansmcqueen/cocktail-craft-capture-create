@@ -489,6 +489,15 @@ export const ingredientDatabase: Ingredient[] = [
     aliases: ["Lavender Simple Syrup"],
     description: "A floral syrup that adds sophistication to gin and vodka cocktails.",
     isCustom: false
+  },
+  {
+    id: "mixers_020",
+    name: "Cream",
+    category: "Mixers",
+    subCategory: "Dairy",
+    aliases: ["Heavy Cream", "Heavy Whipping Cream", "Fresh Cream"],
+    description: "Heavy cream used in creamy cocktails like the Alexander and Brandy Alexander.",
+    isCustom: false
   }
 ];
 

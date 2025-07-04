@@ -231,6 +231,13 @@ export function analyzeRecipes(recipes: Cocktail[], userIngredients: string[]): 
       const matches = findIngredientMatches(ingredient);
       if (matches.length > 0) {
         requiredMatches.push(matches[0]); // Take best match
+      } else {
+        // If no match found, create a placeholder to ensure recipe is marked as unmakeable
+        requiredMatches.push({
+          ingredientId: `unknown_${ingredient.replace(/[^a-zA-Z0-9]/g, '_')}`,
+          confidence: 0,
+          matchType: 'exact'
+        });
       }
     });
     
