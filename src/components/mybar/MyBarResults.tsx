@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Star, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
@@ -40,6 +41,8 @@ export default function MyBarResults({
   user,
   loading = false
 }: MyBarResultsProps) {
+  const [showAllRecipes, setShowAllRecipes] = useState(false);
+  
   if (myBarIngredients.length === 0) {
     if (!user) {
       return (
@@ -72,7 +75,7 @@ export default function MyBarResults({
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {recipesICanMake.slice(0, 6).map((recipe) => (
+            {(showAllRecipes ? recipesICanMake : recipesICanMake.slice(0, 6)).map((recipe) => (
               <RecipeCardWithFavorite
                 key={recipe.id}
                 recipe={recipe}
@@ -81,10 +84,27 @@ export default function MyBarResults({
               />
             ))}
           </div>
-          {recipesICanMake.length > 6 && (
-            <p className="text-center text-sm text-muted-foreground">
-              +{recipesICanMake.length - 6} more cocktails available
-            </p>
+          {recipesICanMake.length > 6 && !showAllRecipes && (
+            <div className="text-center">
+              <Button
+                variant="outline"
+                onClick={() => setShowAllRecipes(true)}
+                className="text-sm"
+              >
+                Show more ({recipesICanMake.length - 6} more cocktails)
+              </Button>
+            </div>
+          )}
+          {showAllRecipes && recipesICanMake.length > 6 && (
+            <div className="text-center">
+              <Button
+                variant="outline"
+                onClick={() => setShowAllRecipes(false)}
+                className="text-sm"
+              >
+                Show less
+              </Button>
+            </div>
           )}
         </div>
       )}

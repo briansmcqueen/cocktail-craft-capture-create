@@ -51,13 +51,23 @@ export function useIndexPage() {
   };
 
   const handleSaveRecipe = async (recipe: Cocktail) => {
-    if (!user) return;
+    if (!user) {
+      console.error('User not authenticated for recipe save');
+      return;
+    }
+    
+    console.log('Saving recipe:', recipe);
     const success = await saveRecipeToDB(recipe);
+    console.log('Save result:', success);
+    
     if (success) {
       const recipes = await getUserRecipesFromDB();
       setUserRecipes(recipes);
       setShowForm(false);
       setEditingRecipe(null);
+      console.log('Recipe saved successfully, form closed');
+    } else {
+      console.error('Failed to save recipe');
     }
   };
 
