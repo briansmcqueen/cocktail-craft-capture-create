@@ -32,7 +32,7 @@ export async function saveRecipeToDB(recipe: Cocktail): Promise<boolean> {
   }
 
   const recipeData = {
-    id: recipe.id,
+    ...(recipe.id && { id: recipe.id }), // Only include id if it exists (editing)
     user_id: user.id,
     name: recipe.name,
     description: recipe.notes,

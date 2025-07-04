@@ -31,12 +31,7 @@ const STEP_TEMPLATES = [
   "Layer ingredients by pouring slowly over the back of a bar spoon."
 ];
 
-function makeId() {
-  return (
-    Date.now().toString(36) +
-    Math.random().toString(36).slice(2, 9)
-  );
-}
+// Removed makeId function - let database generate UUIDs
 
 export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   const [name, setName] = useState(initial?.name || "");
@@ -60,7 +55,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
     }
 
     onSave({
-      id: initial?.id || makeId(),
+      ...(initial?.id && { id: initial.id }), // Only include id if editing existing recipe
       name: name.trim(),
       image,
       ingredients: ingredients
