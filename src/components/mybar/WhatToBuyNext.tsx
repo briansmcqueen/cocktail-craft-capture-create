@@ -41,7 +41,7 @@ export default function WhatToBuyNext({
               <div className="flex items-center gap-2 mb-2">
                 <Star className="h-4 w-4 text-gray-900" />
                 <span className="text-sm font-medium text-gray-900">
-                  Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}
+                  Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}: {recommendation.newRecipesUnlocked.map(recipe => recipe.name).join(', ')}
                 </span>
               </div>
             </div>

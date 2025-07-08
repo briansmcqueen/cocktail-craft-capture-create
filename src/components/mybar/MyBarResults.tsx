@@ -109,39 +109,6 @@ export default function MyBarResults({
         </div>
       )}
 
-      {/* Recipes Needing One Ingredient */}
-      {recipesNeedingOneIngredient.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-serif font-semibold">Just One Ingredient Away</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {recipesNeedingOneIngredient.slice(0, 6).map((recipe) => (
-              <div key={recipe.id} className="relative">
-              <RecipeCardWithFavorite
-                recipe={recipe}
-                onRecipeClick={onRecipeClick}
-                onTagClick={onTagClick}
-              />
-                {recipe.missingIngredient && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                           <div className="absolute top-2 right-2">
-                            <Badge variant="outline" className="bg-red-50 text-red-800 border-red-200 text-xs hover:bg-red-100 transition-colors">
-                              Need: {ingredientMap[recipe.missingIngredient]?.name}
-                            </Badge>
-                          </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Add {ingredientMap[recipe.missingIngredient]?.name} to make this cocktail</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Empty State */}
       {myBarIngredients.length === 0 && recipesNeedingOneIngredient.length === 0 && user && (
