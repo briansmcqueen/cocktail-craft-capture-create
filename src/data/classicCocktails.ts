@@ -892,7 +892,7 @@ export const classicCocktails: Cocktail[] = [
     tags: ["bittersweet", "citrus", "simple"]
   },
   {
-    id: "15",
+    id: "112",
     name: "Grasshopper",
     image: "https://images.unsplash.com/photo-1576629855588-57e1e6034991?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1018,7 +1018,7 @@ export const classicCocktails: Cocktail[] = [
     tags: ["citrusy", "refreshing", "sweet"]
   },
   {
-    id: "23",
+    id: "113",
     name: "Mimosa",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
