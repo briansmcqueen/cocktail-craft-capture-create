@@ -1,4 +1,6 @@
 
+import { fixDuplicateIds, validateUniqueIds } from "@/utils/cocktailIdValidator";
+
 export type Cocktail = {
   id: string;
   name: string;
@@ -10,7 +12,7 @@ export type Cocktail = {
   tags?: string[];
 };
 
-export const classicCocktails: Cocktail[] = [
+const rawCocktails: Cocktail[] = [
   {
     id: "1",
     name: "Adonis",
@@ -2073,3 +2075,16 @@ export const classicCocktails: Cocktail[] = [
     tags: ["classic", "tiki", "rum", "fruity", "tropical"]
   }
 ];
+
+// Fix duplicate IDs and export the validated cocktails
+export const classicCocktails: Cocktail[] = fixDuplicateIds(rawCocktails);
+
+// Validate IDs in development
+if (process.env.NODE_ENV === 'development') {
+  const validation = validateUniqueIds(classicCocktails);
+  if (!validation.isValid) {
+    console.error('Cocktail ID validation failed:', validation.errors);
+  } else {
+    console.log(`✅ All ${classicCocktails.length} cocktail IDs are unique`);
+  }
+}
