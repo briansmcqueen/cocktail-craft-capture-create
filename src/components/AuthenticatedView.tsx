@@ -72,6 +72,10 @@ export default function AuthenticatedView({
     setEditingRecipe(null);
   };
 
+  const handleNavigateToMyBar = () => {
+    setLibrary("ingredients");
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="flex h-screen">
@@ -123,6 +127,7 @@ export default function AuthenticatedView({
                 setShowForm={setShowForm}
                 setEditingRecipe={setEditingRecipe}
                 setShowAuthModal={setShowAuthModal}
+                onNavigateToMyBar={handleNavigateToMyBar}
                 forceUpdate={forceUpdate}
               />
             </div>

@@ -34,6 +34,7 @@ interface MainContentProps {
   setShowForm: (show: boolean) => void;
   setEditingRecipe: (recipe: Cocktail | null) => void;
   setShowAuthModal: (show: boolean) => void;
+  onNavigateToMyBar: () => void;
   forceUpdate: number;
 }
 
@@ -60,6 +61,7 @@ export default function MainContent({
   setShowForm,
   setEditingRecipe,
   setShowAuthModal,
+  onNavigateToMyBar,
   forceUpdate
 }: MainContentProps) {
   if (showForm) {
@@ -109,6 +111,7 @@ export default function MainContent({
             userRecipes={userRecipes}
             onToggleFavorite={() => {}}
             onShowAuthModal={() => setShowAuthModal(true)}
+            onNavigateToMyBar={onNavigateToMyBar}
           />
         ) : library === "ingredients" ? (
           <MyBarEngine
