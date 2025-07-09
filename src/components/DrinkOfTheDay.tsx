@@ -1,8 +1,8 @@
 import React from "react";
-import { Calendar, Star, Clock } from "lucide-react";
+import { Calendar, Globe } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import TagBadge from "./ui/tag";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { Heart } from "lucide-react";
 
@@ -54,7 +54,8 @@ export default function DrinkOfTheDay({
             {/* Favorite Button */}
             <button
               onClick={handleFavoriteClick}
-              className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
+              className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              aria-label={`${isFavorite(recipe.id) ? 'Remove from' : 'Add to'} favorites`}
             >
               <Heart 
                 size={20} 
@@ -83,13 +84,12 @@ export default function DrinkOfTheDay({
             {/* Recipe Metadata */}
             <div className="flex flex-wrap gap-2">
               {recipe.tags && recipe.tags.map((tag) => (
-                <Badge 
+                <TagBadge 
                   key={tag} 
-                  variant="secondary" 
-                  className="text-xs bg-white/60 text-gray-700 border-gray-200"
+                  className="bg-blue-100 text-blue-800 border border-blue-200 text-xs"
                 >
                   {tag}
-                </Badge>
+                </TagBadge>
               ))}
             </div>
 
@@ -97,31 +97,23 @@ export default function DrinkOfTheDay({
             <div className="flex items-center gap-4 text-sm text-gray-600">
               {recipe.origin && (
                 <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4" />
+                  <Globe className="h-4 w-4" />
                   <span>{recipe.origin}</span>
                 </div>
               )}
             </div>
 
-            {/* Ingredients Preview */}
+            {/* Ingredients List */}
             <div>
               <p className="text-sm font-medium text-gray-700 mb-2">Ingredients:</p>
-              <div className="flex flex-wrap gap-1">
-                {recipe.ingredients.slice(0, 3).map((ingredient, index) => (
-                  <Badge 
-                    key={index} 
-                    variant="outline" 
-                    className="text-xs text-gray-600 bg-white/40"
-                  >
-                    {ingredient}
-                  </Badge>
+              <ul className="text-sm text-gray-600 space-y-1">
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-primary mr-2">•</span>
+                    <span>{ingredient}</span>
+                  </li>
                 ))}
-                {recipe.ingredients.length > 3 && (
-                  <Badge variant="outline" className="text-xs text-gray-600 bg-white/40">
-                    +{recipe.ingredients.length - 3} more
-                  </Badge>
-                )}
-              </div>
+              </ul>
             </div>
 
             {/* Action Button */}
