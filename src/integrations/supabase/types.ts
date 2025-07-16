@@ -71,6 +71,27 @@ export type Database = {
         }
         Relationships: []
       }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           created_at: string | null
@@ -119,6 +140,39 @@ export type Database = {
           id?: string
           updated_at?: string | null
           username?: string | null
+        }
+        Relationships: []
+      }
+      recipe_comments: {
+        Row: {
+          comment_type: string
+          content: string
+          created_at: string
+          id: string
+          recipe_id: string
+          tip_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment_type?: string
+          content: string
+          created_at?: string
+          id?: string
+          recipe_id: string
+          tip_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment_type?: string
+          content?: string
+          created_at?: string
+          id?: string
+          recipe_id?: string
+          tip_type?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

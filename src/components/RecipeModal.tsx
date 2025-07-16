@@ -10,6 +10,8 @@ import { getUserRecipes } from "@/utils/storage";
 import { useState, useEffect } from "react";
 import { getUserPreferences } from "@/services/userPreferencesService";
 import { useAuth } from "@/hooks/useAuth";
+import RecipeRatingDisplay from "./RecipeRatingDisplay";
+import RecipeComments from "./RecipeComments";
 
 type Props = {
   open: boolean;
@@ -96,7 +98,7 @@ export default function RecipeModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-white border border-gray-200 max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6">
+      <DialogContent className="max-w-4xl bg-white border border-gray-200 max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6">
         <DialogHeader>
           <DialogTitle className="text-2xl font-serif font-normal text-gray-900 tracking-wide text-left">
             {recipe.name}
@@ -172,7 +174,17 @@ export default function RecipeModal({
                 <span>{likeCount} like{likeCount === 1 ? '' : 's'}</span>
               </div>
             )} */}
+
+            {/* Ratings Section */}
+            <div className="mb-4 border-t pt-4">
+              <RecipeRatingDisplay recipeId={recipe.id} />
+            </div>
           </div>
+        </div>
+
+        {/* Comments Section */}
+        <div className="mt-6 border-t pt-6">
+          <RecipeComments recipeId={recipe.id} />
         </div>
         <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3 flex-wrap">
           <div className="flex gap-2 flex-1 flex-wrap min-w-0">
