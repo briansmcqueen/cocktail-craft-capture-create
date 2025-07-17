@@ -179,10 +179,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
             </span>
             {comment.category !== 'general' && (
-              <Badge variant={categoryColors[comment.category]} className="text-xs">
-                <Tag className="w-3 h-3 mr-1" />
+              <span className="bg-blue-100 text-blue-800 border border-blue-200 text-xs px-2 py-1 rounded-full">
                 {categoryLabels[comment.category]}
-              </Badge>
+              </span>
             )}
           </div>
 
@@ -312,43 +311,44 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                 className="min-h-[100px]"
               />
 
-              {/* Image Upload */}
-              <div className="flex items-center gap-2">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageSelect}
-                  className="hidden"
-                  id="comment-image"
-                />
-                <label
-                  htmlFor="comment-image"
-                  className="cursor-pointer flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"
-                >
-                  <Camera className="w-4 h-4" />
-                  Add Photo
-                </label>
-                {selectedImage && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600">{selectedImage.name}</span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setSelectedImage(null)}
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
-                  </div>
-                )}
-              </div>
+              {selectedImage && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">{selectedImage.name}</span>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setSelectedImage(null)}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              )}
             </div>
 
-            <Button 
-              onClick={handleSubmitComment} 
-              disabled={!newComment.trim() || uploading}
-            >
-              {uploading ? 'Uploading...' : 'Post Comment'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={handleSubmitComment} 
+                disabled={!newComment.trim() || uploading}
+              >
+                {uploading ? 'Uploading...' : 'Post Comment'}
+              </Button>
+              
+              {/* Image Upload */}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+                id="comment-image"
+              />
+              <label
+                htmlFor="comment-image"
+                className="cursor-pointer flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                <Camera className="w-4 h-4" />
+                Add Photo
+              </label>
+            </div>
           </div>
         )}
 
