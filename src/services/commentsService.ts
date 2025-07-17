@@ -18,35 +18,46 @@ export interface RecipeComment {
 }
 
 export async function getRecipeComments(recipeId: string): Promise<RecipeComment[]> {
-  const { data, error } = await supabase
+  // First get the comments
+  const { data: comments, error: commentsError } = await supabase
     .from('recipe_comments')
-    .select(`
-      *,
-      profiles(
-        id,
-        username,
-        full_name,
-        avatar_url
-      )
-    `)
+    .select('*')
     .eq('recipe_id', recipeId)
     .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching recipe comments:', error);
+  if (commentsError) {
+    console.error('Error fetching recipe comments:', commentsError);
     return [];
   }
 
-  return (data || []).map(item => ({
-    id: item.id,
-    recipe_id: item.recipe_id,
-    user_id: item.user_id,
-    content: item.content,
-    category: item.category as 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
-    photo_url: item.photo_url,
-    created_at: item.created_at,
-    updated_at: item.updated_at,
-    user: Array.isArray(item.profiles) ? item.profiles[0] : item.profiles
+  if (!comments || comments.length === 0) {
+    return [];
+  }
+
+  // Get unique user IDs
+  const userIds = [...new Set(comments.map(comment => comment.user_id))];
+
+  // Fetch user profiles separately
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('id, username, full_name, avatar_url')
+    .in('id', userIds);
+
+  if (profilesError) {
+    console.error('Error fetching user profiles:', profilesError);
+  }
+
+  // Map comments with user data
+  return comments.map(comment => ({
+    id: comment.id,
+    recipe_id: comment.recipe_id,
+    user_id: comment.user_id,
+    content: comment.content,
+    category: comment.category as 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
+    photo_url: comment.photo_url,
+    created_at: comment.created_at,
+    updated_at: comment.updated_at,
+    user: profiles?.find(profile => profile.id === comment.user_id)
   }));
 }
 
