@@ -145,32 +145,32 @@ export type Database = {
       }
       recipe_comments: {
         Row: {
-          comment_type: string
+          category: string
           content: string
           created_at: string
           id: string
+          photo_url: string | null
           recipe_id: string
-          tip_type: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
-          comment_type?: string
+          category?: string
           content: string
           created_at?: string
           id?: string
+          photo_url?: string | null
           recipe_id: string
-          tip_type?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
-          comment_type?: string
+          category?: string
           content?: string
           created_at?: string
           id?: string
+          photo_url?: string | null
           recipe_id?: string
-          tip_type?: string | null
           updated_at?: string
           user_id?: string
         }

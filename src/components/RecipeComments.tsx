@@ -4,28 +4,46 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MessageCircle, Lightbulb, Edit2, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { MessageCircle, Edit2, Trash2, Camera, X, Tag } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { getRecipeComments, addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
 import { toast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 
 interface RecipeCommentsProps {
   recipeId: string;
 }
+
+const categoryLabels = {
+  general: 'General',
+  variation: 'Variation',
+  substitution: 'Substitution', 
+  technique: 'Technique',
+  presentation: 'Presentation'
+};
+
+const categoryColors = {
+  general: 'default',
+  variation: 'secondary',
+  substitution: 'outline',
+  technique: 'destructive',
+  presentation: 'default'
+} as const;
 
 export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const { user } = useAuth();
   const [comments, setComments] = useState<RecipeComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState('');
-  const [commentType, setCommentType] = useState<'comment' | 'tip'>('comment');
-  const [tipType, setTipType] = useState<'variation' | 'substitution' | 'technique'>('variation');
+  const [category, setCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
   const [editingComment, setEditingComment] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
+  const [editCategory, setEditCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchComments();
@@ -38,24 +56,63 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     setLoading(false);
   };
 
+  const uploadImage = async (file: File): Promise<string | null> => {
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `comment-photos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('recipes')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error('Error uploading image:', uploadError);
+        return null;
+      }
+
+      const { data } = supabase.storage
+        .from('recipes')
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmitComment = async () => {
     if (!newComment.trim() || !user) return;
+
+    let photoUrl = null;
+    if (selectedImage) {
+      photoUrl = await uploadImage(selectedImage);
+      if (!photoUrl) {
+        toast({
+          title: "Error",
+          description: "Failed to upload image",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
 
     const success = await addComment(
       recipeId,
       newComment.trim(),
-      commentType,
-      commentType === 'tip' ? tipType : undefined
+      category,
+      photoUrl
     );
 
     if (success) {
       setNewComment('');
-      setCommentType('comment');
-      setTipType('variation');
+      setCategory('general');
+      setSelectedImage(null);
       await fetchComments();
       toast({
         title: "Success",
-        description: `${commentType === 'tip' ? 'Tip' : 'Comment'} added successfully`,
+        description: "Comment added successfully",
       });
     }
   };
@@ -63,11 +120,10 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const handleEditComment = async (commentId: string) => {
     if (!editContent.trim()) return;
 
-    const comment = comments.find(c => c.id === commentId);
     const success = await updateComment(
       commentId,
       editContent.trim(),
-      comment?.comment_type === 'tip' ? comment.tip_type : undefined
+      editCategory
     );
 
     if (success) {
@@ -94,9 +150,12 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     }
   };
 
-  const allComments = comments;
-  const tips = comments.filter(c => c.comment_type === 'tip');
-  const regularComments = comments.filter(c => c.comment_type === 'comment');
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
 
   const renderComment = (comment: RecipeComment) => (
     <div key={comment.id} className="space-y-3 border-b border-gray-100 pb-4 last:border-b-0">
@@ -119,16 +178,28 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
             <span className="text-xs text-gray-500">
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
             </span>
-            {comment.comment_type === 'tip' && (
-              <Badge variant="secondary" className="text-xs">
-                <Lightbulb className="w-3 h-3 mr-1" />
-                {comment.tip_type}
+            {comment.category !== 'general' && (
+              <Badge variant={categoryColors[comment.category]} className="text-xs">
+                <Tag className="w-3 h-3 mr-1" />
+                {categoryLabels[comment.category]}
               </Badge>
             )}
           </div>
 
           {editingComment === comment.id ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
+              <Select value={editCategory} onValueChange={(value: any) => setEditCategory(value)}>
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="general">General</SelectItem>
+                  <SelectItem value="variation">Variation</SelectItem>
+                  <SelectItem value="substitution">Substitution</SelectItem>
+                  <SelectItem value="technique">Technique</SelectItem>
+                  <SelectItem value="presentation">Presentation</SelectItem>
+                </SelectContent>
+              </Select>
               <Textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
@@ -154,6 +225,13 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
           ) : (
             <>
               <p className="text-gray-700">{comment.content}</p>
+              {comment.photo_url && (
+                <img 
+                  src={comment.photo_url} 
+                  alt="Comment attachment" 
+                  className="rounded-lg max-w-sm max-h-64 object-cover"
+                />
+              )}
               {user?.id === comment.user_id && (
                 <div className="flex gap-2">
                   <Button
@@ -162,6 +240,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                     onClick={() => {
                       setEditingComment(comment.id);
                       setEditContent(comment.content);
+                      setEditCategory(comment.category);
                     }}
                   >
                     <Edit2 className="w-3 h-3 mr-1" />
@@ -188,7 +267,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Comments & Tips</CardTitle>
+          <CardTitle>Comments</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
@@ -205,96 +284,79 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageCircle className="w-5 h-5" />
-          Comments & Tips
+          Comments ({comments.length})
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Add Comment Form */}
         {user && (
           <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant={commentType === 'comment' ? 'default' : 'outline'}
-                onClick={() => setCommentType('comment')}
-              >
-                <MessageCircle className="w-4 h-4 mr-1" />
-                Comment
-              </Button>
-              <Button
-                size="sm"
-                variant={commentType === 'tip' ? 'default' : 'outline'}
-                onClick={() => setCommentType('tip')}
-              >
-                <Lightbulb className="w-4 h-4 mr-1" />
-                Add Tip
-              </Button>
-            </div>
-
-            {commentType === 'tip' && (
-              <Select value={tipType} onValueChange={(value: any) => setTipType(value)}>
+            <div className="space-y-3">
+              <Select value={category} onValueChange={(value: any) => setCategory(value)}>
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="general">General</SelectItem>
                   <SelectItem value="variation">Variation</SelectItem>
                   <SelectItem value="substitution">Substitution</SelectItem>
-                  <SelectItem value="technique">Technique Note</SelectItem>
+                  <SelectItem value="technique">Technique</SelectItem>
+                  <SelectItem value="presentation">Presentation</SelectItem>
                 </SelectContent>
               </Select>
-            )}
 
-            <Textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder={
-                commentType === 'tip'
-                  ? 'Share a helpful tip or variation...'
-                  : 'Leave a comment...'
-              }
-              className="min-h-[100px]"
-            />
-            <Button onClick={handleSubmitComment} disabled={!newComment.trim()}>
-              {commentType === 'tip' ? 'Add Tip' : 'Post Comment'}
+              <Textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Leave a comment..."
+                className="min-h-[100px]"
+              />
+
+              {/* Image Upload */}
+              <div className="flex items-center gap-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                  id="comment-image"
+                />
+                <label
+                  htmlFor="comment-image"
+                  className="cursor-pointer flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"
+                >
+                  <Camera className="w-4 h-4" />
+                  Add Photo
+                </label>
+                {selectedImage && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600">{selectedImage.name}</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedImage(null)}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleSubmitComment} 
+              disabled={!newComment.trim() || uploading}
+            >
+              {uploading ? 'Uploading...' : 'Post Comment'}
             </Button>
           </div>
         )}
 
         {/* Comments Display */}
         {comments.length > 0 ? (
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="all">All ({allComments.length})</TabsTrigger>
-              <TabsTrigger value="tips">Tips ({tips.length})</TabsTrigger>
-              <TabsTrigger value="comments">Comments ({regularComments.length})</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="all" className="mt-4">
-              <div className="space-y-4">
-                {allComments.map(renderComment)}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="tips" className="mt-4">
-              <div className="space-y-4">
-                {tips.length > 0 ? (
-                  tips.map(renderComment)
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No tips yet</p>
-                )}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="comments" className="mt-4">
-              <div className="space-y-4">
-                {regularComments.length > 0 ? (
-                  regularComments.map(renderComment)
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No comments yet</p>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
+          <div className="space-y-4">
+            {comments.map(renderComment)}
+          </div>
         ) : (
           <div className="text-center py-8">
             <MessageCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />

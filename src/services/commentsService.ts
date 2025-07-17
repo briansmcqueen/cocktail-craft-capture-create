@@ -5,8 +5,8 @@ export interface RecipeComment {
   recipe_id: string;
   user_id: string;
   content: string;
-  comment_type: 'comment' | 'tip';
-  tip_type?: 'variation' | 'substitution' | 'technique';
+  category: 'general' | 'variation' | 'substitution' | 'technique' | 'presentation';
+  photo_url?: string;
   created_at: string;
   updated_at: string;
   user?: {
@@ -22,7 +22,7 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
     .from('recipe_comments')
     .select(`
       *,
-      profiles!recipe_comments_user_id_fkey(
+      profiles(
         id,
         username,
         full_name,
@@ -42,8 +42,8 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
     recipe_id: item.recipe_id,
     user_id: item.user_id,
     content: item.content,
-    comment_type: item.comment_type as 'comment' | 'tip',
-    tip_type: item.tip_type as 'variation' | 'substitution' | 'technique' | undefined,
+    category: item.category as 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
+    photo_url: item.photo_url,
     created_at: item.created_at,
     updated_at: item.updated_at,
     user: Array.isArray(item.profiles) ? item.profiles[0] : item.profiles
@@ -53,8 +53,8 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
 export async function addComment(
   recipeId: string, 
   content: string, 
-  commentType: 'comment' | 'tip' = 'comment',
-  tipType?: 'variation' | 'substitution' | 'technique'
+  category: 'general' | 'variation' | 'substitution' | 'technique' | 'presentation' = 'general',
+  photoUrl?: string
 ): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -69,8 +69,8 @@ export async function addComment(
       recipe_id: recipeId,
       user_id: user.id,
       content,
-      comment_type: commentType,
-      tip_type: tipType
+      category,
+      photo_url: photoUrl
     });
 
   if (error) {
@@ -84,7 +84,8 @@ export async function addComment(
 export async function updateComment(
   commentId: string,
   content: string,
-  tipType?: 'variation' | 'substitution' | 'technique'
+  category?: 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
+  photoUrl?: string
 ): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -97,7 +98,8 @@ export async function updateComment(
     .from('recipe_comments')
     .update({
       content,
-      tip_type: tipType,
+      category,
+      photo_url: photoUrl,
       updated_at: new Date().toISOString()
     })
     .eq('id', commentId)
