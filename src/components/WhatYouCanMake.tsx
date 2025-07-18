@@ -29,7 +29,7 @@ export default function WhatYouCanMake({
         
         <div className="bg-gradient-to-br from-accent/5 to-primary/5 rounded-2xl p-6 lg:p-8 border border-accent/20 text-center">
           <div className="max-w-md mx-auto">
-            <ChefHat className="h-12 w-12 mx-auto mb-4 text-primary/60" />
+            <ChefHat className="h-12 w-12 mx-auto mb-4 text-black" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               Build Your Bar to Get Started
             </h3>
@@ -38,7 +38,7 @@ export default function WhatYouCanMake({
             </p>
             <Button 
               onClick={onNavigateToMyBar}
-              className="bg-primary hover:bg-primary/90 text-white font-medium"
+              className="bg-black hover:bg-black/90 text-white font-medium"
             >
               <Plus className="h-4 w-4 mr-2" />
               Build My Bar
@@ -61,7 +61,7 @@ export default function WhatYouCanMake({
         
         <div className="bg-gradient-to-br from-accent/5 to-primary/5 rounded-2xl p-6 lg:p-8 border border-accent/20 text-center">
           <div className="max-w-md mx-auto">
-            <ChefHat className="h-12 w-12 mx-auto mb-4 text-primary/60" />
+            <ChefHat className="h-12 w-12 mx-auto mb-4 text-black" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               Add More Ingredients
             </h3>
@@ -70,7 +70,7 @@ export default function WhatYouCanMake({
             </p>
             <Button 
               onClick={onNavigateToMyBar}
-              className="bg-primary hover:bg-primary/90 text-white font-medium"
+              className="bg-black hover:bg-black/90 text-white font-medium"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Ingredients
