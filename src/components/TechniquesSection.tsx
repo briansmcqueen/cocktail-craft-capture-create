@@ -1,5 +1,11 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Article, articlesService } from "@/services/articlesService";
+import { articleFavoritesService } from "@/services/articleFavoritesService";
+import ArticleCard from "./ArticleCard";
+import ArticleModal from "./ArticleModal";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/hooks/use-toast";
 import {
   Carousel,
   CarouselContent,
@@ -8,87 +14,151 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const howToArticles = [
-  {
-    id: "simple-syrup",
-    title: "How to Make Simple Syrup",
-    description: "Master the foundation of countless cocktails with this essential technique",
-    image: "https://images.unsplash.com/photo-1544145428-7a4b7abd3d2e?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: "shaking-technique",
-    title: "Perfect Shaking Technique",
-    description: "Learn the proper form and timing for shaking cocktails like a pro",
-    image: "https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: "stirring-vs-shaking",
-    title: "When to Stir vs. Shake",
-    description: "Understanding the science behind mixing methods for optimal results",
-    image: "https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: "garnish-guide",
-    title: "Essential Garnish Guide",
-    description: "Elevate your cocktails with proper citrus twists, herbs, and more",
-    image: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: "ice-guide",
-    title: "The Art of Ice",
-    description: "Different ice types and when to use them for optimal dilution",
-    image: "https://images.unsplash.com/photo-1563227812-0ea4c22213d0?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: "glassware-guide",
-    title: "Essential Glassware",
-    description: "Choose the right glass to enhance your cocktail's presentation and taste",
-    image: "https://images.unsplash.com/photo-1509669803555-2c4b6ad1748c?auto=format&fit=crop&w=400&q=80",
-  },
-];
+type TechniquesSectionProps = {
+  onShowAuthModal?: () => void;
+};
 
-export default function TechniquesSection() {
+export default function TechniquesSection({ onShowAuthModal }: TechniquesSectionProps) {
+  const { user } = useAuth();
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [favoriteArticles, setFavoriteArticles] = useState<string[]>([]);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [showArticleModal, setShowArticleModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadArticles();
+    if (user) {
+      loadFavoriteArticles();
+    }
+  }, [user]);
+
+  const loadArticles = async () => {
+    try {
+      const publishedArticles = await articlesService.getPublishedArticles();
+      setArticles(publishedArticles);
+    } catch (error) {
+      console.error('Error loading articles:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadFavoriteArticles = async () => {
+    if (!user) return;
+    
+    try {
+      const favorites = await articleFavoritesService.getFavoriteArticles();
+      setFavoriteArticles(favorites);
+    } catch (error) {
+      console.error('Error loading favorite articles:', error);
+    }
+  };
+
+  const handleArticleClick = (article: Article) => {
+    setSelectedArticle(article);
+    setShowArticleModal(true);
+  };
+
+  const handleToggleFavorite = async (articleId: string) => {
+    if (!user) {
+      onShowAuthModal?.();
+      return;
+    }
+
+    try {
+      const isFavorite = await articleFavoritesService.toggleFavorite(articleId);
+      if (isFavorite) {
+        setFavoriteArticles(prev => [...prev, articleId]);
+      } else {
+        setFavoriteArticles(prev => prev.filter(id => id !== articleId));
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update favorite status.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleShareArticle = (article: Article) => {
+    if (navigator.share) {
+      navigator.share({
+        title: article.title,
+        text: article.excerpt,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link copied",
+        description: "Article link copied to clipboard.",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <section>
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">Essential Techniques</h2>
+        <p className="text-center text-muted-foreground">Loading articles...</p>
+      </section>
+    );
+  }
+
+  if (articles.length === 0) {
+    return (
+      <section>
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">Essential Techniques</h2>
+        <p className="text-center text-muted-foreground">No articles available yet.</p>
+      </section>
+    );
+  }
   return (
-    <section>
-      <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
-        Essential Techniques
-      </h2>
-      <Carousel
-        opts={{
-          align: "start",
-          loop: false,
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-2 md:-ml-4">
-          {howToArticles.map((article) => (
-            <CarouselItem key={article.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-              <article className="group cursor-pointer bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md h-80">
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                </div>
-                <div className="p-6 flex flex-col justify-between h-32">
-                  <h3 className="font-serif font-medium text-gray-900 mb-3 text-lg leading-tight line-clamp-2">
-                    {article.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-                    {article.description}
-                  </p>
-                </div>
-              </article>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <div className="flex justify-center items-center gap-4 mt-6">
-          <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50" />
-          <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50" />
-        </div>
-      </Carousel>
-    </section>
+    <>
+      <section>
+        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
+          Essential Techniques
+        </h2>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {articles.map((article) => (
+              <CarouselItem key={article.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <ArticleCard
+                  article={article}
+                  onArticleClick={handleArticleClick}
+                  isFavorite={favoriteArticles.includes(article.id)}
+                  onToggleFavorite={handleToggleFavorite}
+                  onShowAuthModal={onShowAuthModal}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50" />
+            <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50" />
+          </div>
+        </Carousel>
+      </section>
+
+      {/* Article Modal */}
+      <ArticleModal
+        article={selectedArticle}
+        isOpen={showArticleModal}
+        onClose={() => setShowArticleModal(false)}
+        isFavorite={selectedArticle ? favoriteArticles.includes(selectedArticle.id) : false}
+        onToggleFavorite={handleToggleFavorite}
+        onShare={handleShareArticle}
+        onShowAuthModal={onShowAuthModal}
+      />
+    </>
   );
 }

@@ -98,7 +98,7 @@ export default function Featured({
       )}
 
       {/* Techniques Section */}
-      <TechniquesSection />
+      <TechniquesSection onShowAuthModal={onShowAuthModal} />
     </div>
   );
 }

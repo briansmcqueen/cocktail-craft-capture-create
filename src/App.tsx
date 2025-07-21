@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { FavoritesProvider } from "@/hooks/useFavoritesRefactored";
 import Index from "./pages/Index";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./components/UserProfile";
 
@@ -22,6 +23,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
