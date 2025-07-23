@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Article, articlesService } from "@/services/articlesService";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import TagBadge from "@/components/ui/tag";
 
 type ArticleFormProps = {
   isOpen: boolean;
@@ -88,9 +89,15 @@ export default function ArticleForm({
           description: "Your article has been updated successfully.",
         });
       } else {
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          throw new Error("User must be logged in to create articles");
+        }
+        
         savedArticle = await articlesService.createArticle({
           ...articleData,
-          author_id: "" // This will be set by the database
+          author_id: user.id
         });
         toast({
           title: "Article created",
@@ -234,16 +241,14 @@ export default function ArticleForm({
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="gap-1">
+                  <TagBadge
+                    key={tag}
+                    removable
+                    onClick={() => handleRemoveTag(tag)}
+                    className="bg-blue-100 text-blue-800 border border-blue-200 text-xs"
+                  >
                     {tag}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(tag)}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X size={12} />
-                    </button>
-                  </Badge>
+                  </TagBadge>
                 ))}
               </div>
             )}
