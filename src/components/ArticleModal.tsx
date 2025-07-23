@@ -9,6 +9,7 @@ import { Article } from "@/services/articlesService";
 import { ArticleComment, articleCommentsService } from "@/services/articleCommentsService";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
+import TagBadge from "@/components/ui/tag";
 
 type ArticleModalProps = {
   article: Article | null;
@@ -195,9 +196,9 @@ export default function ArticleModal({
             {article.tags && article.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary">
+                  <TagBadge key={tag} className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">
                     {tag}
-                  </Badge>
+                  </TagBadge>
                 ))}
               </div>
             )}
