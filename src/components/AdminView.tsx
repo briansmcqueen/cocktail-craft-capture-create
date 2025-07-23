@@ -47,23 +47,34 @@ export default function AdminView() {
   const loadArticles = async () => {
     try {
       // Load all articles (published and unpublished) for admin
-      const { data, error } = await supabase
+      const { data: articleData, error } = await supabase
         .from('articles')
-        .select(`
-          *,
-          profiles!inner(
-            full_name,
-            avatar_url
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       
-      const articlesWithAuthor = data?.map(article => ({
+      if (!articleData || articleData.length === 0) {
+        setArticles([]);
+        return;
+      }
+
+      // Get unique author IDs
+      const authorIds = [...new Set(articleData.map(article => article.author_id))];
+      
+      // Fetch authors
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url')
+        .in('id', authorIds);
+
+      if (profilesError) throw profilesError;
+
+      // Map articles with author data
+      const articlesWithAuthor = articleData.map(article => ({
         ...article,
-        author: article.profiles
-      })) || [];
+        author: profilesData?.find(profile => profile.id === article.author_id) || null
+      }));
       
       setArticles(articlesWithAuthor);
     } catch (error) {
