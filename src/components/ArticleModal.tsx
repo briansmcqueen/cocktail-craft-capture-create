@@ -226,7 +226,7 @@ export default function ArticleModal({
                   href={article.source_url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-foreground underline"
                 >
                   {article.source_name || article.source_url}
                 </a>
