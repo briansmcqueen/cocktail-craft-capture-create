@@ -51,7 +51,7 @@ export default function AdminView() {
         .from('articles')
         .select(`
           *,
-          profiles!articles_author_id_fkey (
+          profiles!inner(
             full_name,
             avatar_url
           )
