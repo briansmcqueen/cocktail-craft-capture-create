@@ -61,7 +61,7 @@ export default function ArticleCard({
             </h2>
             
             {article.excerpt && (
-              <div className="text-sm text-muted-foreground mb-2 line-clamp-2" title={article.excerpt}>
+              <div className="text-sm text-muted-foreground mb-2 line-clamp-4" title={article.excerpt}>
                 {article.excerpt}
               </div>
             )}
@@ -76,27 +76,6 @@ export default function ArticleCard({
                 <TagBadge className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">
                   +{article.tags.length - 3}
                 </TagBadge>
-              )}
-            </div>
-
-            <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-              <div className="flex items-center gap-1">
-                <User className="h-3 w-3" />
-                <span>{article.author?.full_name || 'Unknown Author'}</span>
-              </div>
-              
-              {article.published_at && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  <span>{formatDate(article.published_at)}</span>
-                </div>
-              )}
-
-              {article.source_name && (
-                <div className="flex items-center gap-1">
-                  <ExternalLink className="h-3 w-3" />
-                  <span>{article.source_name}</span>
-                </div>
               )}
             </div>
           </div>
