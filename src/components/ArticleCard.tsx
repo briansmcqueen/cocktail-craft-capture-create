@@ -39,10 +39,11 @@ export default function ArticleCard({
 
   return (
     <div className="relative group">
-      <div
-        className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-200 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-105 sm:active:scale-100 w-full min-w-0 border"
-        onClick={() => onArticleClick(article)}
-      >
+      <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
+        <div
+          className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-200 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-105 sm:active:scale-100 w-full min-w-0"
+          onClick={() => onArticleClick(article)}
+        >
         {article.featured_image_url && (
           <div className="h-40 w-full overflow-hidden">
             <img 
@@ -83,26 +84,25 @@ export default function ArticleCard({
             {/* Additional actions could go here */}
           </div>
         </div>
+        </div>
       </div>
       
       {/* Favorite button */}
-      <div className="absolute top-2 right-2 z-10">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="p-2 rounded-full bg-white/70 backdrop-blur-sm hover:bg-white active:scale-95 transition-all duration-150"
+      <div className="absolute top-1 right-3">
+        <button
+          className="p-1 rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 touch-manipulation"
           onClick={handleToggleFavorite}
         >
           <Heart 
-            size={18} 
+            size={24} 
             className={`${
               isFavorite 
                 ? 'text-red-500 fill-red-500' 
-                : 'text-muted-foreground hover:text-red-500'
+                : 'text-white fill-black/20 stroke-2'
             } transition-colors duration-200`}
             strokeWidth={isFavorite ? 1 : 2}
           />
-        </Button>
+        </button>
       </div>
     </div>
   );
