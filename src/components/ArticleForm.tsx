@@ -31,7 +31,7 @@ export default function ArticleForm({
   const [featuredImageUrl, setFeaturedImageUrl] = useState(article?.featured_image_url || "");
   const [sourceUrl, setSourceUrl] = useState(article?.source_url || "");
   const [sourceName, setSourceName] = useState(article?.source_name || "");
-  const [isPublished, setIsPublished] = useState(article?.is_published || false);
+  
   const [tags, setTags] = useState<string[]>(article?.tags || []);
   const [newTag, setNewTag] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,8 +76,8 @@ export default function ArticleForm({
         featured_image_url: featuredImageUrl.trim() || undefined,
         source_url: sourceUrl.trim() || undefined,
         source_name: sourceName.trim() || undefined,
-        is_published: isPublished,
-        published_at: isPublished ? new Date().toISOString() : undefined,
+        is_published: true,
+        published_at: new Date().toISOString(),
         tags,
         slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
       };
@@ -127,7 +127,7 @@ export default function ArticleForm({
     setFeaturedImageUrl("");
     setSourceUrl("");
     setSourceName("");
-    setIsPublished(false);
+    
     setTags([]);
     setNewTag("");
   };
@@ -256,15 +256,6 @@ export default function ArticleForm({
             )}
           </div>
 
-          {/* Publish Toggle */}
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="publish"
-              checked={isPublished}
-              onCheckedChange={setIsPublished}
-            />
-            <Label htmlFor="publish">Publish immediately</Label>
-          </div>
 
           {/* Submit Buttons */}
           <div className="flex justify-end gap-3">
