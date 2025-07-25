@@ -10,6 +10,8 @@ import { ArticleComment, articleCommentsService } from "@/services/articleCommen
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import TagBadge from "@/components/ui/tag";
+import '@uiw/react-md-editor/markdown-editor.css';
+import MarkdownPreview from '@uiw/react-markdown-preview';
 
 type ArticleModalProps = {
   article: Article | null;
@@ -207,16 +209,12 @@ export default function ArticleModal({
 
         {/* Article Content */}
         <div className="space-y-6">
-          <div className="prose prose-gray max-w-none">
-            {article.content.split('\n').map((paragraph, index) => (
-              paragraph.trim() ? (
-                <p key={index} className="mb-4 text-card-foreground leading-relaxed">
-                  {paragraph}
-                </p>
-              ) : (
-                <br key={index} />
-              )
-            ))}
+          <div className="prose prose-gray max-w-none" data-color-mode="light">
+            <MarkdownPreview 
+              source={article.content} 
+              style={{ backgroundColor: 'transparent' }}
+              wrapperElement={{ "data-color-mode": "light" }}
+            />
           </div>
 
           {/* Source Link */}

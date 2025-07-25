@@ -10,6 +10,7 @@ import { Article, articlesService } from "@/services/articlesService";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import TagBadge from "@/components/ui/tag";
+import MDEditor from '@uiw/react-md-editor';
 
 type ArticleFormProps = {
   isOpen: boolean;
@@ -185,14 +186,15 @@ export default function ArticleForm({
           {/* Content */}
           <div className="space-y-2">
             <Label htmlFor="content">Content *</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Write your article content here..."
-              className="min-h-[300px]"
-              required
-            />
+            <div data-color-mode="light">
+              <MDEditor
+                value={content}
+                onChange={(val) => setContent(val || "")}
+                preview="edit"
+                height={400}
+                visibleDragbar={false}
+              />
+            </div>
           </div>
 
           {/* Source Information */}
