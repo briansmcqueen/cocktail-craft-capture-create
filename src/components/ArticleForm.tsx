@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import TagBadge from "@/components/ui/tag";
 import MDEditor from '@uiw/react-md-editor';
+import TurndownService from 'turndown';
 
 type ArticleFormProps = {
   isOpen: boolean;
@@ -35,6 +36,49 @@ export default function ArticleForm({
   const [tags, setTags] = useState<string[]>(article?.tags || []);
   const [newTag, setNewTag] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Initialize Turndown service for converting HTML to Markdown
+  const turndownService = new TurndownService({
+    headingStyle: 'atx',
+    hr: '---',
+    bulletListMarker: '-',
+    codeBlockStyle: 'fenced',
+    fence: '```'
+  });
+
+  // Handle paste events to convert rich text to markdown
+  const handlePaste = (event: ClipboardEvent) => {
+    const clipboardData = event.clipboardData;
+    if (!clipboardData) return;
+
+    const htmlData = clipboardData.getData('text/html');
+    const textData = clipboardData.getData('text/plain');
+
+    // If we have HTML data, convert it to markdown
+    if (htmlData && htmlData !== textData) {
+      event.preventDefault();
+      const markdown = turndownService.turndown(htmlData);
+      
+      // Get current cursor position and insert the markdown
+      const textarea = event.target as HTMLTextAreaElement;
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const currentContent = content;
+        const newContent = 
+          currentContent.substring(0, start) + 
+          markdown + 
+          currentContent.substring(end);
+        
+        setContent(newContent);
+        
+        // Set cursor position after the inserted text
+        setTimeout(() => {
+          textarea.selectionStart = textarea.selectionEnd = start + markdown.length;
+        }, 0);
+      }
+    }
+  };
 
   const handleAddTag = () => {
     const tag = newTag.trim();
@@ -193,6 +237,9 @@ export default function ArticleForm({
                 preview="edit"
                 height={400}
                 visibleDragbar={false}
+                textareaProps={{
+                  onPaste: handlePaste as any
+                }}
               />
             </div>
           </div>
