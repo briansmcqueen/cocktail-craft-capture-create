@@ -40,7 +40,7 @@ export default function ArticleCard({
   return (
     <div className="relative group">
       <div
-        className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-200 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-105 sm:active:scale-100 w-full min-w-0"
+        className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-200 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-105 sm:active:scale-100 w-full min-w-0 border"
         onClick={() => onArticleClick(article)}
       >
         {article.featured_image_url && (
