@@ -196,7 +196,7 @@ export default function CategorizedIngredientFilter({
               onClick={() => handleIngredientToggle(ingredient)}
               className={`capitalize ${
                 selectedIngredients.includes(ingredient)
-                  ? "bg-orange-600 hover:bg-orange-700 text-white"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground"
                   : "border-gray-300 text-gray-700 hover:bg-gray-50"
               }`}
             >
@@ -211,7 +211,7 @@ export default function CategorizedIngredientFilter({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <ChefHat className="text-orange-600" size={24} />
+        <ChefHat className="text-primary" size={24} />
         <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
           Find Cocktails by Ingredients
         </h2>

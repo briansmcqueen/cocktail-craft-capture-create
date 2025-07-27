@@ -202,7 +202,7 @@ export default function AuthenticatedApp({
         <div className="p-4 border-b">
           <button
             onClick={() => setViewMode('main')}
-            className="text-orange-600 hover:text-orange-700 font-medium"
+            className="text-primary hover:text-primary/80 font-medium"
           >
             ← Back to Barbook
           </button>

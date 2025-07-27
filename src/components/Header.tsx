@@ -44,7 +44,7 @@ export default function Header({
             onMyRecipesClick={onMyRecipesClick}
             onFavoritesClick={onFavoritesClick}
           />
-          <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">B</span>
           </div>
           <h1 className="text-2xl font-serif font-normal text-gray-900 tracking-wide">
@@ -71,7 +71,7 @@ export default function Header({
               </Button>
               <Button 
                 onClick={onSignInClick}
-                className="gap-2 bg-orange-600 hover:bg-orange-700 text-white"
+                className="gap-2"
               >
                 <LogIn className="h-4 w-4" />
                 Sign In

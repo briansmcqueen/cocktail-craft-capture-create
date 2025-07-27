@@ -74,7 +74,7 @@ export default function ProfileForm({
       <Button 
         onClick={onSave} 
         disabled={saving}
-        className="bg-orange-600 hover:bg-orange-700 text-white"
+        className=""
       >
         {saving ? 'Saving...' : 'Save Changes'}
       </Button>

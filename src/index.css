@@ -101,7 +101,7 @@
   * {
     @apply border-border;
     scrollbar-width: thin;
-    scrollbar-color: #dc2626 var(--background);
+    scrollbar-color: hsl(var(--primary)) var(--background);
   }
 
   html {
@@ -134,11 +134,11 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #dc2626;
+    background: hsl(var(--primary));
     border-radius: 4px;
   }
   ::selection {
-    background: rgba(220, 38, 38, 0.15);
+    background: hsl(var(--primary) / 0.15);
   }
 
   /* Focus styles for accessibility - Style guide colors */
@@ -204,7 +204,7 @@
 }
 
 .text-gradient-primary {
-  color: #dc2626;
+  color: hsl(var(--primary));
   font-weight: 500;
 }
 
@@ -291,7 +291,7 @@ input, select, textarea {
   font-weight: bold;
   text-align: center;
   line-height: 26px;
-  background-color: #dc2626;
+  background-color: hsl(var(--primary));
   border-radius: 50%;
   transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
   display: flex;
@@ -315,7 +315,7 @@ input, select, textarea {
 
 .custom-toggle .checkbox:checked + .knobs span {
   left: 51px;
-  background-color: #dc2626;
+  background-color: hsl(var(--primary));
 }
 
 .custom-toggle .checkbox:checked ~ .layer {

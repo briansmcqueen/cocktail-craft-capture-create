@@ -36,7 +36,7 @@ export default function RecipeGrid({
         {library !== "classics" && library !== "favorites" && (
           <Button 
             onClick={onShowForm} 
-            className="w-full sm:w-auto bg-orange-600 text-white hover:bg-orange-700"
+            className="w-full sm:w-auto"
           >
             Add Your First Recipe
           </Button>

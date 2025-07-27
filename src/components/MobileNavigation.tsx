@@ -62,10 +62,10 @@ export default function MobileNavigation({
         <div className="flex flex-col h-full">
           <div className="px-6 py-6 border-b">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">B</span>
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <ChefHat className="text-white" size={20} />
               </div>
-              <h1 className="text-xl font-serif font-bold text-orange-600 tracking-wide">BARBOOK</h1>
+              <h1 className="text-3xl font-medium text-primary tracking-tight">BARBOOK</h1>
             </div>
           </div>
           
@@ -76,7 +76,7 @@ export default function MobileNavigation({
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 rounded transition-all font-medium",
                   activeLibrary === item.id 
-                    ? "bg-orange-50 text-orange-700 border border-orange-200" 
+                    ? "bg-accent/20 text-primary border border-primary/20" 
                     : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                 )}
                 onClick={() => handleNavClick(item.id)}
@@ -89,7 +89,7 @@ export default function MobileNavigation({
 
           <div className="border-t p-6 space-y-4">
             <button
-              className="w-full bg-orange-600 text-white py-3 px-4 rounded flex items-center gap-2 justify-center hover:bg-orange-700 transition-all font-medium"
+              className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium"
               onClick={handleAddRecipe}
             >
               <Plus size={18} />
@@ -136,7 +136,7 @@ export default function MobileNavigation({
                     onSignInClick();
                     setOpen(false);
                   }}
-                  className="w-full gap-2 bg-orange-600 hover:bg-orange-700 text-white"
+                  className="w-full gap-2"
                   size="sm"
                 >
                   <LogIn className="h-4 w-4" />

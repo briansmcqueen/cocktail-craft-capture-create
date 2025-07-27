@@ -144,13 +144,13 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
             />
           </div>
 
-          <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
           </Button>
         </form>
 
         <div className="text-center">
-          <Button variant="link" onClick={switchMode} className="text-orange-600 hover:text-orange-700">
+          <Button variant="link" onClick={switchMode} className="text-primary hover:text-primary/80">
             {mode === 'signin' 
               ? "Don't have an account? Sign up" 
               : "Already have an account? Sign in"

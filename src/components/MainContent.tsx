@@ -139,7 +139,7 @@ export default function MainContent({
               </p>
               <Button 
                 onClick={() => setShowAuthModal(true)}
-                className="gap-2 bg-orange-600 hover:bg-orange-700 text-white"
+                className="gap-2"
               >
                 <UserIcon className="h-4 w-4" />
                 Sign In

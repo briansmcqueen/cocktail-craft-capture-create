@@ -80,7 +80,7 @@ export default function SearchFilters({
               value={ingredientQuery}
               onChange={e => setIngredientQuery(e.target.value)}
               placeholder="Search by ingredient, name, tags, and more..."
-              className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-orange-500"
+              className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-primary"
             />
             <Search className="absolute left-2.5 top-2.5 text-gray-400" size={16} />
           </div>
@@ -98,7 +98,7 @@ export default function SearchFilters({
                 className={`
                   relative text-xs px-3 py-0.5 rounded-md cursor-pointer transition-all duration-200 border
                   ${tagFilters.includes(tag)
-                    ? "bg-orange-600 text-white border-orange-600"
+                    ? "bg-primary text-primary-foreground border-primary"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                   }
                 `}

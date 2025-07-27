@@ -29,7 +29,7 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: Sideba
     <aside className="bg-white border-r border-gray-200 w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0">
       <div className="px-6 mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <h1 className="text-xl font-serif font-bold text-orange-600 tracking-wide">BARBOOK</h1>
+          <h1 className="text-3xl font-medium text-primary tracking-tight">BARBOOK</h1>
         </div>
       </div>
       <nav className="flex flex-col gap-1 grow">
@@ -39,7 +39,7 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: Sideba
             className={cn(
               "flex items-center gap-3 px-6 py-3 mx-3 rounded transition-all font-medium",
               active === item.id 
-                ? "bg-orange-50 text-orange-700 border border-orange-200" 
+                ? "bg-accent/20 text-primary border border-primary/20" 
                 : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
             )}
             onClick={() => handleNavClick(item.id)}
@@ -51,7 +51,7 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: Sideba
       </nav>
       <div className="mt-auto px-6">
         <button
-          className="w-full bg-orange-600 text-white py-3 px-4 rounded flex items-center gap-2 justify-center hover:bg-orange-700 transition-all font-medium"
+          className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium"
           onClick={onAdd}
         >
           <Plus size={18} /> <span>Add New Recipe</span>

@@ -105,7 +105,7 @@ export default function RecipeModal({
           </DialogTitle>
           {recipe.origin && (
             <div className="mt-2 text-left">
-              <TagBadge className="bg-orange-100 text-orange-800 border border-orange-200 text-xs">
+              <TagBadge className="bg-accent/20 text-primary border border-primary/20 text-xs">
                 {recipe.origin}
               </TagBadge>
             </div>

@@ -113,7 +113,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         </Button>
         <Button 
           type="submit" 
-          className="flex items-center gap-2 bg-orange-600 text-white hover:bg-orange-700"
+          className="flex items-center gap-2"
         >
           <Save size={16} /> Save Recipe
         </Button>
