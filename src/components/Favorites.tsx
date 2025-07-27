@@ -16,10 +16,10 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
 
   if (favoriteRecipes.length === 0) {
     return (
-      <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
-        <Heart className="mx-auto mb-4 text-gray-400" size={48} />
-        <h2 className="text-xl font-serif font-normal mb-2 text-gray-900">No favorites yet</h2>
-        <p className="mb-4 text-sm lg:text-base">
+      <div className="container mx-auto px-md py-xl text-center">
+        <Heart className="mx-auto mb-lg text-muted-foreground" size={48} />
+        <h2 className="text-3xl font-medium mb-md text-foreground">No favorites yet</h2>
+        <p className="text-muted-foreground text-base max-w-md mx-auto">
           Start favoriting recipes by clicking the heart icon on any cocktail you love!
         </p>
       </div>
@@ -27,15 +27,15 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <Heart className="text-red-600" size={24} />
-        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
+    <div className="container mx-auto px-md py-xl space-y-xl">
+      <div className="flex items-center gap-md">
+        <Heart className="text-heart-red" size={24} />
+        <h2 className="text-3xl font-medium text-foreground">
           Your Favorite Cocktails
         </h2>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
         {favoriteRecipes.map((recipe) => (
           <RecipeCardWithFavorite
             key={recipe.id}
