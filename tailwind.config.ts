@@ -25,13 +25,12 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				// Modern, trendy font stack
-				'sans': ['Inter', 'Poppins', 'system-ui', 'sans-serif'],
-				'display': ['Playfair Display', 'serif'],
-				'body': ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+				// Journalistic, clean font stack
+				'sans': ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', '"Fira Sans"', '"Droid Sans"', '"Helvetica Neue"', 'sans-serif'],
+				'body': ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'system-ui', 'sans-serif'],
 			},
 			colors: {
-				// Clean black and white theme
+				// Style guide color palette
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -43,42 +42,49 @@ export default {
 					foreground: 'hsl(var(--popover-foreground))',
 				},
 				primary: {
-					// White for primary elements
-					DEFAULT: '#FFFFFF',
-					foreground: '#000000',
+					// Deep Forest Green
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))',
+					dark: 'hsl(var(--primary-dark))',
 				},
 				secondary: {
-					// Dark gray for secondary elements
-					DEFAULT: '#1F1F1F',
-					foreground: '#FFFFFF',
+					// Emerald accent
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))',
 				},
 				accent: {
-					// Medium gray for accents
-					DEFAULT: '#404040',
-					foreground: '#FFFFFF',
+					// Fresh mint
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
 				},
 				muted: {
-					DEFAULT: '#2A2A2A',
-					foreground: '#A0A0A0',
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))',
 				},
 				destructive: {
-					DEFAULT: '#FF4444',
-					foreground: '#FFFFFF',
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))',
 				},
-				border: '#333333',
-				input: '#1A1A1A',
-				ring: '#FFFFFF',
-				// Dark sidebar colors
-				sidebar: {
-					DEFAULT: '#0A0A0A',
-					foreground: '#FFFFFF',
-					primary: '#FFFFFF',
-					'primary-foreground': '#000000',
-					accent: '#1F1F1F',
-					'accent-foreground': '#FFFFFF',
-					border: '#333333',
-					ring: '#FFFFFF',
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				// Semantic colors from style guide
+				'forest-green': {
+					DEFAULT: '#065F46',
+					dark: '#064E3B',
 				},
+				'emerald': '#10B981',
+				'fresh-mint': '#6EE7B7',
+				'heart-red': '#DC2626',
+				'error-red': '#EF4444',
+				'warning-amber': '#F59E0B',
+				// Neutral grays
+				'charcoal': '#1F2937',
+				'dark-gray': '#374151',
+				'medium-gray': '#6B7280',
+				'border-gray': '#E5E7EB',
+				'light-gray': '#F9FAFB',
+				'off-white': '#FEFDF8',
 			},
 			borderRadius: {
 				lg: "1rem",
@@ -86,8 +92,27 @@ export default {
 				sm: "0.5rem",
 			},
 			spacing: {
+				// Style guide spacing scale (4px base unit)
+				'xs': '4px',
+				'sm': '8px',
+				'md': '16px',
+				'lg': '24px',
+				'xl': '32px',
+				'2xl': '48px',
+				'3xl': '64px',
 				'18': '4.5rem',
 				'88': '22rem',
+			},
+			fontSize: {
+				// Style guide typography scale
+				'xs': '12px',
+				'sm': '14px',
+				'base': '16px',
+				'lg': '18px',
+				'xl': '20px',
+				'2xl': '24px',
+				'3xl': '28px',
+				'4xl': '32px',
 			},
 			keyframes: {
 				'accordion-down': {
