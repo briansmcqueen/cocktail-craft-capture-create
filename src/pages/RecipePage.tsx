@@ -82,42 +82,55 @@ export default function RecipePage() {
   const handleShare = async () => {
     const url = window.location.href;
     
-    if (navigator.share) {
-      try {
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: recipe.name,
           text: `Check out this ${recipe.name} recipe!`,
           url: url,
         });
-      } catch (error) {
-        console.log('Error sharing:', error);
-      }
-    } else {
-      try {
+      } else if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(url);
         alert('Recipe link copied to clipboard!');
-      } catch (error) {
-        console.log('Error copying to clipboard:', error);
-        // Fallback: show a prompt with the URL
-        prompt('Copy this link to share the recipe:', url);
+      } else {
+        // Fallback for non-secure contexts
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Recipe link copied to clipboard!');
       }
+    } catch (error) {
+      console.log('Error sharing:', error);
+      // Final fallback - show prompt
+      prompt('Copy this link to share the recipe:', url);
     }
   };
 
   const handleEdit = () => {
-    // This would need to be implemented based on your edit flow
-    console.log('Edit recipe:', recipe.id);
+    // Navigate to main app with editing state
+    navigate('/recipes/mine', { 
+      state: { 
+        editingRecipe: recipe,
+        showForm: true
+      } 
+    });
   };
 
   const handleRiff = () => {
-    // Navigate to recipe form with this recipe as base
-    navigate('/', { 
+    // Navigate to main app with remix state
+    const remixedRecipe = { 
+      ...recipe, 
+      id: undefined,
+      name: `${recipe.name} (Remix)`
+    };
+    
+    navigate('/recipes/mine', { 
       state: { 
-        editingRecipe: { 
-          ...recipe, 
-          name: `${recipe.name} (Remix)`,
-          id: undefined // Remove ID so it creates a new recipe
-        } 
+        editingRecipe: remixedRecipe,
+        showForm: true
       } 
     });
   };

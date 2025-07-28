@@ -59,6 +59,17 @@ export default function Index() {
     }
   }, [location.pathname, setLibrary]);
 
+  // Handle navigation state from other pages (like RecipePage)
+  useEffect(() => {
+    const state = location.state as any;
+    if (state?.editingRecipe && state?.showForm) {
+      setEditingRecipe(state.editingRecipe);
+      setShowForm(true);
+      // Clear the state to prevent re-triggering
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, setEditingRecipe, setShowForm]);
+
   const handleAuthenticatedAction = (action: () => void) => {
     if (!user) {
       setShowAuthModal(true);
