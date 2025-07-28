@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { Save } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -70,19 +70,30 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   }
 
   return (
-    <form
-      className={cn(
-        "w-full max-w-2xl p-6 rounded-organic-lg shadow-lg border border-border space-y-4"
-      )}
-      style={{ backgroundColor: '#202938' }}
-      onSubmit={handleSubmit}
-      autoComplete="off"
-    >
-      <div className="mb-4">
-        <h2 className="text-2xl font-medium text-pure-white tracking-wide mb-2">
-          {initial?.id ? 'Edit Recipe' : 'Create New Recipe'}
-        </h2>
-      </div>
+    <div>
+      {/* Back button */}
+      <button
+        onClick={onCancel}
+        className="flex items-center gap-2 text-light-text hover:text-pure-white mb-6 transition-colors"
+        type="button"
+      >
+        <ArrowLeft size={20} />
+        Back
+      </button>
+
+      <form
+        className={cn(
+          "w-full max-w-2xl p-6 rounded-organic-lg shadow-lg border border-border space-y-4"
+        )}
+        style={{ backgroundColor: '#202938' }}
+        onSubmit={handleSubmit}
+        autoComplete="off"
+      >
+        <div className="mb-4">
+          <h2 className="text-2xl font-medium text-pure-white tracking-wide mb-2">
+            {initial?.id ? 'Edit Recipe' : 'Create New Recipe'}
+          </h2>
+        </div>
 
       <RecipeFormFields
         name={name}
@@ -119,6 +130,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           <Save size={16} /> Save Recipe
         </Button>
       </div>
-    </form>
+      </form>
+    </div>
   );
 }
