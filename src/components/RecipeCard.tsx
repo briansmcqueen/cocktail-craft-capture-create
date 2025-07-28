@@ -74,7 +74,29 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
           </div>
           <div className="text-xs text-card-foreground/80 mb-3 line-clamp-2" title={recipe.notes}>{recipe.notes}</div>
         </div>
-        <div className="h-5 flex items-center justify-start">
+        <div className="h-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {recipe.technique && (
+              <span className={`technique-badge technique-${recipe.technique} px-1.5 py-0.5 text-xs font-medium rounded-organic-sm uppercase tracking-wide`}>
+                {recipe.technique}
+              </span>
+            )}
+            {recipe.difficulty && (
+              <span className={`difficulty-${recipe.difficulty} px-1.5 py-0.5 text-xs font-medium rounded-organic-sm`}>
+                {recipe.difficulty}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {recipe.glassType && (
+              <span className="glass-indicator px-1.5 py-0.5 text-xs font-medium rounded-organic-sm">
+                {recipe.glassType}
+              </span>
+            )}
+            {recipe.abv && (
+              <span className="text-emerald text-xs font-medium">{recipe.abv}</span>
+            )}
+          </div>
           {/* {likeCount > 0 && (
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               <ThumbsUp size={12} />

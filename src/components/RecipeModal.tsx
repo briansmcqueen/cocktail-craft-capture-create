@@ -177,6 +177,63 @@ export default function RecipeModal({
               </div>
             )} */}
 
+            {/* Recipe Info Section */}
+            {(recipe.technique || recipe.glassType || recipe.garnish || recipe.difficulty || recipe.abv || recipe.prepTime) && (
+              <div className="mb-4 p-4 bg-medium-charcoal rounded-organic-md border border-light-charcoal">
+                <div className="font-semibold text-lg text-foreground mb-3 text-left">Recipe Details</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {recipe.technique && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-soft-gray text-sm">Technique:</span>
+                      <span className={`technique-badge technique-${recipe.technique} px-2 py-1 text-xs font-medium rounded-organic-sm uppercase tracking-wide`}>
+                        {recipe.technique}
+                      </span>
+                    </div>
+                  )}
+                  {recipe.glassType && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-soft-gray text-sm">Glass:</span>
+                      <span className="glass-indicator px-2 py-1 text-xs font-medium rounded-organic-sm">
+                        {recipe.glassType}
+                      </span>
+                    </div>
+                  )}
+                  {recipe.difficulty && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-soft-gray text-sm">Difficulty:</span>
+                      <span className={`difficulty-${recipe.difficulty} px-2 py-1 text-xs font-medium rounded-organic-sm`}>
+                        {recipe.difficulty}
+                      </span>
+                    </div>
+                  )}
+                  {recipe.abv && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-soft-gray text-sm">ABV:</span>
+                      <span className="text-emerald text-sm font-medium">{recipe.abv}</span>
+                    </div>
+                  )}
+                  {recipe.prepTime && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-soft-gray text-sm">Prep Time:</span>
+                      <span className="text-light-text text-sm">{recipe.prepTime}</span>
+                    </div>
+                  )}
+                  {recipe.garnish && recipe.garnish.length > 0 && (
+                    <div className="flex items-start gap-2 sm:col-span-2">
+                      <span className="text-soft-gray text-sm">Garnish:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {recipe.garnish.map((garnish, index) => (
+                          <span key={index} className="text-light-text text-sm bg-light-charcoal px-2 py-1 rounded-organic-sm">
+                            {garnish}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Ratings Section */}
             <div className="mb-4 border-t pt-4">
               <RecipeRatingDisplay recipeId={recipe.id} />

@@ -1,6 +1,10 @@
 
 import { fixDuplicateIds, validateUniqueIds } from "@/utils/cocktailIdValidator";
 
+export type CocktailTechnique = 'shake' | 'stir' | 'build' | 'muddle' | 'blend';
+export type GlassType = 'coupe' | 'rocks' | 'collins' | 'martini' | 'hurricane' | 'flute' | 'nick-nora' | 'wine';
+export type Difficulty = 'easy' | 'medium' | 'hard';
+
 export type Cocktail = {
   id: string;
   name: string;
@@ -10,6 +14,12 @@ export type Cocktail = {
   notes?: string;
   origin?: string;
   tags?: string[];
+  technique?: CocktailTechnique;
+  glassType?: GlassType;
+  garnish?: string[];
+  difficulty?: Difficulty;
+  abv?: string;
+  prepTime?: string;
 };
 
 const rawCocktails: Cocktail[] = [
@@ -26,7 +36,13 @@ const rawCocktails: Cocktail[] = [
     steps: "Combine sherry, sweet vermouth, and orange bitters in a mixing glass with ice. Stir until well-chilled. Strain into a chilled coupe or cocktail glass. Express the oils from an orange peel over the drink and discard.",
     notes: "A brilliant vintage aperitivo from the late 19th century. It's an off-dry and aromatic cocktail that beautifully balances the mineral notes of fino sherry with rich vermouth and citrusy bitters.",
     origin: "USA",
-    tags: ["classic", "aperitivo", "sherry", "vermouth", "stirred", "19th-century"]
+    tags: ["classic", "aperitivo", "sherry", "vermouth", "stirred", "19th-century"],
+    technique: "stir",
+    glassType: "coupe",
+    garnish: ["orange peel"],
+    difficulty: "easy",
+    abv: "18%",
+    prepTime: "2 minutes"
   },
   {
     id: "2",
@@ -42,7 +58,13 @@ const rawCocktails: Cocktail[] = [
     steps: "Combine all ingredients in a mixing glass with ice. Stir until well-chilled. Strain into a chilled coupe glass and garnish with a brandied cherry.",
     notes: "A spirituous aperitivo-style cocktail from the early 20th century. It's a sophisticated after-dinner sipper that showcases the harmony between Scotch and two types of vermouth.",
     origin: "UK",
-    tags: ["classic", "scotch", "vermouth", "stirred", "spirit-forward"]
+    tags: ["classic", "scotch", "vermouth", "stirred", "spirit-forward"],
+    technique: "stir",
+    glassType: "coupe",
+    garnish: ["brandied cherry"],
+    difficulty: "medium",
+    abv: "25%",
+    prepTime: "2 minutes"
   },
   {
     id: "3",
@@ -239,7 +261,13 @@ const rawCocktails: Cocktail[] = [
     steps: "Add all ingredients into a mixing glass with ice and stir until well-chilled. Strain into a rocks glass over fresh ice. Garnish with an orange twist.",
     notes: "A variation on the Negroni that substitutes whiskey for gin, creating a richer, warmer profile. It was created in Paris in the 1920s for American writer Erskine Gwynne.",
     origin: "France",
-    tags: ["bittersweet", "boozy", "classic", "whiskey"]
+    tags: ["bittersweet", "boozy", "classic", "whiskey"],
+    technique: "stir",
+    glassType: "rocks",
+    garnish: ["orange peel"],
+    difficulty: "easy",
+    abv: "28%",
+    prepTime: "2 minutes"
   },
   {
     id: "16",
@@ -348,7 +376,13 @@ const rawCocktails: Cocktail[] = [
     steps: "Shake rum, lime juice, and simple syrup with ice until well-chilled. Double-strain into a chilled coupe glass. Garnish with a lime twist.",
     notes: "A cornerstone of mixology, invented in the late 1800s in Daiquiri, Cuba. It is a simple and perfect balance of rum, lime, and sugar, and serves as a true test of a bartender's skill.",
     origin: "Cuba",
-    tags: ["sour", "classic", "refreshing", "cuban", "shaken", "rum"]
+    tags: ["sour", "classic", "refreshing", "cuban", "shaken", "rum"],
+    technique: "shake",
+    glassType: "coupe",
+    garnish: ["lime twist"],
+    difficulty: "easy",
+    abv: "20%",
+    prepTime: "2 minutes"
   },
   {
     id: "23",
