@@ -62,17 +62,18 @@ export default function RecipeFormFields({
   return (
     <>
       <div>
-        <label className="font-medium mb-1 block text-card-foreground">Recipe Name</label>
+        <label className="font-medium mb-1 block text-pure-white">Recipe Name</label>
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
+          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
           required
         />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-card-foreground">Image</label>
+        <label className="font-medium mb-1 block text-pure-white">Image</label>
         <div className="flex items-center gap-3">
           {image ? (
             <img
@@ -118,31 +119,33 @@ export default function RecipeFormFields({
       />
       
       <div>
-        <label className="font-medium mb-1 block text-card-foreground">
-          Tags <span className="text-xs text-muted-foreground">(keywords, separated)</span>
+        <label className="font-medium mb-1 block text-pure-white">
+          Tags <span className="text-xs text-light-text">(keywords, separated)</span>
         </label>
         <TagInput value={tags} onChange={setTags} />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-card-foreground">
-          Notes <span className="text-xs text-muted-foreground">(optional)</span>
+        <label className="font-medium mb-1 block text-pure-white">
+          Notes <span className="text-xs text-light-text">(optional)</span>
         </label>
         <Input
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Invented at Soho Brasserie, London, 1980s"
+          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
         />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-card-foreground">
-          Region / Origin <span className="text-xs text-muted-foreground">(optional)</span>
+        <label className="font-medium mb-1 block text-pure-white">
+          Region / Origin <span className="text-xs text-light-text">(optional)</span>
         </label>
         <Input
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="e.g. Italy"
+          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
         />
       </div>
     </>
