@@ -82,7 +82,10 @@ export default function RecipeFormFields({
               className="h-16 w-16 object-cover rounded border border-gray-200"
             />
           ) : (
-            <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center border border-gray-200">
+            <div 
+              className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center border border-gray-200 cursor-pointer hover:bg-gray-200 transition-colors"
+              onClick={() => inputRef.current?.click()}
+            >
               <Image size={24} className="text-gray-400" />
             </div>
           )}
