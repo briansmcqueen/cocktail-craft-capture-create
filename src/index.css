@@ -4,96 +4,79 @@
 
 @layer base {
   :root {
-    /* Style guide color palette - Light mode */
-    --background: 0 0% 100%; /* Pure white */
-    --foreground: 217 19% 22%; /* Charcoal */
+    /* Premium Bartending App - Dark Mode Default */
+    --background: 217 19% 11%; /* Rich Charcoal #1F2937 */
+    --foreground: 0 0% 100%; /* Pure White */
 
-    --card: 0 0% 100%; /* Pure white */
-    --card-foreground: 217 19% 22%; /* Charcoal */
+    --card: 217 15% 22%; /* Medium Charcoal #374151 */
+    --card-foreground: 212 10% 82%; /* Light Text #D1D5DB */
 
-    --popover: 0 0% 100%; /* Pure white */
-    --popover-foreground: 217 19% 22%; /* Charcoal */
+    --popover: 217 15% 22%; /* Medium Charcoal */
+    --popover-foreground: 212 10% 82%; /* Light Text */
 
     /* Primary: Deep Forest Green */
     --primary: 164 85% 20%; /* #065F46 */
     --primary-foreground: 0 0% 100%; /* White text on green */
     --primary-dark: 166 89% 17%; /* #064E3B - darker variation */
 
-    /* Secondary: Emerald accent */
-    --secondary: 160 84% 39%; /* #10B981 */
+    /* Secondary: Emerald Green */
+    --secondary: 160 84% 39%; /* #10B981 - Emerald Green */
     --secondary-foreground: 0 0% 100%;
 
-    /* Accent: Fresh mint */
-    --accent: 154 75% 67%; /* #6EE7B7 */
-    --accent-foreground: 217 19% 22%;
+    /* Accent: Fresh Mint */
+    --accent: 154 75% 67%; /* #6EE7B7 - Fresh Mint */
+    --accent-foreground: 217 19% 11%;
 
-    /* Muted: Light gray */
-    --muted: 220 14% 96%; /* Light gray #F9FAFB */
-    --muted-foreground: 220 9% 46%; /* Medium gray #6B7280 */
+    /* Muted: Light Charcoal */
+    --muted: 217 16% 30%; /* Light Charcoal #4B5563 */
+    --muted-foreground: 220 9% 46%; /* Soft Gray #6B7280 */
 
-    /* Destructive: Error red */
+    /* Destructive: Error Red */
     --destructive: 0 84% 60%; /* #EF4444 */
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
     /* UI Elements */
-    --border: 220 13% 91%; /* Border gray #E5E7EB */
-    --input: 0 0% 100%; /* White background */
-    --ring: 164 85% 20%; /* Primary green for focus rings */
+    --border: 217 16% 30%; /* Light Charcoal #4B5563 */
+    --input: 217 15% 22%; /* Medium Charcoal */
+    --ring: 160 84% 39%; /* Emerald Green for focus rings */
 
-    /* Style guide spacing and sizing */
-    --radius: 0.5rem; /* 8px default radius */
+    /* Bartending-specific colors */
+    --warning: 38 92% 50%; /* Golden Amber #F59E0B */
+    --warning-foreground: 0 0% 100%;
+    --copper: 20 91% 48%; /* Copper Glow #EA580C */
+    --copper-foreground: 0 0% 100%;
+
+    /* Organic border radius variables */
+    --radius: 0.5rem; /* Default radius */
+    --radius-organic-sm: 6px 12px 9px 15px;
+    --radius-organic-md: 12px 24px 18px 30px;
+    --radius-organic-lg: 16px 32px 24px 40px;
+    --radius-organic-xl: 24px 48px 36px 60px;
+
+    /* Animation timing functions */
+    --timing-pour: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --timing-shake: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --timing-stir: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Sidebar colors */
-    --sidebar-background: 60 9% 98%; /* Off-white #FEFDF8 */
-    --sidebar-foreground: 217 19% 22%; /* Charcoal */
+    --sidebar-background: 217 19% 11%; /* Rich Charcoal */
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 164 85% 20%; /* Deep Forest Green */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%; /* Light gray */
-    --sidebar-accent-foreground: 217 19% 22%;
-    --sidebar-border: 220 13% 91%; /* Border gray */
-    --sidebar-ring: 164 85% 20%; /* Primary green */
+    --sidebar-accent: 217 15% 22%; /* Medium Charcoal */
+    --sidebar-accent-foreground: 212 10% 82%;
+    --sidebar-border: 217 16% 30%; /* Light Charcoal */
+    --sidebar-ring: 160 84% 39%; /* Emerald Green */
   }
 
-  .dark {
-    /* Dark mode - maintain journalistic feel */
-    --background: 217 19% 6%; /* Very dark charcoal */
-    --foreground: 0 0% 98%; /* Off white */
-
-    --card: 217 19% 8%; /* Dark card background */
-    --card-foreground: 0 0% 98%;
-
-    --popover: 217 19% 8%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 154 75% 67%; /* Lighter green for dark mode */
-    --primary-foreground: 217 19% 6%;
-    --primary-dark: 160 84% 39%;
-
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 0 0% 98%;
-
-    --accent: 154 75% 67%;
-    --accent-foreground: 217 19% 6%;
-
-    --muted: 217 19% 12%;
-    --muted-foreground: 220 9% 64%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 217 19% 15%;
-    --input: 217 19% 12%;
-    --ring: 154 75% 67%;
-
-    /* Dark sidebar colors */
-    --sidebar-background: 217 19% 4%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 154 75% 67%;
-    --sidebar-primary-foreground: 217 19% 6%;
-    --sidebar-accent: 217 19% 12%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 217 19% 15%;
-    --sidebar-ring: 154 75% 67%;
+  .light {
+    /* Light mode override for premium bartending - rarely used */
+    --background: 0 0% 100%;
+    --foreground: 217 19% 22%;
+    --card: 0 0% 100%;
+    --card-foreground: 217 19% 22%;
+    --border: 220 13% 91%;
+    --input: 0 0% 100%;
   }
 }
 
@@ -111,15 +94,15 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    /* Style guide: Off-white background */
-    background-color: #FEFDF8;
+    /* Premium Bartending: Dark background optimized for cocktail hour */
+    background-color: #1F2937; /* Rich Charcoal */
     min-height: 100vh;
-    /* Style guide: Journalistic font stack */
+    /* Premium cocktail app font stack optimized for ingredient readability */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    font-size: 16px; /* Body large */
+    font-size: 16px; /* Instruction text size */
     line-height: 1.6;
     letter-spacing: 0.01em;
-    color: #374151; /* Dark gray body text */
+    color: #D1D5DB; /* Light text for dark theme */
   }
 
   /* Improved touch targets for mobile */
@@ -141,10 +124,11 @@
     background: hsl(var(--primary) / 0.15);
   }
 
-  /* Focus styles for accessibility - Style guide colors */
+  /* Focus styles for accessibility - Premium bartending colors */
   *:focus-visible {
-    outline: 2px solid #065F46; /* Deep Forest Green */
+    outline: 2px solid #10B981; /* Emerald Green for high contrast on dark */
     outline-offset: 2px;
+    border-radius: 4px;
   }
 
   /* Clean dropdown styling */
@@ -157,9 +141,9 @@
     padding-right: 2.5rem;
   }
 
-  /* Revert to original background */
+  /* Premium bartending scrollable content */
   .scrollable-content {
-    background: #fafafa;
+    background: #1F2937; /* Rich Charcoal */
   }
 }
 
@@ -187,20 +171,37 @@
   }
 }
 
-/* Clean card styling */
+/* Premium Bartending Cards with Organic Shapes */
 .card-gradient {
-  @apply bg-white border border-gray-200 shadow-sm;
+  @apply bg-card border border-border shadow-lg;
+  border-radius: var(--radius-organic-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s var(--timing-pour);
+}
+
+.card-gradient:hover {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px) scale(1.02) rotate(0.5deg);
 }
 
 @media (min-width: 768px) {
   .card-gradient {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  .card-gradient:hover {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
   }
 }
 
-/* Utility classes */
+/* Organic Utility Classes */
+.organic-sm { border-radius: var(--radius-organic-sm); }
+.organic-md { border-radius: var(--radius-organic-md); }
+.organic-lg { border-radius: var(--radius-organic-lg); }
+.organic-xl { border-radius: var(--radius-organic-xl); }
+
+/* Premium Cocktail App Backgrounds */
 .bg-cocktail {
-  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  background: linear-gradient(135deg, #1F2937 0%, #374151 50%, #4B5563 100%);
 }
 
 .text-gradient-primary {
@@ -208,14 +209,76 @@
   font-weight: 500;
 }
 
+/* Premium Glass Shadow Effects */
 .shadow-glass {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 768px) {
   .shadow-glass {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
   }
+}
+
+/* Ingredient Availability States */
+.ingredient-available {
+  border: 2px solid hsl(var(--primary));
+  background: rgba(6, 95, 70, 0.1);
+}
+
+.ingredient-missing {
+  border: 2px solid hsl(var(--destructive));
+  background: rgba(239, 68, 68, 0.1);
+  opacity: 0.7;
+}
+
+.ingredient-low-stock {
+  border: 2px solid hsl(var(--warning));
+  background: rgba(245, 158, 11, 0.1);
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Organic Loading Animations */
+.shaker-loading {
+  width: 40px;
+  height: 40px;
+  background: hsl(var(--primary));
+  border-radius: var(--radius-organic-sm);
+  animation: shake 1s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(2deg); }
+  50% { transform: translateY(-2px) rotate(-1deg); }
+  75% { transform: translateY(-4px) rotate(1deg); }
+}
+
+.pour-loading {
+  width: 3px;
+  height: 40px;
+  background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--secondary)));
+  border-radius: 2px;
+  animation: pour 1.5s ease-in-out infinite;
+  transform-origin: top;
+}
+
+@keyframes pour {
+  0% { transform: scaleY(0); }
+  50% { transform: scaleY(1) skewX(2deg); }
+  100% { transform: scaleY(0); }
+}
+
+/* Organic Shake Animation for Errors */
+@keyframes organicShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3px) rotate(-1deg); }
+  75% { transform: translateX(3px) rotate(1deg); }
 }
 
 input, select, textarea {

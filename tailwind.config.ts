@@ -30,7 +30,7 @@ export default {
 				'body': ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'system-ui', 'sans-serif'],
 			},
 			colors: {
-				// Style guide color palette
+				// Premium Bartending App - Dark Theme Color Palette
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -42,18 +42,18 @@ export default {
 					foreground: 'hsl(var(--popover-foreground))',
 				},
 				primary: {
-					// Deep Forest Green
+					// Deep Forest Green - primary actions, availability indicators
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
 					dark: 'hsl(var(--primary-dark))',
 				},
 				secondary: {
-					// Emerald accent
+					// Emerald Green - success states, "Can Make" indicators
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))',
 				},
 				accent: {
-					// Fresh mint
+					// Fresh Mint - light accents, subtle highlights
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))',
 				},
@@ -68,28 +68,50 @@ export default {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				// Semantic colors from style guide
+				// Bartending-specific colors
+				warning: {
+					DEFAULT: 'hsl(var(--warning))', // Golden Amber
+					foreground: 'hsl(var(--warning-foreground))',
+				},
+				copper: {
+					DEFAULT: 'hsl(var(--copper))', // Copper Glow
+					foreground: 'hsl(var(--copper-foreground))',
+				},
+				// Direct color values for specific bartending use cases
 				'forest-green': {
 					DEFAULT: '#065F46',
 					dark: '#064E3B',
 				},
 				'emerald': '#10B981',
 				'fresh-mint': '#6EE7B7',
-				'heart-red': '#DC2626',
+				'golden-amber': '#F59E0B',
+				'copper-glow': '#EA580C',
+				'heart-red': '#EF4444',
 				'error-red': '#EF4444',
-				'warning-amber': '#F59E0B',
-				// Neutral grays
-				'charcoal': '#1F2937',
-				'dark-gray': '#374151',
-				'medium-gray': '#6B7280',
-				'border-gray': '#E5E7EB',
-				'light-gray': '#F9FAFB',
-				'off-white': '#FEFDF8',
+				// Dark mode neutral colors
+				'rich-charcoal': '#1F2937',
+				'medium-charcoal': '#374151',
+				'light-charcoal': '#4B5563',
+				'soft-gray': '#6B7280',
+				'light-text': '#D1D5DB',
+				'pure-white': '#FFFFFF',
+				// Spirit category colors (with opacity)
+				'gin-clear': 'rgba(6, 95, 70, 0.1)',
+				'whiskey-amber': 'rgba(245, 158, 11, 0.1)',
+				'rum-gold': 'rgba(217, 119, 6, 0.1)',
+				'vodka-ice': 'rgba(209, 213, 219, 0.1)',
 			},
 			borderRadius: {
 				lg: "1rem",
 				md: "0.75rem",
 				sm: "0.5rem",
+				// Organic border radius patterns for bartending app
+				'organic-sm': '6px 12px 9px 15px',
+				'organic-md': '12px 24px 18px 30px',
+				'organic-lg': '16px 32px 24px 40px',
+				'organic-xl': '24px 48px 36px 60px',
+				// Search and input organic shapes
+				'organic-pill': '25px 35px 30px 40px',
 			},
 			spacing: {
 				// Style guide spacing scale (4px base unit)
@@ -183,10 +205,20 @@ export default {
 					"fade-out 0.3s ease-out, scale-out 0.2s ease-out",
 			},
 			backgroundImage: {
-				// Black gradient backgrounds
-				"cocktail": "linear-gradient(135deg, #000000 0%, #1A1A1A 50%, #2A2A2A 100%)",
-				"cocktail-light": "linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)",
-				"cocktail-dark": "linear-gradient(135deg, #000000 0%, #0A0A0A 100%)",
+				// Premium bartending gradient backgrounds
+				"cocktail": "linear-gradient(135deg, #1F2937 0%, #374151 50%, #4B5563 100%)",
+				"cocktail-light": "linear-gradient(135deg, #374151 0%, #4B5563 100%)",
+				"cocktail-dark": "linear-gradient(135deg, #1F2937 0%, #111827 100%)",
+				// Bartending-specific gradients
+				"bar-shelf": "linear-gradient(90deg, transparent 0%, #065F46 20%, #10B981 50%, #065F46 80%, transparent 100%)",
+				"gin-gradient": "linear-gradient(135deg, rgba(6, 95, 70, 0.1), rgba(6, 95, 70, 0.05))",
+				"whiskey-gradient": "linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05))",
+			},
+			transitionTimingFunction: {
+				// Organic animation curves inspired by cocktail mixing
+				'pour': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+				'shake': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'stir': 'cubic-bezier(0.4, 0, 0.2, 1)',
 			}
 		}
 	},
