@@ -97,7 +97,7 @@ export default function RecipeFormFields({
             type="button"
             onClick={() => inputRef.current?.click()}
             variant="secondary"
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 text-pure-white hover:text-pure-white"
           >
             <Image size={18} /> Upload Photo
           </Button>
