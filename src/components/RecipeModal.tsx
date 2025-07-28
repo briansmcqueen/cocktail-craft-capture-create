@@ -114,11 +114,23 @@ export default function RecipeModal({
           )}
         </DialogHeader>
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 min-w-0">
+          <div className="flex flex-col gap-4">
             <img
-            src={recipe.image}
-            alt={recipe.name}
-            className="h-48 w-full md:w-56 object-cover rounded-organic-md border border-border flex-shrink-0 shadow-glass"
-          />
+              src={recipe.image}
+              alt={recipe.name}
+              className="h-48 w-full md:w-56 object-cover rounded-organic-md border border-border flex-shrink-0 shadow-glass"
+            />
+            
+            {/* Ratings Section */}
+            <div className="border-t pt-4">
+              <RecipeRatingDisplay recipeId={recipe.id} />
+            </div>
+
+            {/* Comments Section */}
+            <div className="border-t pt-4">
+              <RecipeComments recipeId={recipe.id} />
+            </div>
+          </div>
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             <div className="mb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
@@ -234,16 +246,7 @@ export default function RecipeModal({
               </div>
             )}
 
-            {/* Ratings Section */}
-            <div className="mb-4 border-t pt-4">
-              <RecipeRatingDisplay recipeId={recipe.id} />
-            </div>
           </div>
-        </div>
-
-        {/* Comments Section */}
-        <div className="mt-6 border-t pt-6">
-          <RecipeComments recipeId={recipe.id} />
         </div>
         <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3 flex-wrap">
           <div className="flex gap-2 flex-1 flex-wrap min-w-0">
