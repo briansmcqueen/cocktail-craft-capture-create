@@ -123,7 +123,7 @@ export default function RecipePage() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Back button */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => window.history.back()}
           className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors"
         >
           <ArrowLeft size={20} />
