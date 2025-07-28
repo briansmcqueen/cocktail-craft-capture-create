@@ -13,10 +13,9 @@ interface SearchResultsProps {
     all: SearchResult[];
   };
   onRecipeClick: (recipe: any) => void;
-  onToggleFavorite: (recipe: any) => void;
   onAddIngredient?: (ingredient: string) => void;
   onTagClick?: (tag: string) => void;
-  favoriteIds?: string[];
+  onShowAuthModal?: () => void;
   loading?: boolean;
   emptyStateTitle?: string;
   emptyStateDescription?: string;
@@ -29,10 +28,9 @@ type ViewMode = 'grid' | 'list';
 export default function SearchResults({
   results,
   onRecipeClick,
-  onToggleFavorite,
   onAddIngredient,
   onTagClick,
-  favoriteIds = [],
+  onShowAuthModal,
   loading = false,
   emptyStateTitle = "No cocktails found",
   emptyStateDescription = "Try adjusting your filters or search terms",
@@ -109,10 +107,9 @@ export default function SearchResults({
             key={result.cocktail.id}
             result={result}
             onRecipeClick={onRecipeClick}
-            onToggleFavorite={onToggleFavorite}
             onAddIngredient={onAddIngredient}
             onTagClick={onTagClick}
-            isFavorite={favoriteIds.includes(result.cocktail.id)}
+            onShowAuthModal={onShowAuthModal}
             className={viewMode === 'list' ? "max-w-none" : ""}
           />
         ))}

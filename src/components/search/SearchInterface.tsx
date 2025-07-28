@@ -13,10 +13,8 @@ interface SearchInterfaceProps {
   recipes: Cocktail[];
   availableIngredients?: string[];
   onRecipeClick: (recipe: Cocktail) => void;
-  onToggleFavorite: (recipe: Cocktail) => void;
   onAddIngredient?: (ingredient: string) => void;
   onTagClick?: (tag: string) => void;
-  favoriteIds?: string[];
   placeholder?: string;
   emptyStateTitle?: string;
   emptyStateDescription?: string;
@@ -28,10 +26,8 @@ export default function SearchInterface({
   recipes,
   availableIngredients = [],
   onRecipeClick,
-  onToggleFavorite,
   onAddIngredient,
   onTagClick,
-  favoriteIds = [],
   placeholder = "Search cocktails, ingredients, or flavors...",
   emptyStateTitle,
   emptyStateDescription,
@@ -207,10 +203,8 @@ export default function SearchInterface({
       <SearchResults
         results={groupedResults}
         onRecipeClick={onRecipeClick}
-        onToggleFavorite={onToggleFavorite}
         onAddIngredient={onAddIngredient}
         onTagClick={onTagClick}
-        favoriteIds={favoriteIds}
         emptyStateTitle={emptyStateTitle}
         emptyStateDescription={emptyStateDescription}
         hasActiveFilters={hasActiveFilters}

@@ -8,37 +8,37 @@ import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { recipeNameToSlug } from '@/pages/RecipePage';
+import { useFavorites } from '@/hooks/useFavoritesRefactored';
 
 interface RecipeResultCardProps {
   result: SearchResult;
   onRecipeClick: (recipe: any) => void;
-  onToggleFavorite: (recipe: any) => void;
   onAddIngredient?: (ingredient: string) => void;
   onTagClick?: (tag: string) => void;
-  isFavorite?: boolean;
+  onShowAuthModal?: () => void;
   className?: string;
 }
 
 export default function RecipeResultCard({
   result,
   onRecipeClick,
-  onToggleFavorite,
   onAddIngredient,
   onTagClick,
-  isFavorite = false,
+  onShowAuthModal,
   className
 }: RecipeResultCardProps) {
   const navigate = useNavigate();
   const { cocktail, canMake, missingIngredients, availabilityScore } = result;
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const handleAddMissingToBar = (ingredient: string, e: React.MouseEvent) => {
     e.stopPropagation();
     onAddIngredient?.(ingredient);
   };
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    onToggleFavorite(cocktail);
+    await toggleFavorite(cocktail.id, onShowAuthModal);
   };
 
   const handleTagClick = (tag: string, e: React.MouseEvent) => {
@@ -122,10 +122,10 @@ export default function RecipeResultCard({
               onClick={handleToggleFavorite}
               className={cn(
                 "h-8 w-8 p-0 rounded-organic-sm",
-                isFavorite && "text-red-500 hover:text-red-600"
+                isFavorite(cocktail.id) && "text-red-500 hover:text-red-600"
               )}
             >
-              <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
+              <Heart size={16} fill={isFavorite(cocktail.id) ? "currentColor" : "none"} />
             </Button>
           </div>
         </div>

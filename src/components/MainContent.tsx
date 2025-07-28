@@ -95,9 +95,7 @@ export default function MainContent({
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
               onRecipeClick={handleRecipeClick}
-              onToggleFavorite={() => {}}
               onTagClick={handleTagClick}
-              favoriteIds={favoriteRecipes.map(r => r.id)}
               placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "your recipes" : "all recipes"}...`}
             />
           </div>
