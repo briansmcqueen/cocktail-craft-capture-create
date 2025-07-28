@@ -80,7 +80,7 @@ export default function MobileNavigation({
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm",
                   activeLibrary === item.id 
-                    ? "bg-accent/20 text-primary border border-primary/20 shadow-sm transform scale-[1.02] rotate-[0.3deg]" 
+                    ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                     : "text-light-text hover:bg-muted/50 hover:text-pure-white hover:transform hover:scale-[1.01]"
                 )}
                 onClick={() => handleNavClick(item.id)}
