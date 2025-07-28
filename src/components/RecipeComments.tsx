@@ -319,7 +319,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
           <span className="text-lg font-semibold text-foreground">Comments</span>
           <button
             onClick={() => setShowComments(!showComments)}
-            className="text-primary hover:text-primary/80 underline focus:outline-none"
+            className="text-white hover:text-white/80 underline focus:outline-none font-medium"
           >
             {comments.length} comment{comments.length !== 1 ? 's' : ''}
           </button>
