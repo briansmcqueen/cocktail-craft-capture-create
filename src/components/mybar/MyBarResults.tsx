@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
-import RecipeCardWithFavorite from "@/components/RecipeCardWithFavorite";
+import UnifiedRecipeCard from "@/components/UnifiedRecipeCard";
 import WhatToBuyNext from "./WhatToBuyNext";
 
 interface RecommendedIngredient {
@@ -24,6 +24,7 @@ interface MyBarResultsProps {
   onToggleFavorite: (recipe: Cocktail) => void;
   onTagClick: (tag: string) => void;
   onAddIngredient: (ingredientId: string) => void;
+  onShowAuthModal?: () => void;
   user: any;
   loading?: boolean;
 }
@@ -38,6 +39,7 @@ export default function MyBarResults({
   onToggleFavorite,
   onTagClick,
   onAddIngredient,
+  onShowAuthModal,
   user,
   loading = false
 }: MyBarResultsProps) {
@@ -76,11 +78,12 @@ export default function MyBarResults({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(showAllRecipes ? recipesICanMake : recipesICanMake.slice(0, 6)).map((recipe) => (
-              <RecipeCardWithFavorite
+              <UnifiedRecipeCard
                 key={recipe.id}
                 recipe={recipe}
                 onRecipeClick={onRecipeClick}
                 onTagClick={onTagClick}
+                onShowAuthModal={onShowAuthModal}
               />
             ))}
           </div>

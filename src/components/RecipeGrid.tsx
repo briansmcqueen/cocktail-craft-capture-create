@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
+import UnifiedRecipeCard from "./UnifiedRecipeCard";
 import { Cocktail } from "@/data/classicCocktails";
 
 type RecipeGridProps = {
@@ -48,7 +48,7 @@ export default function RecipeGrid({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mx-4 sm:mx-0">
       {recipes.map((recipe) => (
-        <RecipeCardWithFavorite
+        <UnifiedRecipeCard
           key={`${recipe.id}-${forceUpdate}`}
           recipe={recipe}
           onRecipeClick={onRecipeClick}

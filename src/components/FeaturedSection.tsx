@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
+import UnifiedRecipeCard from "./UnifiedRecipeCard";
 import {
   Carousel,
   CarouselContent,
@@ -15,13 +15,15 @@ type FeaturedSectionProps = {
   recipes: Cocktail[];
   onRecipeClick: (recipe: Cocktail) => void;
   onShowAuthModal?: () => void;
+  onTagClick?: (tag: string) => void;
 };
 
 export default function FeaturedSection({ 
   title, 
   recipes, 
   onRecipeClick,
-  onShowAuthModal
+  onShowAuthModal,
+  onTagClick
 }: FeaturedSectionProps) {
   return (
     <section>
@@ -38,9 +40,10 @@ export default function FeaturedSection({
         <CarouselContent className="-ml-2 md:-ml-4">
           {recipes.map((recipe, index) => (
             <CarouselItem key={`${recipe.id}-${index}`} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-              <RecipeCardWithFavorite
+              <UnifiedRecipeCard
                 recipe={recipe}
                 onRecipeClick={onRecipeClick}
+                onTagClick={onTagClick}
                 onShowAuthModal={onShowAuthModal}
               />
             </CarouselItem>

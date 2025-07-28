@@ -2,20 +2,22 @@ import React from "react";
 import { ChefHat, Plus } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Button } from "@/components/ui/button";
-import RecipeCard from "./RecipeCard";
+import UnifiedRecipeCard from "./UnifiedRecipeCard";
 
 interface WhatYouCanMakeProps {
   recipes: Cocktail[];
   myBarIngredients: string[];
   onRecipeClick: (recipe: Cocktail) => void;
   onNavigateToMyBar: () => void;
+  onTagClick?: (tag: string) => void;
 }
 
 export default function WhatYouCanMake({ 
   recipes, 
   myBarIngredients,
   onRecipeClick,
-  onNavigateToMyBar 
+  onNavigateToMyBar,
+  onTagClick
 }: WhatYouCanMakeProps) {
   if (myBarIngredients.length === 0) {
     return (
@@ -110,10 +112,12 @@ export default function WhatYouCanMake({
             key={recipe.id}
             className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-primary/30 transition-all duration-300 bg-white shadow-sm hover:shadow-md group"
           >
-            <RecipeCard
+            <UnifiedRecipeCard
               recipe={recipe}
-              onSelect={() => onRecipeClick(recipe)}
-              editable={false}
+              onRecipeClick={() => {}}
+              onTagClick={onTagClick}
+              showFavorite={false}
+              showActions={false}
             />
             <div className="absolute top-2 right-2">
               <div className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full border border-green-200">
