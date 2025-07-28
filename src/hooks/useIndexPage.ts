@@ -115,10 +115,6 @@ export function useIndexPage() {
                  : library === "favorites" ? favoriteRecipes
                  : allRecipes;
 
-    console.log('getFilteredRecipes - library:', library);
-    console.log('getFilteredRecipes - userRecipes:', userRecipes);
-    console.log('getFilteredRecipes - selected recipes:', recipes);
-
     if (searchTerm) {
       recipes = recipes.filter(recipe =>
         recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

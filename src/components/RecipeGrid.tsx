@@ -49,7 +49,7 @@ export default function RecipeGrid({
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mx-4 sm:mx-0">
       {recipes.map((recipe) => (
         <UniversalRecipeCard
-          key={`${recipe.id}-${forceUpdate}`}
+          key={recipe.id}
           recipe={recipe}
           onShowAuthModal={onShowAuthModal}
         />
