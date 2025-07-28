@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, Edit2, Trash2, Camera, X, Tag } from 'lucide-react';
+import { MessageCircle, Edit2, Trash2, Camera, X, Tag, ThumbsUp, Reply, Share, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { getRecipeComments, addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
 import { toast } from '@/hooks/use-toast';
@@ -38,12 +38,13 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const [comments, setComments] = useState<RecipeComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState('');
-  const [category, setCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
   const [editingComment, setEditingComment] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
-  const [editCategory, setEditCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [sortBy, setSortBy] = useState<'newest' | 'helpful'>('newest');
+  const [showAddComment, setShowAddComment] = useState(false);
 
   useEffect(() => {
     fetchComments();
@@ -83,7 +84,16 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   };
 
   const handleSubmitComment = async () => {
-    if (!newComment.trim() || !user) return;
+    if (!newComment.trim() || !user) {
+      if (!user) {
+        toast({
+          title: "Login required",
+          description: "Please log in to add a comment",
+          variant: "destructive"
+        });
+      }
+      return;
+    }
 
     let photoUrl = null;
     if (selectedImage) {
@@ -101,14 +111,14 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     const success = await addComment(
       recipeId,
       newComment.trim(),
-      category,
+      'general', // Default to general since we removed category selector
       photoUrl
     );
 
     if (success) {
       setNewComment('');
-      setCategory('general');
       setSelectedImage(null);
+      setShowAddComment(false);
       await fetchComments();
       toast({
         title: "Success",
@@ -123,7 +133,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     const success = await updateComment(
       commentId,
       editContent.trim(),
-      editCategory
+      'general' // Default to general since we removed category selector
     );
 
     if (success) {
@@ -178,27 +188,10 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
             <span className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
             </span>
-            {comment.category !== 'general' && (
-              <span className="bg-accent/20 text-secondary border border-accent/30 text-xs px-2 py-1 rounded-organic-sm">
-                {categoryLabels[comment.category]}
-              </span>
-            )}
           </div>
 
           {editingComment === comment.id ? (
             <div className="space-y-3">
-              <Select value={editCategory} onValueChange={(value: any) => setEditCategory(value)}>
-                <SelectTrigger className="w-48 rounded-organic-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="rounded-organic-sm">
-                  <SelectItem value="general">General</SelectItem>
-                  <SelectItem value="variation">Variation</SelectItem>
-                  <SelectItem value="substitution">Substitution</SelectItem>
-                  <SelectItem value="technique">Technique</SelectItem>
-                  <SelectItem value="presentation">Presentation</SelectItem>
-                </SelectContent>
-              </Select>
               <Textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
@@ -232,32 +225,69 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   className="rounded-organic-md max-w-sm max-h-64 object-cover border border-border"
                 />
               )}
-              {user?.id === comment.user_id && (
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      setEditingComment(comment.id);
-                      setEditContent(comment.content);
-                      setEditCategory(comment.category);
-                    }}
-                    className="rounded-organic-sm"
-                  >
-                    <Edit2 className="w-3 h-3 mr-1" />
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleDeleteComment(comment.id)}
-                    className="rounded-organic-sm"
-                  >
-                    <Trash2 className="w-3 h-3 mr-1" />
-                    Delete
-                  </Button>
-                </div>
-              )}
+              
+              {/* Comment Actions */}
+              <div className="flex items-center gap-4 pt-2">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                >
+                  <ThumbsUp className="w-3 h-3 mr-1" />
+                  <span className="text-xs">Helpful</span>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                >
+                  <Reply className="w-3 h-3 mr-1" />
+                  <span className="text-xs">Reply</span>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                >
+                  <Share className="w-3 h-3 mr-1" />
+                  <span className="text-xs">Share</span>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                >
+                  <MessageSquare className="w-3 h-3 mr-1" />
+                  <span className="text-xs">View thread</span>
+                </Button>
+                
+                {/* Edit/Delete for comment owner */}
+                {user?.id === comment.user_id && (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditingComment(comment.id);
+                        setEditContent(comment.content);
+                      }}
+                      className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                    >
+                      <Edit2 className="w-3 h-3 mr-1" />
+                      <span className="text-xs">Edit</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                    >
+                      <Trash2 className="w-3 h-3 mr-1" />
+                      <span className="text-xs">Delete</span>
+                    </Button>
+                  </>
+                )}
+              </div>
             </>
           )}
         </div>
@@ -282,94 +312,136 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   }
 
   return (
-    <Card className="rounded-organic-md border-border">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <MessageCircle className="w-5 h-5" />
-          Comments ({comments.length})
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Add Comment Form */}
-        {user && (
-          <div className="space-y-4 p-4 bg-muted/50 rounded-organic-md border border-border">
-            <div className="space-y-3">
-              <Select value={category} onValueChange={(value: any) => setCategory(value)}>
-                <SelectTrigger className="w-48 rounded-organic-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="rounded-organic-sm">
-                  <SelectItem value="general">General</SelectItem>
-                  <SelectItem value="variation">Variation</SelectItem>
-                  <SelectItem value="substitution">Substitution</SelectItem>
-                  <SelectItem value="technique">Technique</SelectItem>
-                  <SelectItem value="presentation">Presentation</SelectItem>
-                </SelectContent>
-              </Select>
+    <div className="space-y-4">
+      {/* Comments Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-semibold text-foreground">Comments</span>
+          <button
+            onClick={() => setShowComments(!showComments)}
+            className="text-primary hover:text-primary/80 underline focus:outline-none"
+          >
+            {comments.length} comment{comments.length !== 1 ? 's' : ''}
+          </button>
+        </div>
+        
+        {showComments && (
+          <div className="flex items-center gap-3">
+            <Select value={sortBy} onValueChange={(value: 'newest' | 'helpful') => setSortBy(value)}>
+              <SelectTrigger className="w-32 h-8 text-xs border-border bg-background">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-background border-border z-50">
+                <SelectItem value="newest">Newest</SelectItem>
+                <SelectItem value="helpful">Most helpful</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={() => setShowAddComment(true)}
+              size="sm"
+              className="rounded-organic-sm"
+            >
+              Add Comment
+            </Button>
+          </div>
+        )}
+      </div>
 
-              <Textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Leave a comment..."
-                className="min-h-[100px] rounded-organic-sm bg-input text-foreground border-border"
-              />
+      {/* Comments Content */}
+      {showComments && (
+        <div className="space-y-4">
+          {/* Add Comment Form */}
+          {showAddComment && (
+            <div className="space-y-4 p-4 bg-muted/50 rounded-organic-md border border-border">
+              <div className="space-y-3">
+                <Textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder={user ? "Leave a comment..." : "Please log in to add a comment"}
+                  className="min-h-[100px] rounded-organic-sm bg-input text-foreground border-border"
+                  disabled={!user}
+                />
 
-              {selectedImage && (
+                {selectedImage && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">{selectedImage.name}</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedImage(null)}
+                      className="rounded-organic-sm"
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{selectedImage.name}</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setSelectedImage(null)}
+                  <Button 
+                    onClick={handleSubmitComment} 
+                    disabled={!newComment.trim() || uploading || !user}
                     className="rounded-organic-sm"
                   >
-                    <X className="w-3 h-3" />
+                    {uploading ? 'Uploading...' : 'Post Comment'}
                   </Button>
+                  
+                  {user && (
+                    <>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageSelect}
+                        className="hidden"
+                        id="comment-image"
+                      />
+                      <label
+                        htmlFor="comment-image"
+                        className="cursor-pointer flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <Camera className="w-4 h-4" />
+                        Add Photo
+                      </label>
+                    </>
+                  )}
                 </div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button 
-                onClick={handleSubmitComment} 
-                disabled={!newComment.trim() || uploading}
-                className="rounded-organic-sm"
-              >
-                {uploading ? 'Uploading...' : 'Post Comment'}
-              </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAddComment(false)}
+                  className="text-muted-foreground"
+                >
+                  Cancel
+                </Button>
+              </div>
               
-              {/* Image Upload */}
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageSelect}
-                className="hidden"
-                id="comment-image"
-              />
-              <label
-                htmlFor="comment-image"
-                className="cursor-pointer flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Camera className="w-4 h-4" />
-                Add Photo
-              </label>
+              <p className="text-xs text-muted-foreground italic">
+                Comments are moderated.
+              </p>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Comments Display */}
-        {comments.length > 0 ? (
-          <div className="space-y-4">
-            {comments.map(renderComment)}
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <MessageCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground">No comments yet</h3>
-            <p className="text-muted-foreground">Be the first to share your thoughts!</p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          {/* Comments Display */}
+          {loading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-4 bg-muted rounded-organic-sm w-3/4"></div>
+              <div className="h-4 bg-muted rounded-organic-sm w-1/2"></div>
+            </div>
+          ) : comments.length > 0 ? (
+            <div className="space-y-4">
+              {comments.map(renderComment)}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <MessageCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium text-foreground">No comments yet</h3>
+              <p className="text-muted-foreground">Be the first to share your thoughts!</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
