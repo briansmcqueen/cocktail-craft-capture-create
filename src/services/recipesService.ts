@@ -19,7 +19,8 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     return [];
   }
 
-  return data?.map(recipe => ({
+  console.log('Raw database data:', data);
+  const mappedRecipes = data?.map(recipe => ({
     id: recipe.id,
     name: recipe.name,
     image: recipe.image_url || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80',
@@ -28,6 +29,9 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     notes: recipe.description || undefined,
     tags: recipe.tags || []
   })) || [];
+  
+  console.log('Mapped recipes:', mappedRecipes);
+  return mappedRecipes;
 }
 
 export async function saveRecipeToDB(recipe: Cocktail): Promise<boolean> {
