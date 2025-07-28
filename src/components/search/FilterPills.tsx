@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronDown, X } from 'lucide-react';
 import { SearchFilters, SPIRIT_ICONS, BaseSpirit } from '@/types/search';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,8 @@ export default function FilterPills({
   availableIngredients,
   canMakeCount = 0
 }: FilterPillsProps) {
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
   const handleBaseSpiritsToggle = (spirit: BaseSpirit) => {
     const newSpirits = filters.baseSpirits.includes(spirit)
       ? filters.baseSpirits.filter(s => s !== spirit)
@@ -92,40 +95,40 @@ export default function FilterPills({
       </Button>
 
       {/* Base Spirits Dropdown */}
-      <div className="relative">
-        <Button
-          variant={filters.baseSpirits.length > 0 ? "default" : "outline"}
-          size="sm"
-          className={cn(
-            "rounded-organic-sm transition-all duration-200",
-            filters.baseSpirits.length > 0
-              ? "bg-primary text-primary-foreground shadow-md"
-              : "border-border text-light-text hover:bg-card/50"
-          )}
-        >
-          <span className="flex items-center gap-2">
-            Base Spirit
-            {filters.baseSpirits.length > 0 && (
-              <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                {filters.baseSpirits.length}
-              </Badge>
+      <Popover open={openDropdown === 'spirits'} onOpenChange={(open) => setOpenDropdown(open ? 'spirits' : null)}>
+        <PopoverTrigger asChild>
+          <Button
+            variant={filters.baseSpirits.length > 0 ? "default" : "outline"}
+            size="sm"
+            className={cn(
+              "rounded-organic-sm transition-all duration-200",
+              filters.baseSpirits.length > 0
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "border-border text-light-text hover:bg-card/50"
             )}
-            <ChevronDown size={14} />
-            {filters.baseSpirits.length > 0 && (
-              <X 
-                size={14} 
-                className="ml-1 cursor-pointer hover:text-destructive" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  clearFilter('baseSpirits');
-                }}
-              />
-            )}
-          </span>
-        </Button>
-        
-        {/* Base Spirits Grid - would show on hover/click */}
-        <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-card border border-border rounded-lg p-3 shadow-lg z-10 min-w-[280px]">
+          >
+            <span className="flex items-center gap-2">
+              Base Spirit
+              {filters.baseSpirits.length > 0 && (
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
+                  {filters.baseSpirits.length}
+                </Badge>
+              )}
+              <ChevronDown size={14} />
+              {filters.baseSpirits.length > 0 && (
+                <X 
+                  size={14} 
+                  className="ml-1 cursor-pointer hover:text-destructive" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearFilter('baseSpirits');
+                  }}
+                />
+              )}
+            </span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80 p-3 bg-card border-border">
           <div className="grid grid-cols-2 gap-2">
             {Object.entries(SPIRIT_ICONS).map(([spirit, icon]) => (
               <Button
@@ -140,72 +143,126 @@ export default function FilterPills({
               </Button>
             ))}
           </div>
-        </div>
-      </div>
+        </PopoverContent>
+      </Popover>
 
       {/* Difficulty Filter */}
-      <Button
-        variant={filters.difficulty !== 'any' ? "default" : "outline"}
-        size="sm"
-        className={cn(
-          "rounded-organic-sm transition-all duration-200",
-          filters.difficulty !== 'any'
-            ? "bg-primary text-primary-foreground shadow-md"
-            : "border-border text-light-text hover:bg-card/50"
-        )}
-      >
-        <span className="flex items-center gap-2">
-          Difficulty
-          {filters.difficulty !== 'any' && (
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize">
-              {filters.difficulty}
-            </Badge>
-          )}
-          <ChevronDown size={14} />
-          {filters.difficulty !== 'any' && (
-            <X 
-              size={14} 
-              className="ml-1 cursor-pointer hover:text-destructive" 
-              onClick={(e) => {
-                e.stopPropagation();
-                clearFilter('difficulty');
-              }}
-            />
-          )}
-        </span>
-      </Button>
+      <Popover open={openDropdown === 'difficulty'} onOpenChange={(open) => setOpenDropdown(open ? 'difficulty' : null)}>
+        <PopoverTrigger asChild>
+          <Button
+            variant={filters.difficulty !== 'any' ? "default" : "outline"}
+            size="sm"
+            className={cn(
+              "rounded-organic-sm transition-all duration-200",
+              filters.difficulty !== 'any'
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "border-border text-light-text hover:bg-card/50"
+            )}
+          >
+            <span className="flex items-center gap-2">
+              Difficulty
+              {filters.difficulty !== 'any' && (
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize">
+                  {filters.difficulty}
+                </Badge>
+              )}
+              <ChevronDown size={14} />
+              {filters.difficulty !== 'any' && (
+                <X 
+                  size={14} 
+                  className="ml-1 cursor-pointer hover:text-destructive" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearFilter('difficulty');
+                  }}
+                />
+              )}
+            </span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-48 p-3 bg-card border-border">
+          <div className="space-y-2">
+            <Button
+              variant={filters.difficulty === 'any' ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleDifficultyChange('any')}
+              className="w-full justify-start"
+            >
+              Any Difficulty
+            </Button>
+            {(['easy', 'medium', 'hard'] as const).map((difficulty) => (
+              <Button
+                key={difficulty}
+                variant={filters.difficulty === difficulty ? "default" : "outline"}
+                size="sm"
+                onClick={() => handleDifficultyChange(difficulty)}
+                className="w-full justify-start capitalize"
+              >
+                {difficulty}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
 
       {/* Glass Type Filter */}
-      <Button
-        variant={filters.glassType !== 'any' ? "default" : "outline"}
-        size="sm"
-        className={cn(
-          "rounded-organic-sm transition-all duration-200",
-          filters.glassType !== 'any'
-            ? "bg-primary text-primary-foreground shadow-md"
-            : "border-border text-light-text hover:bg-card/50"
-        )}
-      >
-        <span className="flex items-center gap-2">
-          Glass Type
-          {filters.glassType !== 'any' && (
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize">
-              {filters.glassType}
-            </Badge>
-          )}
-          <ChevronDown size={14} />
-          {filters.glassType !== 'any' && (
-            <X 
-              size={14} 
-              className="ml-1 cursor-pointer hover:text-destructive" 
-              onClick={(e) => {
-                e.stopPropagation();
-                clearFilter('glassType');
-              }}
-            />
-          )}
-        </span>
-      </Button>
+      <Popover open={openDropdown === 'glass'} onOpenChange={(open) => setOpenDropdown(open ? 'glass' : null)}>
+        <PopoverTrigger asChild>
+          <Button
+            variant={filters.glassType !== 'any' ? "default" : "outline"}
+            size="sm"
+            className={cn(
+              "rounded-organic-sm transition-all duration-200",
+              filters.glassType !== 'any'
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "border-border text-light-text hover:bg-card/50"
+            )}
+          >
+            <span className="flex items-center gap-2">
+              Glass Type
+              {filters.glassType !== 'any' && (
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize">
+                  {filters.glassType}
+                </Badge>
+              )}
+              <ChevronDown size={14} />
+              {filters.glassType !== 'any' && (
+                <X 
+                  size={14} 
+                  className="ml-1 cursor-pointer hover:text-destructive" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearFilter('glassType');
+                  }}
+                />
+              )}
+            </span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-48 p-3 bg-card border-border">
+          <div className="space-y-2">
+            <Button
+              variant={filters.glassType === 'any' ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleGlassTypeChange('any')}
+              className="w-full justify-start"
+            >
+              Any Glass
+            </Button>
+            {(['coupe', 'rocks', 'collins', 'martini'] as const).map((glassType) => (
+              <Button
+                key={glassType}
+                variant={filters.glassType === glassType ? "default" : "outline"}
+                size="sm"
+                onClick={() => handleGlassTypeChange(glassType)}
+                className="w-full justify-start capitalize"
+              >
+                {glassType}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
 
       {/* Advanced Filters Toggle */}
       <Button
