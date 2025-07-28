@@ -72,13 +72,14 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   return (
     <form
       className={cn(
-        "w-full max-w-2xl p-6 rounded-organic-lg shadow-lg bg-light-charcoal border border-border space-y-4"
+        "w-full max-w-2xl p-6 rounded-organic-lg shadow-lg border border-border space-y-4"
       )}
+      style={{ backgroundColor: '#202938' }}
       onSubmit={handleSubmit}
       autoComplete="off"
     >
       <div className="mb-4">
-        <h2 className="text-2xl font-serif font-normal text-pure-white tracking-wide mb-2">
+        <h2 className="text-2xl font-medium text-pure-white tracking-wide mb-2">
           {initial?.id ? 'Edit Recipe' : 'Create New Recipe'}
         </h2>
       </div>

@@ -87,8 +87,8 @@ export default function IngredientInput({
   return (
     <div className="relative">
       <div className="flex items-center justify-between mb-1">
-        <label className="font-medium text-gray-900">
-          Ingredients <span className="text-xs text-gray-500">(one per line)</span>
+        <label className="font-medium text-pure-white">
+          Ingredients <span className="text-xs text-light-text">(one per line)</span>
         </label>
         <Button
           type="button"

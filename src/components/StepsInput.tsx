@@ -49,7 +49,7 @@ export default function StepsInput({
   return (
     <div className="relative">
       <div className="flex items-center justify-between mb-1">
-        <label className="font-medium text-gray-900">Steps</label>
+        <label className="font-medium text-pure-white">Steps</label>
         <Button
           type="button"
           variant="secondary"

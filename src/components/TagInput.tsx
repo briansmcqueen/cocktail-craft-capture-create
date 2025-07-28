@@ -60,9 +60,15 @@ export default function TagInput({ value, onChange }: TagInputProps) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1"
+          className="flex-1 bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
         />
-        <Button type="button" onClick={handleAdd} size="sm" variant="secondary" className="rounded-organic-sm">
+        <Button 
+          type="button" 
+          onClick={handleAdd} 
+          size="sm" 
+          variant="secondary" 
+          className="rounded-organic-sm text-pure-white hover:text-pure-white"
+        >
           <Tag size={16} />
         </Button>
       </div>
