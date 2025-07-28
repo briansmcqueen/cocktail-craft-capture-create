@@ -81,7 +81,7 @@ export default function MobileNavigation({
                   "flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm",
                   activeLibrary === item.id 
                     ? "bg-accent/20 text-primary border border-primary/20 shadow-sm transform scale-[1.02] rotate-[0.3deg]" 
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground hover:transform hover:scale-[1.01]"
+                    : "text-light-text hover:bg-muted/50 hover:text-pure-white hover:transform hover:scale-[1.01]"
                 )}
                 onClick={() => handleNavClick(item.id)}
                 style={{ 
