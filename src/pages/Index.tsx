@@ -7,6 +7,7 @@ import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import ProfileSettings from "@/components/profile/ProfileSettings";
+import LearnPage from "./Learn";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -54,6 +55,8 @@ export default function Index() {
       setLibrary('favorites');
     } else if (path === '/recipes/mine') {
       setLibrary('mine');
+    } else if (path === '/learn') {
+      setLibrary('learn');
     }
   }, [location.pathname, setLibrary]);
 
@@ -125,6 +128,11 @@ export default function Index() {
         <div className="text-lg">Loading...</div>
       </div>
     );
+  }
+
+  // Show Learn page for /learn route
+  if (library === 'learn') {
+    return <LearnPage />;
   }
 
   if (showProfileSettings) {

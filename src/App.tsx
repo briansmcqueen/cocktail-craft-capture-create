@@ -28,6 +28,7 @@ const App = () => (
           <Route path="/mybar" element={<Index />} />
           <Route path="/favorites" element={<Index />} />
           <Route path="/recipes/mine" element={<Index />} />
+          <Route path="/learn" element={<Index />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/cocktail/:recipeName" element={<RecipePage />} />

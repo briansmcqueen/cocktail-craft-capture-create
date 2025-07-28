@@ -27,6 +27,7 @@ const nav = [
   { id: "ingredients", label: "My Bar", icon: ChefHat, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
   { id: "mine", label: "My Creations", icon: Edit, path: "/recipes/mine" },
+  { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
 ];
 
 export default function MobileNavigation({
