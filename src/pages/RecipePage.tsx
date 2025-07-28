@@ -14,7 +14,6 @@ import RecipeUserRating from "@/components/RecipeUserRating";
 import RecipeComments from "@/components/RecipeComments";
 import AuthModal from "@/components/auth/AuthModal";
 import { RecipeSidebar } from "@/components/RecipeSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 // Convert recipe name to URL slug
 const recipeNameToSlug = (name: string): string => {
@@ -185,18 +184,12 @@ export default function RecipePage() {
   };
 
   return (
-    <SidebarProvider defaultOpen={false}>
-      <div className="min-h-screen flex w-full bg-rich-charcoal">
-        <RecipeSidebar />
-        
-        {/* Main Content */}
-        <main className="flex-1">
-          {/* Sidebar Trigger Button - Always Visible */}
-          <div className="fixed top-4 left-4 z-50">
-            <SidebarTrigger className="bg-medium-charcoal/90 text-pure-white border border-border hover:bg-light-charcoal rounded-organic-sm" />
-          </div>
-          
-          <div className="max-w-6xl mx-auto px-4 py-6 pl-16">
+    <div className="min-h-screen flex w-full bg-rich-charcoal">
+      <RecipeSidebar />
+      
+      {/* Main Content */}
+      <main className="flex-1">          
+        <div className="max-w-6xl mx-auto px-4 py-6">
             {/* Back button */}
             <button
               onClick={handleGoBack}
@@ -423,14 +416,13 @@ export default function RecipePage() {
             </div>
           </div>
         </main>
-      </div>
-
+      
       <AuthModal 
         open={showAuthModal} 
         onOpenChange={setShowAuthModal}
         initialMode="signin"
       />
-    </SidebarProvider>
+    </div>
   );
 }
 
