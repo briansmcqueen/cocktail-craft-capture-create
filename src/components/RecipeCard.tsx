@@ -41,7 +41,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
   
   return (
     <div
-      className="bg-card rounded-organic-md shadow-glass hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-400 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100 w-full min-w-0 border border-border"
+      className="bg-card rounded-organic-md shadow-glass hover:shadow-xl cursor-pointer transition-all duration-400 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100 w-full min-w-0 border border-border"
       onClick={onSelect}
       style={{ transitionTimingFunction: 'var(--timing-pour)' }}
     >
