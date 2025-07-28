@@ -8,6 +8,7 @@ import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
 import RecipeGrid from "@/components/RecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
+import Learn from "@/components/Learn";
 import { Button } from "@/components/ui/button";
 import { User as UserIcon } from "lucide-react";
 
@@ -89,7 +90,7 @@ export default function MainContent({
           onCopyDialogOpen={() => {}}
         />
 
-        {library !== "featured" && library !== "ingredients" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
@@ -146,6 +147,10 @@ export default function MainContent({
               </Button>
             </div>
           )
+        ) : library === "learn" ? (
+          <Learn
+            onShowAuthModal={() => setShowAuthModal(true)}
+          />
         ) : (
           <RecipeGrid
             recipes={getFilteredRecipes()}

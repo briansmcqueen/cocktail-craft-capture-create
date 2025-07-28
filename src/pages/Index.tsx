@@ -7,7 +7,6 @@ import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import ProfileSettings from "@/components/profile/ProfileSettings";
-import LearnPage from "./Learn";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -128,11 +127,6 @@ export default function Index() {
         <div className="text-lg">Loading...</div>
       </div>
     );
-  }
-
-  // Show Learn page for /learn route
-  if (library === 'learn') {
-    return <LearnPage />;
   }
 
   if (showProfileSettings) {
