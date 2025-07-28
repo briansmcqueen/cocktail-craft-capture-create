@@ -1,7 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
+import { useLocation } from "react-router-dom";
 import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
@@ -9,6 +10,7 @@ import ProfileSettings from "@/components/profile/ProfileSettings";
 
 export default function Index() {
   const { user, loading } = useAuth();
+  const location = useLocation();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
   const [showProfileSettings, setShowProfileSettings] = useState(false);
@@ -38,6 +40,22 @@ export default function Index() {
     favoriteRecipes,
     getFilteredRecipes
   } = useIndexPage();
+
+  // Set library based on URL path
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/') {
+      setLibrary('featured');
+    } else if (path === '/recipes') {
+      setLibrary('all');
+    } else if (path === '/mybar') {
+      setLibrary('ingredients');
+    } else if (path === '/favorites') {
+      setLibrary('favorites');
+    } else if (path === '/recipes/mine') {
+      setLibrary('mine');
+    }
+  }, [location.pathname, setLibrary]);
 
   const handleAuthenticatedAction = (action: () => void) => {
     if (!user) {

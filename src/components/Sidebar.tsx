@@ -1,5 +1,6 @@
 
 import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 type SidebarProps = {
@@ -10,11 +11,11 @@ type SidebarProps = {
 };
 
 const nav = [
-  { id: "featured", label: "Featured", icon: Home },
-  { id: "all", label: "Recipes", icon: Book },
-  { id: "ingredients", label: "My Bar", icon: ChefHat },
-  { id: "favorites", label: "Favorites", icon: Star },
-  { id: "mine", label: "My Creations", icon: Edit },
+  { id: "featured", label: "Featured", icon: Home, path: "/" },
+  { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
+  { id: "ingredients", label: "My Bar", icon: ChefHat, path: "/mybar" },
+  { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
+  { id: "mine", label: "My Creations", icon: Edit, path: "/recipes/mine" },
 ];
 
 export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: SidebarProps) {
@@ -34,19 +35,24 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: Sideba
       </div>
       <nav className="flex flex-col gap-1 grow">
         {nav.map((item) => (
-          <button
+          <Link
             key={item.id}
+            to={item.path}
             className={cn(
               "flex items-center gap-3 px-6 py-3 mx-3 rounded-organic-sm transition-all font-medium duration-300",
               active === item.id 
                 ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                 : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:scale-[1.01] hover:rotate-[-0.3deg]"
             )}
-            onClick={() => handleNavClick(item.id)}
+            onClick={() => {
+              if (onCloseForm) {
+                onCloseForm();
+              }
+            }}
           >
             <item.icon size={20} />
             <span>{item.label}</span>
-          </button>
+          </Link>
         ))}
       </nav>
       <div className="mt-auto px-6">

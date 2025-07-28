@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -21,11 +22,11 @@ interface MobileNavigationProps {
 }
 
 const nav = [
-  { id: "featured", label: "Featured", icon: Home },
-  { id: "all", label: "Recipes", icon: Book },
-  { id: "ingredients", label: "My Bar", icon: ChefHat },
-  { id: "favorites", label: "Favorites", icon: Star },
-  { id: "mine", label: "My Creations", icon: Edit },
+  { id: "featured", label: "Featured", icon: Home, path: "/" },
+  { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
+  { id: "ingredients", label: "My Bar", icon: ChefHat, path: "/mybar" },
+  { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
+  { id: "mine", label: "My Creations", icon: Edit, path: "/recipes/mine" },
 ];
 
 export default function MobileNavigation({
@@ -75,15 +76,16 @@ export default function MobileNavigation({
           {/* Navigation with organic shapes */}
           <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
             {nav.map((item, index) => (
-              <button
+              <Link
                 key={item.id}
+                to={item.path}
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm",
                   activeLibrary === item.id 
                     ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                     : "text-light-text hover:bg-muted/50 hover:text-pure-white hover:transform hover:scale-[1.01]"
                 )}
-                onClick={() => handleNavClick(item.id)}
+                onClick={() => setOpen(false)}
                 style={{ 
                   transitionTimingFunction: 'var(--timing-stir)',
                   transitionDelay: `${index * 50}ms`
@@ -91,7 +93,7 @@ export default function MobileNavigation({
               >
                 <item.icon size={20} />
                 <span>{item.label}</span>
-              </button>
+              </Link>
             ))}
           </nav>
 

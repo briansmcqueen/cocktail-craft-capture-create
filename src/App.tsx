@@ -24,6 +24,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/recipes" element={<Index />} />
+          <Route path="/mybar" element={<Index />} />
+          <Route path="/favorites" element={<Index />} />
+          <Route path="/recipes/mine" element={<Index />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/cocktail/:recipeName" element={<RecipePage />} />
