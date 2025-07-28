@@ -10,7 +10,8 @@ import { getUserRecipes } from "@/utils/storage";
 import { useState, useEffect } from "react";
 import { getUserPreferences } from "@/services/userPreferencesService";
 import { useAuth } from "@/hooks/useAuth";
-import RecipeRatingDisplay from "./RecipeRatingDisplay";
+import RecipeOverallRating from "./RecipeOverallRating";
+import RecipeUserRating from "./RecipeUserRating";
 import RecipeComments from "./RecipeComments";
 
 type Props = {
@@ -121,9 +122,9 @@ export default function RecipeModal({
               className="h-48 w-full md:w-56 object-cover rounded-organic-md border border-border flex-shrink-0 shadow-glass"
             />
             
-            {/* Ratings Section */}
+            {/* Overall Ratings Section */}
             <div className="border-t pt-4">
-              <RecipeRatingDisplay recipeId={recipe.id} />
+              <RecipeOverallRating recipeId={recipe.id} />
             </div>
 
             {/* Comments Section */}
@@ -246,6 +247,8 @@ export default function RecipeModal({
               </div>
             )}
 
+            {/* User Rating Section */}
+            <RecipeUserRating recipeId={recipe.id} />
           </div>
         </div>
         <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3 flex-wrap">
