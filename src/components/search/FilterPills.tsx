@@ -78,11 +78,11 @@ export default function FilterPills({
       >
         <span className="flex items-center gap-2">
           ✓ Can Make Now
-          {canMakeCount > 0 && (
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-              {canMakeCount}
-            </Badge>
-          )}
+           {canMakeCount > 0 && (
+             <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs text-pure-white">
+               {canMakeCount}
+             </Badge>
+           )}
           {filters.canMakeOnly && (
             <X 
               size={14} 
@@ -111,11 +111,11 @@ export default function FilterPills({
           >
             <span className="flex items-center gap-2">
               Base Spirit
-              {filters.baseSpirits.length > 0 && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                  {filters.baseSpirits.length}
-                </Badge>
-              )}
+               {filters.baseSpirits.length > 0 && (
+                 <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs text-pure-white">
+                   {filters.baseSpirits.length}
+                 </Badge>
+               )}
               <ChevronDown size={14} />
               {filters.baseSpirits.length > 0 && (
                 <X 
@@ -164,9 +164,9 @@ export default function FilterPills({
             <span className="flex items-center gap-2">
               Difficulty
               {filters.difficulty !== 'any' && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize">
-                  {filters.difficulty}
-                </Badge>
+                 <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize text-pure-white">
+                   {filters.difficulty}
+                 </Badge>
               )}
               <ChevronDown size={14} />
               {filters.difficulty !== 'any' && (
@@ -223,9 +223,9 @@ export default function FilterPills({
             <span className="flex items-center gap-2">
               Glass Type
               {filters.glassType !== 'any' && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize">
-                  {filters.glassType}
-                </Badge>
+                 <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs capitalize text-pure-white">
+                   {filters.glassType}
+                 </Badge>
               )}
               <ChevronDown size={14} />
               {filters.glassType !== 'any' && (
@@ -281,9 +281,9 @@ export default function FilterPills({
         <span className="flex items-center gap-2">
           More Filters
           {activeFilterCount > 0 && (
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-              {activeFilterCount}
-            </Badge>
+             <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs text-pure-white">
+               {activeFilterCount}
+             </Badge>
           )}
           <ChevronDown 
             size={14} 
@@ -298,7 +298,7 @@ export default function FilterPills({
           variant="outline"
           size="sm"
           onClick={onClearAllFilters}
-          className="gap-2 text-muted-foreground hover:text-foreground border-border rounded-organic-sm"
+          className="gap-2 text-pure-white hover:text-pure-white border-border rounded-organic-sm"
         >
           <RotateCcw size={14} />
           Clear All

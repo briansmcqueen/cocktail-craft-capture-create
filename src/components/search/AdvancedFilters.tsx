@@ -92,7 +92,7 @@ export default function AdvancedFilters({
                 variant="outline"
                 size="sm"
                 onClick={onClearFilters}
-                className="h-8 gap-2 text-muted-foreground hover:text-foreground border-border rounded-organic-sm"
+                className="h-8 gap-2 text-pure-white hover:text-pure-white border-border rounded-organic-sm"
               >
                 <RotateCcw size={14} />
                 Clear All
