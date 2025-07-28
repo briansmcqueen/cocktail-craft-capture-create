@@ -5,25 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:transform active:translateY-0.5",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:transform active:translateY-0.5 active:scale-[0.98] rounded-organic-sm border border-primary/20 shadow-sm hover:shadow-md hover:transform hover:scale-[1.02] hover:rotate-[0.5deg]",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-organic-sm",
         outline:
-          "border border-border bg-card hover:bg-muted hover:text-foreground",
+          "border border-border bg-card hover:bg-muted hover:text-foreground rounded-organic-sm",
         secondary:
-          "bg-card text-foreground border border-border hover:bg-muted",
-        ghost: "hover:bg-muted hover:text-foreground",
+          "bg-muted text-muted-foreground border border-border hover:bg-muted/80 hover:text-foreground rounded-organic-sm",
+        ghost: "hover:bg-muted hover:text-foreground rounded-organic-sm",
         link: "text-primary underline-offset-4 hover:underline hover:text-primary/80",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        sm: "h-9 px-3 rounded-organic-sm",
+        lg: "h-11 px-8 rounded-organic-md",
+        icon: "h-10 w-10 rounded-organic-sm",
       },
     },
     defaultVariants: {

@@ -54,32 +54,40 @@ export default function MobileNavigation({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="lg:hidden hover:bg-gray-100">
-          <Menu className="h-6 w-6 text-gray-700" />
+        <Button variant="ghost" size="icon" className="lg:hidden hover:bg-muted rounded-organic-sm">
+          <Menu className="h-6 w-6 text-foreground" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-72 p-0">
-        <div className="flex flex-col h-full">
-          <div className="px-6 py-6 border-b">
+      <SheetContent side="left" className="w-72 p-0 rounded-r-organic-lg border-r-border">
+        <div className="flex flex-col h-full bg-card">
+          {/* Header with organic accent */}
+          <div className="px-6 py-6 border-b border-border relative">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <ChefHat className="text-white" size={20} />
+              <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
+                <ChefHat className="text-primary-foreground" size={20} />
               </div>
               <h1 className="text-3xl font-medium text-primary tracking-tight">BARBOOK</h1>
             </div>
+            {/* Organic top accent */}
+            <div className="absolute top-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
           </div>
           
+          {/* Navigation with organic shapes */}
           <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
-            {nav.map((item) => (
+            {nav.map((item, index) => (
               <button
                 key={item.id}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-3 rounded transition-all font-medium",
+                  "flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm",
                   activeLibrary === item.id 
-                    ? "bg-accent/20 text-primary border border-primary/20" 
-                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-accent/20 text-primary border border-primary/20 shadow-sm transform scale-[1.02] rotate-[0.3deg]" 
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground hover:transform hover:scale-[1.01]"
                 )}
                 onClick={() => handleNavClick(item.id)}
+                style={{ 
+                  transitionTimingFunction: 'var(--timing-stir)',
+                  transitionDelay: `${index * 50}ms`
+                }}
               >
                 <item.icon size={20} />
                 <span>{item.label}</span>
@@ -87,17 +95,19 @@ export default function MobileNavigation({
             ))}
           </nav>
 
-          <div className="border-t p-6 space-y-4">
+          {/* Bottom section with organic styling */}
+          <div className="border-t border-border p-6 space-y-4">
             <button
-              className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium"
+              className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-md flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium hover:transform hover:scale-[1.02] hover:rotate-[0.5deg] active:scale-[0.98]"
               onClick={handleAddRecipe}
+              style={{ transitionTimingFunction: 'var(--timing-pour)' }}
             >
               <Plus size={18} />
               <span>Add New Recipe</span>
             </button>
 
             {user ? (
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
+              <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-organic-md border border-border">
                 <UserMenu
                   onProfileClick={() => {
                     onProfileClick();
@@ -113,8 +123,8 @@ export default function MobileNavigation({
                   }}
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">{user.user_metadata?.full_name || 'User'}</span>
-                  <span className="text-xs text-gray-500 truncate">{user.email}</span>
+                  <span className="text-sm font-medium text-foreground">{user.user_metadata?.full_name || 'User'}</span>
+                  <span className="text-xs text-muted-foreground truncate">{user.email}</span>
                 </div>
               </div>
             ) : (
@@ -125,7 +135,7 @@ export default function MobileNavigation({
                     setOpen(false);
                   }}
                   variant="secondary"
-                  className="w-full gap-2 bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
+                  className="w-full gap-2 rounded-organic-sm"
                   size="sm"
                 >
                   <User className="h-4 w-4" />
@@ -136,7 +146,7 @@ export default function MobileNavigation({
                     onSignInClick();
                     setOpen(false);
                   }}
-                  className="w-full gap-2"
+                  className="w-full gap-2 rounded-organic-sm"
                   size="sm"
                 >
                   <LogIn className="h-4 w-4" />

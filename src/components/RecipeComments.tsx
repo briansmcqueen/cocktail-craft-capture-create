@@ -158,28 +158,28 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   };
 
   const renderComment = (comment: RecipeComment) => (
-    <div key={comment.id} className="space-y-3 border-b border-gray-100 pb-4 last:border-b-0">
+    <div key={comment.id} className="space-y-3 border-b border-border pb-4 last:border-b-0">
       <div className="flex items-start gap-3">
         <Avatar className="w-8 h-8">
           <AvatarImage src={comment.user?.avatar_url || undefined} />
-          <AvatarFallback>
+          <AvatarFallback className="bg-muted text-muted-foreground">
             {comment.user?.full_name?.[0] || comment.user?.username?.[0] || 'U'}
           </AvatarFallback>
         </Avatar>
 
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm">
+            <span className="font-medium text-sm text-foreground">
               {comment.user?.full_name || comment.user?.username || 'Anonymous'}
             </span>
             {comment.user?.username && (
-              <span className="text-xs text-gray-500">@{comment.user.username}</span>
+              <span className="text-xs text-muted-foreground">@{comment.user.username}</span>
             )}
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
             </span>
             {comment.category !== 'general' && (
-              <span className="bg-blue-100 text-blue-800 border border-blue-200 text-xs px-2 py-1 rounded-full">
+              <span className="bg-accent/20 text-secondary border border-accent/30 text-xs px-2 py-1 rounded-organic-sm">
                 {categoryLabels[comment.category]}
               </span>
             )}
@@ -188,10 +188,10 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
           {editingComment === comment.id ? (
             <div className="space-y-3">
               <Select value={editCategory} onValueChange={(value: any) => setEditCategory(value)}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-48 rounded-organic-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-organic-sm">
                   <SelectItem value="general">General</SelectItem>
                   <SelectItem value="variation">Variation</SelectItem>
                   <SelectItem value="substitution">Substitution</SelectItem>
@@ -203,10 +203,10 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 placeholder="Edit your comment..."
-                className="min-h-[80px]"
+                className="min-h-[80px] rounded-organic-sm bg-input text-foreground border-border"
               />
               <div className="flex gap-2">
-                <Button size="sm" onClick={() => handleEditComment(comment.id)}>
+                <Button size="sm" onClick={() => handleEditComment(comment.id)} className="rounded-organic-sm">
                   Save
                 </Button>
                 <Button
@@ -216,6 +216,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                     setEditingComment(null);
                     setEditContent('');
                   }}
+                  className="rounded-organic-sm"
                 >
                   Cancel
                 </Button>
@@ -223,12 +224,12 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
             </div>
           ) : (
             <>
-              <p className="text-gray-700">{comment.content}</p>
+              <p className="text-card-foreground">{comment.content}</p>
               {comment.photo_url && (
                 <img 
                   src={comment.photo_url} 
                   alt="Comment attachment" 
-                  className="rounded-lg max-w-sm max-h-64 object-cover"
+                  className="rounded-organic-md max-w-sm max-h-64 object-cover border border-border"
                 />
               )}
               {user?.id === comment.user_id && (
@@ -241,6 +242,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                       setEditContent(comment.content);
                       setEditCategory(comment.category);
                     }}
+                    className="rounded-organic-sm"
                   >
                     <Edit2 className="w-3 h-3 mr-1" />
                     Edit
@@ -249,6 +251,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                     size="sm"
                     variant="ghost"
                     onClick={() => handleDeleteComment(comment.id)}
+                    className="rounded-organic-sm"
                   >
                     <Trash2 className="w-3 h-3 mr-1" />
                     Delete
@@ -264,14 +267,14 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="rounded-organic-md border-border">
         <CardHeader>
-          <CardTitle>Comments</CardTitle>
+          <CardTitle className="text-foreground">Comments</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-muted rounded-organic-sm w-3/4"></div>
+            <div className="h-4 bg-muted rounded-organic-sm w-1/2"></div>
           </div>
         </CardContent>
       </Card>
@@ -279,9 +282,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   }
 
   return (
-    <Card>
+    <Card className="rounded-organic-md border-border">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-foreground">
           <MessageCircle className="w-5 h-5" />
           Comments ({comments.length})
         </CardTitle>
@@ -289,13 +292,13 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
       <CardContent className="space-y-6">
         {/* Add Comment Form */}
         {user && (
-          <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+          <div className="space-y-4 p-4 bg-muted/50 rounded-organic-md border border-border">
             <div className="space-y-3">
               <Select value={category} onValueChange={(value: any) => setCategory(value)}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-48 rounded-organic-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-organic-sm">
                   <SelectItem value="general">General</SelectItem>
                   <SelectItem value="variation">Variation</SelectItem>
                   <SelectItem value="substitution">Substitution</SelectItem>
@@ -308,16 +311,17 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Leave a comment..."
-                className="min-h-[100px]"
+                className="min-h-[100px] rounded-organic-sm bg-input text-foreground border-border"
               />
 
               {selectedImage && (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">{selectedImage.name}</span>
+                  <span className="text-sm text-muted-foreground">{selectedImage.name}</span>
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => setSelectedImage(null)}
+                    className="rounded-organic-sm"
                   >
                     <X className="w-3 h-3" />
                   </Button>
@@ -329,6 +333,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
               <Button 
                 onClick={handleSubmitComment} 
                 disabled={!newComment.trim() || uploading}
+                className="rounded-organic-sm"
               >
                 {uploading ? 'Uploading...' : 'Post Comment'}
               </Button>
@@ -343,7 +348,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
               />
               <label
                 htmlFor="comment-image"
-                className="cursor-pointer flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"
+                className="cursor-pointer flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Camera className="w-4 h-4" />
                 Add Photo
@@ -359,9 +364,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
           </div>
         ) : (
           <div className="text-center py-8">
-            <MessageCircle className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-600">No comments yet</h3>
-            <p className="text-gray-500">Be the first to share your thoughts!</p>
+            <MessageCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium text-foreground">No comments yet</h3>
+            <p className="text-muted-foreground">Be the first to share your thoughts!</p>
           </div>
         )}
       </CardContent>

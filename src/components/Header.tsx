@@ -30,7 +30,7 @@ export default function Header({
   onAddRecipe = () => {}
 }: HeaderProps) {
   return (
-    <div className="bg-white border-b border-gray-200 px-4 py-4">
+    <div className="bg-background border-b border-border px-4 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <MobileNavigation
@@ -44,10 +44,10 @@ export default function Header({
             onMyRecipesClick={onMyRecipesClick}
             onFavoritesClick={onFavoritesClick}
           />
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">B</span>
+          <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-lg">B</span>
           </div>
-          <h1 className="text-2xl font-serif font-normal text-gray-900 tracking-wide">
+          <h1 className="text-2xl font-serif font-normal text-foreground tracking-wide">
             Barbook
           </h1>
         </div>
@@ -64,14 +64,14 @@ export default function Header({
               <Button 
                 onClick={onSignUpClick}
                 variant="secondary"
-                className="gap-2 bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
+                className="gap-2 rounded-organic-sm"
               >
                 <User className="h-4 w-4" />
                 Create Account
               </Button>
               <Button 
                 onClick={onSignInClick}
-                className="gap-2"
+                className="gap-2 rounded-organic-sm"
               >
                 <LogIn className="h-4 w-4" />
                 Sign In
@@ -80,6 +80,8 @@ export default function Header({
           )}
         </div>
       </div>
+      {/* Organic bottom accent bar */}
+      <div className="mt-4 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
     </div>
   );
 }
