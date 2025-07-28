@@ -54,7 +54,7 @@ export function RecipeSidebar() {
             B
           </button>
           {!isCollapsed && (
-            <span className="text-3xl font-medium text-pure-white tracking-tight animate-fade-in ml-1">
+            <span className="text-3xl font-medium text-pure-white tracking-tight animate-fade-in -ml-1">
               ARBOOK
             </span>
           )}
