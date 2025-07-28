@@ -77,7 +77,7 @@ export default function AuthenticatedView({
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="flex h-screen">
         {/* Desktop Sidebar */}
         {!isMobile && (
