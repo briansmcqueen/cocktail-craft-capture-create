@@ -32,36 +32,11 @@ export default function RecipePage() {
   const [recipe, setRecipe] = useState<Cocktail | null>(null);
   const [isMetric, setIsMetric] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [referrerInfo, setReferrerInfo] = useState({ path: '/', label: 'Featured' });
+  
 
-  // Load recipe and determine referrer
+  // Load recipe
   useEffect(() => {
     if (!recipeName) return;
-
-    // Determine where user came from based on document.referrer
-    const referrer = document.referrer;
-    if (referrer) {
-      const url = new URL(referrer);
-      const path = url.pathname;
-      
-      if (path === '/') {
-        setReferrerInfo({ path: '/', label: 'Featured' });
-      } else if (path === '/recipes') {
-        setReferrerInfo({ path: '/recipes', label: 'Recipes' });
-      } else if (path === '/mybar') {
-        setReferrerInfo({ path: '/mybar', label: 'My Bar' });
-      } else if (path === '/favorites') {
-        setReferrerInfo({ path: '/favorites', label: 'Favorites' });
-      } else if (path === '/recipes/mine') {
-        setReferrerInfo({ path: '/recipes/mine', label: 'My Creations' });
-      } else {
-        // Default fallback
-        setReferrerInfo({ path: '/', label: 'Featured' });
-      }
-    } else {
-      // No referrer, default to featured
-      setReferrerInfo({ path: '/', label: 'Featured' });
-    }
 
     // Find recipe by matching slug
     const allRecipes = [...classicCocktails, ...getUserRecipes()];
@@ -148,11 +123,11 @@ export default function RecipePage() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Back button */}
         <button
-          onClick={() => navigate(referrerInfo.path)}
+          onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors"
         >
           <ArrowLeft size={20} />
-          Back to {referrerInfo.label.toLowerCase()}
+          Back
         </button>
 
         {/* Recipe header */}
