@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Share2, Plus, Check } from 'lucide-react';
+import { Heart, Share2, Plus, Check, Star } from 'lucide-react';
 import { SearchResult } from '@/types/search';
 import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
@@ -84,9 +84,26 @@ export default function RecipeResultCard({
           </h3>
           
           {/* Simple description or ingredients preview */}
-          <p className="text-sm text-light-text line-clamp-2 mb-3">
+          <p className="text-sm text-light-text line-clamp-3 mb-3">
             {cocktail.notes || `A delicious cocktail featuring ${cocktail.ingredients.slice(0, 2).map(ing => ing.replace(/^\d+[\s\w]*\s/, '').split(' ')[0]).join(' and ')}`}
           </p>
+
+          {/* Review stars and count */}
+          <div className="flex items-center gap-1 mb-3">
+            <div className="flex items-center">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  size={12}
+                  className={cn(
+                    "text-golden-amber",
+                    star <= 4 ? "fill-current" : "fill-none"
+                  )}
+                />
+              ))}
+            </div>
+            <span className="text-xs text-soft-gray ml-1">4.0 (127 reviews)</span>
+          </div>
 
           {/* Action buttons */}
           <div className="flex items-center justify-between">
