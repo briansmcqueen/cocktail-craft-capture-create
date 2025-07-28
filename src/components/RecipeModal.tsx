@@ -98,9 +98,11 @@ export default function RecipeModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl bg-white border border-gray-200 max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6">
+      <DialogContent className="max-w-4xl bg-card border border-border rounded-organic-xl max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6 shadow-glass"
+        style={{ borderRadius: '24px 48px 36px 60px' }}
+      >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif font-normal text-gray-900 tracking-wide text-left">
+          <DialogTitle className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight text-left leading-tight">
             {recipe.name}
           </DialogTitle>
           {recipe.origin && (
@@ -112,15 +114,15 @@ export default function RecipeModal({
           )}
         </DialogHeader>
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 min-w-0">
-          <img
+            <img
             src={recipe.image}
             alt={recipe.name}
-            className="h-48 w-full md:w-56 object-cover rounded-lg border border-gray-200 flex-shrink-0"
+            className="h-48 w-full md:w-56 object-cover rounded-organic-md border border-border flex-shrink-0 shadow-glass"
           />
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             <div className="mb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
-                <div className="font-semibold text-gray-900 text-left">Ingredients</div>
+                <div className="font-semibold text-lg text-foreground text-left">Ingredients</div>
                 {/* Custom Metric/Imperial Toggle */}
                 <div className="flex items-center justify-start sm:justify-end flex-shrink-0">
                   <div className="relative">
@@ -143,26 +145,26 @@ export default function RecipeModal({
                   </div>
                 </div>
               </div>
-              <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 break-words">
+              <ul className="list-disc pl-5 text-sm text-light-text space-y-1.5 break-words">
                 {recipe.ingredients.map((ing, i) => (
-                  <li key={i}>{convertMeasurement(ing)}</li>
+                  <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
                 ))}
               </ul>
             </div>
             <div className="mb-4">
-              <div className="font-semibold text-gray-900 mb-2 text-left">Instructions</div>
-              <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed text-left break-words">{recipe.steps}</p>
+              <div className="font-semibold text-lg text-foreground mb-2 text-left">Instructions</div>
+              <p className="text-base text-light-text whitespace-pre-line leading-relaxed text-left break-words">{recipe.steps}</p>
             </div>
             {recipe.notes && (
               <div className="mb-4">
-                <div className="font-semibold text-gray-900 mb-2 text-left">Notes</div>
-                <p className="text-sm text-gray-600 leading-relaxed text-left break-words">{recipe.notes}</p>
+                <div className="font-semibold text-lg text-foreground mb-2 text-left">Notes</div>
+                <p className="text-sm text-soft-gray leading-relaxed text-left break-words">{recipe.notes}</p>
               </div>
             )}
             {recipe.tags && recipe.tags.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-2 max-w-full">
                 {recipe.tags.map(tag => (
-                  <TagBadge key={tag} className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">
+                  <TagBadge key={tag} className="bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm">
                     {tag}
                   </TagBadge>
                 ))}
@@ -190,9 +192,10 @@ export default function RecipeModal({
           <div className="flex gap-2 flex-1 flex-wrap min-w-0">
             <Button
               variant="secondary"
-              className={`flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors ${
-                isRecipeFavorited ? 'text-red-600 border-red-200 bg-red-50 hover:bg-red-100' : 'text-gray-500 hover:text-red-600'
+              className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 ${
+                isRecipeFavorited ? 'text-heart-red border-heart-red/30 bg-heart-red/10 hover:bg-heart-red/20 hover:scale-[1.05] hover:rotate-[0.5deg]' : 'text-soft-gray hover:text-heart-red hover:scale-[1.02] hover:rotate-[-0.3deg]'
               }`}
+              style={{ transitionTimingFunction: 'var(--timing-stir)' }}
               onClick={handleToggleFavorite}
             >
               <Heart size={16} fill={isRecipeFavorited ? 'currentColor' : 'none'} />
@@ -215,7 +218,8 @@ export default function RecipeModal({
             {onShareRecipe && (
               <Button
                 variant="secondary"
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors text-gray-500 hover:text-red-600"
+                className="flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 text-soft-gray hover:text-secondary hover:scale-[1.02] hover:rotate-[-0.3deg]"
+                style={{ transitionTimingFunction: 'var(--timing-stir)' }}
                 onClick={handleShare}
               >
                 <Share size={16} />
@@ -225,7 +229,8 @@ export default function RecipeModal({
             {onRemix && (
               <Button
                 variant="secondary"
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 rounded-full transition-colors text-gray-500 hover:text-red-600"
+                className="flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 text-soft-gray hover:text-secondary hover:scale-[1.02] hover:rotate-[-0.3deg]"
+                style={{ transitionTimingFunction: 'var(--timing-stir)' }}
                 onClick={handleRiff}
               >
                 <Martini size={16} />
@@ -238,7 +243,7 @@ export default function RecipeModal({
               <Button 
                 variant="outline" 
                 onClick={onEdit}
-                className="flex items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+                className="flex items-center gap-2 text-light-text hover:text-foreground rounded-organic-sm"
               >
                 <Edit size={16} /> Edit
               </Button>
@@ -246,9 +251,9 @@ export default function RecipeModal({
             <Button 
               variant="secondary" 
               onClick={() => onOpenChange(false)}
-              className="flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
+              className="flex items-center gap-2 text-light-text hover:text-foreground rounded-organic-sm"
             >
-              <X size={16} className="text-gray-700" /> Close
+              <X size={16} /> Close
             </Button>
           </div>
         </DialogFooter>

@@ -302,6 +302,166 @@ input, select, textarea {
   }
 }
 
+/* Premium Bartending Ingredient Availability States */
+.ingredient-available {
+  border: 2px solid hsl(var(--primary));
+  background: rgba(6, 95, 70, 0.1);
+  position: relative;
+}
+
+.ingredient-available::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: hsl(var(--primary));
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ingredient-missing {
+  border: 2px solid hsl(var(--destructive));
+  background: rgba(239, 68, 68, 0.1);
+  opacity: 0.7;
+}
+
+.ingredient-low-stock {
+  border: 2px solid hsl(var(--warning));
+  background: rgba(245, 158, 11, 0.1);
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+/* Difficulty Badges for Cocktails */
+.difficulty-easy {
+  background: rgba(16, 185, 129, 0.2);
+  color: hsl(var(--secondary));
+  border: 1px solid hsl(var(--primary));
+  border-radius: var(--radius-organic-sm);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.difficulty-medium {
+  background: rgba(245, 158, 11, 0.2);
+  color: hsl(var(--warning));
+  border: 1px solid #D97706;
+  border-radius: var(--radius-organic-sm);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.difficulty-hard {
+  background: rgba(239, 68, 68, 0.2);
+  color: hsl(var(--destructive));
+  border: 1px solid #DC2626;
+  border-radius: var(--radius-organic-sm);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Glass Type and Technique Indicators */
+.glass-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(107, 114, 128, 0.2);
+  border-radius: var(--radius-organic-sm);
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+}
+
+.glass-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.technique-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(6, 95, 70, 0.2);
+  border: 1px solid hsl(var(--primary));
+  border-radius: 10px 18px 14px 22px;
+  font-size: 11px;
+  color: hsl(var(--secondary));
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.technique-shake { 
+  border-color: hsl(var(--warning)); 
+  color: hsl(var(--warning)); 
+  background: rgba(245, 158, 11, 0.2); 
+}
+
+.technique-stir { 
+  border-color: hsl(var(--primary)); 
+  color: hsl(var(--secondary)); 
+  background: rgba(6, 95, 70, 0.2); 
+}
+
+.technique-build { 
+  border-color: hsl(var(--muted-foreground)); 
+  color: hsl(var(--muted-foreground)); 
+  background: rgba(107, 114, 128, 0.2); 
+}
+
+.technique-muddle { 
+  border-color: #84CC16; 
+  color: #84CC16; 
+  background: rgba(132, 204, 22, 0.2); 
+}
+
+/* Enhanced Search Container with Focus Animation */
+.search-container:focus-within .search-icon {
+  transform: scale(1.1) rotate(8deg);
+  color: hsl(var(--secondary));
+}
+
+/* Organic Skeleton Loading for Recipe Cards */
+.recipe-skeleton {
+  background: hsl(var(--muted));
+  border-radius: var(--radius-organic-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe-skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.2),
+    transparent
+  );
+  animation: organicShimmer 2s ease-in-out infinite;
+}
+
+@keyframes organicShimmer {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  50% { transform: translateX(50%) skewX(15deg); }
+  100% { transform: translateX(100%) skewX(-15deg); }
+}
+
 /* Custom Toggle Styles */
 .toggle-button-cover {
   position: relative;
@@ -369,11 +529,11 @@ input, select, textarea {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #f3f4f6;
+  background-color: hsl(var(--muted));
   transition: 0.3s ease all;
   z-index: 1;
   border-radius: 100px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid hsl(var(--border));
 }
 
 .custom-toggle .checkbox:checked + .knobs span {
@@ -382,7 +542,7 @@ input, select, textarea {
 }
 
 .custom-toggle .checkbox:checked ~ .layer {
-  background-color: #f3f4f6;
+  background-color: hsl(var(--muted));
 }
 
 .custom-toggle .checkbox:active + .knobs span {

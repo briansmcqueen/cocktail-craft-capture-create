@@ -9,9 +9,10 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-organic-md border border-border bg-card text-card-foreground shadow-glass transition-all duration-400",
       className
     )}
+    style={{ transitionTimingFunction: 'var(--timing-pour)' }}
     {...props}
   />
 ))

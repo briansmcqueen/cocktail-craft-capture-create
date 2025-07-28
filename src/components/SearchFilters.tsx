@@ -75,14 +75,15 @@ export default function SearchFilters({
         {/* Search section */}
         <div className="flex flex-col sm:flex-row gap-2 lg:flex-1">
           {/* Search bar - always visible */}
-          <div className="relative flex-1">
+          <div className="relative flex-1 search-container">
             <Input
               value={ingredientQuery}
               onChange={e => setIngredientQuery(e.target.value)}
-              placeholder="Search by ingredient, name, tags, and more..."
-              className="pl-9 bg-white border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-primary"
+              placeholder="Find cocktails, ingredients, or techniques..."
+              className="pl-12 rounded-organic-pill bg-card border-border text-light-text placeholder:text-soft-gray focus:border-primary focus:bg-muted focus:scale-[1.02] focus:rotate-[0.2deg] focus:shadow-lg focus:shadow-primary/20"
+              style={{ borderRadius: '25px 35px 30px 40px' }}
             />
-            <Search className="absolute left-2.5 top-2.5 text-gray-400" size={16} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-soft-gray search-icon transition-all duration-300" size={18} />
           </div>
         </div>
       </div>
@@ -90,18 +91,19 @@ export default function SearchFilters({
       {/* Tag filters with multi-select and reduced padding */}
       {availableTags.length > 0 && (
         <div className="mb-6 mx-4 sm:mx-0">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Filter by Tags:</h3>
+          <h3 className="text-sm font-semibold text-light-text mb-3">Filter by Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {availableTags.map(tag => (
               <button
                 key={tag}
                 className={`
-                  relative text-xs px-3 py-0.5 rounded-md cursor-pointer transition-all duration-200 border
+                  relative text-xs px-3 py-1.5 cursor-pointer transition-all duration-300 border font-medium
                   ${tagFilters.includes(tag)
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                    ? "bg-primary/20 text-secondary border-primary rounded-organic-sm hover:bg-primary/30 hover:scale-[1.05] hover:rotate-[0.5deg]"
+                    : "bg-card text-light-text border-border rounded-organic-sm hover:bg-muted hover:border-soft-gray hover:scale-[1.02] hover:rotate-[-0.3deg]"
                   }
                 `}
+                style={{ transitionTimingFunction: 'var(--timing-stir)' }}
                 onClick={() => onTagFilterToggle(tag)}
               >
                 {tag}
