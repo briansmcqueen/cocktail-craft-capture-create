@@ -79,17 +79,28 @@ export default function RecipePage() {
     await toggleFavorite(recipe.id, () => setShowAuthModal(true));
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     const url = window.location.href;
+    
     if (navigator.share) {
-      navigator.share({
-        title: recipe.name,
-        text: `Check out this ${recipe.name} recipe!`,
-        url: url,
-      });
+      try {
+        await navigator.share({
+          title: recipe.name,
+          text: `Check out this ${recipe.name} recipe!`,
+          url: url,
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
     } else {
-      navigator.clipboard.writeText(url);
-      // Could add a toast notification here
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Recipe link copied to clipboard!');
+      } catch (error) {
+        console.log('Error copying to clipboard:', error);
+        // Fallback: show a prompt with the URL
+        prompt('Copy this link to share the recipe:', url);
+      }
     }
   };
 
@@ -99,8 +110,16 @@ export default function RecipePage() {
   };
 
   const handleRiff = () => {
-    // This would need to be implemented based on your remix flow
-    console.log('Riff recipe:', recipe.id);
+    // Navigate to recipe form with this recipe as base
+    navigate('/', { 
+      state: { 
+        editingRecipe: { 
+          ...recipe, 
+          name: `${recipe.name} (Remix)`,
+          id: undefined // Remove ID so it creates a new recipe
+        } 
+      } 
+    });
   };
 
   // Convert measurements based on toggle
