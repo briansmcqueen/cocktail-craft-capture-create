@@ -49,10 +49,7 @@ export function RecipeSidebar() {
         <div className="flex items-center gap-0 mb-2">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className={cn(
-              "flex items-center justify-center transition-all duration-700 ease-out hover:scale-[1.1] text-pure-white font-medium",
-              isCollapsed ? "w-8 h-8 text-xl" : "w-auto h-8 text-3xl"
-            )}
+            className="flex items-center justify-center w-auto h-8 text-3xl text-pure-white font-medium"
           >
             B
           </button>
