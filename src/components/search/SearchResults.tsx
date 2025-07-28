@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChefHat, Package, AlertCircle, Grid3X3, List } from 'lucide-react';
+import { ChefHat, Package, Grid3X3, List } from 'lucide-react';
 import RecipeResultCard from './RecipeResultCard';
 import { SearchResult } from '@/types/search';
 import { cn } from '@/lib/utils';
@@ -42,12 +40,9 @@ export default function SearchResults({
   onClearFilters
 }: SearchResultsProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [activeTab, setActiveTab] = useState('all');
 
   const totalResults = results.all.length;
   const canMakeCount = results.canMake.length;
-  const missing1Count = results.missing1.length;
-  const missing2PlusCount = results.missing2Plus.length;
 
   if (loading) {
     return (
@@ -160,105 +155,10 @@ export default function SearchResults({
         </div>
       </div>
 
-      {/* Results tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-card/50">
-          <TabsTrigger 
-            value="canMake" 
-            className="relative"
-            disabled={canMakeCount === 0}
-          >
-            <span className="flex items-center gap-2">
-              <span className="text-green-400">✓</span>
-              Can Make
-              {canMakeCount > 0 && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                  {canMakeCount}
-                </Badge>
-              )}
-            </span>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="missing1"
-            disabled={missing1Count === 0}
-          >
-            <span className="flex items-center gap-2">
-              <span className="text-yellow-400">1</span>
-              Missing 1
-              {missing1Count > 0 && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                  {missing1Count}
-                </Badge>
-              )}
-            </span>
-          </TabsTrigger>
-          
-          <TabsTrigger 
-            value="missing2Plus"
-            disabled={missing2PlusCount === 0}
-          >
-            <span className="flex items-center gap-2">
-              <span className="text-red-400">2+</span>
-              Missing 2+
-              {missing2PlusCount > 0 && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                  {missing2PlusCount}
-                </Badge>
-              )}
-            </span>
-          </TabsTrigger>
-          
-          <TabsTrigger value="all">
-            <span className="flex items-center gap-2">
-              All Results
-              <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                {totalResults}
-              </Badge>
-            </span>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="canMake" className="mt-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-medium text-pure-white mb-1">
-              Ready to Make ({canMakeCount})
-            </h3>
-            <p className="text-sm text-light-text">
-              You have all the ingredients for these cocktails
-            </p>
-          </div>
-          {renderResults(results.canMake)}
-        </TabsContent>
-
-        <TabsContent value="missing1" className="mt-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-medium text-pure-white mb-1">
-              Close Calls ({missing1Count})
-            </h3>
-            <p className="text-sm text-light-text">
-              Just one ingredient away from making these
-            </p>
-          </div>
-          {renderResults(results.missing1)}
-        </TabsContent>
-
-        <TabsContent value="missing2Plus" className="mt-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-medium text-pure-white mb-1">
-              Future Possibilities ({missing2PlusCount})
-            </h3>
-            <p className="text-sm text-light-text">
-              Great cocktails to consider for your next shopping trip
-            </p>
-          </div>
-          {renderResults(results.missing2Plus)}
-        </TabsContent>
-
-        <TabsContent value="all" className="mt-6">
-          {renderResults(results.all)}
-        </TabsContent>
-      </Tabs>
+      {/* Results */}
+      <div className="mt-6">
+        {renderResults(results.all)}
+      </div>
     </div>
   );
 }
