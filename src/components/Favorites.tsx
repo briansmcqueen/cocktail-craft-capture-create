@@ -27,22 +27,13 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   }
 
   return (
-    <div className="container mx-auto px-md py-xl space-y-xl">
-      <div className="flex items-center gap-md">
-        <Heart className="text-heart-red" size={24} />
-        <h2 className="text-3xl font-medium text-foreground">
-          Your Favorite Cocktails
-        </h2>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
-        {favoriteRecipes.map((recipe) => (
-          <UniversalRecipeCard
-            key={recipe.id}
-            recipe={recipe}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
+      {favoriteRecipes.map((recipe) => (
+        <UniversalRecipeCard
+          key={recipe.id}
+          recipe={recipe}
+        />
+      ))}
     </div>
   );
 }
