@@ -41,7 +41,7 @@ export default function MyBarEngine({
 
   return (
     <div className="space-y-6 px-4 sm:px-0">
-      {/* Header - styled like Favorites/My Creations with consistent mobile padding */}
+      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <User className="text-primary" size={24} />
         <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">

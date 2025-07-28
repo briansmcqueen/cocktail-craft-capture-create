@@ -3,7 +3,7 @@ import { User } from "@supabase/supabase-js";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeForm from "@/components/RecipeForm";
 import LibraryHeader from "@/components/LibraryHeader";
-import SearchFilters from "@/components/SearchFilters";
+import SearchInterface from "@/components/search/SearchInterface";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
 import RecipeGrid from "@/components/RecipeGrid";
@@ -90,16 +90,16 @@ export default function MainContent({
         />
 
         {library !== "featured" && library !== "ingredients" && (
-          <SearchFilters
-            searchType="everything"
-            setSearchType={() => {}}
-            ingredientQuery={searchTerm}
-            setIngredientQuery={setSearchTerm}
-            tagFilters={selectedTags}
-            onTagFilterToggle={handleTagClick}
-            allTags={[]}
-            recipes={allRecipes}
-          />
+          <div className="mb-6">
+            <SearchInterface
+              recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
+              onRecipeClick={handleRecipeClick}
+              onToggleFavorite={() => {}}
+              onTagClick={handleTagClick}
+              favoriteIds={favoriteRecipes.map(r => r.id)}
+              placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "your recipes" : "all recipes"}...`}
+            />
+          </div>
         )}
 
         {library === "featured" ? (
