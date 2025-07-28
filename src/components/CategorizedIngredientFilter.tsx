@@ -3,7 +3,7 @@ import React, { useState, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Button } from "@/components/ui/button";
 import { ChefHat, X } from "lucide-react";
-import UnifiedRecipeCard from "./UnifiedRecipeCard";
+import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
 
 type CategorizedIngredientFilterProps = {
   recipes: Cocktail[];
@@ -267,7 +267,7 @@ export default function CategorizedIngredientFilter({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
           {filteredRecipes.map((recipe) => (
-            <UnifiedRecipeCard
+            <RecipeCardWithFavorite
               key={`${recipe.id}-${forceUpdate}`}
               recipe={recipe}
               onRecipeClick={onRecipeClick}

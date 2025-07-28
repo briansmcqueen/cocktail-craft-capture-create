@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChefHat, Package, Grid3X3, List } from 'lucide-react';
-import UnifiedRecipeCard from '../UnifiedRecipeCard';
+import RecipeResultCard from './RecipeResultCard';
 import { SearchResult } from '@/types/search';
 import { cn } from '@/lib/utils';
 
@@ -105,16 +105,14 @@ export default function SearchResults({
           : "space-y-3"
       )}>
         {searchResults.map((result) => (
-          <UnifiedRecipeCard
+          <RecipeResultCard
             key={result.cocktail.id}
-            recipe={result.cocktail}
+            result={result}
             onRecipeClick={onRecipeClick}
+            onToggleFavorite={onToggleFavorite}
             onAddIngredient={onAddIngredient}
             onTagClick={onTagClick}
-            canMake={result.canMake}
-            missingIngredients={result.missingIngredients}
-            availabilityScore={result.availabilityScore}
-            showAvailability={true}
+            isFavorite={favoriteIds.includes(result.cocktail.id)}
             className={viewMode === 'list' ? "max-w-none" : ""}
           />
         ))}
