@@ -89,12 +89,12 @@ export default function RecipeResultCard({
           </p>
 
           {/* Review stars and count */}
-          <div className="flex items-center gap-1 mb-3">
+          <div className="flex items-center gap-1 mb-2">
             <div className="flex items-center">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  size={12}
+                  size={16}
                   className={cn(
                     "text-golden-amber",
                     star <= 4 ? "fill-current" : "fill-none"
@@ -102,7 +102,7 @@ export default function RecipeResultCard({
                 />
               ))}
             </div>
-            <span className="text-xs text-soft-gray ml-1">4.0 (127 reviews)</span>
+            <span className="text-xs text-pure-white ml-1">4.0 (127 reviews)</span>
           </div>
 
           {/* Action buttons */}
