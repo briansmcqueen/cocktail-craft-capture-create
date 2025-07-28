@@ -14,6 +14,7 @@ import RecipeUserRating from "@/components/RecipeUserRating";
 import RecipeComments from "@/components/RecipeComments";
 import AuthModal from "@/components/auth/AuthModal";
 import { RecipeSidebar } from "@/components/RecipeSidebar";
+import MobileNavigation from "@/components/MobileNavigation";
 
 // Convert recipe name to URL slug
 const recipeNameToSlug = (name: string): string => {
@@ -185,10 +186,29 @@ export default function RecipePage() {
 
   return (
     <div className="min-h-screen flex w-full bg-rich-charcoal">
-      <RecipeSidebar />
+      {/* Desktop Sidebar - Hidden on mobile */}
+      <div className="hidden lg:block">
+        <RecipeSidebar />
+      </div>
       
       {/* Main Content */}
-      <main className="flex-1">          
+      <main className="flex-1">
+        {/* Mobile Header with Navigation */}
+        <div className="lg:hidden bg-rich-charcoal border-b border-light-charcoal px-4 py-3 flex items-center justify-between">
+          <MobileNavigation
+            user={user}
+            activeLibrary="recipe"
+            onLibrarySelect={() => {}}
+            onAddRecipe={() => navigate('/recipes/mine')}
+            onSignInClick={() => setShowAuthModal(true)}
+            onSignUpClick={() => setShowAuthModal(true)}
+            onProfileClick={() => navigate('/profile')}
+            onMyRecipesClick={() => navigate('/recipes/mine')}
+            onFavoritesClick={() => navigate('/favorites')}
+          />
+          <h1 className="text-xl font-medium text-pure-white">BARBOOK</h1>
+        </div>
+        
         <div className="max-w-6xl mx-auto px-4 py-6">
             {/* Back button */}
             <button
