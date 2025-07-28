@@ -148,9 +148,12 @@ export default function RecipePage() {
               className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
             />
             
-            {/* Overall Ratings */}
-            <div className="mb-6 p-4 bg-medium-charcoal rounded-organic-md border border-light-charcoal">
-              <RecipeOverallRating recipeId={recipe.id} />
+            {/* Overall Ratings - moved out of container */}
+            <RecipeOverallRating recipeId={recipe.id} />
+            
+            {/* Comments - moved underneath ratings */}
+            <div className="mt-6 mb-6">
+              <RecipeComments recipeId={recipe.id} />
             </div>
 
             {/* Action buttons */}
@@ -321,10 +324,6 @@ export default function RecipePage() {
               </div>
             )}
 
-            {/* Comments */}
-            <div className="mb-6">
-              <RecipeComments recipeId={recipe.id} />
-            </div>
           </div>
         </div>
       </div>

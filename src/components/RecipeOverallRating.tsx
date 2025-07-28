@@ -62,7 +62,7 @@ export default function RecipeOverallRating({ recipeId }: RecipeOverallRatingPro
           }
         </span>
         {aggregatedRating.totalRatings > 0 && (
-          <span className="text-gray-500 text-sm">
+          <span className="text-white text-sm">
             ({aggregatedRating.totalRatings} rating{aggregatedRating.totalRatings !== 1 ? 's' : ''})
           </span>
         )}
