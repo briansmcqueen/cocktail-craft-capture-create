@@ -131,9 +131,9 @@ export default function MainContent({
               userRecipes={userRecipes}
             />
           ) : (
-            <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
-              <UserIcon className="mx-auto mb-4 text-gray-400" size={48} />
-              <h2 className="text-xl font-serif font-normal mb-2 text-gray-900">Sign in to view favorites</h2>
+            <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
+              <UserIcon className="mx-auto mb-4 text-light-text/60" size={48} />
+              <h2 className="text-xl font-serif font-normal mb-2 text-pure-white">Sign in to view favorites</h2>
               <p className="mb-4 text-sm lg:text-base">
                 Create an account or sign in to save your favorite cocktail recipes!
               </p>

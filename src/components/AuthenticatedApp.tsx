@@ -129,9 +129,9 @@ export default function AuthenticatedApp({
       case 'myrecipes':
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-serif mb-6">My Recipes</h2>
+            <h2 className="text-2xl font-serif mb-6 text-pure-white">My Recipes</h2>
             {userRecipes.length === 0 ? (
-              <p className="text-center text-gray-500">You haven't created any recipes yet.</p>
+              <p className="text-center text-light-text">You haven't created any recipes yet.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {userRecipes.map((recipe) => (
@@ -145,8 +145,8 @@ export default function AuthenticatedApp({
                       alt={recipe.name}
                       className="w-full h-48 object-cover rounded-lg mb-3"
                     />
-                    <h3 className="font-semibold">{recipe.name}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{recipe.notes}</p>
+                    <h3 className="font-semibold text-pure-white">{recipe.name}</h3>
+                    <p className="text-sm text-light-text line-clamp-2">{recipe.notes}</p>
                   </div>
                 ))}
               </div>
@@ -156,9 +156,9 @@ export default function AuthenticatedApp({
       case 'favorites':
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-serif mb-6">Favorite Recipes</h2>
+            <h2 className="text-2xl font-serif mb-6 text-pure-white">Favorite Recipes</h2>
             {favoriteRecipes.length === 0 ? (
-              <p className="text-center text-gray-500">You haven't favorited any recipes yet.</p>
+              <p className="text-center text-light-text">You haven't favorited any recipes yet.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {favoriteRecipes.map((recipe) => (
@@ -172,8 +172,8 @@ export default function AuthenticatedApp({
                       alt={recipe.name}
                       className="w-full h-48 object-cover rounded-lg mb-3"
                     />
-                    <h3 className="font-semibold">{recipe.name}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{recipe.notes}</p>
+                    <h3 className="font-semibold text-pure-white">{recipe.name}</h3>
+                    <p className="text-sm text-light-text line-clamp-2">{recipe.notes}</p>
                   </div>
                 ))}
               </div>

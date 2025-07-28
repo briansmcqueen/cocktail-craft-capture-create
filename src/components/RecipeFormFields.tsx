@@ -62,18 +62,17 @@ export default function RecipeFormFields({
   return (
     <>
       <div>
-        <label className="font-medium mb-1 block text-gray-900">Recipe Name</label>
+        <label className="font-medium mb-1 block text-card-foreground">Recipe Name</label>
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
           required
-          className="bg-white border-gray-300 text-gray-700"
         />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-gray-900">Image</label>
+        <label className="font-medium mb-1 block text-card-foreground">Image</label>
         <div className="flex items-center gap-3">
           {image ? (
             <img
@@ -97,7 +96,7 @@ export default function RecipeFormFields({
             type="button"
             onClick={() => inputRef.current?.click()}
             variant="secondary"
-            className="flex items-center gap-1 bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-1"
           >
             <Image size={18} /> Upload Photo
           </Button>
@@ -119,33 +118,31 @@ export default function RecipeFormFields({
       />
       
       <div>
-        <label className="font-medium mb-1 block text-gray-900">
-          Tags <span className="text-xs text-gray-500">(keywords, separated)</span>
+        <label className="font-medium mb-1 block text-card-foreground">
+          Tags <span className="text-xs text-muted-foreground">(keywords, separated)</span>
         </label>
         <TagInput value={tags} onChange={setTags} />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-gray-900">
-          Notes <span className="text-xs text-gray-500">(optional)</span>
+        <label className="font-medium mb-1 block text-card-foreground">
+          Notes <span className="text-xs text-muted-foreground">(optional)</span>
         </label>
         <Input
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Invented at Soho Brasserie, London, 1980s"
-          className="bg-white border-gray-300 text-gray-700"
         />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-gray-900">
-          Region / Origin <span className="text-xs text-gray-500">(optional)</span>
+        <label className="font-medium mb-1 block text-card-foreground">
+          Region / Origin <span className="text-xs text-muted-foreground">(optional)</span>
         </label>
         <Input
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="e.g. Italy"
-          className="bg-white border-gray-300 text-gray-700"
         />
       </div>
     </>

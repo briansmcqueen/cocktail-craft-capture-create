@@ -102,7 +102,7 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
   if (isLoading) {
     return (
       <section>
-        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">Essential Techniques</h2>
+        <h2 className="text-pure-white mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">Essential Techniques</h2>
         <p className="text-center text-muted-foreground">Loading articles...</p>
       </section>
     );
@@ -119,7 +119,7 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
   return (
     <>
       <section>
-        <h2 className="text-gray-900 mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
+        <h2 className="text-pure-white mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
           Essential Techniques
         </h2>
         <Carousel

@@ -30,14 +30,14 @@ export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHead
     <>
       {/* Mobile library title with consistent padding */}
       <div className="lg:hidden mb-4 px-4 sm:px-0">
-        <h2 className="text-xl font-display font-semibold text-gray-900">
+        <h2 className="text-xl font-display font-semibold text-pure-white">
           {getLibraryTitle(library)}
         </h2>
         {library === "mine" && (
           <Button 
             variant="secondary" 
             size="sm"
-            className="mt-2 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            className="mt-2"
             onClick={onCopyDialogOpen}
           >
             Copy from…
@@ -48,7 +48,7 @@ export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHead
       {/* Desktop header with NYT styling */}
       <div className="hidden lg:flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-3xl xl:text-4xl font-display font-light text-gray-900 mb-1 tracking-wide">
+          <h2 className="text-3xl xl:text-4xl font-display font-light text-pure-white mb-1 tracking-wide">
             {getLibraryTitle(library)}
           </h2>
         </div>
@@ -56,7 +56,6 @@ export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHead
           <Button 
             variant="secondary" 
             onClick={onCopyDialogOpen}
-            className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
           >
             Copy from…
           </Button>

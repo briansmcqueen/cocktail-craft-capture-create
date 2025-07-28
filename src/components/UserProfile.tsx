@@ -167,7 +167,7 @@ export default function UserProfile() {
   if (!profile) {
     return (
       <div className="max-w-4xl mx-auto p-6 text-center">
-        <h1 className="text-2xl font-bold text-gray-600">User not found</h1>
+        <h1 className="text-2xl font-bold text-foreground">User not found</h1>
         <Button onClick={() => navigate('/')} className="mt-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Go Back
@@ -205,12 +205,12 @@ export default function UserProfile() {
 
             <div className="flex-1 space-y-4">
               <div>
-                <h1 className="text-2xl font-bold">{profile.full_name || 'Anonymous'}</h1>
+                <h1 className="text-2xl font-bold text-card-foreground">{profile.full_name || 'Anonymous'}</h1>
                 {profile.username && (
-                  <p className="text-gray-600">@{profile.username}</p>
+                  <p className="text-muted-foreground">@{profile.username}</p>
                 )}
                 {profile.bio && (
-                  <p className="text-gray-700 mt-2">{profile.bio}</p>
+                  <p className="text-card-foreground mt-2">{profile.bio}</p>
                 )}
               </div>
 
@@ -218,15 +218,15 @@ export default function UserProfile() {
               <div className="flex gap-6">
                 <div className="text-center">
                   <div className="font-bold text-lg">{stats.recipes_count}</div>
-                  <div className="text-sm text-gray-600">Recipes</div>
+                  <div className="text-sm text-muted-foreground">Recipes</div>
                 </div>
                 <div className="text-center">
                   <div className="font-bold text-lg">{stats.followers_count}</div>
-                  <div className="text-sm text-gray-600">Followers</div>
+                  <div className="text-sm text-muted-foreground">Followers</div>
                 </div>
                 <div className="text-center">
                   <div className="font-bold text-lg">{stats.following_count}</div>
-                  <div className="text-sm text-gray-600">Following</div>
+                  <div className="text-sm text-muted-foreground">Following</div>
                 </div>
               </div>
 
@@ -274,8 +274,8 @@ export default function UserProfile() {
                     )}
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-2">{recipe.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">{recipe.description}</p>
+                    <h3 className="font-semibold text-lg mb-2 text-card-foreground">{recipe.name}</h3>
+                    <p className="text-muted-foreground text-sm mb-2 line-clamp-2">{recipe.description}</p>
                     <div className="flex flex-wrap gap-1">
                       {recipe.tags?.slice(0, 3).map((tag, index) => (
                         <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
@@ -290,7 +290,7 @@ export default function UserProfile() {
           ) : (
             <div className="text-center py-12">
               <ChefHat className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-600">No recipes yet</h3>
+              <h3 className="text-lg font-medium text-muted-foreground">No recipes yet</h3>
               <p className="text-gray-500">
                 {isOwnProfile ? "Start creating your first recipe!" : "This user hasn't created any recipes yet."}
               </p>
@@ -301,7 +301,7 @@ export default function UserProfile() {
         <TabsContent value="favorites" className="mt-6">
           <div className="text-center py-12">
             <Heart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-600">Favorites coming soon</h3>
+            <h3 className="text-lg font-medium text-muted-foreground">Favorites coming soon</h3>
             <p className="text-gray-500">
               This section will show favorited recipes.
             </p>
@@ -311,7 +311,7 @@ export default function UserProfile() {
         <TabsContent value="activity" className="mt-6">
           <div className="text-center py-12">
             <div className="w-12 h-12 mx-auto text-gray-400 mb-4">📱</div>
-            <h3 className="text-lg font-medium text-gray-600">Activity feed coming soon</h3>
+            <h3 className="text-lg font-medium text-muted-foreground">Activity feed coming soon</h3>
             <p className="text-gray-500">
               This section will show recent user activity.
             </p>

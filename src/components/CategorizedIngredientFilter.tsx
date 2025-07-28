@@ -186,7 +186,7 @@ export default function CategorizedIngredientFilter({
     
     return (
       <div className="mb-4">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">{title}</h4>
+        <h4 className="text-sm font-medium text-light-text mb-2">{title}</h4>
         <div className="flex flex-wrap gap-2">
           {ingredients.map(ingredient => (
             <Button
@@ -197,7 +197,7 @@ export default function CategorizedIngredientFilter({
               className={`capitalize ${
                 selectedIngredients.includes(ingredient)
                   ? "bg-primary hover:bg-primary/90 text-primary-foreground"
-                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                  : "border-border text-light-text hover:bg-card/50"
               }`}
             >
               {ingredient}
@@ -212,14 +212,14 @@ export default function CategorizedIngredientFilter({
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <ChefHat className="text-primary" size={24} />
-        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-gray-900 tracking-wide">
+        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
           Find Cocktails by Ingredients
         </h2>
       </div>
 
-      <div className="bg-white p-6 rounded-lg border border-gray-200">
+      <div className="bg-card p-6 rounded-lg border border-border">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
+          <h3 className="text-lg font-medium text-pure-white">
             Select ingredients you have:
           </h3>
           {selectedIngredients.length > 0 && (
@@ -244,22 +244,22 @@ export default function CategorizedIngredientFilter({
         {renderIngredientCategory("Others", categorizedIngredients.others)}
 
         {selectedIngredients.length > 0 && (
-          <div className="text-sm text-gray-600 mt-4">
+          <div className="text-sm text-light-text mt-4">
             <span className="font-medium">{filteredRecipes.length}</span> cocktail{filteredRecipes.length !== 1 ? 's' : ''} found with selected ingredients
           </div>
         )}
       </div>
 
       {selectedIngredients.length === 0 ? (
-        <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
-          <ChefHat className="mx-auto mb-4 text-gray-400" size={48} />
-          <h3 className="text-xl font-serif font-normal mb-2 text-gray-900">Select ingredients to get started</h3>
+        <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
+          <ChefHat className="mx-auto mb-4 text-light-text/60" size={48} />
+          <h3 className="text-xl font-serif font-normal mb-2 text-pure-white">Select ingredients to get started</h3>
           <p className="mb-4 text-sm lg:text-base">
             Choose the ingredients you have available and we'll show you cocktails you can make!
           </p>
         </div>
       ) : filteredRecipes.length === 0 ? (
-        <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
+        <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
           <p className="mb-4 text-sm lg:text-base">
             No cocktails found with those ingredients. Try selecting different ones!
           </p>

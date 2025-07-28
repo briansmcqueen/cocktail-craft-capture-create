@@ -78,7 +78,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
       autoComplete="off"
     >
       <div className="mb-4">
-        <h2 className="text-2xl font-serif font-normal text-gray-900 tracking-wide mb-2">
+        <h2 className="text-2xl font-serif font-normal text-card-foreground tracking-wide mb-2">
           {initial?.id ? 'Edit Recipe' : 'Create New Recipe'}
         </h2>
       </div>
@@ -107,7 +107,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           type="button" 
           variant="secondary" 
           onClick={onCancel}
-          className="bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
+          className=""
         >
           Cancel
         </Button>
