@@ -133,7 +133,7 @@ export default function RecipePage() {
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{recipe.name}</h1>
           {recipe.origin && (
-            <TagBadge className="bg-accent/20 text-primary border border-primary/20">
+            <TagBadge className="bg-accent/20 text-secondary border border-accent/30 rounded-organic-sm">
               {recipe.origin}
             </TagBadge>
           )}
