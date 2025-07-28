@@ -46,24 +46,22 @@ export function RecipeSidebar() {
         "transition-all duration-500 ease-out",
         isCollapsed ? "px-3 mb-4" : "px-6 mb-8"
       )}>
-        {!isCollapsed && (
-          <div className="flex items-center gap-3 mb-2 animate-fade-in">
-            <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
-          </div>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={cn(
-            "flex items-center justify-center rounded-organic-sm bg-medium-charcoal hover:bg-light-charcoal transition-all duration-300 hover:scale-[1.05] hover:rotate-[2deg]",
-            isCollapsed ? "w-8 h-8" : "w-8 h-8"
+        <div className="flex items-center gap-0 mb-2">
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={cn(
+              "flex items-center justify-center rounded-organic-sm bg-medium-charcoal hover:bg-light-charcoal transition-all duration-300 hover:scale-[1.05] hover:rotate-[2deg] text-pure-white font-bold text-xl",
+              isCollapsed ? "w-8 h-8" : "w-auto h-8 px-2"
+            )}
+          >
+            B
+          </button>
+          {!isCollapsed && (
+            <span className="text-3xl font-medium text-pure-white tracking-tight animate-fade-in ml-1">
+              ARBOOK
+            </span>
           )}
-        >
-          {isCollapsed ? (
-            <ChevronRight size={16} className="text-light-text" />
-          ) : (
-            <ChevronLeft size={16} className="text-light-text" />
-          )}
-        </button>
+        </div>
       </div>
       
       {/* Navigation */}
