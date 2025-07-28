@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
-import RecipeCardWithFavorite from "@/components/RecipeCardWithFavorite";
+import UniversalRecipeCard from "@/components/UniversalRecipeCard";
 import WhatToBuyNext from "./WhatToBuyNext";
 
 interface RecommendedIngredient {
@@ -76,11 +76,9 @@ export default function MyBarResults({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(showAllRecipes ? recipesICanMake : recipesICanMake.slice(0, 6)).map((recipe) => (
-              <RecipeCardWithFavorite
+              <UniversalRecipeCard
                 key={recipe.id}
                 recipe={recipe}
-                onRecipeClick={onRecipeClick}
-                onTagClick={onTagClick}
               />
             ))}
           </div>

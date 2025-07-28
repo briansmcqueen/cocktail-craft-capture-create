@@ -2,7 +2,7 @@
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Heart } from "lucide-react";
-import RecipeCardWithFavorite from "./RecipeCardWithFavorite";
+import UniversalRecipeCard from "./UniversalRecipeCard";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -37,10 +37,9 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
         {favoriteRecipes.map((recipe) => (
-          <RecipeCardWithFavorite
+          <UniversalRecipeCard
             key={recipe.id}
             recipe={recipe}
-            onRecipeClick={onRecipeClick}
           />
         ))}
       </div>
