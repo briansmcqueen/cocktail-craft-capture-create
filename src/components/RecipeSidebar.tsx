@@ -35,21 +35,28 @@ export function RecipeSidebar() {
   return (
     <aside 
       className={cn(
-        "bg-rich-charcoal border-r border-light-charcoal min-h-screen flex flex-col py-6 gap-2 sticky top-0 transition-all duration-300 rounded-organic-lg",
+        "bg-rich-charcoal border-r border-light-charcoal min-h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg transition-all duration-500 ease-out",
         isCollapsed ? "w-14" : "w-60"
       )}
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
-      <div className="px-6 mb-8">
+      {/* Header */}
+      <div className={cn(
+        "transition-all duration-500 ease-out",
+        isCollapsed ? "px-3 mb-4" : "px-6 mb-8"
+      )}>
         {!isCollapsed && (
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-2 animate-fade-in">
             <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
           </div>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex items-center justify-center w-8 h-8 rounded-organic-sm bg-medium-charcoal hover:bg-light-charcoal transition-all duration-200"
+          className={cn(
+            "flex items-center justify-center rounded-organic-sm bg-medium-charcoal hover:bg-light-charcoal transition-all duration-300 hover:scale-[1.05] hover:rotate-[2deg]",
+            isCollapsed ? "w-8 h-8" : "w-8 h-8"
+          )}
         >
           {isCollapsed ? (
             <ChevronRight size={16} className="text-light-text" />
@@ -59,21 +66,31 @@ export function RecipeSidebar() {
         </button>
       </div>
       
+      {/* Navigation */}
       <nav className="flex flex-col gap-1 grow">
-        {navigationItems.map((item) => (
+        {navigationItems.map((item, index) => (
           <NavLink
             key={item.id}
             to={item.url}
             end={item.url === "/"}
             className={cn(
-              "flex items-center gap-3 px-6 py-3 mx-3 rounded-organic-sm transition-all font-medium duration-300",
+              "flex items-center rounded-organic-sm transition-all font-medium duration-300",
+              isCollapsed 
+                ? "mx-2 px-2 py-3 justify-center" 
+                : "mx-3 px-6 py-3 gap-3",
               isActive(item.url)
                 ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                 : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:scale-[1.01] hover:rotate-[-0.3deg]"
             )}
+            style={{ 
+              transitionDelay: `${index * 50}ms`,
+              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
           >
             <item.icon size={20} className="flex-shrink-0" />
-            {!isCollapsed && <span>{item.title}</span>}
+            {!isCollapsed && (
+              <span className="animate-fade-in transition-all duration-300">{item.title}</span>
+            )}
           </NavLink>
         ))}
       </nav>
