@@ -7,7 +7,6 @@ import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import DrinkOfTheDay from "./DrinkOfTheDay";
-import WhatYouCanMake from "./WhatYouCanMake";
 import FeaturedSection from "./FeaturedSection";
 import TechniquesSection from "./TechniquesSection";
 
@@ -61,13 +60,6 @@ export default function Featured({
         onShowAuthModal={onShowAuthModal}
       />
 
-      {/* What You Can Make */}
-      <WhatYouCanMake
-        recipes={recipesICanMake}
-        myBarIngredients={myBarIngredients}
-        onRecipeClick={onRecipeClick}
-        onNavigateToMyBar={handleNavigateToMyBar}
-      />
 
       {/* Personalized Recommendations */}
       {favoriteIds.length > 0 && (

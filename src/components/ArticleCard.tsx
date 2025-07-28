@@ -3,7 +3,7 @@ import { Heart, User, Calendar, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Article } from "@/services/articlesService";
-import TagBadge from "@/components/ui/tag";
+import { cn } from "@/lib/utils";
 
 type ArticleCardProps = {
   article: Article;
@@ -38,72 +38,66 @@ export default function ArticleCard({
   };
 
   return (
-    <div className="relative group">
-      <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
-        <div
-          className="bg-card rounded-xl shadow hover:shadow-xl overflow-hidden cursor-pointer transition-all duration-200 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-105 sm:active:scale-100 w-full min-w-0"
-          onClick={() => onArticleClick(article)}
-        >
+    <Card 
+      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border-border rounded-organic-md group overflow-hidden"
+      onClick={() => onArticleClick(article)}
+    >
+      <CardContent className="p-0">
+        {/* Hero image */}
         {article.featured_image_url && (
-          <div className="h-40 w-full overflow-hidden">
-            <img 
-              src={article.featured_image_url} 
+          <div className="relative h-48 overflow-hidden">
+            <img
+              src={article.featured_image_url}
               alt={article.title}
-              className="h-full w-full object-cover group-hover:scale-105 transition-all duration-300"
-              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
         )}
-        
-        <div className="p-4 flex-1 flex flex-col justify-between">
-          <div className="flex-1">
-            <h2 className="font-bold text-lg mb-1 line-clamp-2" title={article.title}>
-              {article.title}
-            </h2>
-            
-            {article.excerpt && (
-              <div className="text-sm text-muted-foreground mb-2 line-clamp-4" title={article.excerpt}>
-                {article.excerpt}
-              </div>
-            )}
 
-            <div className="flex flex-wrap gap-1 mb-2 min-h-[20px]">
-              {article.tags && article.tags.slice(0, 3).map((tag) => (
-                <TagBadge key={tag} className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">
-                  {tag}
-                </TagBadge>
-              ))}
-              {article.tags && article.tags.length > 3 && (
-                <TagBadge className="bg-blue-100 text-blue-800 border border-blue-200 text-xs">
-                  +{article.tags.length - 3}
-                </TagBadge>
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="font-bold text-lg text-pure-white line-clamp-1 mb-2">
+            {article.title}
+          </h3>
+          
+          {/* Article excerpt */}
+          <p className="text-sm text-light-text line-clamp-3 mb-3">
+            {article.excerpt || "Discover tips, techniques, and insights from the world of cocktail making."}
+          </p>
+
+          {/* Published date */}
+          <div className="flex items-center gap-1 mb-3">
+            <Calendar size={14} className="text-soft-gray" />
+            <span className="text-xs text-soft-gray">
+              {formatDate(article.created_at)}
+            </span>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center justify-between">
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => onArticleClick(article)}
+              className="flex-1 mr-2 rounded-organic-sm"
+            >
+              Read Article
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleToggleFavorite}
+              className={cn(
+                "h-8 w-8 p-0 rounded-organic-sm",
+                isFavorite && "text-red-500 hover:text-red-600"
               )}
-            </div>
-          </div>
-          <div className="h-5 flex items-center justify-start">
-            {/* Additional actions could go here */}
+            >
+              <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
+            </Button>
           </div>
         </div>
-        </div>
-      </div>
-      
-      {/* Favorite button */}
-      <div className="absolute top-1 right-3">
-        <button
-          className="p-1 rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 touch-manipulation"
-          onClick={handleToggleFavorite}
-        >
-          <Heart 
-            size={24} 
-            className={`${
-              isFavorite 
-                ? 'text-red-500 fill-red-500' 
-                : 'text-white fill-black/20 stroke-2'
-            } transition-colors duration-200`}
-            strokeWidth={isFavorite ? 1 : 2}
-          />
-        </button>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

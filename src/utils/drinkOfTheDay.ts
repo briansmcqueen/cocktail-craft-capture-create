@@ -29,6 +29,7 @@ export function getDrinkOfTheDay(recipes: Cocktail[]): Cocktail {
 
 /**
  * Gets personalized recommendations based on user's favorite recipes
+ * Finds recipes with similar ingredients to favorites, excluding the favorites themselves
  */
 export function getPersonalizedRecommendations(
   allRecipes: Cocktail[], 
@@ -44,24 +45,82 @@ export function getPersonalizedRecommendations(
     favoriteRecipeIds.includes(recipe.id)
   );
 
-  // Extract tags from favorite recipes to find similar ones
-  const favoriteTags = new Set<string>();
+  // Extract ingredients from favorite recipes to find similar ones
+  const favoriteIngredients = new Set<string>();
   favoriteRecipes.forEach(recipe => {
-    recipe.tags?.forEach(tag => favoriteTags.add(tag));
+    recipe.ingredients.forEach(ingredient => {
+      // Clean ingredient name by removing measurements and extra descriptors
+      let cleanIngredient = ingredient
+        .replace(/^\d+[\s\w]*\s/, '') // Remove measurements like "2 oz", "1 dash"
+        .replace(/^\d+\/\d+[\s\w]*\s/, '') // Remove fractions like "1/2 oz"
+        .replace(/^\.\d+[\s\w]*\s/, '') // Remove decimal measurements like ".5 oz"
+        .replace(/\s*\([^)]*\)/g, '') // Remove parenthetical descriptions
+        .replace(/,.*$/, '') // Remove everything after comma
+        .trim()
+        .toLowerCase();
+
+      // Standardize common ingredient names
+      if (cleanIngredient.includes('gin')) cleanIngredient = 'gin';
+      else if (cleanIngredient.includes('vodka')) cleanIngredient = 'vodka';
+      else if (cleanIngredient.includes('rum')) cleanIngredient = 'rum';
+      else if (cleanIngredient.includes('whiskey') || cleanIngredient.includes('bourbon')) cleanIngredient = 'whiskey';
+      else if (cleanIngredient.includes('tequila')) cleanIngredient = 'tequila';
+      else if (cleanIngredient.includes('vermouth')) {
+        if (cleanIngredient.includes('dry')) cleanIngredient = 'dry vermouth';
+        else if (cleanIngredient.includes('sweet')) cleanIngredient = 'sweet vermouth';
+        else cleanIngredient = 'vermouth';
+      }
+      else if (cleanIngredient.includes('lime')) cleanIngredient = 'lime juice';
+      else if (cleanIngredient.includes('lemon')) cleanIngredient = 'lemon juice';
+      else if (cleanIngredient.includes('triple sec') || cleanIngredient.includes('cointreau')) cleanIngredient = 'triple sec';
+      
+      favoriteIngredients.add(cleanIngredient);
+    });
   });
 
-  // Score recipes based on tag overlap with favorites
+  // Score recipes based on ingredient overlap with favorites
   const scoredRecipes = allRecipes
     .filter(recipe => !favoriteRecipeIds.includes(recipe.id)) // Exclude already favorited
     .map(recipe => {
-      const recipeTags = recipe.tags || [];
-      const overlapCount = recipeTags.filter(tag => favoriteTags.has(tag)).length;
+      let overlapCount = 0;
+      
+      recipe.ingredients.forEach(ingredient => {
+        // Clean this recipe's ingredient the same way
+        let cleanIngredient = ingredient
+          .replace(/^\d+[\s\w]*\s/, '')
+          .replace(/^\d+\/\d+[\s\w]*\s/, '')
+          .replace(/^\.\d+[\s\w]*\s/, '')
+          .replace(/\s*\([^)]*\)/g, '')
+          .replace(/,.*$/, '')
+          .trim()
+          .toLowerCase();
+
+        // Apply same standardization
+        if (cleanIngredient.includes('gin')) cleanIngredient = 'gin';
+        else if (cleanIngredient.includes('vodka')) cleanIngredient = 'vodka';
+        else if (cleanIngredient.includes('rum')) cleanIngredient = 'rum';
+        else if (cleanIngredient.includes('whiskey') || cleanIngredient.includes('bourbon')) cleanIngredient = 'whiskey';
+        else if (cleanIngredient.includes('tequila')) cleanIngredient = 'tequila';
+        else if (cleanIngredient.includes('vermouth')) {
+          if (cleanIngredient.includes('dry')) cleanIngredient = 'dry vermouth';
+          else if (cleanIngredient.includes('sweet')) cleanIngredient = 'sweet vermouth';
+          else cleanIngredient = 'vermouth';
+        }
+        else if (cleanIngredient.includes('lime')) cleanIngredient = 'lime juice';
+        else if (cleanIngredient.includes('lemon')) cleanIngredient = 'lemon juice';
+        else if (cleanIngredient.includes('triple sec') || cleanIngredient.includes('cointreau')) cleanIngredient = 'triple sec';
+        
+        if (favoriteIngredients.has(cleanIngredient)) {
+          overlapCount++;
+        }
+      });
+      
       return {
         recipe,
         score: overlapCount
       };
     })
-    .filter(item => item.score > 0) // Only include recipes with some tag overlap
+    .filter(item => item.score > 0) // Only include recipes with ingredient overlap
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(item => item.recipe);
