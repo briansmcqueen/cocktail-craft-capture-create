@@ -46,32 +46,27 @@ export default function RecipeResultCard({
   return (
     <Card 
       className={cn(
-        "cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border-border rounded-organic-md group",
-        canMake && "ring-2 ring-primary/20",
+        "cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border-border rounded-organic-md group overflow-hidden",
         className
       )}
       onClick={() => onRecipeClick(cocktail)}
     >
       <CardContent className="p-0">
         {/* Hero image */}
-        <div className="relative h-48 overflow-hidden rounded-t-organic-md">
+        <div className="relative h-48 overflow-hidden">
           <img
             src={cocktail.image}
             alt={cocktail.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          {/* Availability badge overlay */}
-          <div className="absolute top-3 right-3">
-            {canMake ? (
+          {/* Simple availability indicator for can make only */}
+          {canMake && (
+            <div className="absolute top-3 right-3">
               <Badge className="bg-primary/90 text-primary-foreground text-xs px-2 py-1 backdrop-blur-sm">
-                ✓ CAN MAKE
+                ✓ Ready
               </Badge>
-            ) : (
-              <Badge variant="destructive" className="bg-destructive/90 text-xs px-2 py-1 backdrop-blur-sm">
-                MISSING {missingIngredients.length}
-              </Badge>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -80,43 +75,19 @@ export default function RecipeResultCard({
             {cocktail.name}
           </h3>
           
-          {/* Simplified ingredient status */}
-          <div className="mb-3">
-            <div className="text-sm text-light-text mb-2">
-              {cocktail.ingredients.length - missingIngredients.length}/{cocktail.ingredients.length} ingredients available
-            </div>
-            
-            {/* Progress bar */}
-            <div className="w-full bg-muted rounded-full h-1.5">
-              <div 
-                className={cn(
-                  "h-1.5 rounded-full transition-all duration-300",
-                  availabilityScore === 100 ? "bg-primary" : "bg-gradient-to-r from-destructive to-primary"
-                )}
-                style={{ width: `${availabilityScore}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Missing ingredients (only if not can make) */}
-          {!canMake && missingIngredients.length > 0 && (
-            <div className="mb-3 text-sm">
-              <span className="text-muted-foreground">Missing: </span>
-              <span className="text-destructive">
-                {missingIngredients.slice(0, 2).join(', ')}
-                {missingIngredients.length > 2 && ` +${missingIngredients.length - 2} more`}
-              </span>
-            </div>
-          )}
+          {/* Simple description or ingredients preview */}
+          <p className="text-sm text-light-text line-clamp-2 mb-3">
+            {cocktail.notes || `A delicious cocktail featuring ${cocktail.ingredients.slice(0, 2).map(ing => ing.replace(/^\d+[\s\w]*\s/, '').split(' ')[0]).join(' and ')}`}
+          </p>
 
           {/* Action buttons */}
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between">
             <Button
-              variant={canMake ? "default" : "secondary"}
+              variant="default"
               size="sm"
               className="flex-1 mr-2 rounded-organic-sm"
             >
-              {canMake ? 'Make Recipe' : 'View Details'}
+              View Recipe
             </Button>
             
             <Button
