@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown, X, RotateCcw } from 'lucide-react';
 import { SearchFilters, SPIRIT_ICONS, BaseSpirit } from '@/types/search';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +14,7 @@ interface FilterPillsProps {
   activeFilterCount: number;
   availableIngredients: string[];
   canMakeCount?: number;
+  onClearAllFilters?: () => void;
 }
 
 export default function FilterPills({
@@ -23,7 +24,8 @@ export default function FilterPills({
   isAdvancedOpen,
   activeFilterCount,
   availableIngredients,
-  canMakeCount = 0
+  canMakeCount = 0,
+  onClearAllFilters
 }: FilterPillsProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -289,6 +291,19 @@ export default function FilterPills({
           />
         </span>
       </Button>
+
+      {/* Clear All Filters Button */}
+      {(activeFilterCount > 0 || filters.canMakeOnly || filters.query) && onClearAllFilters && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onClearAllFilters}
+          className="gap-2 text-muted-foreground hover:text-foreground border-border rounded-organic-sm"
+        >
+          <RotateCcw size={14} />
+          Clear All
+        </Button>
+      )}
     </div>
   );
 }

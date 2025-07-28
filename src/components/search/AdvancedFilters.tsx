@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { X, Save, BookmarkPlus } from 'lucide-react';
+import { X, Save, BookmarkPlus, RotateCcw } from 'lucide-react';
 import { 
   SearchFilters, 
   BaseSpirit, 
@@ -29,6 +29,7 @@ interface AdvancedFiltersProps {
   savedFilters: SavedFilter[];
   onLoadSavedFilter: (filter: SavedFilter) => void;
   onDeleteSavedFilter: (id: string) => void;
+  onClearFilters?: () => void;
 }
 
 const FLAVOR_PROFILES: FlavorProfile[] = [
@@ -52,7 +53,8 @@ export default function AdvancedFilters({
   onSaveFilter,
   savedFilters,
   onLoadSavedFilter,
-  onDeleteSavedFilter
+  onDeleteSavedFilter,
+  onClearFilters
 }: AdvancedFiltersProps) {
   const [saveFilterName, setSaveFilterName] = React.useState('');
 
@@ -84,14 +86,27 @@ export default function AdvancedFilters({
         {/* Header */}
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium text-pure-white">Advanced Filters</h3>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-8 w-8 p-0"
-          >
-            <X size={16} />
-          </Button>
+          <div className="flex items-center gap-2">
+            {onClearFilters && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onClearFilters}
+                className="h-8 gap-2 text-muted-foreground hover:text-foreground border-border rounded-organic-sm"
+              >
+                <RotateCcw size={14} />
+                Clear All
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-8 w-8 p-0"
+            >
+              <X size={16} />
+            </Button>
+          </div>
         </div>
 
         {/* Saved Filters */}

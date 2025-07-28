@@ -186,6 +186,7 @@ export default function SearchInterface({
         activeFilterCount={activeFilterCount}
         availableIngredients={availableIngredients}
         canMakeCount={canMakeCount}
+        onClearAllFilters={clearFilters}
       />
 
       {/* Advanced filters panel */}
@@ -198,6 +199,7 @@ export default function SearchInterface({
           savedFilters={savedFilters}
           onLoadSavedFilter={loadSavedFilter}
           onDeleteSavedFilter={deleteSavedFilter}
+          onClearFilters={clearFilters}
         />
       )}
 
