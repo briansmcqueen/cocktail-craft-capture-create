@@ -50,8 +50,8 @@ export function RecipeSidebar() {
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className={cn(
-              "flex items-center justify-center rounded-organic-sm bg-medium-charcoal hover:bg-light-charcoal transition-all duration-300 hover:scale-[1.05] hover:rotate-[2deg] text-pure-white font-bold text-xl",
-              isCollapsed ? "w-8 h-8" : "w-auto h-8 px-2"
+              "flex items-center justify-center transition-all duration-700 ease-out hover:scale-[1.1] text-pure-white font-bold text-xl",
+              isCollapsed ? "w-8 h-8" : "w-auto h-8"
             )}
           >
             B
