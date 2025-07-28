@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
 import { getLikeCount } from "@/utils/likes";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { recipeNameToSlug } from "@/pages/RecipePage";
 
 type RecipeCardProps = {
   recipe: Cocktail;
@@ -17,6 +19,7 @@ type RecipeCardProps = {
 const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=400&q=80";
 
 export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick }: RecipeCardProps) {
+  const navigate = useNavigate();
   const likeCount = getLikeCount(recipe.id);
   const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
   const [hasErrored, setHasErrored] = useState(false);
@@ -38,11 +41,16 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
     if (!onTagClick) return undefined;
     return () => onTagClick(tag);
   };
+
+  const handleCardClick = () => {
+    const slug = recipeNameToSlug(recipe.name);
+    navigate(`/cocktail/${slug}`);
+  };
   
   return (
     <div
       className="bg-card rounded-organic-md shadow-glass hover:shadow-xl cursor-pointer transition-all duration-400 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100 w-full min-w-0 border border-border"
-      onClick={onSelect}
+      onClick={handleCardClick}
       style={{ transitionTimingFunction: 'var(--timing-pour)' }}
     >
       <div className="h-40 w-full overflow-hidden">

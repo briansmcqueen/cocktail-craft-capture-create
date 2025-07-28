@@ -3,6 +3,8 @@ import { Heart } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
+import { useNavigate } from "react-router-dom";
+import { recipeNameToSlug } from "@/pages/RecipePage";
 
 type RecipeCardWithFavoriteProps = {
   recipe: Cocktail;
@@ -17,6 +19,7 @@ export default function RecipeCardWithFavorite({
   onTagClick,
   onShowAuthModal
 }: RecipeCardWithFavoriteProps) {
+  const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
@@ -24,12 +27,17 @@ export default function RecipeCardWithFavorite({
     await toggleFavorite(recipe.id, onShowAuthModal);
   };
 
+  const handleCardClick = () => {
+    const slug = recipeNameToSlug(recipe.name);
+    navigate(`/cocktail/${slug}`);
+  };
+
   return (
     <div className="relative group">
       <div className="relative overflow-hidden rounded-organic-lg border border-light-charcoal hover:border-primary/30 transition-all duration-300 bg-medium-charcoal hover:bg-light-charcoal hover:scale-[1.02] hover:rotate-[0.5deg] shadow-lg hover:shadow-xl">
         <RecipeCard
           recipe={recipe}
-          onSelect={() => onRecipeClick(recipe)}
+          onSelect={handleCardClick}
           editable={false}
           onTagClick={onTagClick}
         />

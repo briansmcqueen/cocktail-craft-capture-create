@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./components/UserProfile";
+import RecipePage from "./pages/RecipePage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/user/:userId" element={<UserProfile />} />
+          <Route path="/cocktail/:recipeName" element={<RecipePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

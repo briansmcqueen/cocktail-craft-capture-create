@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
 import AuthModal from "@/components/auth/AuthModal";
-import RecipeModal from "@/components/RecipeModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import ProfileSettings from "@/components/profile/ProfileSettings";
@@ -15,8 +14,6 @@ export default function Index() {
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   
   const {
-    selectedRecipe,
-    setSelectedRecipe,
     library,
     setLibrary,
     searchTerm,
@@ -31,7 +28,6 @@ export default function Index() {
     forceUpdate,
     isMobile,
     userRecipes,
-    handleRecipeClick,
     handleSaveRecipe,
     handleDeleteRecipe,
     handleEditRecipe,
@@ -147,7 +143,7 @@ export default function Index() {
         favoriteRecipes={favoriteRecipes}
         userRecipes={userRecipes}
         getFilteredRecipes={getFilteredRecipes}
-        handleRecipeClick={handleRecipeClick}
+        handleRecipeClick={() => {}} // No longer needed since we use URL navigation
         handleSaveRecipe={handleSaveRecipe}
         handleEditRecipe={handleEditRecipe}
         handleShareRecipe={handleShareRecipe}
@@ -167,16 +163,6 @@ export default function Index() {
         open={showAuthModal} 
         onOpenChange={setShowAuthModal}
         initialMode={authModalMode}
-      />
-      <RecipeModal
-        open={!!selectedRecipe}
-        onOpenChange={(open) => !open && setSelectedRecipe(null)}
-        recipe={selectedRecipe}
-        onEdit={() => handleEditRecipe(selectedRecipe!)}
-        editable={user && userRecipes.some(r => r.id === selectedRecipe?.id)}
-        onShareRecipe={handleShareRecipe}
-        onRemix={handleRemixRecipe}
-        onShowAuthModal={() => setShowAuthModal(true)}
       />
       <ShareRecipe 
         recipe={shareRecipe} 
