@@ -46,7 +46,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
         {tags.map((tag, i) => (
           <TagBadge
             key={`${tag}-${i}`}
-            className="bg-muted text-white cursor-pointer"
+            className="bg-primary/20 text-emerald border border-primary/30 cursor-pointer rounded-organic-sm"
             onClick={() => removeTag(i)}
             removable
           >
@@ -62,7 +62,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
           onKeyDown={handleKeyDown}
           className="flex-1"
         />
-        <Button type="button" onClick={handleAdd} size="sm" variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300">
+        <Button type="button" onClick={handleAdd} size="sm" variant="secondary" className="rounded-organic-sm">
           <Tag size={16} />
         </Button>
       </div>

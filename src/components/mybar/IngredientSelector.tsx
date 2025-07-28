@@ -96,7 +96,7 @@ export default function IngredientSelector({
       {/* Selected Ingredients Pills */}
       {myBarIngredients.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium">My Bar ({myBarIngredients.length} ingredients)</h3>
+          <h3 className="text-sm font-medium text-light-text">My Bar ({myBarIngredients.length} ingredients)</h3>
           {/* Mobile: Horizontal Carousel */}
           <div className="md:hidden">
             <Carousel className="w-full">
@@ -114,7 +114,7 @@ export default function IngredientSelector({
                     return (
                       <CarouselItem key={ingredientId} className="pl-2 basis-auto">
                         <span
-                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 cursor-pointer hover:bg-blue-200 transition-colors whitespace-nowrap"
+                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-organic-sm bg-primary/20 text-emerald border border-primary/30 cursor-pointer hover:bg-primary/30 transition-colors whitespace-nowrap"
                           onClick={() => toggleIngredient(ingredientId)}
                         >
                           {ingredient.name}
@@ -141,7 +141,7 @@ export default function IngredientSelector({
                 return (
                   <span
                     key={ingredientId}
-                    className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200 cursor-pointer hover:bg-blue-200 transition-colors"
+                    className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-organic-sm bg-primary/20 text-emerald border border-primary/30 cursor-pointer hover:bg-primary/30 transition-colors"
                     onClick={() => toggleIngredient(ingredientId)}
                   >
                     {ingredient.name}
@@ -159,29 +159,29 @@ export default function IngredientSelector({
           <div
             key={ingredient.id}
             className={cn(
-              "flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm",
+              "flex items-center justify-between p-3 rounded-organic-sm border cursor-pointer transition-all hover:shadow-sm",
               myBar[ingredient.id] 
-                ? 'bg-accent/20 border-accent' 
-                : 'bg-card border-border hover:border-accent/50 hover:bg-accent/5'
+                ? 'bg-primary/20 border-primary/30' 
+                : 'bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal'
             )}
             onClick={() => toggleIngredient(ingredient.id)}
           >
             <div className="flex-1">
-              <div className="font-medium text-sm flex items-center gap-2 text-gray-900">
+              <div className="font-medium text-sm flex items-center gap-2 text-light-text">
                 {ingredient.name}
                 {ingredient.isCustom && (
-                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800 border border-blue-200">Custom</span>
+                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-organic-sm bg-primary/20 text-emerald border border-primary/30">Custom</span>
                 )}
               </div>
-              <div className="text-xs text-gray-600">{ingredient.subCategory}</div>
+              <div className="text-xs text-soft-gray">{ingredient.subCategory}</div>
             </div>
             <div className="ml-2">
               {myBar[ingredient.id] ? (
-                <div className="w-4 h-4 bg-accent rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-accent-foreground rounded-full" />
+                <div className="w-4 h-4 bg-emerald rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-primary rounded-full" />
                 </div>
               ) : (
-                <div className="w-4 h-4 border-2 border-muted-foreground rounded-full" />
+                <div className="w-4 h-4 border-2 border-soft-gray rounded-full" />
               )}
             </div>
           </div>
