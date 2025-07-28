@@ -332,7 +332,7 @@ export default function RecipePage() {
                           {[1, 2, 3, 4, 5].map((level) => {
                             const difficultyLevel = recipe.difficulty === 'easy' ? 1 : recipe.difficulty === 'medium' ? 3 : 5;
                             const isActive = level <= difficultyLevel;
-                            const barColor = difficultyLevel === 1 ? 'bg-emerald-green' : 
+                            const barColor = difficultyLevel === 1 ? 'bg-green-400' : 
                                            difficultyLevel === 3 ? 'bg-golden-amber' : 'bg-red-500';
                             return (
                               <div
