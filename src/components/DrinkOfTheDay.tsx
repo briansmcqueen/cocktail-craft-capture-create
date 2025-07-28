@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import TagBadge from "./ui/tag";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { recipeNameToSlug } from "@/pages/RecipePage";
 
 interface DrinkOfTheDayProps {
   recipe: Cocktail;
@@ -18,10 +20,21 @@ export default function DrinkOfTheDay({
   onShowAuthModal 
 }: DrinkOfTheDayProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const navigate = useNavigate();
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await toggleFavorite(recipe.id, onShowAuthModal);
+  };
+
+  const handleRecipeClick = () => {
+    const slug = recipeNameToSlug(recipe.name);
+    navigate(`/cocktail/${slug}`);
+  };
+
+  const handleImageClick = () => {
+    const slug = recipeNameToSlug(recipe.name);
+    navigate(`/cocktail/${slug}`);
   };
 
   return (
@@ -52,13 +65,13 @@ export default function DrinkOfTheDay({
         
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* Recipe Image */}
-          <div className="relative">
-            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-lg">
+          <div className="relative cursor-pointer" onClick={handleImageClick}>
+            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
               {recipe.image ? (
                 <img 
                   src={recipe.image} 
                   alt={recipe.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/30">
@@ -118,7 +131,7 @@ export default function DrinkOfTheDay({
 
             {/* Action Button */}
             <Button 
-              onClick={() => onRecipeClick(recipe)}
+              onClick={handleRecipeClick}
               variant="secondary"
               className="flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 hover:scale-[1.02] hover:rotate-[-0.3deg]"
             >
