@@ -26,7 +26,7 @@ export default function RecipeCardWithFavorite({
 
   return (
     <div className="relative group">
-      <div className="relative overflow-hidden rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white">
+      <div className="relative overflow-hidden rounded-organic-lg border border-light-charcoal hover:border-primary/30 transition-all duration-300 bg-medium-charcoal hover:bg-light-charcoal hover:scale-[1.02] hover:rotate-[0.5deg] shadow-lg hover:shadow-xl">
         <RecipeCard
           recipe={recipe}
           onSelect={() => onRecipeClick(recipe)}
@@ -37,15 +37,15 @@ export default function RecipeCardWithFavorite({
       
       <div className="absolute top-1 right-3">
         <button
-          className="p-1 rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 touch-manipulation"
+          className="p-1 rounded-organic-sm bg-medium-charcoal/80 backdrop-blur-sm hover:bg-light-charcoal hover:scale-110 active:scale-95 transition-all duration-200 touch-manipulation border border-light-charcoal/30"
           onClick={handleToggleFavorite}
         >
           <Heart 
             size={24} 
             className={`${
               isFavorite(recipe.id) 
-                ? 'text-red-500 fill-red-500' 
-                : 'text-white fill-black/20 stroke-2'
+                ? 'text-heart-red fill-heart-red' 
+                : 'text-light-text fill-transparent stroke-2'
             } transition-colors duration-200`}
             strokeWidth={isFavorite(recipe.id) ? 1 : 2}
           />
