@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, Edit, Heart, Share, Martini } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
@@ -27,11 +27,43 @@ const slugToRecipeName = (slug: string): string => {
 export default function RecipePage() {
   const { recipeName } = useParams<{ recipeName: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [recipe, setRecipe] = useState<Cocktail | null>(null);
   const [isMetric, setIsMetric] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Smart back navigation function
+  const handleGoBack = useCallback(() => {
+    // Check if we have meaningful navigation history
+    const hasHistory = window.history.length > 1;
+    
+    if (hasHistory) {
+      // Try to use React Router's navigate first (more reliable in SPAs)
+      try {
+        navigate(-1);
+        return;
+      } catch (error) {
+        console.log('React Router navigate failed, trying browser history:', error);
+      }
+    }
+    
+    // Fallback logic based on recipe type and user state
+    const userRecipes = getUserRecipes();
+    const isUserRecipe = userRecipes.some(r => r.id === recipe?.id);
+    
+    if (isUserRecipe) {
+      // User's own recipe - go to My Creations
+      navigate('/recipes/mine');
+    } else if (user) {
+      // Authenticated user viewing classic recipe - go to all recipes
+      navigate('/recipes');  
+    } else {
+      // Unauthenticated user - go to featured page
+      navigate('/');
+    }
+  }, [navigate, recipe?.id, user]);
   
 
   // Load recipe
@@ -155,7 +187,7 @@ export default function RecipePage() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Back button */}
         <button
-          onClick={() => window.history.back()}
+          onClick={handleGoBack}
           className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors"
         >
           <ArrowLeft size={20} />
