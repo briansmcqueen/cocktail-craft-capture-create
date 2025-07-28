@@ -20,6 +20,7 @@ type FeaturedProps = {
   onToggleFavorite: (recipe: Cocktail) => void;
   onShowAuthModal?: () => void;
   onNavigateToMyBar?: () => void;
+  onTagClick?: (tag: string) => void;
 };
 
 export default function Featured({ 
@@ -30,7 +31,8 @@ export default function Featured({
   userRecipes,
   onToggleFavorite,
   onShowAuthModal,
-  onNavigateToMyBar
+  onNavigateToMyBar,
+  onTagClick
 }: FeaturedProps) {
   // Get data for personalization
   const { myBarIngredients } = useMyBarData(0);
@@ -67,6 +69,7 @@ export default function Featured({
         myBarIngredients={myBarIngredients}
         onRecipeClick={onRecipeClick}
         onNavigateToMyBar={handleNavigateToMyBar}
+        onTagClick={onTagClick}
       />
 
       {/* Personalized Recommendations */}
