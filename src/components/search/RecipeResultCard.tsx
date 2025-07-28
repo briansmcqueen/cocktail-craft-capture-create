@@ -6,6 +6,8 @@ import { Heart, Share2, Plus, Check } from 'lucide-react';
 import { SearchResult } from '@/types/search';
 import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { recipeNameToSlug } from '@/pages/RecipePage';
 
 interface RecipeResultCardProps {
   result: SearchResult;
@@ -26,6 +28,7 @@ export default function RecipeResultCard({
   isFavorite = false,
   className
 }: RecipeResultCardProps) {
+  const navigate = useNavigate();
   const { cocktail, canMake, missingIngredients, availabilityScore } = result;
 
   const handleAddMissingToBar = (ingredient: string, e: React.MouseEvent) => {
@@ -42,6 +45,11 @@ export default function RecipeResultCard({
     e.stopPropagation();
     onTagClick?.(tag);
   };
+  
+  const handleViewRecipe = () => {
+    const slug = recipeNameToSlug(cocktail.name);
+    navigate(`/cocktail/${slug}`);
+  };
 
   return (
     <Card 
@@ -49,7 +57,7 @@ export default function RecipeResultCard({
         "cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border-border rounded-organic-md group overflow-hidden",
         className
       )}
-      onClick={() => onRecipeClick(cocktail)}
+      onClick={handleViewRecipe}
     >
       <CardContent className="p-0">
         {/* Hero image */}
@@ -85,6 +93,7 @@ export default function RecipeResultCard({
             <Button
               variant="default"
               size="sm"
+              onClick={handleViewRecipe}
               className="flex-1 mr-2 rounded-organic-sm"
             >
               View Recipe
