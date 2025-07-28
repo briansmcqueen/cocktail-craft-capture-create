@@ -2,9 +2,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Cocktail } from "@/data/classicCocktails";
 
 export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('recipes')
     .select('*')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
   if (error) {
