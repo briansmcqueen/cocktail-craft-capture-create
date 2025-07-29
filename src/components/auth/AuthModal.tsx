@@ -87,10 +87,10 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" aria-describedby="auth-description">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-center text-gray-900">
+          <DialogTitle className="text-2xl font-serif text-center text-pure-white">
             {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
-          <p id="auth-description" className="text-sm text-muted-foreground text-center">
+          <p id="auth-description" className="text-sm text-light-text text-center">
             {mode === 'signin' ? 'Sign in to your account to access your recipes and preferences.' : 'Create a new account to save recipes and track your bar inventory.'}
           </p>
         </DialogHeader>
@@ -150,7 +150,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
         </form>
 
         <div className="text-center">
-          <Button variant="link" onClick={switchMode} className="text-primary hover:text-primary/80">
+          <Button variant="link" onClick={switchMode} className="text-soft-gray hover:text-light-text">
             {mode === 'signin' 
               ? "Don't have an account? Sign up" 
               : "Already have an account? Sign in"
