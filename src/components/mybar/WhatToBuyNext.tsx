@@ -36,18 +36,18 @@ export default function WhatToBuyNext({
             onClick={() => onAddIngredient(recommendation.ingredient.id)}
           >
             <div className="flex-1">
-              <div className="font-medium text-base text-gray-900 mb-1">{recommendation.ingredient.name}</div>
-              <p className="text-sm text-gray-600 mb-2">{recommendation.ingredient.description}</p>
+              <div className="font-medium text-base text-pure-white mb-1">{recommendation.ingredient.name}</div>
+              <p className="text-sm text-light-text mb-2">{recommendation.ingredient.description}</p>
               <div className="flex items-center gap-2 mb-2">
-                <Star className="h-4 w-4 text-gray-900" />
-                <span className="text-sm font-medium text-gray-900">
+                <Star className="h-4 w-4 text-pure-white" />
+                <span className="text-sm font-medium text-pure-white">
                   Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}: {recommendation.newRecipesUnlocked.map(recipe => recipe.name).join(', ')}
                 </span>
               </div>
             </div>
             <div className="ml-4">
               <div className="flex items-center justify-center w-8 h-8 bg-accent/20 rounded-full">
-                <Plus className="h-4 w-4 text-gray-900" />
+                <Plus className="h-4 w-4 text-pure-white" />
               </div>
             </div>
           </div>
