@@ -57,6 +57,21 @@ export default function AdvancedFilters({
   onClearFilters
 }: AdvancedFiltersProps) {
   const [saveFilterName, setSaveFilterName] = React.useState('');
+  const cardRef = React.useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const toggleArrayFilter = <T,>(
     key: keyof SearchFilters,
@@ -81,7 +96,7 @@ export default function AdvancedFilters({
   };
 
   return (
-    <Card className="w-full bg-card border-border rounded-organic-md">
+    <Card ref={cardRef} className="w-full bg-card border-border rounded-organic-md">
       <CardContent className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
