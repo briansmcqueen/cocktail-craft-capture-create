@@ -6,7 +6,7 @@ import TagBadge from "./ui/tag";
 import { getLikeCount } from "@/utils/likes";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { recipeNameToSlug } from "@/pages/RecipePage";
+import { getRecipeUrl } from "@/pages/RecipePage";
 
 type RecipeCardProps = {
   recipe: Cocktail;
@@ -43,8 +43,8 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
   };
 
   const handleCardClick = () => {
-    const slug = recipeNameToSlug(recipe.name);
-    navigate(`/cocktail/${slug}`);
+    const url = getRecipeUrl(recipe);
+    navigate(url);
   };
   
   return (

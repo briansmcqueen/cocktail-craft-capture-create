@@ -4,6 +4,7 @@ import { ArrowLeft, Edit, Heart, Share, Martini } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getUserRecipes } from "@/utils/storage";
+import { getRecipeByUsernameAndName } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { getUserPreferences } from "@/services/userPreferencesService";
@@ -26,8 +27,21 @@ const slugToRecipeName = (slug: string): string => {
   return slug.replace(/-/g, ' ');
 };
 
+// Generate the correct URL for any recipe
+const getRecipeUrl = (recipe: Cocktail): string => {
+  const slug = recipeNameToSlug(recipe.name);
+  if (recipe.isUserRecipe && recipe.createdBy) {
+    // User recipe: /cocktail/{username}/{recipe-name}
+    const usernameSlug = recipeNameToSlug(recipe.createdBy);
+    return `/cocktail/${usernameSlug}/${slug}`;
+  } else {
+    // Classic recipe: /cocktail/{recipe-name}
+    return `/cocktail/${slug}`;
+  }
+};
+
 export default function RecipePage() {
-  const { recipeName } = useParams<{ recipeName: string }>();
+  const { recipeName, username } = useParams<{ recipeName: string; username?: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -72,18 +86,29 @@ export default function RecipePage() {
   useEffect(() => {
     if (!recipeName) return;
 
-    // Find recipe by matching slug
-    const allRecipes = [...classicCocktails, ...getUserRecipes()];
-    const foundRecipe = allRecipes.find(r => 
-      recipeNameToSlug(r.name) === recipeName
-    );
+    const loadRecipe = async () => {
+      let foundRecipe: Cocktail | null = null;
 
-    if (foundRecipe) {
-      setRecipe(foundRecipe);
-    } else {
-      // Recipe not found, redirect to home
-      navigate('/');
-    }
+      if (username) {
+        // User recipe with username in URL
+        foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
+      } else {
+        // Classic recipe or user recipe with old URL format
+        const allRecipes = [...classicCocktails, ...getUserRecipes()];
+        foundRecipe = allRecipes.find(r => 
+          recipeNameToSlug(r.name) === recipeName
+        ) || null;
+      }
+
+      if (foundRecipe) {
+        setRecipe(foundRecipe);
+      } else {
+        // Recipe not found, redirect to home
+        navigate('/');
+      }
+    };
+
+    loadRecipe();
 
     // Load user preferences
     const loadUserPreferences = async () => {
@@ -95,7 +120,7 @@ export default function RecipePage() {
       }
     };
     loadUserPreferences();
-  }, [recipeName, user, navigate]);
+  }, [recipeName, username, user, navigate]);
 
   if (!recipe) {
     return (
@@ -446,4 +471,4 @@ export default function RecipePage() {
   );
 }
 
-export { recipeNameToSlug, slugToRecipeName };
+export { recipeNameToSlug, slugToRecipeName, getRecipeUrl };

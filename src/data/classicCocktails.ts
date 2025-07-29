@@ -20,6 +20,8 @@ export type Cocktail = {
   difficulty?: Difficulty;
   abv?: string;
   prepTime?: string;
+  createdBy?: string; // Username of the creator for user recipes
+  isUserRecipe?: boolean; // Flag to distinguish user recipes from classic ones
 };
 
 const rawCocktails: Cocktail[] = [

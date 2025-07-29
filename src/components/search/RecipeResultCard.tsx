@@ -7,7 +7,7 @@ import { SearchResult } from '@/types/search';
 import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { recipeNameToSlug } from '@/pages/RecipePage';
+import { getRecipeUrl } from '@/pages/RecipePage';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
 
 interface RecipeResultCardProps {
@@ -47,8 +47,8 @@ export default function RecipeResultCard({
   };
   
   const handleViewRecipe = () => {
-    const slug = recipeNameToSlug(cocktail.name);
-    navigate(`/cocktail/${slug}`);
+    const url = getRecipeUrl(cocktail);
+    navigate(url);
   };
 
   return (

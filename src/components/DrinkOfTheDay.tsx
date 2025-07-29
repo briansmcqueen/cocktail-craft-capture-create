@@ -6,7 +6,7 @@ import TagBadge from "./ui/tag";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { recipeNameToSlug } from "@/pages/RecipePage";
+import { getRecipeUrl } from "@/pages/RecipePage";
 
 interface DrinkOfTheDayProps {
   recipe: Cocktail;
@@ -28,13 +28,13 @@ export default function DrinkOfTheDay({
   };
 
   const handleRecipeClick = () => {
-    const slug = recipeNameToSlug(recipe.name);
-    navigate(`/cocktail/${slug}`);
+    const url = getRecipeUrl(recipe);
+    navigate(url);
   };
 
   const handleImageClick = () => {
-    const slug = recipeNameToSlug(recipe.name);
-    navigate(`/cocktail/${slug}`);
+    const url = getRecipeUrl(recipe);
+    navigate(url);
   };
 
   return (

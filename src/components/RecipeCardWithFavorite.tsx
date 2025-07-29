@@ -4,7 +4,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { useNavigate } from "react-router-dom";
-import { recipeNameToSlug } from "@/pages/RecipePage";
+import { getRecipeUrl } from "@/pages/RecipePage";
 
 type RecipeCardWithFavoriteProps = {
   recipe: Cocktail;
@@ -28,8 +28,8 @@ export default function RecipeCardWithFavorite({
   };
 
   const handleCardClick = () => {
-    const slug = recipeNameToSlug(recipe.name);
-    navigate(`/cocktail/${slug}`);
+    const url = getRecipeUrl(recipe);
+    navigate(url);
   };
 
   return (

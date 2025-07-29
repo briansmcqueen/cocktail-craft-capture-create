@@ -32,6 +32,7 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/cocktail/:recipeName" element={<RecipePage />} />
+          <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

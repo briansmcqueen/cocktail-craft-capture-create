@@ -19,6 +19,13 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     return [];
   }
 
+  // Get user profile separately to get username
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username, full_name')
+    .eq('id', user.id)
+    .single();
+
   return data?.map(recipe => ({
     id: recipe.id,
     name: recipe.name,
@@ -26,7 +33,9 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     ingredients: recipe.ingredients,
     steps: recipe.instructions,
     notes: recipe.description || undefined,
-    tags: recipe.tags || []
+    tags: recipe.tags || [],
+    createdBy: profile?.username || profile?.full_name,
+    isUserRecipe: true
   })) || [];
 }
 
@@ -99,5 +108,58 @@ export async function syncUserRecipesFromLocalStorage(): Promise<void> {
     localStorage.removeItem(localRecipesKey);
   } catch (error) {
     console.error('Error syncing recipes from localStorage:', error);
+  }
+}
+
+export async function getRecipeByUsernameAndName(username: string, recipeName: string): Promise<Cocktail | null> {
+  try {
+    // First, find the user by username
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, username, full_name')
+      .eq('username', username)
+      .single();
+
+    if (profileError || !profile) {
+      console.error('User not found:', username);
+      return null;
+    }
+
+    // Convert URL slug back to recipe name for searching
+    const searchName = recipeName.replace(/-/g, ' ');
+    
+    // Then find the recipe by that user with matching name
+    const { data: recipes, error: recipeError } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('user_id', profile.id)
+      .eq('is_public', true);
+
+    if (recipeError || !recipes) {
+      console.error('Error fetching recipe:', recipeError);
+      return null;
+    }
+
+    // Find recipe with matching name (case-insensitive)
+    const recipe = recipes.find(r => r.name.toLowerCase() === searchName.toLowerCase());
+    
+    if (!recipe) {
+      return null;
+    }
+
+    return {
+      id: recipe.id,
+      name: recipe.name,
+      image: recipe.image_url || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80',
+      ingredients: recipe.ingredients,
+      steps: recipe.instructions,
+      notes: recipe.description || undefined,
+      tags: recipe.tags || [],
+      createdBy: profile.username || profile.full_name,
+      isUserRecipe: true
+    };
+  } catch (error) {
+    console.error('Error fetching recipe by username and name:', error);
+    return null;
   }
 }

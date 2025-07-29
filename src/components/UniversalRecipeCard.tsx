@@ -6,7 +6,7 @@ import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
-import { recipeNameToSlug } from '@/pages/RecipePage';
+import { getRecipeUrl } from '@/pages/RecipePage';
 
 interface UniversalRecipeCardProps {
   recipe: Cocktail;
@@ -35,8 +35,8 @@ export default function UniversalRecipeCard({
   };
   
   const handleViewRecipe = () => {
-    const slug = recipeNameToSlug(recipe.name);
-    navigate(`/cocktail/${slug}`);
+    const url = getRecipeUrl(recipe);
+    navigate(url);
   };
 
   return (
