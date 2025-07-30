@@ -2,6 +2,7 @@ import { User } from "@supabase/supabase-js";
 import { Cocktail } from "@/data/classicCocktails";
 import Sidebar from "@/components/Sidebar";
 import MainContent from "@/components/MainContent";
+import TopNavigation from "@/components/TopNavigation";
 
 interface AuthenticatedViewProps {
   user: User | null;
@@ -77,7 +78,21 @@ export default function AuthenticatedView({
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex h-screen">
+      {/* Top Navigation for Mobile/Tablet */}
+      <TopNavigation
+        user={user}
+        activeLibrary={library}
+        onLibrarySelect={setLibrary}
+        onAddRecipe={handleAddRecipe}
+        onSignInClick={onSignInClick}
+        onSignUpClick={onSignUpClick}
+        onProfileClick={onProfileClick}
+        onMyRecipesClick={onMyRecipesClick}
+        onFavoritesClick={onFavoritesClick}
+      />
+      
+      <div className="flex h-screen lg:h-auto">
+        {/* Desktop Sidebar */}
         {/* Desktop Sidebar */}
         {!isMobile && (
           <Sidebar
@@ -94,8 +109,8 @@ export default function AuthenticatedView({
           />
         )}
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-auto">
+        <div className="flex-1 flex flex-col overflow-hidden lg:overflow-visible">
+          <main className="flex-1 overflow-auto lg:overflow-visible">
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8">
               <MainContent
                 user={user}
