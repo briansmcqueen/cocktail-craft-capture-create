@@ -14,7 +14,7 @@ import RecipeOverallRating from "@/components/RecipeOverallRating";
 import RecipeUserRating from "@/components/RecipeUserRating";
 import RecipeComments from "@/components/RecipeComments";
 import AuthModal from "@/components/auth/AuthModal";
-import { RecipeSidebar } from "@/components/RecipeSidebar";
+import Sidebar from "@/components/Sidebar";
 import MobileNavigation from "@/components/MobileNavigation";
 
 // Convert recipe name to URL slug
@@ -213,7 +213,11 @@ export default function RecipePage() {
     <div className="min-h-screen flex w-full bg-rich-charcoal">
       {/* Desktop Sidebar - Hidden on mobile */}
       <div className="hidden lg:block">
-        <RecipeSidebar />
+        <Sidebar 
+          active="recipe" 
+          onSelect={() => {}} 
+          onAdd={() => {}} 
+        />
       </div>
       
       {/* Main Content */}
