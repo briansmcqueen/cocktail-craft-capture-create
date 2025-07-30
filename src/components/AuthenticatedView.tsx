@@ -1,7 +1,6 @@
 import { User } from "@supabase/supabase-js";
 import { Cocktail } from "@/data/classicCocktails";
 import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
 import MainContent from "@/components/MainContent";
 
 interface AuthenticatedViewProps {
@@ -86,22 +85,16 @@ export default function AuthenticatedView({
             onSelect={setLibrary}
             onAdd={handleAddRecipe}
             onCloseForm={handleCloseForm}
+            user={user}
+            onSignInClick={onSignInClick}
+            onSignUpClick={onSignUpClick}
+            onProfileClick={onProfileClick}
+            onMyRecipesClick={onMyRecipesClick}
+            onFavoritesClick={onFavoritesClick}
           />
         )}
 
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Header
-            user={user}
-            onSignInClick={onSignInClick}
-            onSignUpClick={onSignUpClick}
-            onLibraryChange={setLibrary}
-            onProfileClick={onProfileClick}
-            onMyRecipesClick={onMyRecipesClick}
-            onFavoritesClick={onFavoritesClick}
-            activeLibrary={library}
-            onAddRecipe={handleAddRecipe}
-          />
-
           <main className="flex-1 overflow-auto">
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8">
               <MainContent

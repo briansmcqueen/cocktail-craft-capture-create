@@ -1,13 +1,22 @@
 
-import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat } from "lucide-react";
+import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import UserMenu from "@/components/auth/UserMenu";
+import { User as SupabaseUser } from "@supabase/supabase-js";
 
 type SidebarProps = {
   active: string;
   onSelect: (id: string) => void;
   onAdd: () => void;
   onCloseForm?: () => void;
+  user?: SupabaseUser | null;
+  onSignInClick?: () => void;
+  onSignUpClick?: () => void;
+  onProfileClick?: () => void;
+  onMyRecipesClick?: () => void;
+  onFavoritesClick?: () => void;
 };
 
 const nav = [
@@ -19,7 +28,7 @@ const nav = [
   { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
 ];
 
-export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: SidebarProps) {
+export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, onSignInClick, onSignUpClick, onProfileClick, onMyRecipesClick, onFavoritesClick }: SidebarProps) {
   const handleNavClick = (id: string) => {
     if (onCloseForm) {
       onCloseForm();
@@ -56,13 +65,42 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm }: Sideba
           </Link>
         ))}
       </nav>
-      <div className="mt-auto px-6">
+      <div className="mt-auto px-6 space-y-3">
         <button
           className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-sm flex items-center gap-2 justify-center hover:bg-primary/90 hover:scale-[1.02] hover:rotate-[0.5deg] transition-all font-medium duration-300"
           onClick={onAdd}
         >
           <Plus size={18} /> <span>Add New Recipe</span>
         </button>
+        
+        {/* Authentication section */}
+        <div className="border-t border-light-charcoal pt-3">
+          {user ? (
+            <UserMenu
+              onProfileClick={onProfileClick}
+              onMyRecipesClick={onMyRecipesClick}
+              onFavoritesClick={onFavoritesClick}
+            />
+          ) : (
+            <div className="space-y-2">
+              <Button 
+                onClick={onSignUpClick}
+                variant="secondary"
+                className="w-full gap-2 rounded-organic-sm"
+              >
+                <User className="h-4 w-4" />
+                Create Account
+              </Button>
+              <Button 
+                onClick={onSignInClick}
+                className="w-full gap-2 rounded-organic-sm"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );

@@ -216,7 +216,13 @@ export default function RecipePage() {
         <Sidebar 
           active="recipe" 
           onSelect={() => {}} 
-          onAdd={() => {}} 
+          onAdd={() => navigate('/recipes/mine')}
+          user={user}
+          onSignInClick={() => setShowAuthModal(true)}
+          onSignUpClick={() => setShowAuthModal(true)}
+          onProfileClick={() => navigate('/profile')}
+          onMyRecipesClick={() => navigate('/recipes/mine')}
+          onFavoritesClick={() => navigate('/favorites')}
         />
       </div>
       
