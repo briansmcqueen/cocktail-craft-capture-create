@@ -5,7 +5,7 @@
 @layer base {
   :root {
     /* Premium Bartending App - Dark Mode Default */
-    --background: 217 19% 11%; /* Rich Charcoal #1F2937 */
+    --background: 219 19% 13%; /* Deep Charcoal #171a21 */
     --foreground: 0 0% 100%; /* Pure White */
 
     --card: 217 15% 22%; /* Medium Charcoal #374151 */
@@ -95,7 +95,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     /* Premium Bartending: Dark background optimized for cocktail hour */
-    background-color: #1F2937; /* Rich Charcoal */
+    background-color: #171a21; /* Deep Charcoal */
     min-height: 100vh;
     /* Premium cocktail app font stack optimized for ingredient readability */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -143,7 +143,7 @@
 
   /* Premium bartending scrollable content */
   .scrollable-content {
-    background: #1F2937; /* Rich Charcoal */
+    background: #171a21; /* Deep Charcoal */
   }
 }
 
