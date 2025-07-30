@@ -89,7 +89,7 @@ export default {
 				'heart-red': '#EF4444',
 				'error-red': '#EF4444',
 				// Dark mode neutral colors
-				'rich-charcoal': '#1F2937',
+				'rich-charcoal': '#171a21',
 				'medium-charcoal': '#374151',
 				'light-charcoal': '#4B5563',
 				'soft-gray': '#6B7280',

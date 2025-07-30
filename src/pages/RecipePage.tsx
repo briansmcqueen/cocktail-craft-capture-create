@@ -210,7 +210,7 @@ export default function RecipePage() {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-rich-charcoal">
+    <div className="min-h-screen flex w-full bg-background">
       {/* Desktop Sidebar - Hidden on mobile */}
       <div className="hidden lg:block">
         <Sidebar 
@@ -223,7 +223,7 @@ export default function RecipePage() {
       {/* Main Content */}
       <main className="flex-1">
         {/* Mobile Header with Navigation */}
-        <div className="lg:hidden bg-rich-charcoal border-b border-light-charcoal px-4 py-3 flex items-center justify-between">
+        <div className="lg:hidden bg-background border-b border-light-charcoal px-4 py-3 flex items-center justify-between">
           <MobileNavigation
             user={user}
             activeLibrary="recipe"
