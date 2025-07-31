@@ -95,6 +95,16 @@ export default function RecipePage() {
         console.log('Trying to load user recipe by username');
         foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
         console.log('Result from getRecipeByUsernameAndName:', foundRecipe);
+        
+        // If not found by username, try searching in localStorage recipes
+        if (!foundRecipe) {
+          console.log('User recipe not found in DB, checking localStorage');
+          const localRecipes = getUserRecipes();
+          foundRecipe = localRecipes.find(r => 
+            recipeNameToSlug(r.name) === recipeName
+          ) || null;
+          console.log('Found in localStorage:', foundRecipe);
+        }
       } else {
         // Classic recipe or user recipe with old URL format
         console.log('Trying to load from allRecipes');
