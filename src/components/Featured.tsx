@@ -52,7 +52,7 @@ export default function Featured({
   };
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto px-4 sm:px-0">
+    <div className="space-y-8 md:space-y-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Drink of the Day */}
       <DrinkOfTheDay
         recipe={drinkOfTheDay}

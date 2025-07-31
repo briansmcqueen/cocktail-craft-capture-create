@@ -46,7 +46,7 @@ export default function DrinkOfTheDay({
         </h2>
       </div>
       
-      <div className="relative bg-gradient-to-br from-primary/20 to-accent/20 rounded-organic-xl p-6 lg:p-8 border border-primary/20">
+      <div className="relative bg-gradient-to-br from-primary/20 to-accent/20 rounded-organic-lg md:rounded-organic-xl p-4 md:p-6 lg:p-8 border border-primary/20">
         {/* Favorite Button */}
         <button
           onClick={handleFavoriteClick}
@@ -63,10 +63,10 @@ export default function DrinkOfTheDay({
           />
         </button>
         
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* Recipe Image */}
-          <div className="relative cursor-pointer" onClick={handleImageClick}>
-            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="relative cursor-pointer order-2 lg:order-1" onClick={handleImageClick}>
+            <div className="aspect-square rounded-lg md:rounded-xl overflow-hidden bg-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
               {recipe.image ? (
                 <img 
                   src={recipe.image} 
@@ -82,9 +82,9 @@ export default function DrinkOfTheDay({
           </div>
 
           {/* Recipe Details */}
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4 order-1 lg:order-2">
             <div>
-              <h3 className="text-2xl lg:text-3xl font-serif font-medium text-pure-white mb-2">
+              <h3 className="text-xl md:text-2xl lg:text-3xl font-serif font-medium text-pure-white mb-2">
                 {recipe.name}
               </h3>
               {recipe.notes && (
