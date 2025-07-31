@@ -35,7 +35,9 @@ export default function UniversalRecipeCard({
   };
   
   const handleViewRecipe = () => {
+    console.log('Generating URL for recipe:', { id: recipe.id, name: recipe.name, isUserRecipe: recipe.isUserRecipe, createdBy: recipe.createdBy });
     const url = getRecipeUrl(recipe);
+    console.log('Generated URL:', url);
     navigate(url);
   };
 

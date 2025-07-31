@@ -88,21 +88,29 @@ export default function RecipePage() {
 
     const loadRecipe = async () => {
       let foundRecipe: Cocktail | null = null;
+      console.log('Loading recipe with params:', { username, recipeName });
 
       if (username) {
         // User recipe with username in URL
+        console.log('Trying to load user recipe by username');
         foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
+        console.log('Result from getRecipeByUsernameAndName:', foundRecipe);
       } else {
         // Classic recipe or user recipe with old URL format
+        console.log('Trying to load from allRecipes');
         const allRecipes = [...classicCocktails, ...getUserRecipes()];
+        console.log('Available recipes:', allRecipes.map(r => ({ id: r.id, name: r.name, isUserRecipe: r.isUserRecipe, createdBy: r.createdBy })));
         foundRecipe = allRecipes.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
+        console.log('Found recipe from allRecipes:', foundRecipe);
       }
 
       if (foundRecipe) {
+        console.log('Setting recipe:', foundRecipe);
         setRecipe(foundRecipe);
       } else {
+        console.log('Recipe not found, redirecting to home');
         // Recipe not found, redirect to home
         navigate('/');
       }
