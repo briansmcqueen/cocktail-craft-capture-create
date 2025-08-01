@@ -37,36 +37,27 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, on
   };
 
   return (
-    <aside className="bg-card border-r border-border w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg">
-      <div className="px-6 mb-8 relative">
+    <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg">
+      <div className="px-6 mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
-            <ChefHat className="text-primary-foreground" size={20} />
-          </div>
-          <h1 className="text-3xl font-medium text-primary tracking-tight">BARBOOK</h1>
+          <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
         </div>
-        {/* Organic accent bar */}
-        <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
       </div>
-      <nav className="flex flex-col gap-1 px-3 grow">
-        {nav.map((item, index) => (
+      <nav className="flex flex-col gap-1 grow">
+        {nav.map((item) => (
           <Link
             key={item.id}
             to={item.path}
             className={cn(
-              "flex items-center gap-3 px-3 py-3 rounded-organic-sm transition-all font-medium",
+              "flex items-center gap-3 px-6 py-3 mx-3 rounded-organic-sm transition-all font-medium duration-300",
               active === item.id 
                 ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
-                : "text-light-text hover:bg-muted/50 hover:text-foreground hover:transform hover:scale-[1.01]"
+                : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:scale-[1.01] hover:rotate-[-0.3deg]"
             )}
             onClick={() => {
               if (onCloseForm) {
                 onCloseForm();
               }
-            }}
-            style={{ 
-              transitionTimingFunction: 'var(--timing-stir)',
-              transitionDelay: `${index * 50}ms`
             }}
           >
             <item.icon size={20} />
@@ -76,15 +67,14 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, on
       </nav>
       <div className="mt-auto px-6 space-y-3">
         <button
-          className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-md flex items-center gap-2 justify-center hover:bg-primary/90 hover:transform hover:scale-[1.02] hover:rotate-[0.5deg] active:scale-[0.98] transition-all font-medium"
+          className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-sm flex items-center gap-2 justify-center hover:bg-primary/90 hover:scale-[1.02] hover:rotate-[0.5deg] transition-all font-medium duration-300"
           onClick={onAdd}
-          style={{ transitionTimingFunction: 'var(--timing-pour)' }}
         >
           <Plus size={18} /> <span>Add New Recipe</span>
         </button>
         
         {/* Authentication section */}
-        <div className="border-t border-border pt-3">
+        <div className="border-t border-light-charcoal pt-3">
           {user ? (
             <UserMenu
               onProfileClick={onProfileClick}
