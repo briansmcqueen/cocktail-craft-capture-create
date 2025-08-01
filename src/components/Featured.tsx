@@ -35,17 +35,20 @@ export default function Featured({
   const { myBarIngredients } = useMyBarData(0);
   const { favoriteIds } = useFavorites();
   
+  // Combine all recipes including user recipes
+  const allRecipes = [...recipes, ...userRecipes];
+  
   // Calculate what user can make with their bar
-  const { recipesICanMake } = useRecipeAnalysis(recipes, myBarIngredients, {});
+  const { recipesICanMake } = useRecipeAnalysis(allRecipes, myBarIngredients, {});
 
   // Get drink of the day
-  const drinkOfTheDay = getDrinkOfTheDay(recipes);
+  const drinkOfTheDay = getDrinkOfTheDay(allRecipes);
   
   // Get personalized recommendations
-  const personalizedRecipes = getPersonalizedRecommendations(recipes, favoriteIds, 8);
+  const personalizedRecipes = getPersonalizedRecommendations(allRecipes, favoriteIds, 8);
   
   // Get trending recipes
-  const trendingRecipes = getTrendingRecipes(recipes);
+  const trendingRecipes = getTrendingRecipes(allRecipes);
 
   const handleNavigateToMyBar = () => {
     onNavigateToMyBar?.();
@@ -75,7 +78,7 @@ export default function Featured({
           {/* Featured Cocktails */}
           <FeaturedSection
             title="Featured Cocktails"
-            recipes={recipes.slice(0, 8)}
+            recipes={allRecipes.slice(0, 8)}
             onRecipeClick={onRecipeClick}
             onShowAuthModal={onShowAuthModal}
           />

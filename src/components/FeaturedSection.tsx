@@ -35,9 +35,9 @@ export default function FeaturedSection({
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-1 md:-ml-2 lg:-ml-4">
+        <CarouselContent className="-ml-2 lg:-ml-4">
           {recipes.map((recipe, index) => (
-            <CarouselItem key={`${recipe.id}-${index}`} className="pl-1 md:pl-2 lg:pl-4 basis-[85%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+            <CarouselItem key={`${recipe.id}-${index}`} className="pl-2 lg:pl-4 basis-[280px] sm:basis-[300px] lg:basis-[320px] xl:basis-[280px]">
               <UniversalRecipeCard
                 recipe={recipe}
                 onShowAuthModal={onShowAuthModal}
