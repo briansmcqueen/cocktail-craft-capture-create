@@ -52,45 +52,48 @@ export default function Featured({
   };
 
   return (
-    <div className="space-y-8 md:space-y-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Drink of the Day */}
-      <DrinkOfTheDay
-        recipe={drinkOfTheDay}
-        onRecipeClick={onRecipeClick}
-        onShowAuthModal={onShowAuthModal}
-      />
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="space-y-8 md:space-y-12">
+          {/* Drink of the Day */}
+          <DrinkOfTheDay
+            recipe={drinkOfTheDay}
+            onRecipeClick={onRecipeClick}
+            onShowAuthModal={onShowAuthModal}
+          />
 
+          {/* Personalized Recommendations */}
+          {favoriteIds.length > 0 && (
+            <FeaturedSection
+              title="Recommended For You"
+              recipes={personalizedRecipes}
+              onRecipeClick={onRecipeClick}
+              onShowAuthModal={onShowAuthModal}
+            />
+          )}
 
-      {/* Personalized Recommendations */}
-      {favoriteIds.length > 0 && (
-        <FeaturedSection
-          title="Recommended For You"
-          recipes={personalizedRecipes}
-          onRecipeClick={onRecipeClick}
-          onShowAuthModal={onShowAuthModal}
-        />
-      )}
+          {/* Featured Cocktails */}
+          <FeaturedSection
+            title="Featured Cocktails"
+            recipes={recipes.slice(0, 8)}
+            onRecipeClick={onRecipeClick}
+            onShowAuthModal={onShowAuthModal}
+          />
 
-      {/* Featured Cocktails */}
-      <FeaturedSection
-        title="Featured Cocktails"
-        recipes={recipes.slice(0, 8)}
-        onRecipeClick={onRecipeClick}
-        onShowAuthModal={onShowAuthModal}
-      />
+          {/* Trending Now */}
+          {trendingRecipes.length > 0 && (
+            <FeaturedSection
+              title="Trending Now"
+              recipes={trendingRecipes}
+              onRecipeClick={onRecipeClick}
+              onShowAuthModal={onShowAuthModal}
+            />
+          )}
 
-      {/* Trending Now */}
-      {trendingRecipes.length > 0 && (
-        <FeaturedSection
-          title="Trending Now"
-          recipes={trendingRecipes}
-          onRecipeClick={onRecipeClick}
-          onShowAuthModal={onShowAuthModal}
-        />
-      )}
-
-      {/* Techniques Section */}
-      <TechniquesSection onShowAuthModal={onShowAuthModal} />
+          {/* Techniques Section */}
+          <TechniquesSection onShowAuthModal={onShowAuthModal} />
+        </div>
+      </div>
     </div>
   );
 }
