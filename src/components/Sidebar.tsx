@@ -1,4 +1,3 @@
-
 import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -60,8 +59,8 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, on
               }
             }}
           >
-            <item.icon size={20} />
-            <span>{item.label}</span>
+            <item.icon size={20} className="flex-shrink-0" />
+            <span className="whitespace-nowrap truncate">{item.label}</span>
           </Link>
         ))}
       </nav>
