@@ -4,7 +4,7 @@ import { ArrowLeft, Edit, Heart, Share, Martini } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getUserRecipes } from "@/utils/storage";
-import { getRecipeByUsernameAndName } from "@/services/recipesService";
+import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { getUserPreferences } from "@/services/userPreferencesService";
@@ -90,12 +90,26 @@ export default function RecipePage() {
       console.log('Loading recipe with params:', { username, recipeName });
 
       if (username === 'custom') {
-        // Custom recipe stored in localStorage
-        console.log('Loading custom recipe from localStorage');
+        // Custom recipe - check both localStorage and database
+        console.log('Loading custom recipe from localStorage and database');
+        
+        // First try localStorage
         const localRecipes = getUserRecipes();
+        console.log('LocalStorage recipes:', localRecipes.map(r => ({ id: r.id, name: r.name, slug: recipeNameToSlug(r.name) })));
         foundRecipe = localRecipes.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
+        
+        // If not found in localStorage, try database
+        if (!foundRecipe && user) {
+          console.log('Not found in localStorage, trying database');
+          const dbRecipes = await getUserRecipesFromDB();
+          console.log('Database recipes:', dbRecipes.map(r => ({ id: r.id, name: r.name, slug: recipeNameToSlug(r.name) })));
+          foundRecipe = dbRecipes.find(r => 
+            recipeNameToSlug(r.name) === recipeName
+          ) || null;
+        }
+        
         console.log('Found custom recipe:', foundRecipe);
       } else if (username) {
         // Database user recipe with username in URL
