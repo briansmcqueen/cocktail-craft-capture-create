@@ -121,15 +121,7 @@ export default function MainContent({
             forceUpdate={forceUpdate}
           />
         ) : library === "favorites" ? (
-          user ? (
-            <Favorites
-              favoriteRecipes={favoriteRecipes}
-              onRecipeClick={handleRecipeClick}
-              onEditRecipe={handleEditRecipe}
-              onShareRecipe={handleShareRecipe}
-              userRecipes={userRecipes}
-            />
-          ) : (
+          user ? null : (
             <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
               <UserIcon className="mx-auto mb-4 text-light-text/60" size={48} />
               <h2 className="text-xl font-serif font-normal mb-2 text-pure-white">Sign in to view favorites</h2>
