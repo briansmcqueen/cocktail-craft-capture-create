@@ -149,20 +149,7 @@ export default function MainContent({
           <Learn
             onShowAuthModal={() => setShowAuthModal(true)}
           />
-        ) : (
-          <RecipeGrid
-            recipes={getFilteredRecipes()}
-            onRecipeClick={handleRecipeClick}
-            onToggleFavorite={() => {}}
-            onLike={handleLikeWithAuth}
-            onShareRecipe={handleShareRecipe}
-            onTagClick={handleTagClick}
-            onShowForm={handleAddRecipe}
-            forceUpdate={forceUpdate}
-            library={library}
-            onShowAuthModal={() => setShowAuthModal(true)}
-          />
-        )}
+        ) : null}
       </div>
     </div>
   );
