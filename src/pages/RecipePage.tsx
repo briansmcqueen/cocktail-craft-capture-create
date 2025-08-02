@@ -30,10 +30,9 @@ const slugToRecipeName = (slug: string): string => {
 // Generate the correct URL for any recipe
 const getRecipeUrl = (recipe: Cocktail): string => {
   const slug = recipeNameToSlug(recipe.name);
-  if (recipe.isUserRecipe && recipe.createdBy) {
-    // User recipe: /cocktail/{username}/{recipe-name}
-    const usernameSlug = recipeNameToSlug(recipe.createdBy);
-    return `/cocktail/${usernameSlug}/${slug}`;
+  if (recipe.isUserRecipe) {
+    // Custom recipe stored locally: /cocktail/custom/{recipe-name}
+    return `/cocktail/custom/${slug}`;
   } else {
     // Classic recipe: /cocktail/{recipe-name}
     return `/cocktail/${slug}`;
@@ -90,21 +89,19 @@ export default function RecipePage() {
       let foundRecipe: Cocktail | null = null;
       console.log('Loading recipe with params:', { username, recipeName });
 
-      if (username) {
-        // User recipe with username in URL
+      if (username === 'custom') {
+        // Custom recipe stored in localStorage
+        console.log('Loading custom recipe from localStorage');
+        const localRecipes = getUserRecipes();
+        foundRecipe = localRecipes.find(r => 
+          recipeNameToSlug(r.name) === recipeName
+        ) || null;
+        console.log('Found custom recipe:', foundRecipe);
+      } else if (username) {
+        // Database user recipe with username in URL
         console.log('Trying to load user recipe by username');
         foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
         console.log('Result from getRecipeByUsernameAndName:', foundRecipe);
-        
-        // If not found by username, try searching in localStorage recipes
-        if (!foundRecipe) {
-          console.log('User recipe not found in DB, checking localStorage');
-          const localRecipes = getUserRecipes();
-          foundRecipe = localRecipes.find(r => 
-            recipeNameToSlug(r.name) === recipeName
-          ) || null;
-          console.log('Found in localStorage:', foundRecipe);
-        }
       } else {
         // Classic recipe or user recipe with old URL format
         console.log('Trying to load from allRecipes');
