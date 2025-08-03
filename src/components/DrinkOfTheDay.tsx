@@ -24,11 +24,11 @@ export default function DrinkOfTheDay({
         Drink of the Day
       </h2>
       
-      <div className="w-full max-w-none">
+      <div className="w-full">
         <UniversalRecipeCard
           recipe={recipe}
           onShowAuthModal={onShowAuthModal}
-          className="w-full max-w-sm mx-auto sm:max-w-md md:max-w-lg"
+          className="w-full max-w-sm mx-auto sm:max-w-md lg:max-w-sm lg:mx-0"
         />
       </div>
     </section>

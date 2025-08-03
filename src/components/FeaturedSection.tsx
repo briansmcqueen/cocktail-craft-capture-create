@@ -37,7 +37,7 @@ export default function FeaturedSection({
       >
         <CarouselContent className="-ml-2 lg:-ml-4">
           {recipes.map((recipe, index) => (
-            <CarouselItem key={`${recipe.id}-${index}`} className="pl-2 lg:pl-4 basis-[280px] sm:basis-[300px] lg:basis-[320px] xl:basis-[280px]">
+            <CarouselItem key={`${recipe.id}-${index}`} className="pl-2 lg:pl-4 basis-[85%] sm:basis-1/2 lg:basis-[320px] xl:basis-[280px]">
               <UniversalRecipeCard
                 recipe={recipe}
                 onShowAuthModal={onShowAuthModal}
@@ -45,7 +45,7 @@ export default function FeaturedSection({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="flex justify-center items-center gap-4 mt-4 md:mt-6">
+        <div className="flex items-center gap-4 mt-4 md:mt-6">
           <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
           <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
         </div>
