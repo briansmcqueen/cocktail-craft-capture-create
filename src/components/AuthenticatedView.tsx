@@ -91,9 +91,9 @@ export default function AuthenticatedView({
         onFavoritesClick={onFavoritesClick}
       />
       
-      <div className="flex lg:h-auto">
-        {/* Desktop Sidebar */}
-        {!isMobile && (
+      <div className="flex h-screen">
+        {/* Desktop & Tablet Sidebar - Always visible on md+ screens */}
+        <div className="hidden md:block">
           <Sidebar
             active={library}
             onSelect={setLibrary}
@@ -106,10 +106,10 @@ export default function AuthenticatedView({
             onMyRecipesClick={onMyRecipesClick}
             onFavoritesClick={onFavoritesClick}
           />
-        )}
+        </div>
 
-        <div className="flex-1">
-          <main className="w-full">
+        <div className="flex-1 overflow-auto">
+          <main className="w-full h-full">
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8">
               <MainContent
                 user={user}
