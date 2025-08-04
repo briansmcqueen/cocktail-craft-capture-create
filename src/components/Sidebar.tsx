@@ -36,19 +36,19 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, on
   };
 
   return (
-    <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 min-h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg">
-      <div className="px-6 mb-8">
+    <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg overflow-hidden">
+      <div className="px-6 mb-8 flex-shrink-0">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
         </div>
       </div>
-      <nav className="flex flex-col gap-1 grow">
+      <nav className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 px-3">
         {nav.map((item) => (
           <Link
             key={item.id}
             to={item.path}
             className={cn(
-              "flex items-center gap-3 px-6 py-3 mx-3 rounded-organic-sm transition-all font-medium duration-300",
+              "flex items-center gap-3 px-3 py-3 rounded-organic-sm transition-all font-medium duration-300",
               active === item.id 
                 ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                 : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:scale-[1.01] hover:rotate-[-0.3deg]"
