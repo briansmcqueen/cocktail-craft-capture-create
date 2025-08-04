@@ -1,8 +1,8 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { getTrendingRecipes } from "@/utils/likes";
 import { getDrinkOfTheDay, getPersonalizedRecommendations } from "@/utils/drinkOfTheDay";
+import { getTrendingRecipesHybrid } from "@/utils/trendingRecipes";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
@@ -34,6 +34,7 @@ export default function Featured({
   // Get data for personalization
   const { myBarIngredients } = useMyBarData(0);
   const { favoriteIds } = useFavorites();
+  const [trendingRecipes, setTrendingRecipes] = useState<Cocktail[]>([]);
   
   // Combine all recipes including user recipes
   const allRecipes = [...recipes, ...userRecipes];
@@ -47,8 +48,15 @@ export default function Featured({
   // Get personalized recommendations
   const personalizedRecipes = getPersonalizedRecommendations(allRecipes, favoriteIds, 8);
   
-  // Get trending recipes
-  const trendingRecipes = getTrendingRecipes(allRecipes);
+  // Fetch trending recipes based on ratings
+  useEffect(() => {
+    const fetchTrendingRecipes = async () => {
+      const trending = await getTrendingRecipesHybrid(allRecipes, 10);
+      setTrendingRecipes(trending);
+    };
+    
+    fetchTrendingRecipes();
+  }, [allRecipes]);
 
   const handleNavigateToMyBar = () => {
     onNavigateToMyBar?.();
@@ -83,7 +91,7 @@ export default function Featured({
             onShowAuthModal={onShowAuthModal}
           />
 
-          {/* Trending Now */}
+          {/* Trending Now - Top 10 Most Popular */}
           {trendingRecipes.length > 0 && (
             <FeaturedSection
               title="Trending Now"
