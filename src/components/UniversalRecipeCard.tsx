@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Star } from 'lucide-react';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
 import { getRecipeUrl } from '@/pages/RecipePage';
+import { getAggregatedRating, type AggregatedRating } from '@/services/ratingsService';
 
 interface UniversalRecipeCardProps {
   recipe: Cocktail;
@@ -23,6 +24,20 @@ export default function UniversalRecipeCard({
 }: UniversalRecipeCardProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const [ratingData, setRatingData] = useState<AggregatedRating>({
+    averageRating: 0,
+    totalRatings: 0,
+    ratingDistribution: {}
+  });
+
+  useEffect(() => {
+    const fetchRatingData = async () => {
+      const data = await getAggregatedRating(recipe.id);
+      setRatingData(data);
+    };
+    
+    fetchRatingData();
+  }, [recipe.id]);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -79,12 +94,17 @@ export default function UniversalRecipeCard({
                   size={16}
                   className={cn(
                     "text-golden-amber",
-                    star <= 4 ? "fill-current" : "fill-none"
+                    star <= Math.round(ratingData.averageRating) ? "fill-current" : "fill-none"
                   )}
                 />
               ))}
             </div>
-            <span className="text-xs text-pure-white ml-1">127 reviews</span>
+            <span className="text-xs text-pure-white ml-1">
+              {ratingData.totalRatings > 0 
+                ? `${ratingData.totalRatings} review${ratingData.totalRatings === 1 ? '' : 's'}`
+                : 'No reviews yet'
+              }
+            </span>
           </div>
 
           {/* Action buttons */}
