@@ -422,72 +422,54 @@ export default function RecipePage() {
                 {/* Recipe Details */}
                 {(recipe.technique || recipe.glassType || recipe.garnish || recipe.difficulty || recipe.abv || recipe.prepTime) && (
                   <div className="mb-6 p-4 bg-medium-charcoal rounded-organic-md border border-light-charcoal">
-                    <h2 className="text-xl font-semibold text-pure-white mb-4">Recipe Details</h2>
+                    <h2 className="text-base font-normal text-pure-white mb-4">Recipe Details</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {recipe.technique && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-pure-white">Technique:</span>
-                          <span className={`technique-badge technique-${recipe.technique} px-2 py-1 text-xs font-medium rounded-organic-sm uppercase tracking-wide`}>
-                            {recipe.technique}
-                          </span>
-                        </div>
+                         <div className="flex items-center gap-2">
+                           <span className="text-base text-pure-white">Technique:</span>
+                           <span className="text-base text-pure-white">
+                             {recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1).toLowerCase()}
+                           </span>
+                         </div>
                       )}
                       {recipe.glassType && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-pure-white">Glass:</span>
-                          <span className="glass-indicator px-2 py-1 text-xs font-medium rounded-organic-sm">
-                            {recipe.glassType}
-                          </span>
-                        </div>
+                         <div className="flex items-center gap-2">
+                           <span className="text-base text-pure-white">Glass:</span>
+                           <span className="text-base text-pure-white">
+                             {recipe.glassType}
+                           </span>
+                         </div>
                       )}
                       {recipe.difficulty && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-pure-white">Difficulty:</span>
-                          <div className="flex items-center gap-2">
-                            <span className={`difficulty-${recipe.difficulty} px-2 py-1 text-xs font-medium rounded-organic-sm`}>
-                              {recipe.difficulty}
-                            </span>
-                            <div className="flex items-center gap-1">
-                              {[1, 2, 3, 4, 5].map((level) => {
-                                const difficultyLevel = recipe.difficulty === 'easy' ? 1 : recipe.difficulty === 'medium' ? 3 : 5;
-                                const isActive = level <= difficultyLevel;
-                                const barColor = difficultyLevel === 1 ? 'bg-green-400' : 
-                                               difficultyLevel === 3 ? 'bg-golden-amber' : 'bg-red-500';
-                                return (
-                                  <div
-                                    key={level}
-                                    className={`w-2 h-4 rounded-sm ${
-                                      isActive ? barColor : 'bg-soft-gray/30'
-                                    }`}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
+                         <div className="flex items-center gap-2">
+                           <span className="text-base text-pure-white">Difficulty:</span>
+                           <span className="text-base text-pure-white">
+                             {recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1).toLowerCase()}
+                           </span>
+                         </div>
                       )}
                       {recipe.abv && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-pure-white">ABV:</span>
-                          <span className="text-emerald font-medium">{recipe.abv}</span>
-                        </div>
+                         <div className="flex items-center gap-2">
+                           <span className="text-base text-pure-white">ABV:</span>
+                           <span className="text-base text-pure-white">{recipe.abv}</span>
+                         </div>
                       )}
                       {recipe.prepTime && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-pure-white">Prep Time:</span>
-                          <span className="text-light-text">{recipe.prepTime}</span>
-                        </div>
+                         <div className="flex items-center gap-2">
+                           <span className="text-base text-pure-white">Prep time:</span>
+                           <span className="text-base text-pure-white">{recipe.prepTime}</span>
+                         </div>
                       )}
                       {recipe.garnish && recipe.garnish.length > 0 && (
-                        <div className="flex items-start gap-2 sm:col-span-2">
-                          <span className="text-pure-white">Garnish:</span>
-                          <div className="flex flex-wrap gap-1">
-                            {recipe.garnish.map((garnish, index) => (
-                              <span key={index} className="text-light-text bg-light-charcoal px-2 py-1 rounded-organic-sm">
-                                {garnish}
-                              </span>
-                            ))}
-                          </div>
+                         <div className="flex items-start gap-2 sm:col-span-2">
+                           <span className="text-base text-pure-white">Garnish:</span>
+                           <div className="flex flex-wrap gap-1">
+                             {recipe.garnish.map((garnish, index) => (
+                               <span key={index} className="text-base text-pure-white">
+                                 {garnish}{index < recipe.garnish.length - 1 ? ', ' : ''}
+                               </span>
+                             ))}
+                           </div>
                         </div>
                       )}
                     </div>
