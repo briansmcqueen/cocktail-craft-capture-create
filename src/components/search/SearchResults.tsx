@@ -132,7 +132,7 @@ export default function SearchResults({
           )}
         </div>
         
-        <div className="flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-1">
           <Button
             variant={viewMode === 'grid' ? "default" : "ghost"}
             size="sm"
