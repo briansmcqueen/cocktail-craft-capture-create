@@ -313,7 +313,7 @@ export default function RecipePage() {
                   <Button
                     variant="secondary"
                     className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 ${
-                      isRecipeFavorited ? 'text-heart-red border-heart-red/30 bg-heart-red/10 hover:bg-heart-red/20' : 'text-soft-gray hover:text-heart-red'
+                      isRecipeFavorited ? 'text-heart-red border-heart-red/30 bg-heart-red/10 hover:bg-heart-red/20' : 'text-pure-white hover:text-heart-red'
                     }`}
                     onClick={handleToggleFavorite}
                   >
@@ -323,7 +323,7 @@ export default function RecipePage() {
                   
                   <Button
                     variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-soft-gray hover:text-secondary"
+                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary"
                     onClick={handleShare}
                   >
                     <Share size={16} />
@@ -332,7 +332,7 @@ export default function RecipePage() {
 
                   <Button
                     variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-soft-gray hover:text-secondary"
+                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary"
                     onClick={handleRiff}
                   >
                     <Martini size={16} />
@@ -396,7 +396,7 @@ export default function RecipePage() {
                 {recipe.notes && (
                   <div className="mb-6">
                     <h2 className="text-xl font-semibold text-foreground mb-4">Notes</h2>
-                    <p className="text-soft-gray leading-relaxed">{recipe.notes}</p>
+                    <p className="text-pure-white leading-relaxed">{recipe.notes}</p>
                   </div>
                 )}
 
