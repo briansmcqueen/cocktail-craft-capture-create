@@ -142,9 +142,9 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="flex justify-center items-center gap-4 mt-6">
-            <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50" />
-            <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50" />
+          <div className="flex items-center gap-4 mt-4 md:mt-6">
+            <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
+            <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
           </div>
         </Carousel>
       </section>
