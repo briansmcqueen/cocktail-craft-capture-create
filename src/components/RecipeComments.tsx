@@ -287,6 +287,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   size="sm"
                   variant="ghost"
                   className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                  disabled
+                  title="Coming soon"
                 >
                   <ThumbsUp className="w-3 h-3 mr-1" />
                   <span className="text-xs">Helpful</span>
@@ -295,6 +297,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   size="sm"
                   variant="ghost"
                   className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                  disabled
+                  title="Coming soon"
                 >
                   <Reply className="w-3 h-3 mr-1" />
                   <span className="text-xs">Reply</span>
@@ -303,6 +307,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   size="sm"
                   variant="ghost"
                   className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                  disabled
+                  title="Coming soon"
                 >
                   <Share className="w-3 h-3 mr-1" />
                   <span className="text-xs">Share</span>
@@ -311,6 +317,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   size="sm"
                   variant="ghost"
                   className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                  disabled
+                  title="Coming soon"
                 >
                   <MessageSquare className="w-3 h-3 mr-1" />
                   <span className="text-xs">View thread</span>
