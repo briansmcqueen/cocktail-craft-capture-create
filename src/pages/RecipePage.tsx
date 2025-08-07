@@ -87,55 +87,73 @@ export default function RecipePage() {
 
   // Load recipe
   useEffect(() => {
-    if (!recipeName) return;
-
     const loadRecipe = async () => {
       let foundRecipe: Cocktail | null = null;
-      console.log('Loading recipe with params:', { username, recipeName });
+
+      // Check for query parameter format first (?recipe=Recipe%20Name)
+      const urlParams = new URLSearchParams(location.search);
+      const recipeQuery = urlParams.get('recipe');
+      
+      if (recipeQuery) {
+        // Handle query parameter format - search all recipes
+        const localRecipes = getUserRecipes();
+        const allRecipes = [...classicCocktails, ...localRecipes];
+        
+        // Try exact name match first
+        foundRecipe = allRecipes.find(r => r.name === recipeQuery) || null;
+        
+        // If not found and user is authenticated, try database
+        if (!foundRecipe && user) {
+          const dbRecipes = await getUserRecipesFromDB();
+          foundRecipe = dbRecipes.find(r => r.name === recipeQuery) || null;
+        }
+        
+        if (foundRecipe) {
+          // Redirect to proper URL format
+          const correctUrl = getRecipeUrl(foundRecipe);
+          navigate(correctUrl, { replace: true });
+          return;
+        }
+      }
+
+      // Handle standard URL format
+      if (!recipeName) return;
 
       if (username === 'custom') {
-        // Custom recipe - check both localStorage and database
-        console.log('Loading custom recipe from localStorage and database');
-        
-        // First try localStorage
+        // Custom recipe - check localStorage first (faster)
         const localRecipes = getUserRecipes();
-        console.log('LocalStorage recipes:', localRecipes.map(r => ({ id: r.id, name: r.name, slug: recipeNameToSlug(r.name) })));
         foundRecipe = localRecipes.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
         
-        // If not found in localStorage, try database
+        // If not found in localStorage and user is authenticated, try database
         if (!foundRecipe && user) {
-          console.log('Not found in localStorage, trying database');
           const dbRecipes = await getUserRecipesFromDB();
-          console.log('Database recipes:', dbRecipes.map(r => ({ id: r.id, name: r.name, slug: recipeNameToSlug(r.name) })));
           foundRecipe = dbRecipes.find(r => 
             recipeNameToSlug(r.name) === recipeName
           ) || null;
         }
-        
-        console.log('Found custom recipe:', foundRecipe);
       } else if (username) {
         // Database user recipe with username in URL
-        console.log('Trying to load user recipe by username');
         foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
-        console.log('Result from getRecipeByUsernameAndName:', foundRecipe);
       } else {
-        // Classic recipe or user recipe with old URL format
-        console.log('Trying to load from allRecipes');
-        const allRecipes = [...classicCocktails, ...getUserRecipes()];
-        console.log('Available recipes:', allRecipes.map(r => ({ id: r.id, name: r.name, isUserRecipe: r.isUserRecipe, createdBy: r.createdBy })));
-        foundRecipe = allRecipes.find(r => 
+        // Classic recipe - search classic cocktails first (faster)
+        foundRecipe = classicCocktails.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
-        console.log('Found recipe from allRecipes:', foundRecipe);
+        
+        // If not found in classics, check user recipes
+        if (!foundRecipe) {
+          const localRecipes = getUserRecipes();
+          foundRecipe = localRecipes.find(r => 
+            recipeNameToSlug(r.name) === recipeName
+          ) || null;
+        }
       }
 
       if (foundRecipe) {
-        console.log('Setting recipe:', foundRecipe);
         setRecipe(foundRecipe);
       } else {
-        console.log('Recipe not found, redirecting to home');
         // Recipe not found, redirect to home
         navigate('/');
       }
