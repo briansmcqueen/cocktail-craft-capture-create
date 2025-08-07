@@ -10,12 +10,14 @@ import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { getUserPreferences } from "@/services/userPreferencesService";
 import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";
+import ShareRecipe from "@/components/ShareRecipe";
 import RecipeOverallRating from "@/components/RecipeOverallRating";
 import RecipeUserRating from "@/components/RecipeUserRating";
 import RecipeComments from "@/components/RecipeComments";
 import AuthModal from "@/components/auth/AuthModal";
 import Sidebar from "@/components/Sidebar";
 import TopNavigation from "@/components/TopNavigation";
+import { useToast } from "@/hooks/use-toast";
 
 // Convert recipe name to URL slug
 const recipeNameToSlug = (name: string): string => {
@@ -48,6 +50,8 @@ export default function RecipePage() {
   const [recipe, setRecipe] = useState<Cocktail | null>(null);
   const [isMetric, setIsMetric] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const { toast } = useToast();
 
   // Smart back navigation function
   const handleGoBack = useCallback(() => {
@@ -167,34 +171,8 @@ export default function RecipePage() {
     await toggleFavorite(recipe.id, () => setShowAuthModal(true));
   };
 
-  const handleShare = async () => {
-    const url = window.location.href;
-    
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: recipe.name,
-          text: `Check out this ${recipe.name} recipe!`,
-          url: url,
-        });
-      } else if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(url);
-        alert('Recipe link copied to clipboard!');
-      } else {
-        // Fallback for non-secure contexts
-        const textArea = document.createElement('textarea');
-        textArea.value = url;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert('Recipe link copied to clipboard!');
-      }
-    } catch (error) {
-      console.log('Error sharing:', error);
-      // Final fallback - show prompt
-      prompt('Copy this link to share the recipe:', url);
-    }
+  const handleShare = () => {
+    setShowShareModal(true);
   };
 
   const handleEdit = () => {
@@ -486,6 +464,12 @@ export default function RecipePage() {
         open={showAuthModal} 
         onOpenChange={setShowAuthModal}
         initialMode="signin"
+      />
+
+      <ShareRecipe 
+        recipe={recipe} 
+        open={showShareModal} 
+        onOpenChange={setShowShareModal} 
       />
     </>
   );
