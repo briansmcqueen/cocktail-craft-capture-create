@@ -71,7 +71,7 @@ export default function RecipeFormFields({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
-          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border focus:bg-pure-white focus:text-rich-charcoal focus:border-primary"
+          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border focus-visible:bg-pure-white focus-visible:text-rich-charcoal"
           required
         />
       </div>
