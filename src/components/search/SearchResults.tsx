@@ -100,9 +100,11 @@ export default function SearchResults({
     }
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = showPagination ? startIndex + ITEMS_PER_PAGE : searchResults.length;
-    const displayedResults = searchResults.slice(0, endIndex);
-    const hasMoreResults = searchResults.length > endIndex;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const displayedResults = showPagination 
+      ? searchResults.slice(0, currentPage * ITEMS_PER_PAGE)
+      : searchResults;
+    const hasMoreResults = showPagination && searchResults.length > currentPage * ITEMS_PER_PAGE;
 
     return (
       <div className="space-y-4">
@@ -131,7 +133,7 @@ export default function SearchResults({
               onClick={() => setCurrentPage(prev => prev + 1)}
               className="rounded-organic-sm"
             >
-              Show More ({searchResults.length - endIndex} remaining)
+              Show More ({searchResults.length - (currentPage * ITEMS_PER_PAGE)} remaining)
             </Button>
           </div>
         )}
