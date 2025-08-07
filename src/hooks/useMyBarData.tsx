@@ -153,12 +153,7 @@ export function useMyBarData(forceUpdate: number) {
         ? await removeUserIngredient(ingredientId)
         : await addUserIngredient(ingredientId);
       
-      if (success) {
-        toast({
-          title: isSelected ? "Ingredient Removed" : "Ingredient Added",
-          description: `${ingredientMap[ingredientId]?.name} ${isSelected ? 'removed from' : 'added to'} your bar.`
-        });
-      } else {
+      if (!success) {
         // Revert on failure
         setMyBar(prev => ({
           ...prev,
