@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { getUserRecipesFromDB, saveRecipeToDB, deleteRecipeFromDB } from '@/services/recipesService';
-import { getAggregatedRating } from '@/services/ratingsService';
+import { useRecipeRating as useOptimizedRecipeRating } from './useRecipeRatings';
 import { useAuth } from './useAuth';
 import { Cocktail } from '@/data/classicCocktails';
 
@@ -17,14 +17,9 @@ export function useUserRecipes() {
   });
 }
 
+// Use the new optimized hook instead
 export function useRecipeRating(recipeId: string) {
-  return useQuery({
-    queryKey: ['recipeRating', recipeId],
-    queryFn: () => getAggregatedRating(recipeId),
-    enabled: !!recipeId,
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 5 * 60 * 1000, // 5 minutes
-  });
+  return useOptimizedRecipeRating(recipeId);
 }
 
 export function useSaveRecipe() {

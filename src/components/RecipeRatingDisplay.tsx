@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
-import { getAggregatedRating, getUserRating, rateRecipe, type AggregatedRating, type RecipeRating } from '@/services/ratingsService';
+import { getUserRating, rateRecipe, type RecipeRating } from '@/services/ratingsService';
+import { useRecipeRating } from '@/hooks/useRecipeRatings';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
@@ -11,34 +12,23 @@ interface RecipeRatingDisplayProps {
 
 export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayProps) {
   const { user } = useAuth();
-  const [aggregatedRating, setAggregatedRating] = useState<AggregatedRating>({
-    averageRating: 0,
-    totalRatings: 0,
-    ratingDistribution: {}
-  });
+  const { rating: aggregatedRating, loading } = useRecipeRating(recipeId);
   const [userRating, setUserRating] = useState<RecipeRating | null>(null);
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(false);
 
   useEffect(() => {
-    fetchRatings();
-  }, [recipeId, user]);
-
-  const fetchRatings = async () => {
-    setLoading(true);
-    
-    // Fetch aggregated rating
-    const aggregated = await getAggregatedRating(recipeId);
-    setAggregatedRating(aggregated);
-
-    // Fetch user's rating if logged in
-    if (user) {
+    const fetchUserRating = async () => {
+      if (!user || !recipeId) return;
+      
+      setUserLoading(true);
       const userRatingData = await getUserRating(recipeId);
       setUserRating(userRatingData);
-    }
+      setUserLoading(false);
+    };
 
-    setLoading(false);
-  };
+    fetchUserRating();
+  }, [recipeId, user]);
 
   const handleRating = async (rating: number) => {
     if (!user) {
@@ -52,7 +42,9 @@ export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayPro
 
     const success = await rateRecipe(recipeId, rating);
     if (success) {
-      await fetchRatings();
+      // Refresh user rating
+      const userRatingData = await getUserRating(recipeId);
+      setUserRating(userRatingData);
       toast({
         title: "Rating submitted",
         description: `You rated this recipe ${rating} star${rating !== 1 ? 's' : ''}`,
@@ -81,7 +73,7 @@ export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayPro
     );
   };
 
-  if (loading) {
+  if (loading || userLoading) {
     return (
       <div className="space-y-3">
         <div className="animate-pulse">

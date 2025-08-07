@@ -1,51 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
-import { getAggregatedRating, type AggregatedRating } from '@/services/ratingsService';
-import { ratingsCache } from '@/services/ratingsCache';
+import { useRecipeRating } from '@/hooks/useRecipeRatings';
 
 interface RecipeOverallRatingProps {
   recipeId: string;
 }
 
 export default function RecipeOverallRating({ recipeId }: RecipeOverallRatingProps) {
-  const [aggregatedRating, setAggregatedRating] = useState<AggregatedRating>({
-    averageRating: 0,
-    totalRatings: 0,
-    ratingDistribution: {}
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (recipeId) {
-      fetchRatings();
-    }
-  }, [recipeId]);
-
-  const fetchRatings = async () => {
-    if (!recipeId) return;
-    
-    setLoading(true);
-    try {
-      const ratingData = await ratingsCache.getOrFetch(recipeId, async (id) => {
-        const aggregated = await getAggregatedRating(id);
-        return {
-          averageRating: aggregated.averageRating,
-          totalRatings: aggregated.totalRatings,
-          ratingDistribution: aggregated.ratingDistribution
-        };
-      });
-      
-      setAggregatedRating({
-        averageRating: ratingData.averageRating,
-        totalRatings: ratingData.totalRatings,
-        ratingDistribution: ratingData.ratingDistribution
-      });
-    } catch (error) {
-      console.error('Error fetching ratings:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { rating, loading } = useRecipeRating(recipeId);
 
   const renderStars = (rating: number) => {
     return (
@@ -76,16 +38,16 @@ export default function RecipeOverallRating({ recipeId }: RecipeOverallRatingPro
   return (
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">
-        {renderStars(aggregatedRating.averageRating)}
+        {renderStars(rating.averageRating)}
         <span className="font-medium">
-          {aggregatedRating.averageRating > 0 
-            ? aggregatedRating.averageRating.toFixed(1)
+          {rating.averageRating > 0 
+            ? rating.averageRating.toFixed(1)
             : 'No ratings'
           }
         </span>
-        {aggregatedRating.totalRatings > 0 && (
+        {rating.totalRatings > 0 && (
           <span className="text-white text-sm">
-            ({aggregatedRating.totalRatings} rating{aggregatedRating.totalRatings !== 1 ? 's' : ''})
+            ({rating.totalRatings} rating{rating.totalRatings !== 1 ? 's' : ''})
           </span>
         )}
       </div>

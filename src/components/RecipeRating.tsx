@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { rateRecipe, getUserRating, getAggregatedRating } from "@/services/ratingsService";
+import { rateRecipe, getUserRating } from "@/services/ratingsService";
+import { useRecipeRating } from "@/hooks/useRecipeRatings";
+import { ratingsCache } from "@/services/ratingsCache";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -32,10 +34,7 @@ export default function RecipeRating({ recipeId, recipeName, trigger }: RecipeRa
 
   const loadRatings = async () => {
     try {
-      const [userRatingData, aggregatedData] = await Promise.all([
-        getUserRating(recipeId),
-        getAggregatedRating(recipeId)
-      ]);
+      const userRatingData = await getUserRating(recipeId);
 
       if (userRatingData) {
         setUserRating(userRatingData.rating);
@@ -43,7 +42,14 @@ export default function RecipeRating({ recipeId, recipeName, trigger }: RecipeRa
         setReview(userRatingData.review || "");
       }
 
-      setAggregatedRating(aggregatedData);
+      // Get aggregated rating from cache/service
+      const cachedRating = ratingsCache.get(recipeId);
+      if (cachedRating) {
+        setAggregatedRating({
+          averageRating: cachedRating.averageRating,
+          totalRatings: cachedRating.totalRatings
+        });
+      }
     } catch (error) {
       console.error("Error loading ratings:", error);
     }
@@ -81,9 +87,8 @@ export default function RecipeRating({ recipeId, recipeName, trigger }: RecipeRa
       setUserRating(rating);
       setOpen(false);
       
-      // Reload aggregated ratings
-      const newAggregated = await getAggregatedRating(recipeId);
-      setAggregatedRating(newAggregated);
+      // Invalidate cache to force refresh
+      ratingsCache.invalidate(recipeId);
     } else {
       toast({
         title: "Error",

@@ -4,6 +4,7 @@ import { ChefHat, Package, Grid3X3, List } from 'lucide-react';
 import RecipeResultCard from './RecipeResultCard';
 import { SearchResult } from '@/types/search';
 import { cn } from '@/lib/utils';
+import { useRecipeRatings } from '@/hooks/useRecipeRatings';
 
 interface SearchResultsProps {
   results: {
@@ -41,6 +42,10 @@ export default function SearchResults({
   const [currentPage, setCurrentPage] = useState(1);
   
   const ITEMS_PER_PAGE = 12;
+
+  // Extract recipe IDs for batch rating fetch
+  const recipeIds = results.all.map(result => result.cocktail.id).filter(Boolean);
+  const { getRating } = useRecipeRatings(recipeIds);
 
   const totalResults = results.all.length;
   const canMakeCount = results.canMake.length;
@@ -122,6 +127,7 @@ export default function SearchResults({
               onTagClick={onTagClick}
               onShowAuthModal={onShowAuthModal}
               className={viewMode === 'list' ? "max-w-none" : ""}
+              preloadedRating={getRating(result.cocktail.id)}
             />
           ))}
         </div>

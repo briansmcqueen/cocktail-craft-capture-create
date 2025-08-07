@@ -19,6 +19,11 @@ interface RecipeResultCardProps {
   onTagClick?: (tag: string) => void;
   onShowAuthModal?: () => void;
   className?: string;
+  preloadedRating?: {
+    averageRating: number;
+    totalRatings: number;
+    ratingDistribution: Record<string, number>;
+  };
 }
 
 export default function RecipeResultCard({
@@ -27,7 +32,8 @@ export default function RecipeResultCard({
   onAddIngredient,
   onTagClick,
   onShowAuthModal,
-  className
+  className,
+  preloadedRating
 }: RecipeResultCardProps) {
   const navigate = useNavigate();
   const { cocktail, canMake, missingIngredients, availabilityScore } = result;
@@ -37,6 +43,16 @@ export default function RecipeResultCard({
   const [loadingRatings, setLoadingRatings] = useState(false);
 
   useEffect(() => {
+    // Use preloaded rating if available
+    if (preloadedRating) {
+      setRatings({
+        averageRating: preloadedRating.averageRating,
+        totalRatings: preloadedRating.totalRatings
+      });
+      return;
+    }
+
+    // Otherwise load individually (fallback)
     const loadRatings = async () => {
       if (!cocktail.id) return;
       
@@ -56,14 +72,14 @@ export default function RecipeResultCard({
           totalRatings: ratingData.totalRatings
         });
       } catch (error) {
-        console.error('Error loading ratings:', error);
+        console.error('Error fetching ratings:', error);
       } finally {
         setLoadingRatings(false);
       }
     };
 
     loadRatings();
-  }, [cocktail.id]);
+  }, [cocktail.id, preloadedRating]);
 
   const handleAddMissingToBar = (ingredient: string, e: React.MouseEvent) => {
     e.stopPropagation();
