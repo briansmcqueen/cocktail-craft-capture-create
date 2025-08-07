@@ -293,6 +293,26 @@ export default function RecipePage() {
                     </Button>
                   )}
                 </div>
+
+                {/* Ratings and Comments Section */}
+                <div className="space-y-6">
+                  {/* Overall Ratings */}
+                  <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-4">
+                    <h3 className="text-lg font-semibold text-foreground mb-3">Ratings</h3>
+                    <RecipeOverallRating recipeId={recipe.id} />
+                    {user && (
+                      <div className="mt-4 pt-4 border-t border-light-charcoal">
+                        <RecipeUserRating recipeId={recipe.id} />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Comments */}
+                  <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-4">
+                    <h3 className="text-lg font-semibold text-foreground mb-3">Comments & Reviews</h3>
+                    <RecipeComments recipeId={recipe.id} />
+                  </div>
+                </div>
               </div>
 
               {/* Right column - Recipe details */}
@@ -421,26 +441,6 @@ export default function RecipePage() {
                     </div>
                   </div>
                  )}
-
-                 {/* Ratings and Comments Section */}
-                 <div className="mt-8 space-y-6 border-t border-light-charcoal pt-6">
-                   {/* Overall Ratings */}
-                   <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-6">
-                     <h2 className="text-xl font-semibold text-foreground mb-4">Ratings</h2>
-                     <RecipeOverallRating recipeId={recipe.id} />
-                     {user && (
-                       <div className="mt-4 pt-4 border-t border-light-charcoal">
-                         <RecipeUserRating recipeId={recipe.id} />
-                       </div>
-                     )}
-                   </div>
-
-                   {/* Comments */}
-                   <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-6">
-                     <h2 className="text-xl font-semibold text-foreground mb-4">Comments & Reviews</h2>
-                     <RecipeComments recipeId={recipe.id} />
-                   </div>
-                 </div>
                </div>
              </div>
            </div>
