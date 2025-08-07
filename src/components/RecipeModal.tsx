@@ -13,6 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 import RecipeOverallRating from "./RecipeOverallRating";
 import RecipeUserRating from "./RecipeUserRating";
 import RecipeComments from "./RecipeComments";
+import RecipeScaling from "./RecipeScaling";
+import { useRecipeScaling } from "@/hooks/useRecipeScaling";
 
 type Props = {
   open: boolean;
@@ -54,6 +56,7 @@ export default function RecipeModal({
 
   if (!recipe) return null;
 
+  const scaling = useRecipeScaling(recipe);
   const userRecipes = getUserRecipes();
   const isUserRecipe = userRecipes.some(r => r.id === recipe.id);
 
@@ -159,10 +162,15 @@ export default function RecipeModal({
                 </div>
               </div>
               <ul className="list-disc pl-5 text-sm text-light-text space-y-1.5 break-words">
-                {recipe.ingredients.map((ing, i) => (
+                {scaling.scaledRecipe.ingredients.map((ing, i) => (
                   <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
                 ))}
               </ul>
+              
+              {/* Recipe Scaling Component */}
+              <div className="mt-4">
+                <RecipeScaling scaling={scaling} />
+              </div>
             </div>
             <div className="mb-4">
               <div className="font-semibold text-lg text-foreground mb-2 text-left">Instructions</div>

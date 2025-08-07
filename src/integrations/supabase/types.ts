@@ -324,6 +324,7 @@ export type Database = {
       recipes: {
         Row: {
           created_at: string | null
+          default_servings: number | null
           description: string | null
           difficulty: string | null
           difficulty_rating: number | null
@@ -332,16 +333,20 @@ export type Database = {
           ingredients: string[]
           instructions: string
           is_public: boolean | null
+          max_servings: number | null
+          min_servings: number | null
           name: string
           notes: string | null
           prep_time: number | null
           rating: number | null
+          scaling_notes: string | null
           tags: string[] | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
+          default_servings?: number | null
           description?: string | null
           difficulty?: string | null
           difficulty_rating?: number | null
@@ -350,16 +355,20 @@ export type Database = {
           ingredients: string[]
           instructions: string
           is_public?: boolean | null
+          max_servings?: number | null
+          min_servings?: number | null
           name: string
           notes?: string | null
           prep_time?: number | null
           rating?: number | null
+          scaling_notes?: string | null
           tags?: string[] | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
+          default_servings?: number | null
           description?: string | null
           difficulty?: string | null
           difficulty_rating?: number | null
@@ -368,10 +377,13 @@ export type Database = {
           ingredients?: string[]
           instructions?: string
           is_public?: boolean | null
+          max_servings?: number | null
+          min_servings?: number | null
           name?: string
           notes?: string | null
           prep_time?: number | null
           rating?: number | null
+          scaling_notes?: string | null
           tags?: string[] | null
           updated_at?: string | null
           user_id?: string

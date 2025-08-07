@@ -23,6 +23,11 @@ export type Cocktail = {
   createdBy?: string; // Username of the creator for user recipes
   isUserRecipe?: boolean; // Flag to distinguish user recipes from classic ones
   isPrivate?: boolean; // Flag to mark recipe as private (user only)
+  // Scaling metadata
+  default_servings?: number;
+  min_servings?: number;
+  max_servings?: number;
+  scaling_notes?: string;
 };
 
 const rawCocktails: Cocktail[] = [
@@ -45,7 +50,10 @@ const rawCocktails: Cocktail[] = [
     garnish: ["orange peel"],
     difficulty: "easy",
     abv: "18%",
-    prepTime: "2 minutes"
+    prepTime: "2 minutes",
+    default_servings: 1,
+    min_servings: 1,
+    max_servings: 8
   },
   {
     id: "2",
@@ -1054,7 +1062,16 @@ const rawCocktails: Cocktail[] = [
     steps: "Shake all ingredients with ice. Strain into glass (salt rim optional). Garnish with lime.",
     notes: "A timeless tequila sour. One legend cites 1948 Acapulco (socialite inspiration); another links it to earlier 'Daisy' cocktails. Regardless, it rose to global fame by late 20th c.",
     origin: "Mexico",
-    tags: ["citrusy", "refreshing", "sweet"]
+    tags: ["citrusy", "refreshing", "sweet"],
+    technique: "shake",
+    glassType: "rocks",
+    garnish: ["lime wheel"],
+    difficulty: "easy",
+    abv: "22%",
+    prepTime: "3 minutes",
+    default_servings: 1,
+    min_servings: 1,
+    max_servings: 12
   },
   {
     id: "113",
