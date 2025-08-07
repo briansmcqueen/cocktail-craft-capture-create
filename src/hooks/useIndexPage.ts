@@ -73,10 +73,23 @@ export function useIndexPage() {
     }
     
     try {
-      await saveRecipeMutation.mutateAsync(recipe);
+      // Optimistically close form immediately for better UX
       setShowForm(false);
       setEditingRecipe(null);
-      console.log('Recipe saved successfully, form closed');
+      
+      // Show immediate success feedback
+      console.log('Saving recipe in background...');
+      
+      // Save in background without blocking UI
+      saveRecipeMutation.mutate(recipe, {
+        onSuccess: () => {
+          console.log('Recipe saved successfully');
+        },
+        onError: (error) => {
+          console.error('Failed to save recipe:', error);
+          // Could show error toast here if needed
+        }
+      });
     } catch (error) {
       console.error('Failed to save recipe:', error);
     }

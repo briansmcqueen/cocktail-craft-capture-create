@@ -8,25 +8,27 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     return [];
   }
 
-  const { data, error } = await supabase
-    .from('recipes')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  // Fetch both user recipes and profile in parallel for better performance
+  const [recipesResult, profileResult] = await Promise.all([
+    supabase
+      .from('recipes')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('profiles')
+      .select('username, full_name')
+      .eq('id', user.id)
+      .single()
+  ]);
 
-  if (error) {
-    console.error('Error fetching user recipes:', error);
+  if (recipesResult.error) {
+    console.error('Error fetching user recipes:', recipesResult.error);
     return [];
   }
 
-  // Get user profile separately to get username
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('username, full_name')
-    .eq('id', user.id)
-    .single();
-
-  return data?.map(recipe => ({
+  const profile = profileResult.data;
+  return recipesResult.data?.map(recipe => ({
     id: recipe.id,
     name: recipe.name,
     image: recipe.image_url || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80',
