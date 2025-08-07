@@ -49,14 +49,23 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const [newCommentCategory, setNewCommentCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
 
   useEffect(() => {
-    fetchComments();
+    if (recipeId) {
+      fetchComments();
+    }
   }, [recipeId]);
 
   const fetchComments = async () => {
+    if (!recipeId) return;
+    
     setLoading(true);
-    const data = await getRecipeComments(recipeId);
-    setComments(data);
-    setLoading(false);
+    try {
+      const data = await getRecipeComments(recipeId);
+      setComments(data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const uploadImage = async (file: File): Promise<string | null> => {
@@ -364,12 +373,16 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         <MessageCircle size={18} className="text-muted-foreground" />
         <div className="flex items-center gap-2">
           <span className="text-lg font-semibold text-foreground">Comments</span>
-          <button
-            onClick={() => setShowCommentsModal(true)}
-            className="text-white hover:text-white/80 underline focus:outline-none font-medium"
-          >
-            {comments.length} comment{comments.length !== 1 ? 's' : ''}
-          </button>
+          {loading ? (
+            <span className="text-white/60">Loading...</span>
+          ) : (
+            <button
+              onClick={() => setShowCommentsModal(true)}
+              className="text-white hover:text-white/80 underline focus:outline-none font-medium"
+            >
+              {comments.length} comment{comments.length !== 1 ? 's' : ''}
+            </button>
+          )}
         </div>
       </div>
 

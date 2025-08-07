@@ -15,14 +15,23 @@ export default function RecipeOverallRating({ recipeId }: RecipeOverallRatingPro
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchRatings();
+    if (recipeId) {
+      fetchRatings();
+    }
   }, [recipeId]);
 
   const fetchRatings = async () => {
+    if (!recipeId) return;
+    
     setLoading(true);
-    const aggregated = await getAggregatedRating(recipeId);
-    setAggregatedRating(aggregated);
-    setLoading(false);
+    try {
+      const aggregated = await getAggregatedRating(recipeId);
+      setAggregatedRating(aggregated);
+    } catch (error) {
+      console.error('Error fetching ratings:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStars = (rating: number) => {
