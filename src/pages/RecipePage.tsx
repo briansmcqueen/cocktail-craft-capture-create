@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowLeft, Edit, Heart, Share, Martini } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
-import { useRecipeCache } from "@/hooks/useRecipeCache";
-import { useBatchRatings } from "@/hooks/useBatchRatings";
 import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
@@ -20,7 +18,7 @@ import AuthModal from "@/components/auth/AuthModal";
 import Sidebar from "@/components/Sidebar";
 import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
-import { PerformanceMonitor } from "@/utils/performanceUtils";
+
 
 // Convert recipe name to URL slug
 const recipeNameToSlug = (name: string): string => {
@@ -50,8 +48,6 @@ export default function RecipePage() {
   const location = useLocation();
   const { user } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { getRecipe, recipes } = useRecipeCache();
-  const { prefetchRatings } = useBatchRatings();
   
   const [recipe, setRecipe] = useState<Cocktail | null>(null);
   const [isMetric, setIsMetric] = useState(false);
@@ -61,83 +57,22 @@ export default function RecipePage() {
 
   // Smart back navigation function  
   const handleGoBack = useCallback(() => {
-    // Check if we have meaningful navigation history
-    const hasHistory = window.history.length > 1;
-    
-    if (hasHistory) {
-      // Try to use React Router's navigate first (more reliable in SPAs)
-      try {
-        navigate(-1);
-        return;
-      } catch (error) {
-        console.log('React Router navigate failed, trying browser history:', error);
-      }
-    }
-    
-    // Fallback logic based on recipe type and user state
-    const isUserRecipe = recipes.some(r => r.id === recipe?.id);
-    
-    if (isUserRecipe) {
-      // User's own recipe - go to My Creations
-      navigate('/recipes/mine');
-    } else if (user) {
-      // Authenticated user viewing classic recipe - go to all recipes
-      navigate('/recipes');  
-    } else {
-      // Unauthenticated user - go to featured page
-      navigate('/');
-    }
-  }, [navigate, recipe?.id, user, recipes]);
+    navigate(-1);
+  }, [navigate]);
   
 
   // Load recipe
   useEffect(() => {
     const loadRecipe = async () => {
-      const endMeasurement = PerformanceMonitor.start('recipe_page_load');
+      if (!recipeName) return;
+
       let foundRecipe: Cocktail | null = null;
 
-      // Check for query parameter format first (?recipe=Recipe%20Name)
-      const urlParams = new URLSearchParams(location.search);
-      const recipeQuery = urlParams.get('recipe');
-      
-      if (recipeQuery) {
-        // Handle query parameter format - search all recipes
-        const allRecipes = [...classicCocktails, ...recipes];
-        
-        // Try exact name match first
-        foundRecipe = allRecipes.find(r => r.name === recipeQuery) || null;
-        
-        // If not found and user is authenticated, try database
-        if (!foundRecipe && user) {
-          const dbRecipes = await getUserRecipesFromDB();
-          foundRecipe = dbRecipes.find(r => r.name === recipeQuery) || null;
-        }
-        
-        if (foundRecipe) {
-          // Redirect to proper URL format
-          const correctUrl = getRecipeUrl(foundRecipe);
-          navigate(correctUrl, { replace: true });
-          endMeasurement();
-          return;
-        }
-      }
-
-      // Handle standard URL format
-      if (!recipeName) {
-        endMeasurement();
-        return;
-      }
-
       if (username === 'custom') {
-        // Custom recipe - check cache first (fastest)
-        foundRecipe = getRecipe(recipeName) || recipes.find(r => 
-          recipeNameToSlug(r.name) === recipeName
-        ) || null;
-        
-        // If not found in cache/localStorage and user is authenticated, try database
-        if (!foundRecipe && user) {
-          const dbRecipes = await getUserRecipesFromDB();
-          foundRecipe = dbRecipes.find(r => 
+        // Custom recipe from database
+        if (user) {
+          const userRecipes = await getUserRecipesFromDB();
+          foundRecipe = userRecipes.find(r => 
             recipeNameToSlug(r.name) === recipeName
           ) || null;
         }
@@ -145,29 +80,17 @@ export default function RecipePage() {
         // Database user recipe with username in URL
         foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
       } else {
-        // Classic recipe - search classic cocktails first (fastest)
+        // Classic recipe
         foundRecipe = classicCocktails.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
-        
-        // If not found in classics, check cached user recipes
-        if (!foundRecipe) {
-          foundRecipe = getRecipe(recipeName) || recipes.find(r => 
-            recipeNameToSlug(r.name) === recipeName
-          ) || null;
-        }
       }
 
       if (foundRecipe) {
         setRecipe(foundRecipe);
-        // Prefetch rating data for this recipe
-        prefetchRatings([foundRecipe.id]);
       } else {
-        // Recipe not found, redirect to home
         navigate('/');
       }
-      
-      endMeasurement();
     };
 
     loadRecipe();
@@ -182,7 +105,7 @@ export default function RecipePage() {
       }
     };
     loadUserPreferences();
-  }, [recipeName, username, user, navigate, location.search, getRecipe, recipes, prefetchRatings]);
+  }, [recipeName, username, user, navigate]);
 
   if (!recipe) {
     return (
@@ -194,13 +117,8 @@ export default function RecipePage() {
 
   const isUserRecipe = useMemo(() => {
     if (!recipe) return false;
-    
-    // Check if recipe has the isUserRecipe flag
-    if (recipe.isUserRecipe) return true;
-    
-    // Check if recipe exists in cached user recipes
-    return recipes.some(r => r.id === recipe.id);
-  }, [recipe, recipes]);
+    return recipe.isUserRecipe || false;
+  }, [recipe]);
   
   const isRecipeFavorited = isFavorite(recipe.id);
 
