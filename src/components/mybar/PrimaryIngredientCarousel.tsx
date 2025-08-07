@@ -73,7 +73,7 @@ export default function PrimaryIngredientCarousel({
   }, {} as Record<string, Ingredient[]>);
 
   // Define the desired display order
-  const categoryOrder = ["Liqueurs", "Spirits", "Wines & Vermouths"];
+  const categoryOrder = ["Spirits", "Liqueurs", "Wines & Vermouths"];
   const sortedCategories = categoryOrder.filter(category => groupedIngredients[category]);
 
   return (
