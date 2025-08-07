@@ -156,7 +156,7 @@ export default function MainContent({
           />
         ) : (
           <LazyRecipeGrid
-            recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : getFilteredRecipes()}
+            recipes={library === "mine" ? userRecipes : getFilteredRecipes()}
             onRecipeClick={handleRecipeClick}
             onToggleFavorite={() => {}}
             onLike={handleLikeWithAuth}
