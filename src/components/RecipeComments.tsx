@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MessageCircle, Edit2, Trash2, Camera, X, Tag, ThumbsUp, Reply, Share, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { getRecipeComments, addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
+import { addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
+import { useOptimizedComments } from '@/hooks/useOptimizedComments';
 import { toast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
@@ -36,8 +37,7 @@ const categoryColors = {
 
 export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const { user } = useAuth();
-  const [comments, setComments] = useState<RecipeComment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { comments, loading, invalidateCache, addOptimisticComment } = useOptimizedComments(recipeId);
   const [newComment, setNewComment] = useState('');
   const [editingComment, setEditingComment] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
@@ -47,26 +47,6 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const [sortBy, setSortBy] = useState<'newest' | 'helpful'>('newest');
   const [showAddComment, setShowAddComment] = useState(false);
   const [newCommentCategory, setNewCommentCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
-
-  useEffect(() => {
-    if (recipeId) {
-      fetchComments();
-    }
-  }, [recipeId]);
-
-  const fetchComments = async () => {
-    if (!recipeId) return;
-    
-    setLoading(true);
-    try {
-      const data = await getRecipeComments(recipeId);
-      setComments(data);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const uploadImage = async (file: File): Promise<string | null> => {
     setUploading(true);
@@ -127,10 +107,29 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     );
 
     if (success) {
+      // Optimistically add comment to UI
+      if (user) {
+        addOptimisticComment({
+          recipe_id: recipeId,
+          user_id: user.id,
+          content: newComment.trim(),
+          category: newCommentCategory,
+          photo_url: photoUrl || undefined,
+          user: {
+            id: user.id,
+            username: user.user_metadata?.username || null,
+            full_name: user.user_metadata?.full_name || null,
+            avatar_url: user.user_metadata?.avatar_url || null
+          }
+        });
+      }
+      
       setNewComment('');
       setSelectedImage(null);
       setShowAddComment(false);
-      await fetchComments();
+      
+      // Invalidate cache to trigger refresh
+      invalidateCache();
       toast({
         title: "Success",
         description: "Comment added successfully",
@@ -171,10 +170,27 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     );
 
     if (success) {
+      // Optimistically add comment to UI  
+      if (user) {
+        addOptimisticComment({
+          recipe_id: recipeId,
+          user_id: user.id,
+          content: newComment.trim(),
+          category: 'general',
+          photo_url: photoUrl || undefined,
+          user: {
+            id: user.id,
+            username: user.user_metadata?.username || null,
+            full_name: user.user_metadata?.full_name || null,
+            avatar_url: user.user_metadata?.avatar_url || null
+          }
+        });
+      }
+      
       setNewComment('');
       setSelectedImage(null);
       setShowAddComment(false);
-      await fetchComments();
+      invalidateCache();
       toast({
         title: "Success",
         description: "Comment added successfully",
@@ -194,7 +210,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     if (success) {
       setEditingComment(null);
       setEditContent('');
-      await fetchComments();
+      invalidateCache(); // Refresh comments
       toast({
         title: "Success",
         description: "Comment updated successfully",
@@ -207,7 +223,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
 
     const success = await deleteComment(commentId);
     if (success) {
-      await fetchComments();
+      invalidateCache(); // Refresh comments
       toast({
         title: "Success",
         description: "Comment deleted successfully",

@@ -18,37 +18,40 @@ export interface RecipeComment {
 }
 
 export async function getRecipeComments(recipeId: string): Promise<RecipeComment[]> {
-  // First get the comments
-  const { data: comments, error: commentsError } = await supabase
-    .from('recipe_comments')
-    .select('*')
-    .eq('recipe_id', recipeId)
-    .order('created_at', { ascending: false });
+  // Optimized: Use parallel queries and limit results
+  const [commentsResult, profilesResult] = await Promise.all([
+    supabase
+      .from('recipe_comments')
+      .select('*')
+      .eq('recipe_id', recipeId)
+      .order('created_at', { ascending: false })
+      .limit(50), // Limit for better performance
+    
+    // Get all profiles that might be needed in a single query
+    supabase
+      .from('profiles')
+      .select('id, username, full_name, avatar_url')
+  ]);
 
-  if (commentsError) {
-    console.error('Error fetching recipe comments:', commentsError);
+  if (commentsResult.error) {
+    console.error('Error fetching recipe comments:', commentsResult.error);
     return [];
   }
 
-  if (!comments || comments.length === 0) {
+  if (!commentsResult.data || commentsResult.data.length === 0) {
     return [];
   }
 
-  // Get unique user IDs
-  const userIds = [...new Set(comments.map(comment => comment.user_id))];
-
-  // Fetch user profiles separately
-  const { data: profiles, error: profilesError } = await supabase
-    .from('profiles')
-    .select('id, username, full_name, avatar_url')
-    .in('id', userIds);
-
-  if (profilesError) {
-    console.error('Error fetching user profiles:', profilesError);
+  // Create a lookup map for profiles for O(1) access
+  const profilesMap = new Map();
+  if (profilesResult.data) {
+    profilesResult.data.forEach(profile => {
+      profilesMap.set(profile.id, profile);
+    });
   }
 
-  // Map comments with user data
-  return comments.map(comment => ({
+  // Map comments with user data using the lookup map
+  return commentsResult.data.map(comment => ({
     id: comment.id,
     recipe_id: comment.recipe_id,
     user_id: comment.user_id,
@@ -57,7 +60,7 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
     photo_url: comment.photo_url,
     created_at: comment.created_at,
     updated_at: comment.updated_at,
-    user: profiles?.find(profile => profile.id === comment.user_id)
+    user: profilesMap.get(comment.user_id)
   }));
 }
 
