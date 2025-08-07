@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { ArrowLeft, Edit, Heart, Share, Martini } from "lucide-react";
+import { ArrowLeft, Edit, Heart, Share, Martini, MessageCircle } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
@@ -251,6 +251,25 @@ export default function RecipePage() {
                   className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
                 />
 
+                {/* Comments Section */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <MessageCircle size={20} className="text-pure-white" />
+                    <span className="text-pure-white font-medium">Comments</span>
+                  </div>
+                  <RecipeComments recipeId={recipe.id} />
+                </div>
+
+                {/* Ratings Section */}
+                <div className="mb-6">
+                  <RecipeOverallRating recipeId={recipe.id} />
+                  {user && (
+                    <div className="mt-3">
+                      <RecipeUserRating recipeId={recipe.id} />
+                    </div>
+                  )}
+                </div>
+
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
                   <Button
@@ -293,29 +312,7 @@ export default function RecipePage() {
                     </Button>
                   )}
                 </div>
-
-                {/* Ratings and Comments Section */}
-                <div className="space-y-6">
-                  {/* Overall Ratings */}
-                  <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-4">
-                    <h3 className="text-lg font-semibold text-foreground mb-3">Ratings</h3>
-                    <RecipeOverallRating recipeId={recipe.id} />
-                    {user && (
-                      <div className="mt-4 pt-4 border-t border-light-charcoal">
-                        <RecipeUserRating recipeId={recipe.id} />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Comments */}
-                  <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-4">
-                    <h3 className="text-lg font-semibold text-foreground mb-3">Comments & Reviews</h3>
-                    <RecipeComments recipeId={recipe.id} />
-                  </div>
-                </div>
               </div>
-
-              {/* Right column - Recipe details */}
               <div className="lg:col-span-2">
                 {/* Ingredients */}
                 <div className="mb-6">
