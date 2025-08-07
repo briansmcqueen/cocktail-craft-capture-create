@@ -15,6 +15,8 @@ import AuthModal from "@/components/auth/AuthModal";
 import Sidebar from "@/components/Sidebar";
 import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
+import RecipeScaling from "@/components/RecipeScaling";
+import { useRecipeScaling } from "@/hooks/useRecipeScaling";
 
 
 // Convert recipe name to URL slug
@@ -51,6 +53,9 @@ export default function RecipePage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const { toast } = useToast();
+  
+  // Initialize scaling hook only when recipe is available
+  const scaling = recipe ? useRecipeScaling(recipe) : null;
 
   // Smart back navigation function  
   const handleGoBack = useCallback(() => {
@@ -300,11 +305,18 @@ export default function RecipePage() {
                     </div>
                   </div>
                   <ul className="list-disc pl-5 text-light-text space-y-2">
-                    {recipe.ingredients.map((ing, i) => (
+                    {(scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
                       <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
                     ))}
                   </ul>
                 </div>
+
+                {/* Recipe Scaling */}
+                {scaling && (
+                  <div className="mb-6">
+                    <RecipeScaling scaling={scaling} />
+                  </div>
+                )}
 
                 {/* Instructions */}
                 <div className="mb-6">
