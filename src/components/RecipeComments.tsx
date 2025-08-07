@@ -149,52 +149,56 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
       return;
     }
 
-    let photoUrl = null;
-    if (selectedImage) {
-      photoUrl = await uploadImage(selectedImage);
-      if (!photoUrl) {
-        toast({
-          title: "Error",
-          description: "Failed to upload image",
-          variant: "destructive"
-        });
-        return;
+    // Optimistically add comment immediately
+    const optimisticComment = {
+      recipe_id: recipeId,
+      user_id: user.id,
+      content: newComment.trim(),
+      category: 'general' as const,
+      photo_url: undefined,
+      user: {
+        id: user.id,
+        username: user.user_metadata?.username || null,
+        full_name: user.user_metadata?.full_name || null,
+        avatar_url: user.user_metadata?.avatar_url || null
       }
-    }
+    };
 
-    const success = await addComment(
-      recipeId,
-      newComment.trim(),
-      'general', // Default to general since we removed category selector
-      photoUrl
-    );
+    addOptimisticComment(optimisticComment);
+    
+    // Clear form immediately
+    const commentText = newComment.trim();
+    const imageFile = selectedImage;
+    setNewComment('');
+    setSelectedImage(null);
+    setShowAddComment(false);
+    
+    toast({
+      title: "Success",
+      description: "Comment added successfully",
+    });
 
-    if (success) {
-      // Optimistically add comment to UI  
-      if (user) {
-        addOptimisticComment({
-          recipe_id: recipeId,
-          user_id: user.id,
-          content: newComment.trim(),
-          category: 'general',
-          photo_url: photoUrl || undefined,
-          user: {
-            id: user.id,
-            username: user.user_metadata?.username || null,
-            full_name: user.user_metadata?.full_name || null,
-            avatar_url: user.user_metadata?.avatar_url || null
-          }
-        });
+    // Handle image upload and comment saving in background
+    try {
+      let photoUrl = null;
+      if (imageFile) {
+        photoUrl = await uploadImage(imageFile);
       }
+
+      await addComment(recipeId, commentText, 'general', photoUrl);
       
-      setNewComment('');
-      setSelectedImage(null);
-      setShowAddComment(false);
-      invalidateCache();
+      // Update the comment with photo if uploaded
+      if (photoUrl) {
+        invalidateCache();
+      }
+    } catch (error) {
+      console.error('Error saving comment:', error);
       toast({
-        title: "Success",
-        description: "Comment added successfully",
+        title: "Error",
+        description: "Failed to save comment. Please try again.",
+        variant: "destructive"
       });
+      invalidateCache(); // Refresh to remove optimistic comment
     }
   };
 
