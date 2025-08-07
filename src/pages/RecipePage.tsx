@@ -59,12 +59,7 @@ export default function RecipePage() {
 
   // Smart back navigation function  
   const handleGoBack = useCallback(() => {
-    // Try to go back in history, but fallback to home if there's no history
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
+    navigate(-1);
   }, [navigate]);
   
 
