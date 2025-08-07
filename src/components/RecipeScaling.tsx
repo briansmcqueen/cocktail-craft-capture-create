@@ -56,7 +56,7 @@ export default function RecipeScaling({ scaling, className = "" }: RecipeScaling
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Scaling Controls */}
-      <div className="flex items-center gap-3 p-4 bg-medium-charcoal rounded-organic-sm border border-light-charcoal">
+      <div className="flex items-center gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-sm font-medium text-light-text">Servings:</span>
@@ -79,7 +79,7 @@ export default function RecipeScaling({ scaling, className = "" }: RecipeScaling
               size="sm"
               onClick={handleDecrement}
               disabled={!canScaleDown}
-              className="h-8 w-8 p-0 rounded-organic-sm"
+              className="h-6 w-6 p-0 rounded-organic-sm"
             >
               <Minus className="h-4 w-4" />
             </Button>
@@ -90,7 +90,7 @@ export default function RecipeScaling({ scaling, className = "" }: RecipeScaling
               onChange={(e) => handleInputChange(e.target.value)}
               min={scalingConfig.minServings}
               max={scalingConfig.maxServings}
-              className="w-16 h-8 text-center rounded-organic-sm"
+              className="w-16 h-6 text-center rounded-organic-sm"
             />
             
             <Button
@@ -98,7 +98,7 @@ export default function RecipeScaling({ scaling, className = "" }: RecipeScaling
               size="sm"
               onClick={handleIncrement}
               disabled={!canScaleUp}
-              className="h-8 w-8 p-0 rounded-organic-sm"
+              className="h-6 w-6 p-0 rounded-organic-sm"
             >
               <Plus className="h-4 w-4" />
             </Button>

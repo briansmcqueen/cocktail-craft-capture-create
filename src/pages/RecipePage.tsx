@@ -322,7 +322,7 @@ export default function RecipePage() {
                    </div>
 
                    {/* Unit Toggle */}
-                   <div className="flex items-center justify-end mb-4">
+                   <div className="flex items-center justify-start mb-4">
                      <div className="relative">
                        <div className="toggle-button-cover">
                          <div className="button-cover">
