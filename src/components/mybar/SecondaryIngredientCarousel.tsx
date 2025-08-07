@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Ingredient } from "@/data/ingredients";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Package, Apple, ChefHat, Beer } from "lucide-react";
@@ -29,6 +29,10 @@ export default function SecondaryIngredientCarousel({
   myBar,
   onToggle
 }: SecondaryIngredientCarouselProps) {
+  // Optimize toggle callback
+  const handleToggle = useCallback((ingredientId: string) => {
+    onToggle(ingredientId);
+  }, [onToggle]);
   const groupedIngredients = ingredients.reduce((acc, ingredient) => {
     if (!acc[ingredient.category]) {
       acc[ingredient.category] = [];
@@ -68,6 +72,11 @@ export default function SecondaryIngredientCarousel({
             opts={{
               align: "start",
               slidesToScroll: 2,
+              breakpoints: {
+                "(min-width: 640px)": { slidesToScroll: 3 },
+                "(min-width: 768px)": { slidesToScroll: 4 },
+                "(min-width: 1024px)": { slidesToScroll: 6 },
+              },
             }}
             className="w-full"
           >
@@ -75,11 +84,11 @@ export default function SecondaryIngredientCarousel({
               {categoryIngredients.map((ingredient) => (
                 <CarouselItem 
                   key={ingredient.id} 
-                  className="pl-1 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
+                  className="pl-1 basis-[140px] sm:basis-[160px] md:basis-[180px] lg:basis-[160px]"
                 >
                   <button
-                    onClick={() => onToggle(ingredient.id)}
-                    className={`w-full p-3 rounded-lg border transition-all duration-200 text-left text-sm hover:scale-102 ${
+                    onClick={() => handleToggle(ingredient.id)}
+                    className={`w-full p-3 rounded-lg border transition-all duration-150 text-left text-sm hover:scale-[1.02] ${
                       myBar[ingredient.id]
                         ? "border-available bg-available/10 text-available"
                         : "border-border bg-secondary-surface hover:border-border-hover text-pure-white"
@@ -99,8 +108,12 @@ export default function SecondaryIngredientCarousel({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex -left-8 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white scale-75" />
-            <CarouselNext className="hidden sm:flex -right-8 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white scale-75" />
+            
+            {/* Controls below carousel, left aligned */}
+            <div className="flex items-center gap-2 mt-3">
+              <CarouselPrevious className="relative left-0 top-0 h-7 w-7 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
+              <CarouselNext className="relative left-0 top-0 h-7 w-7 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
+            </div>
           </Carousel>
         </div>
       ))}

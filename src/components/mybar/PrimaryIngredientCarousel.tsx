@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Ingredient } from "@/data/ingredients";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Wine, Zap, Sparkles } from "lucide-react";
@@ -60,6 +60,10 @@ export default function PrimaryIngredientCarousel({
   myBar,
   onToggle
 }: PrimaryIngredientCarouselProps) {
+  // Optimize toggle callback to prevent unnecessary re-renders
+  const handleToggle = useCallback((ingredientId: string) => {
+    onToggle(ingredientId);
+  }, [onToggle]);
   const groupedIngredients = ingredients.reduce((acc, ingredient) => {
     if (!acc[ingredient.category]) {
       acc[ingredient.category] = [];
@@ -90,6 +94,10 @@ export default function PrimaryIngredientCarousel({
             opts={{
               align: "start",
               slidesToScroll: 1,
+              breakpoints: {
+                "(min-width: 768px)": { slidesToScroll: 2 },
+                "(min-width: 1024px)": { slidesToScroll: 3 },
+              },
             }}
             className="w-full"
           >
@@ -97,19 +105,19 @@ export default function PrimaryIngredientCarousel({
               {categoryIngredients.map((ingredient) => (
                 <CarouselItem 
                   key={ingredient.id} 
-                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                  className="pl-2 md:pl-4 basis-[280px] sm:basis-[300px] md:basis-[320px] lg:basis-[280px] xl:basis-[300px]"
                 >
                   <button
-                    onClick={() => onToggle(ingredient.id)}
-                    className={`group relative w-full h-48 rounded-xl overflow-hidden border-2 transition-all duration-300 hover:scale-102 ${
+                    onClick={() => handleToggle(ingredient.id)}
+                    className={`group relative w-full h-48 rounded-xl overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02] ${
                       myBar[ingredient.id]
-                        ? `border-available shadow-lg shadow-available/20 ring-2 ring-available/30`
+                        ? `border-available shadow-lg shadow-available/20 ring-1 ring-available/30`
                         : "border-border hover:border-border-hover"
                     }`}
                   >
                     {/* Background Image */}
                     <div 
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-110"
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-200 group-hover:scale-105"
                       style={{ 
                         backgroundImage: `url(${getCategoryImage(category, ingredient.subCategory)})`,
                       }}
@@ -120,7 +128,7 @@ export default function PrimaryIngredientCarousel({
                       myBar[ingredient.id] 
                         ? "from-available/80 via-available/20 to-transparent" 
                         : "from-secondary-surface/90 via-secondary-surface/40 to-transparent"
-                    } transition-all duration-300`} />
+                    } transition-all duration-200`} />
                     
                     {/* Content */}
                     <div className="absolute inset-0 p-4 flex flex-col justify-end">
@@ -142,13 +150,17 @@ export default function PrimaryIngredientCarousel({
                     </div>
                     
                     {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-pure-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-pure-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   </button>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex -left-12 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
-            <CarouselNext className="hidden sm:flex -right-12 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
+            
+            {/* Controls below carousel, left aligned */}
+            <div className="flex items-center gap-2 mt-4">
+              <CarouselPrevious className="relative left-0 top-0 h-8 w-8 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
+              <CarouselNext className="relative left-0 top-0 h-8 w-8 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
+            </div>
           </Carousel>
         </div>
       ))}
