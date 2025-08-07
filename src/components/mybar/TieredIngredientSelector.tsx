@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { Ingredient } from "@/data/ingredients";
 import { INGREDIENT_TIERS, DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
-import PrimaryIngredientGrid from "./PrimaryIngredientGrid";
-import SecondaryIngredientList from "./SecondaryIngredientList";
+import PrimaryIngredientCarousel from "./PrimaryIngredientCarousel";
+import SecondaryIngredientCarousel from "./SecondaryIngredientCarousel";
 import IngredientTierToggle from "./IngredientTierToggle";
 
 interface TieredIngredientSelectorProps {
@@ -56,7 +56,7 @@ export default function TieredIngredientSelector({
           </p>
         </div>
         
-        <PrimaryIngredientGrid 
+        <PrimaryIngredientCarousel 
           ingredients={primaryIngredients}
           myBar={myBar}
           onToggle={toggleIngredient}
@@ -74,13 +74,13 @@ export default function TieredIngredientSelector({
       />
       
       {/* Secondary Ingredients Section */}
-      {showSecondary && (
-        <SecondaryIngredientList
-          ingredients={secondaryIngredients}
-          myBar={myBar}
-          onToggle={toggleIngredient}
-        />
-      )}
+        {showSecondary && (
+          <SecondaryIngredientCarousel
+            ingredients={secondaryIngredients}
+            myBar={myBar}
+            onToggle={toggleIngredient}
+          />
+        )}
     </div>
   );
 }
