@@ -110,7 +110,7 @@ export default function SecondaryIngredientCarousel({
             </CarouselContent>
             
             {/* Controls below carousel, left aligned */}
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2 mt-6">
               <CarouselPrevious className="relative left-0 top-0 h-7 w-7 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
               <CarouselNext className="relative left-0 top-0 h-7 w-7 bg-secondary-surface border-border hover:bg-secondary-surface/80 text-light-text hover:text-pure-white" />
             </div>
