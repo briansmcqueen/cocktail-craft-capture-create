@@ -90,13 +90,13 @@ export default function MainContent({
           onCopyDialogOpen={() => {}}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "favorites" && (
           <div className="mb-6">
             <SearchInterface
-              recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
+              recipes={library === "mine" ? userRecipes : allRecipes}
               onRecipeClick={handleRecipeClick}
               onTagClick={handleTagClick}
-              placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "your recipes" : "all recipes"}...`}
+              placeholder={`Search ${library === "mine" ? "your recipes" : "all recipes"}...`}
             />
           </div>
         )}
