@@ -121,21 +121,17 @@ export default function RecipePage() {
     max_servings: 20
   };
   
+  // Always call the scaling hook to maintain hook order
   const scaling = useRecipeScaling(recipe || dummyRecipe);
-
-  if (!recipe) {
-    return (
-      <div className="min-h-screen bg-rich-charcoal flex items-center justify-center">
-        <div className="text-lg text-light-text">Loading...</div>
-      </div>
-    );
-  }
-
-  const isUserRecipe = recipe?.isUserRecipe || false;
   
-  const isRecipeFavorited = isFavorite(recipe.id);
+  // Check if we have a valid recipe (not the dummy one)
+  const hasValidRecipe = recipe && recipe.id !== 'dummy';
+  const isUserRecipe = hasValidRecipe ? (recipe?.isUserRecipe || false) : false;
+  
+  const isRecipeFavorited = hasValidRecipe ? isFavorite(recipe.id) : false;
 
   const handleToggleFavorite = async () => {
+    if (!hasValidRecipe) return;
     await toggleFavorite(recipe.id, () => setShowAuthModal(true));
   };
 
@@ -183,6 +179,15 @@ export default function RecipePage() {
       .replace(/(\d+)\s*tsp/g, (match, num) => `${Math.round(parseFloat(num) * 5)}ml`)
       .replace(/(\d+)\s*tbsp/g, (match, num) => `${Math.round(parseFloat(num) * 15)}ml`);
   };
+
+  // Show loading state when no valid recipe
+  if (!hasValidRecipe) {
+    return (
+      <div className="min-h-screen bg-rich-charcoal flex items-center justify-center">
+        <div className="text-lg text-light-text">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -324,14 +329,14 @@ export default function RecipePage() {
                     </div>
                   </div>
                   <ul className="list-disc pl-5 text-light-text space-y-2">
-                    {(recipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
+                    {(hasValidRecipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
                       <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Recipe Scaling */}
-                {recipe && scaling && (
+                {hasValidRecipe && scaling && (
                   <div className="mb-6">
                     <RecipeScaling scaling={scaling} />
                   </div>
