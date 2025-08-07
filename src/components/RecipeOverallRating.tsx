@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { getAggregatedRating, type AggregatedRating } from '@/services/ratingsService';
+import { ratingsCache } from '@/services/ratingsCache';
 
 interface RecipeOverallRatingProps {
   recipeId: string;
@@ -25,8 +26,20 @@ export default function RecipeOverallRating({ recipeId }: RecipeOverallRatingPro
     
     setLoading(true);
     try {
-      const aggregated = await getAggregatedRating(recipeId);
-      setAggregatedRating(aggregated);
+      const ratingData = await ratingsCache.getOrFetch(recipeId, async (id) => {
+        const aggregated = await getAggregatedRating(id);
+        return {
+          averageRating: aggregated.averageRating,
+          totalRatings: aggregated.totalRatings,
+          ratingDistribution: aggregated.ratingDistribution
+        };
+      });
+      
+      setAggregatedRating({
+        averageRating: ratingData.averageRating,
+        totalRatings: ratingData.totalRatings,
+        ratingDistribution: ratingData.ratingDistribution
+      });
     } catch (error) {
       console.error('Error fetching ratings:', error);
     } finally {

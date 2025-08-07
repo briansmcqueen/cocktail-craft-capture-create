@@ -38,6 +38,9 @@ export default function SearchResults({
   onClearFilters
 }: SearchResultsProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const ITEMS_PER_PAGE = 12;
 
   const totalResults = results.all.length;
   const canMakeCount = results.canMake.length;
@@ -86,7 +89,7 @@ export default function SearchResults({
     );
   }
 
-  const renderResults = (searchResults: SearchResult[]) => {
+  const renderResults = (searchResults: SearchResult[], showPagination = false) => {
     if (searchResults.length === 0) {
       return (
         <div className="text-center py-8">
@@ -96,23 +99,42 @@ export default function SearchResults({
       );
     }
 
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = showPagination ? startIndex + ITEMS_PER_PAGE : searchResults.length;
+    const displayedResults = searchResults.slice(0, endIndex);
+    const hasMoreResults = searchResults.length > endIndex;
+
     return (
-      <div className={cn(
-        viewMode === 'grid' 
-          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-          : "space-y-3"
-      )}>
-        {searchResults.map((result) => (
-          <RecipeResultCard
-            key={result.cocktail.id}
-            result={result}
-            onRecipeClick={onRecipeClick}
-            onAddIngredient={onAddIngredient}
-            onTagClick={onTagClick}
-            onShowAuthModal={onShowAuthModal}
-            className={viewMode === 'list' ? "max-w-none" : ""}
-          />
-        ))}
+      <div className="space-y-4">
+        <div className={cn(
+          viewMode === 'grid' 
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            : "space-y-3"
+        )}>
+          {displayedResults.map((result) => (
+            <RecipeResultCard
+              key={result.cocktail.id}
+              result={result}
+              onRecipeClick={onRecipeClick}
+              onAddIngredient={onAddIngredient}
+              onTagClick={onTagClick}
+              onShowAuthModal={onShowAuthModal}
+              className={viewMode === 'list' ? "max-w-none" : ""}
+            />
+          ))}
+        </div>
+        
+        {showPagination && hasMoreResults && (
+          <div className="flex justify-center pt-6">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => prev + 1)}
+              className="rounded-organic-sm"
+            >
+              Show More ({searchResults.length - endIndex} remaining)
+            </Button>
+          </div>
+        )}
       </div>
     );
   };
@@ -154,7 +176,7 @@ export default function SearchResults({
 
       {/* Results */}
       <div className="mt-6">
-        {renderResults(results.all)}
+        {renderResults(results.all, true)}
       </div>
     </div>
   );

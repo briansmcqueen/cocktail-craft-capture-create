@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +9,8 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { getRecipeUrl } from '@/pages/RecipePage';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
+import { ratingsCache } from '@/services/ratingsCache';
+import { getAggregatedRating } from '@/services/ratingsService';
 
 interface RecipeResultCardProps {
   result: SearchResult;
@@ -30,6 +32,38 @@ export default function RecipeResultCard({
   const navigate = useNavigate();
   const { cocktail, canMake, missingIngredients, availabilityScore } = result;
   const { isFavorite, toggleFavorite } = useFavorites();
+  
+  const [ratings, setRatings] = useState({ averageRating: 0, totalRatings: 0 });
+  const [loadingRatings, setLoadingRatings] = useState(false);
+
+  useEffect(() => {
+    const loadRatings = async () => {
+      if (!cocktail.id) return;
+      
+      setLoadingRatings(true);
+      try {
+        const ratingData = await ratingsCache.getOrFetch(cocktail.id, async (id) => {
+          const aggregated = await getAggregatedRating(id);
+          return {
+            averageRating: aggregated.averageRating,
+            totalRatings: aggregated.totalRatings,
+            ratingDistribution: aggregated.ratingDistribution
+          };
+        });
+        
+        setRatings({
+          averageRating: ratingData.averageRating,
+          totalRatings: ratingData.totalRatings
+        });
+      } catch (error) {
+        console.error('Error loading ratings:', error);
+      } finally {
+        setLoadingRatings(false);
+      }
+    };
+
+    loadRatings();
+  }, [cocktail.id]);
 
   const handleAddMissingToBar = (ingredient: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -90,19 +124,29 @@ export default function RecipeResultCard({
 
           {/* Review stars and count */}
           <div className="flex items-center gap-1 mb-3">
-            <div className="flex items-center">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  size={16}
-                  className={cn(
-                    "text-golden-amber",
-                    star <= 4 ? "fill-current" : "fill-none"
-                  )}
-                />
-              ))}
-            </div>
-            <span className="text-xs text-pure-white ml-1">127 reviews</span>
+            {loadingRatings ? (
+              <div className="flex items-center text-xs text-muted-foreground">
+                <div className="animate-pulse h-3 bg-muted rounded w-16"></div>
+              </div>
+            ) : ratings.totalRatings > 0 ? (
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={16}
+                    className={cn(
+                      "text-golden-amber",
+                      star <= Math.round(ratings.averageRating) ? "fill-current" : "fill-none"
+                    )}
+                  />
+                ))}
+                <span className="text-xs text-pure-white ml-1">
+                  {ratings.totalRatings} review{ratings.totalRatings !== 1 ? 's' : ''}
+                </span>
+              </div>
+            ) : (
+              <span className="text-xs text-muted-foreground">No reviews yet</span>
+            )}
           </div>
 
           {/* Action buttons */}
