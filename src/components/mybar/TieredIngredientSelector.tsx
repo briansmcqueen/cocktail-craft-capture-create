@@ -53,7 +53,7 @@ export default function TieredIngredientSelector({
       <div className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-light-text" />
         <Input
-          placeholder="Search ingredients..."
+          placeholder="Search by ingredient name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10 bg-secondary-surface border-border text-pure-white placeholder-light-text focus:border-available"

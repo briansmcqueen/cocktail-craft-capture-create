@@ -23,10 +23,7 @@ export default function MyBarSearch({
     
     const term = searchTerm.toLowerCase();
     return allIngredients.filter(ingredient => 
-      ingredient.name.toLowerCase().includes(term) ||
-      ingredient.aliases.some(alias => alias.toLowerCase().includes(term)) ||
-      ingredient.subCategory.toLowerCase().includes(term) ||
-      ingredient.category.toLowerCase().includes(term)
+      ingredient.name.toLowerCase().includes(term)
     ).sort((a, b) => {
       // Prioritize exact matches
       const aNameMatch = a.name.toLowerCase().startsWith(term);
