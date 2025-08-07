@@ -124,11 +124,7 @@ export default function PrimaryIngredientCarousel({
                     />
                     
                     {/* Gradient Overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-t ${
-                      myBar[ingredient.id] 
-                        ? "from-available/90 via-available/60 via-available/30 to-transparent" 
-                        : "from-black/90 via-black/60 via-black/30 to-transparent"
-                    } transition-all duration-200`} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 via-black/30 to-transparent transition-all duration-200" />
                     
                     {/* Content */}
                     <div className="absolute inset-0 p-4 flex flex-col justify-end">
@@ -141,10 +137,10 @@ export default function PrimaryIngredientCarousel({
                         </p>
                       </div>
                       
-                      {/* Selection Indicator */}
+                      {/* Selection Indicator - Forest Green Circle */}
                       {myBar[ingredient.id] && (
-                        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-available flex items-center justify-center shadow-lg">
-                          <span className="text-pure-white text-sm font-bold">✓</span>
+                        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-available border-2 border-white flex items-center justify-center shadow-lg">
+                          <span className="text-white text-sm font-bold">✓</span>
                         </div>
                       )}
                     </div>
