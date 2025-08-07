@@ -108,17 +108,6 @@ export default function RecipeScaling({ scaling, className = "" }: RecipeScaling
             Range: {scalingConfig.minServings}-{scalingConfig.maxServings} servings
           </div>
         </div>
-        
-        {isScaled && (
-          <div className="text-right">
-            <div className="text-sm font-medium text-emerald">
-              {currentServings}x Recipe
-            </div>
-            <div className="text-xs text-soft-gray">
-              Original: {scalingConfig.defaultServings} serving{scalingConfig.defaultServings !== 1 ? 's' : ''}
-            </div>
-          </div>
-        )}
       </div>
       
       {/* Scaling Warnings */}
