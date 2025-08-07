@@ -38,7 +38,7 @@ const categoryColors = {
 
 export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const { user } = useAuth();
-  const { comments, loading, invalidateCache, addOptimisticComment } = useOptimizedComments(recipeId);
+  const { comments, loading, invalidateCache, addOptimisticComment, optimisticDeleteComment } = useOptimizedComments(recipeId);
   const [newComment, setNewComment] = useState('');
   const [editingComment, setEditingComment] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
@@ -224,15 +224,20 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   };
 
   const handleDeleteComment = async (commentId: string) => {
+    // Optimistically remove comment from UI immediately
+    const previousComments = optimisticDeleteComment(commentId);
+    
+    toast({
+      title: "Success",
+      description: "Comment deleted successfully",
+    });
+
+    // Process delete in background
     try {
       const success = await deleteComment(commentId);
-      if (success) {
-        invalidateCache(); // Refresh comments
-        toast({
-          title: "Success",
-          description: "Comment deleted successfully",
-        });
-      } else {
+      if (!success) {
+        // Rollback on failure
+        invalidateCache();
         toast({
           title: "Error",
           description: "Failed to delete comment. Please try again.",
@@ -241,6 +246,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
       }
     } catch (error) {
       console.error('Error deleting comment:', error);
+      // Rollback on error
+      invalidateCache();
       toast({
         title: "Error",
         description: "Failed to delete comment. Please try again.",

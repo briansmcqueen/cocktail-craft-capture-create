@@ -69,11 +69,19 @@ export function useOptimizedComments(recipeId: string) {
     invalidateCache(); // Invalidate cache since we added a comment
   };
 
+  const optimisticDeleteComment = (commentId: string) => {
+    const previousComments = comments;
+    setComments(prev => prev.filter(comment => comment.id !== commentId));
+    invalidateCache(); // Invalidate cache since we removed a comment
+    return previousComments; // Return previous state for rollback if needed
+  };
+
   return {
     comments,
     loading,
     error,
     invalidateCache,
-    addOptimisticComment
+    addOptimisticComment,
+    optimisticDeleteComment
   };
 }
