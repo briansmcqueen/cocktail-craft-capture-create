@@ -182,8 +182,14 @@ export default function RecipePage() {
   }
 
   const userRecipes = getUserRecipes();
-  const isUserRecipe = userRecipes.some(r => r.id === recipe.id);
+  const isUserRecipe = userRecipes.some(r => r.id === recipe.id) || recipe.isUserRecipe;
   const isRecipeFavorited = isFavorite(recipe.id);
+  
+  // Debug logging
+  console.log('Recipe:', recipe);
+  console.log('User recipes:', userRecipes);
+  console.log('Is user recipe?', isUserRecipe);
+  console.log('Recipe.isUserRecipe:', recipe.isUserRecipe);
 
   const handleToggleFavorite = async () => {
     await toggleFavorite(recipe.id, () => setShowAuthModal(true));

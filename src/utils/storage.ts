@@ -6,11 +6,15 @@ const USER_RECIPES_KEY = "user_cocktail_recipes";
 export function saveUserRecipe(recipe: Cocktail) {
   const all = getUserRecipes();
   const existing = all.find((r) => r.id === recipe.id);
+  
+  // Ensure user recipes are properly flagged
+  const recipeWithFlag = { ...recipe, isUserRecipe: true };
+  
   let updated;
   if (existing) {
-    updated = all.map((r) => (r.id === recipe.id ? recipe : r));
+    updated = all.map((r) => (r.id === recipe.id ? recipeWithFlag : r));
   } else {
-    updated = [...all, recipe];
+    updated = [...all, recipeWithFlag];
   }
   localStorage.setItem(USER_RECIPES_KEY, JSON.stringify(updated));
 }
