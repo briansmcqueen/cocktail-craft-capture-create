@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { MessageCircle, Edit2, Trash2, Camera, X, Tag, ThumbsUp, Reply, Share, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
@@ -223,14 +224,27 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   };
 
   const handleDeleteComment = async (commentId: string) => {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
-
-    const success = await deleteComment(commentId);
-    if (success) {
-      invalidateCache(); // Refresh comments
+    try {
+      const success = await deleteComment(commentId);
+      if (success) {
+        invalidateCache(); // Refresh comments
+        toast({
+          title: "Success",
+          description: "Comment deleted successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to delete comment. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
       toast({
-        title: "Success",
-        description: "Comment deleted successfully",
+        title: "Error",
+        description: "Failed to delete comment. Please try again.",
+        variant: "destructive"
       });
     }
   };
@@ -359,15 +373,35 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                       <Edit2 className="w-3 h-3 mr-1" />
                       <span className="text-xs">Edit</span>
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="p-1 h-auto text-muted-foreground hover:text-foreground"
-                    >
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      <span className="text-xs">Delete</span>
-                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="p-1 h-auto text-muted-foreground hover:text-foreground"
+                        >
+                          <Trash2 className="w-3 h-3 mr-1" />
+                          <span className="text-xs">Delete</span>
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-card border-border">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-foreground">Delete Comment</AlertDialogTitle>
+                          <AlertDialogDescription className="text-muted-foreground">
+                            Are you sure you want to delete this comment? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="text-muted-foreground">Cancel</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => handleDeleteComment(comment.id)}
+                            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </>
                 )}
               </div>
