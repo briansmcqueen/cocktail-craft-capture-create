@@ -1,9 +1,11 @@
+import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowLeft, Edit, Heart, Share, Martini } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
-import { getUserRecipes } from "@/utils/storage";
+import { useRecipeCache } from "@/hooks/useRecipeCache";
+import { useBatchRatings } from "@/hooks/useBatchRatings";
 import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
@@ -18,6 +20,7 @@ import AuthModal from "@/components/auth/AuthModal";
 import Sidebar from "@/components/Sidebar";
 import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
+import { PerformanceMonitor } from "@/utils/performanceUtils";
 
 // Convert recipe name to URL slug
 const recipeNameToSlug = (name: string): string => {
@@ -47,13 +50,16 @@ export default function RecipePage() {
   const location = useLocation();
   const { user } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { getRecipe, recipes } = useRecipeCache();
+  const { prefetchRatings } = useBatchRatings();
+  
   const [recipe, setRecipe] = useState<Cocktail | null>(null);
   const [isMetric, setIsMetric] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const { toast } = useToast();
 
-  // Smart back navigation function
+  // Smart back navigation function  
   const handleGoBack = useCallback(() => {
     // Check if we have meaningful navigation history
     const hasHistory = window.history.length > 1;
@@ -69,8 +75,7 @@ export default function RecipePage() {
     }
     
     // Fallback logic based on recipe type and user state
-    const userRecipes = getUserRecipes();
-    const isUserRecipe = userRecipes.some(r => r.id === recipe?.id);
+    const isUserRecipe = recipes.some(r => r.id === recipe?.id);
     
     if (isUserRecipe) {
       // User's own recipe - go to My Creations
@@ -82,12 +87,13 @@ export default function RecipePage() {
       // Unauthenticated user - go to featured page
       navigate('/');
     }
-  }, [navigate, recipe?.id, user]);
+  }, [navigate, recipe?.id, user, recipes]);
   
 
   // Load recipe
   useEffect(() => {
     const loadRecipe = async () => {
+      const endMeasurement = PerformanceMonitor.start('recipe_page_load');
       let foundRecipe: Cocktail | null = null;
 
       // Check for query parameter format first (?recipe=Recipe%20Name)
@@ -96,8 +102,7 @@ export default function RecipePage() {
       
       if (recipeQuery) {
         // Handle query parameter format - search all recipes
-        const localRecipes = getUserRecipes();
-        const allRecipes = [...classicCocktails, ...localRecipes];
+        const allRecipes = [...classicCocktails, ...recipes];
         
         // Try exact name match first
         foundRecipe = allRecipes.find(r => r.name === recipeQuery) || null;
@@ -112,21 +117,24 @@ export default function RecipePage() {
           // Redirect to proper URL format
           const correctUrl = getRecipeUrl(foundRecipe);
           navigate(correctUrl, { replace: true });
+          endMeasurement();
           return;
         }
       }
 
       // Handle standard URL format
-      if (!recipeName) return;
+      if (!recipeName) {
+        endMeasurement();
+        return;
+      }
 
       if (username === 'custom') {
-        // Custom recipe - check localStorage first (faster)
-        const localRecipes = getUserRecipes();
-        foundRecipe = localRecipes.find(r => 
+        // Custom recipe - check cache first (fastest)
+        foundRecipe = getRecipe(recipeName) || recipes.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
         
-        // If not found in localStorage and user is authenticated, try database
+        // If not found in cache/localStorage and user is authenticated, try database
         if (!foundRecipe && user) {
           const dbRecipes = await getUserRecipesFromDB();
           foundRecipe = dbRecipes.find(r => 
@@ -137,15 +145,14 @@ export default function RecipePage() {
         // Database user recipe with username in URL
         foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
       } else {
-        // Classic recipe - search classic cocktails first (faster)
+        // Classic recipe - search classic cocktails first (fastest)
         foundRecipe = classicCocktails.find(r => 
           recipeNameToSlug(r.name) === recipeName
         ) || null;
         
-        // If not found in classics, check user recipes
+        // If not found in classics, check cached user recipes
         if (!foundRecipe) {
-          const localRecipes = getUserRecipes();
-          foundRecipe = localRecipes.find(r => 
+          foundRecipe = getRecipe(recipeName) || recipes.find(r => 
             recipeNameToSlug(r.name) === recipeName
           ) || null;
         }
@@ -153,10 +160,14 @@ export default function RecipePage() {
 
       if (foundRecipe) {
         setRecipe(foundRecipe);
+        // Prefetch rating data for this recipe
+        prefetchRatings([foundRecipe.id]);
       } else {
         // Recipe not found, redirect to home
         navigate('/');
       }
+      
+      endMeasurement();
     };
 
     loadRecipe();
@@ -171,7 +182,7 @@ export default function RecipePage() {
       }
     };
     loadUserPreferences();
-  }, [recipeName, username, user, navigate]);
+  }, [recipeName, username, user, navigate, location.search, getRecipe, recipes, prefetchRatings]);
 
   if (!recipe) {
     return (
@@ -181,15 +192,17 @@ export default function RecipePage() {
     );
   }
 
-  const userRecipes = getUserRecipes();
-  const isUserRecipe = userRecipes.some(r => r.id === recipe.id) || recipe.isUserRecipe;
-  const isRecipeFavorited = isFavorite(recipe.id);
+  const isUserRecipe = useMemo(() => {
+    if (!recipe) return false;
+    
+    // Check if recipe has the isUserRecipe flag
+    if (recipe.isUserRecipe) return true;
+    
+    // Check if recipe exists in cached user recipes
+    return recipes.some(r => r.id === recipe.id);
+  }, [recipe, recipes]);
   
-  // Debug logging
-  console.log('Recipe:', recipe);
-  console.log('User recipes:', userRecipes);
-  console.log('Is user recipe?', isUserRecipe);
-  console.log('Recipe.isUserRecipe:', recipe.isUserRecipe);
+  const isRecipeFavorited = isFavorite(recipe.id);
 
   const handleToggleFavorite = async () => {
     await toggleFavorite(recipe.id, () => setShowAuthModal(true));

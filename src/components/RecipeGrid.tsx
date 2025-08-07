@@ -1,8 +1,9 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import UniversalRecipeCard from "./UniversalRecipeCard";
 import { Cocktail } from "@/data/classicCocktails";
+import { useBatchRatings } from "@/hooks/useBatchRatings";
 
 type RecipeGridProps = {
   recipes: Cocktail[];
@@ -29,6 +30,15 @@ export default function RecipeGrid({
   library,
   onShowAuthModal
 }: RecipeGridProps) {
+  const { prefetchRatings } = useBatchRatings();
+
+  // Batch prefetch ratings for all recipes when component mounts
+  useEffect(() => {
+    if (recipes.length > 0) {
+      const recipeIds = recipes.map(recipe => recipe.id);
+      prefetchRatings(recipeIds);
+    }
+  }, [recipes, prefetchRatings]);
   if (recipes.length === 0) {
     return (
       <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
