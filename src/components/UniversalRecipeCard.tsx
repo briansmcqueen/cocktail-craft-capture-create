@@ -7,8 +7,6 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
 import { getRecipeUrl } from '@/pages/RecipePage';
-import { useBatchRatings } from '@/hooks/useBatchRatings';
-import { AggregatedRating } from '@/services/ratingsService';
 
 interface UniversalRecipeCardProps {
   recipe: Cocktail;
@@ -25,21 +23,13 @@ export default function UniversalRecipeCard({
 }: UniversalRecipeCardProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { getRating, prefetchRatings } = useBatchRatings();
   
-  // Get rating from cache
-  const ratingData = getRating(recipe.id) || {
+  // Skip ratings for now - major performance bottleneck
+  const ratingData = {
     averageRating: 0,
     totalRatings: 0,
     ratingDistribution: {}
   };
-
-  // Prefetch rating on mount if not cached
-  useEffect(() => {
-    if (!getRating(recipe.id)) {
-      prefetchRatings([recipe.id]);
-    }
-  }, [recipe.id, getRating, prefetchRatings]);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -1,6 +1,5 @@
 
 import type { Cocktail } from "@/data/classicCocktails";
-import { CacheService } from "@/services/cacheService";
 
 const USER_RECIPES_KEY = "user_cocktail_recipes";
 
@@ -17,34 +16,15 @@ export function saveUserRecipe(recipe: Cocktail) {
   } else {
     updated = [...all, recipeWithFlag];
   }
-  
-  // Use async localStorage operations for better performance
-  CacheService.setLocalStorage(USER_RECIPES_KEY, updated);
-  
-  // Update cache immediately for instant UI feedback
-  CacheService.setRecipes(updated);
+  localStorage.setItem(USER_RECIPES_KEY, JSON.stringify(updated));
 }
 
 export function getUserRecipes(): Cocktail[] {
-  // Try cache first for better performance
-  const cached = CacheService.getRecipes();
-  if (cached) return cached;
-  
-  // Fallback to localStorage
-  const recipes = CacheService.getLocalStorage<Cocktail[]>(USER_RECIPES_KEY) || [];
-  
-  // Cache the result
-  CacheService.setRecipes(recipes);
-  
-  return recipes;
+  const data = localStorage.getItem(USER_RECIPES_KEY);
+  return data ? JSON.parse(data) : [];
 }
 
 export function deleteUserRecipe(id: string) {
   const all = getUserRecipes().filter((r) => r.id !== id);
-  
-  // Use async localStorage operations
-  CacheService.setLocalStorage(USER_RECIPES_KEY, all);
-  
-  // Update cache immediately
-  CacheService.deleteRecipe(id);
+  localStorage.setItem(USER_RECIPES_KEY, JSON.stringify(all));
 }
