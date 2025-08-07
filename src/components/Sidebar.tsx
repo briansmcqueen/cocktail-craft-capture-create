@@ -1,9 +1,10 @@
 import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat, User, LogIn } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import UserMenu from "@/components/auth/UserMenu";
 import { User as SupabaseUser } from "@supabase/supabase-js";
+import { memo } from "react";
 
 type SidebarProps = {
   active: string;
@@ -27,13 +28,8 @@ const nav = [
   { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
 ];
 
-export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, onSignInClick, onSignUpClick, onProfileClick, onMyRecipesClick, onFavoritesClick }: SidebarProps) {
-  const handleNavClick = (id: string) => {
-    if (onCloseForm) {
-      onCloseForm();
-    }
-    onSelect(id);
-  };
+const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, user, onSignInClick, onSignUpClick, onProfileClick, onMyRecipesClick, onFavoritesClick }: SidebarProps) {
+  const location = useLocation();
 
   return (
     <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg overflow-hidden">
@@ -49,7 +45,7 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, on
             to={item.path}
             className={cn(
               "flex items-center gap-3 px-3 py-3 rounded-organic-sm transition-all font-medium duration-300",
-              active === item.id 
+              location.pathname === item.path
                 ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                 : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:scale-[1.01] hover:rotate-[-0.3deg]"
             )}
@@ -103,4 +99,6 @@ export default function Sidebar({ active, onSelect, onAdd, onCloseForm, user, on
       </div>
     </aside>
   );
-}
+});
+
+export default Sidebar;

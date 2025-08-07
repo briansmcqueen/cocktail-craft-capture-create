@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, memo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -29,7 +29,7 @@ const nav = [
   { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
 ];
 
-export default function TopNavigation({
+const TopNavigation = memo(function TopNavigation({
   user,
   activeLibrary,
   onLibrarySelect,
@@ -41,11 +41,7 @@ export default function TopNavigation({
   onFavoritesClick
 }: TopNavigationProps) {
   const [open, setOpen] = useState(false);
-
-  const handleNavClick = (id: string) => {
-    onLibrarySelect(id);
-    setOpen(false);
-  };
+  const location = useLocation();
 
   const handleAddRecipe = () => {
     onAddRecipe();
@@ -85,7 +81,7 @@ export default function TopNavigation({
                       to={item.path}
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm",
-                        activeLibrary === item.id 
+                        location.pathname === item.path
                           ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
                           : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:transform hover:scale-[1.01]"
                       )}
@@ -170,4 +166,6 @@ export default function TopNavigation({
       </div>
     </>
   );
-}
+});
+
+export default TopNavigation;
