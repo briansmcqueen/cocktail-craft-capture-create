@@ -141,7 +141,7 @@ export default function MainContent({
           <Learn
             onShowAuthModal={() => setShowAuthModal(true)}
           />
-        ) : library === "all" ? null : (
+        ) : library === "all" ? null : library === "mine" ? null : (
           <LazyRecipeGrid
             recipes={library === "mine" ? userRecipes : getFilteredRecipes()}
             onRecipeClick={handleRecipeClick}
