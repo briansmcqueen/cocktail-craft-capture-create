@@ -57,6 +57,28 @@ export default function RecipePage() {
   const [showShareModal, setShowShareModal] = useState(false);
   const { toast } = useToast();
 
+  // Check if we should show the back button
+  const shouldShowBackButton = useMemo(() => {
+    // Don't show if we're at the first page or if the previous page is the same as current
+    if (window.history.length <= 1) return false;
+    
+    // Check if the referrer is the same as current page (like after a refresh)
+    const currentPath = location.pathname;
+    const referrer = document.referrer;
+    
+    if (referrer) {
+      try {
+        const referrerUrl = new URL(referrer);
+        const referrerPath = referrerUrl.pathname;
+        if (referrerPath === currentPath) return false;
+      } catch (e) {
+        // If we can't parse referrer, show the button
+      }
+    }
+    
+    return true;
+  }, [location.pathname]);
+
   // Smart back navigation function  
   const handleGoBack = useCallback(() => {
     navigate(-1);
@@ -223,14 +245,16 @@ export default function RecipePage() {
         {/* Main Content */}
         <main className="flex-1">
           <div className="max-w-6xl mx-auto px-4 py-6">
-            {/* Back button */}
-            <button
-              onClick={handleGoBack}
-              className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              Back
-            </button>
+            {/* Back button - only show if we should */}
+            {shouldShowBackButton && (
+              <button
+                onClick={handleGoBack}
+                className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors"
+              >
+                <ArrowLeft size={20} />
+                Back
+              </button>
+            )}
 
             {/* Recipe header */}
             <div className="mb-8">
