@@ -312,35 +312,37 @@ export default function RecipePage() {
               <div className="lg:col-span-2">
                 {/* Ingredients */}
                 <div className="mb-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-foreground">Ingredients</h2>
-                    <div className="flex items-center">
-                      <div className="relative">
-                        <div className="toggle-button-cover">
-                          <div className="button-cover">
-                            <div className="button custom-toggle">
-                              <input 
-                                type="checkbox" 
-                                className="checkbox" 
-                                checked={isMetric}
-                                onChange={(e) => setIsMetric(e.target.checked)}
-                              />
-                              <div className="knobs">
-                                <span>{isMetric ? 'ML' : 'OZ'}</span>
-                              </div>
-                              <div className="layer"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <ul className="list-disc pl-5 text-light-text space-y-2">
-                    {(hasValidRecipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
-                      <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
-                    ))}
-                  </ul>
-                </div>
+                   <h2 className="text-xl font-semibold text-foreground">Ingredients</h2>
+                   <div className="mb-4">
+                     <ul className="list-disc pl-5 text-light-text space-y-2">
+                       {(hasValidRecipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
+                         <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
+                       ))}
+                     </ul>
+                   </div>
+
+                   {/* Unit Toggle */}
+                   <div className="flex items-center justify-end mb-4">
+                     <div className="relative">
+                       <div className="toggle-button-cover">
+                         <div className="button-cover">
+                           <div className="button custom-toggle">
+                             <input 
+                               type="checkbox" 
+                               className="checkbox" 
+                               checked={isMetric}
+                               onChange={(e) => setIsMetric(e.target.checked)}
+                             />
+                             <div className="knobs">
+                               <span>{isMetric ? 'ML' : 'OZ'}</span>
+                             </div>
+                             <div className="layer"></div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
 
                 {/* Recipe Scaling */}
                 {hasValidRecipe && scaling && (
