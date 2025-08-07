@@ -17,6 +17,9 @@ import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
 import RecipeScaling from "@/components/RecipeScaling";
 import { useRecipeScaling } from "@/hooks/useRecipeScaling";
+import RecipeOverallRating from "@/components/RecipeOverallRating";
+import RecipeUserRating from "@/components/RecipeUserRating";
+import RecipeComments from "@/components/RecipeComments";
 
 
 // Convert recipe name to URL slug
@@ -53,9 +56,6 @@ export default function RecipePage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const { toast } = useToast();
-  
-  // Initialize scaling hook only when recipe is available
-  const scaling = recipe ? useRecipeScaling(recipe) : null;
 
   // Smart back navigation function  
   const handleGoBack = useCallback(() => {
@@ -108,6 +108,20 @@ export default function RecipePage() {
     };
     loadUserPreferences();
   }, [recipeName, username, user, navigate]);
+
+  // Initialize scaling hook - use dummy recipe to maintain hook order
+  const dummyRecipe: Cocktail = {
+    id: 'dummy',
+    name: 'Loading',
+    image: '',
+    ingredients: ['1 oz placeholder'],
+    steps: 'Loading...',
+    default_servings: 1,
+    min_servings: 1,
+    max_servings: 20
+  };
+  
+  const scaling = useRecipeScaling(recipe || dummyRecipe);
 
   if (!recipe) {
     return (
@@ -232,6 +246,11 @@ export default function RecipePage() {
                   className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
                 />
                 
+                {/* Recipe Ratings */}
+                <div className="mb-6">
+                  <RecipeOverallRating recipeId={recipe.id} />
+                  {user && <RecipeUserRating recipeId={recipe.id} />}
+                </div>
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
@@ -305,14 +324,14 @@ export default function RecipePage() {
                     </div>
                   </div>
                   <ul className="list-disc pl-5 text-light-text space-y-2">
-                    {(scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
+                    {(recipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
                       <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Recipe Scaling */}
-                {scaling && (
+                {recipe && scaling && (
                   <div className="mb-6">
                     <RecipeScaling scaling={scaling} />
                   </div>
@@ -403,6 +422,11 @@ export default function RecipePage() {
                     </div>
                   </div>
                 )}
+
+                {/* Recipe Comments */}
+                <div className="mt-8">
+                  <RecipeComments recipeId={recipe.id} />
+                </div>
 
               </div>
             </div>
