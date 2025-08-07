@@ -61,36 +61,31 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
     {
       name: "X",
       icon: XIcon,
-      color: "text-gray-900",
-      hoverColor: "hover:bg-gray-100 hover:text-black",
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`🍸 Check out this ${recipe.name} recipe on Barbook!`)}&url=${encodeURIComponent(shareUrl)}`,
     },
     {
       name: "Instagram", 
       icon: InstagramIcon,
-      color: "text-pink-600",
-      hoverColor: "hover:bg-pink-50 hover:text-pink-700",
       url: `https://www.instagram.com/`, // Instagram doesn't support direct sharing with text, opens Instagram
     },
     {
       name: "Facebook", 
       icon: Facebook,
-      color: "text-blue-600",
-      hoverColor: "hover:bg-blue-50 hover:text-blue-700",
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      name: "WhatsApp",
+      icon: MessageSquare,
+      url: `https://wa.me/?text=${encodeURIComponent(shareText)}`,
     },
     {
       name: "Email",
       icon: Mail,
-      color: "text-gray-600",
-      hoverColor: "hover:bg-gray-50 hover:text-gray-700",
       url: `mailto:?subject=${encodeURIComponent(`${recipe.name} Recipe from Barbook`)}&body=${encodeURIComponent(shareText)}`,
     },
     {
       name: "SMS",
       icon: MessageSquare,
-      color: "text-green-600",
-      hoverColor: "hover:bg-green-50 hover:text-green-700",
       url: `sms:?body=${encodeURIComponent(shareText)}`,
     }
   ];
@@ -114,70 +109,70 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-charcoal border-border-gray">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-white">
             <Share size={20} />
             Share {recipe.name}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-light-text">
             Share this delicious recipe with friends and fellow cocktail enthusiasts! 🍹
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
-          {/* Social sharing options - Modernized */}
-          <div className="grid grid-cols-1 gap-2">
+          {/* Social sharing options - Organic design */}
+          <div className="grid grid-cols-1 gap-3">
             {socialShares.map((social) => (
               <Button
                 key={social.name}
                 variant="outline"
                 onClick={() => handleSocialShare(social.url, social.name)}
-                className={`flex items-center gap-3 h-12 justify-start border border-gray-200 bg-white transition-all duration-200 ${social.hoverColor}`}
+                className="flex items-center gap-3 h-12 justify-start border-border-gray bg-medium-charcoal transition-all duration-300 hover:bg-light-charcoal hover:scale-[1.02] rounded-[8px_16px_12px_20px]"
               >
-                <social.icon size={20} className={social.color} />
-                <span className="text-sm font-medium text-gray-900">Share on {social.name}</span>
+                <social.icon size={20} className="text-white" />
+                <span className="text-sm font-medium text-white">Share on {social.name}</span>
               </Button>
             ))}
           </div>
 
-          <Separator />
+          <Separator className="bg-border-gray" />
 
-          {/* Copy link option - Modernized */}
+          {/* Copy link option - Organic design */}
           <div className="space-y-3">
             <Button 
               variant="outline"
               onClick={handleCopyLink}
-              className={`w-full flex items-center gap-3 h-12 border border-gray-200 bg-white transition-all duration-200 ${
+              className={`w-full flex items-center gap-3 h-12 border-border-gray bg-medium-charcoal transition-all duration-300 hover:bg-light-charcoal hover:scale-[1.02] rounded-[10px_20px_15px_25px] ${
                 copied 
-                  ? 'border-green-200 bg-green-50 text-green-700' 
-                  : 'hover:bg-gray-50 hover:border-gray-300'
+                  ? 'border-available bg-available/20 text-emerald-green' 
+                  : ''
               }`}
             >
-              {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} className="text-gray-600" />}
-              <span className="font-medium">
+              {copied ? <Check size={20} className="text-emerald-green" /> : <Copy size={20} className="text-white" />}
+              <span className="font-medium text-white">
                 {copied ? "Link Copied!" : "Copy Link"}
               </span>
             </Button>
             
-            {/* Link preview */}
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            {/* Link preview - Organic design */}
+            <div className="bg-medium-charcoal rounded-[12px_24px_18px_30px] p-4 border border-border-gray">
               <div className="flex items-start gap-3">
                 <img
                   src={recipe.image}
                   alt={recipe.name}
-                  className="w-16 h-16 object-cover rounded-lg"
+                  className="w-16 h-16 object-cover rounded-[8px_16px_12px_20px]"
                 />
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-sm text-gray-900 line-clamp-1">
+                  <h4 className="font-semibold text-sm text-white line-clamp-1">
                     {recipe.name} Recipe
                   </h4>
-                  <p className="text-xs text-gray-600 line-clamp-2 mt-1">
+                  <p className="text-xs text-light-text line-clamp-2 mt-1">
                     Discover this delicious {recipe.name} recipe on Barbook - your digital cocktail companion
                   </p>
                   <div className="flex items-center gap-1 mt-2">
-                    <ExternalLink size={12} className="text-gray-400" />
-                    <span className="text-xs text-gray-500 font-mono">
+                    <ExternalLink size={12} className="text-soft-gray" />
+                    <span className="text-xs text-soft-gray font-mono">
                       barbook.app
                     </span>
                   </div>
@@ -186,8 +181,8 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
             </div>
           </div>
           
-          <div className="border-t pt-4">
-            <p className="text-xs text-gray-500 text-center">
+          <div className="border-t border-border-gray pt-4">
+            <p className="text-xs text-soft-gray text-center">
               💡 Love discovering new recipes? Share your favorites to help others find great cocktails too.
             </p>
           </div>
