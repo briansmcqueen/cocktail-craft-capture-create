@@ -112,10 +112,7 @@ export default function RecipePage() {
     );
   }
 
-  const isUserRecipe = useMemo(() => {
-    if (!recipe) return false;
-    return recipe.isUserRecipe || false;
-  }, [recipe]);
+  const isUserRecipe = recipe?.isUserRecipe || false;
   
   const isRecipeFavorited = isFavorite(recipe.id);
 

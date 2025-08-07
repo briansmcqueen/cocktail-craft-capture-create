@@ -44,7 +44,7 @@ export async function rateRecipe(recipeId: string, rating: number, review?: stri
 // OPTIMIZED: Use database aggregation instead of client-side processing
 export async function getAggregatedRating(recipeId: string): Promise<AggregatedRating> {
   const { data, error } = await supabase
-    .rpc('get_recipe_rating_stats', { recipe_id: recipeId });
+    .rpc('get_recipe_rating_stats', { p_recipe_id: recipeId });
 
   if (error) {
     console.error('Error fetching aggregated rating:', error);

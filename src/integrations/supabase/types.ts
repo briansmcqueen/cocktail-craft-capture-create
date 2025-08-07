@@ -462,7 +462,7 @@ export type Database = {
     }
     Functions: {
       get_recipe_rating_stats: {
-        Args: { recipe_id: string }
+        Args: { p_recipe_id: string }
         Returns: Json
       }
       has_role: {
