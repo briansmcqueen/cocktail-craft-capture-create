@@ -6,7 +6,7 @@ import LibraryHeader from "@/components/LibraryHeader";
 import SearchInterface from "@/components/search/SearchInterface";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
-import RecipeGrid from "@/components/RecipeGrid";
+import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
 import Learn from "@/components/Learn";
 import { Button } from "@/components/ui/button";
@@ -141,7 +141,20 @@ export default function MainContent({
           <Learn
             onShowAuthModal={() => setShowAuthModal(true)}
           />
-        ) : null}
+        ) : (
+          <LazyRecipeGrid
+            recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : getFilteredRecipes()}
+            onRecipeClick={handleRecipeClick}
+            onToggleFavorite={() => {}}
+            onLike={handleLikeWithAuth}
+            onShareRecipe={handleShareRecipe}
+            onTagClick={handleTagClick}
+            onShowForm={handleAddRecipe}
+            forceUpdate={forceUpdate}
+            library={library}
+            onShowAuthModal={() => setShowAuthModal(true)}
+          />
+        )}
       </div>
     </div>
   );
