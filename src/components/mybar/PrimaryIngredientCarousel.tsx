@@ -72,9 +72,15 @@ export default function PrimaryIngredientCarousel({
     return acc;
   }, {} as Record<string, Ingredient[]>);
 
+  // Define the desired display order
+  const categoryOrder = ["Liqueurs", "Spirits", "Wines & Vermouths"];
+  const sortedCategories = categoryOrder.filter(category => groupedIngredients[category]);
+
   return (
     <div className="space-y-8">
-      {Object.entries(groupedIngredients).map(([category, categoryIngredients]) => (
+      {sortedCategories.map((category) => {
+        const categoryIngredients = groupedIngredients[category];
+        return (
         <div key={category} className="space-y-4">
           <div className="flex items-center gap-3 mb-6">
             <div className={`bg-gradient-to-br ${getCategoryColor(category)} p-3 rounded-lg border`}>
@@ -159,7 +165,8 @@ export default function PrimaryIngredientCarousel({
             </div>
           </Carousel>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
