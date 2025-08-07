@@ -124,16 +124,6 @@ export default function RecipeModal({
               alt={recipe.name}
               className="h-48 w-full md:w-56 object-cover rounded-organic-md border border-border flex-shrink-0 shadow-glass"
             />
-            
-            {/* Overall Ratings Section */}
-            <div className="border-t pt-4">
-              <RecipeOverallRating recipeId={recipe.id} />
-            </div>
-
-            {/* Comments Section */}
-            <div className="border-t pt-4">
-              <RecipeComments recipeId={recipe.id} />
-            </div>
           </div>
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             <div className="mb-4">
@@ -255,8 +245,23 @@ export default function RecipeModal({
               </div>
             )}
 
-            {/* User Rating Section */}
-            <RecipeUserRating recipeId={recipe.id} />
+            {/* Ratings and Comments Section */}
+            <div className="space-y-6 mt-6 border-t border-light-charcoal pt-6">
+              {/* Overall Ratings */}
+              <div>
+                <RecipeOverallRating recipeId={recipe.id} />
+                {user && (
+                  <div className="mt-4">
+                    <RecipeUserRating recipeId={recipe.id} />
+                  </div>
+                )}
+              </div>
+
+              {/* Comments */}
+              <div>
+                <RecipeComments recipeId={recipe.id} />
+              </div>
+            </div>
           </div>
         </div>
         <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-3 flex-wrap">

@@ -17,9 +17,6 @@ import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
 import RecipeScaling from "@/components/RecipeScaling";
 import { useRecipeScaling } from "@/hooks/useRecipeScaling";
-import RecipeOverallRating from "@/components/RecipeOverallRating";
-import RecipeUserRating from "@/components/RecipeUserRating";
-import RecipeComments from "@/components/RecipeComments";
 
 
 // Convert recipe name to URL slug
@@ -250,12 +247,6 @@ export default function RecipePage() {
                   alt={recipe.name}
                   className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
                 />
-                
-                {/* Recipe Ratings */}
-                <div className="mb-6">
-                  <RecipeOverallRating recipeId={recipe.id} />
-                  {user && <RecipeUserRating recipeId={recipe.id} />}
-                </div>
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
@@ -427,12 +418,6 @@ export default function RecipePage() {
                     </div>
                   </div>
                 )}
-
-                {/* Recipe Comments */}
-                <div className="mt-8">
-                  <RecipeComments recipeId={recipe.id} />
-                </div>
-
               </div>
             </div>
           </div>

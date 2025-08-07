@@ -46,6 +46,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [sortBy, setSortBy] = useState<'newest' | 'helpful'>('newest');
   const [showAddComment, setShowAddComment] = useState(false);
+  const [newCommentCategory, setNewCommentCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
 
   useEffect(() => {
     fetchComments();
@@ -81,6 +82,50 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
       return data.publicUrl;
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim() || !user) {
+      if (!user) {
+        toast({
+          title: "Login required",
+          description: "Please log in to add a comment",
+          variant: "destructive"
+        });
+      }
+      return;
+    }
+
+    let photoUrl = null;
+    if (selectedImage) {
+      photoUrl = await uploadImage(selectedImage);
+      if (!photoUrl) {
+        toast({
+          title: "Error",
+          description: "Failed to upload image",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+
+    const success = await addComment(
+      recipeId,
+      newComment.trim(),
+      newCommentCategory,
+      photoUrl
+    );
+
+    if (success) {
+      setNewComment('');
+      setSelectedImage(null);
+      setShowAddComment(false);
+      await fetchComments();
+      toast({
+        title: "Success",
+        description: "Comment added successfully",
+      });
     }
   };
 
