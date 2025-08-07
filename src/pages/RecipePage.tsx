@@ -11,9 +11,6 @@ import { getUserPreferences } from "@/services/userPreferencesService";
 import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";
 import ShareRecipe from "@/components/ShareRecipe";
-import RecipeOverallRating from "@/components/RecipeOverallRating";
-import RecipeUserRating from "@/components/RecipeUserRating";
-import RecipeComments from "@/components/RecipeComments";
 import AuthModal from "@/components/auth/AuthModal";
 import Sidebar from "@/components/Sidebar";
 import TopNavigation from "@/components/TopNavigation";
@@ -233,13 +230,6 @@ export default function RecipePage() {
                   className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
                 />
                 
-                {/* Overall Ratings - moved out of container */}
-                <RecipeOverallRating recipeId={recipe.id} />
-                
-                {/* Comments - moved underneath ratings */}
-                <div className="mt-6 mb-6">
-                  <RecipeComments recipeId={recipe.id} />
-                </div>
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
@@ -347,10 +337,6 @@ export default function RecipePage() {
                   </div>
                 )}
 
-                {/* User Rating */}
-                <div className="mb-6">
-                  <RecipeUserRating recipeId={recipe.id} />
-                </div>
 
                 {/* Recipe Details */}
                 {(recipe.technique || recipe.glassType || recipe.garnish || recipe.difficulty || recipe.abv || recipe.prepTime) && (
