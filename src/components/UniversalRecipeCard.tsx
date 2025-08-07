@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Star } from 'lucide-react';
+import { Heart, Star, Edit } from 'lucide-react';
 import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -108,15 +108,34 @@ export default function UniversalRecipeCard({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <Button
               variant="default"
               size="sm"
               onClick={handleViewRecipe}
-              className="flex-1 mr-2 rounded-organic-sm"
+              className="flex-1 rounded-organic-sm"
             >
               View Recipe
             </Button>
+            
+            {recipe.isUserRecipe && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/recipes/mine', { 
+                    state: { 
+                      editingRecipe: recipe,
+                      showForm: true
+                    } 
+                  });
+                }}
+                className="h-8 w-8 p-0 rounded-organic-sm text-light-text hover:text-foreground"
+              >
+                <Edit size={16} />
+              </Button>
+            )}
             
             <Button
               variant="ghost"

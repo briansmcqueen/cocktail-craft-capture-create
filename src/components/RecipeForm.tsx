@@ -43,6 +43,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   const [notes, setNotes] = useState(initial?.notes || "");
   const [origin, setOrigin] = useState(initial?.origin || "");
   const [tags, setTags] = useState<string[]>(initial?.tags || []);
+  const [isPrivate, setIsPrivate] = useState(initial?.isPrivate || false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,6 +67,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
       notes,
       origin,
       tags,
+      isPrivate,
     });
   }
 
@@ -110,6 +112,8 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         setOrigin={setOrigin}
         tags={tags}
         setTags={setTags}
+        isPrivate={isPrivate}
+        setIsPrivate={setIsPrivate}
         commonIngredients={COMMON_INGREDIENTS}
         stepTemplates={STEP_TEMPLATES}
       />

@@ -22,6 +22,8 @@ type RecipeFormFieldsProps = {
   setOrigin: (value: string) => void;
   tags: string[];
   setTags: (value: string[]) => void;
+  isPrivate: boolean;
+  setIsPrivate: (value: boolean) => void;
   commonIngredients: string[];
   stepTemplates: string[];
 };
@@ -41,6 +43,8 @@ export default function RecipeFormFields({
   setOrigin,
   tags,
   setTags,
+  isPrivate,
+  setIsPrivate,
   commonIngredients,
   stepTemplates,
 }: RecipeFormFieldsProps) {
@@ -150,6 +154,20 @@ export default function RecipeFormFields({
           placeholder="e.g. Italy"
           className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
         />
+      </div>
+      
+      <div className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          id="isPrivate"
+          checked={isPrivate}
+          onChange={(e) => setIsPrivate(e.target.checked)}
+          className="h-4 w-4 text-primary focus:ring-primary border-border rounded"
+        />
+        <label htmlFor="isPrivate" className="font-medium text-pure-white">
+          Make this recipe private
+          <span className="block text-xs text-light-text">Only you can see private recipes</span>
+        </label>
       </div>
     </>
   );

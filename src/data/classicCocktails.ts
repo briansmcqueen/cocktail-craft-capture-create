@@ -22,6 +22,7 @@ export type Cocktail = {
   prepTime?: string;
   createdBy?: string; // Username of the creator for user recipes
   isUserRecipe?: boolean; // Flag to distinguish user recipes from classic ones
+  isPrivate?: boolean; // Flag to mark recipe as private (user only)
 };
 
 const rawCocktails: Cocktail[] = [
