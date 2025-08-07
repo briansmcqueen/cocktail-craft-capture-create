@@ -90,7 +90,7 @@ export default function MainContent({
           onCopyDialogOpen={() => {}}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "all" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
@@ -154,7 +154,7 @@ export default function MainContent({
           <Learn
             onShowAuthModal={() => setShowAuthModal(true)}
           />
-        ) : (
+        ) : library === "all" ? null : (
           <LazyRecipeGrid
             recipes={library === "mine" ? userRecipes : getFilteredRecipes()}
             onRecipeClick={handleRecipeClick}
