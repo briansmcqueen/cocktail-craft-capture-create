@@ -1,5 +1,6 @@
 import { ingredientDatabase, Ingredient } from "@/data/ingredients";
 import { Cocktail } from "@/data/classicCocktails";
+import { ASSUMED_INGREDIENT_IDS } from "@/types/ingredientTiers";
 
 export interface IngredientMatch {
   ingredientId: string;
@@ -211,13 +212,20 @@ function calculateSimilarity(str1: string, str2: string): number {
 }
 
 // Analyze recipes to determine what can be made
-export function analyzeRecipes(recipes: Cocktail[], userIngredients: string[]): RecipeAnalysis[] {
-  const userIngredientSet = new Set(userIngredients);
-  const cacheKey = `${recipes.map(r => r.id).join(',')}-${userIngredients.sort().join(',')}`;
+export function analyzeRecipes(
+  recipes: Cocktail[], 
+  userIngredients: string[], 
+  includeAssumedIngredients = true
+): RecipeAnalysis[] {
+  // Combine user ingredients with assumed ingredients if enabled
+  const assumedIngredients = includeAssumedIngredients ? ASSUMED_INGREDIENT_IDS : [];
+  const allAvailableIngredients = [...userIngredients, ...assumedIngredients];
+  const userIngredientSet = new Set(allAvailableIngredients);
+  const cacheKey = `${recipes.map(r => r.id).join(',')}-${allAvailableIngredients.sort().join(',')}`;
   
   return recipes.map(recipe => {
     // Create a cache key for this specific recipe and user ingredients combination
-    const recipeCacheKey = `${recipe.id}-${userIngredients.sort().join(',')}`;
+    const recipeCacheKey = `${recipe.id}-${allAvailableIngredients.sort().join(',')}`;
     
     // Check if we have this analysis cached
     if (recipeAnalysisCache.has(recipeCacheKey)) {
@@ -296,9 +304,10 @@ export function findSubstitutions(ingredientId: string): string[] {
 export function calculateIngredientValue(
   ingredientId: string, 
   recipes: Cocktail[], 
-  userIngredients: string[]
+  userIngredients: string[], 
+  includeAssumedIngredients = true
 ): { newRecipesUnlocked: Cocktail[], score: number } {
-  const analyses = analyzeRecipes(recipes, userIngredients);
+  const analyses = analyzeRecipes(recipes, userIngredients, includeAssumedIngredients);
   
   // Find recipes that would become makeable with this ingredient
   const newRecipesUnlocked = analyses

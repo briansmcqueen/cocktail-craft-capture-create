@@ -3,7 +3,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import { User } from "lucide-react";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
-import IngredientSelector from "./mybar/IngredientSelector";
+import TieredIngredientSelector from "./mybar/TieredIngredientSelector";
 import MyBarResults from "./mybar/MyBarResults";
 
 type MyBarEngineProps = {
@@ -53,14 +53,13 @@ export default function MyBarEngine({
       </p>
 
       {/* Ingredient Selection */}
-      <IngredientSelector
+      <TieredIngredientSelector
         allIngredients={allIngredients}
         myBar={myBar}
         myBarIngredients={myBarIngredients}
         ingredientMap={ingredientMap}
         toggleIngredient={toggleIngredient}
         user={user}
-        setCustomIngredients={setCustomIngredients}
       />
 
       {/* Results Section */}
