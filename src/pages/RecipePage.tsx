@@ -253,10 +253,6 @@ export default function RecipePage() {
 
                 {/* Comments Section */}
                 <div className="mb-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <MessageCircle size={20} className="text-pure-white" />
-                    <span className="text-pure-white font-medium">Comments</span>
-                  </div>
                   <RecipeComments recipeId={recipe.id} />
                 </div>
 
