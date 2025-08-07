@@ -38,7 +38,7 @@ export default function Index() {
     handleTagClick,
     allRecipes,
     favoriteRecipes,
-    getFilteredRecipes
+    filteredRecipes
   } = useIndexPage();
 
   // Set library based on URL path
@@ -173,7 +173,7 @@ export default function Index() {
         allRecipes={allRecipes}
         favoriteRecipes={favoriteRecipes}
         userRecipes={userRecipes}
-        getFilteredRecipes={getFilteredRecipes}
+        getFilteredRecipes={() => filteredRecipes}
         handleRecipeClick={() => {}} // No longer needed since we use URL navigation
         handleSaveRecipe={handleSaveRecipe}
         handleEditRecipe={handleEditRecipe}

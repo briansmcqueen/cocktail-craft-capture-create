@@ -1,8 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
-import { getUserRecipesFromDB, saveRecipeToDB, deleteRecipeFromDB } from "@/services/recipesService";
+import { useUserRecipes, useSaveRecipe, useDeleteRecipe } from "./useOptimizedRecipes";
 import { toggleLikeInDB } from "@/services/likesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useDataMigration } from "@/hooks/useDataMigration";
@@ -12,6 +12,9 @@ export function useIndexPage() {
   const { user } = useAuth();
   useDataMigration(); // Auto-migrate localStorage data
   const { favoriteIds, toggleFavorite } = useFavorites();
+  const { data: userRecipes = [], isLoading } = useUserRecipes();
+  const saveRecipeMutation = useSaveRecipe();
+  const deleteRecipeMutation = useDeleteRecipe();
   
   const [selectedRecipe, setSelectedRecipe] = useState<Cocktail | null>(null);
   const [library, setLibrary] = useState("featured");
@@ -22,28 +25,41 @@ export function useIndexPage() {
   const [shareRecipe, setShareRecipe] = useState<Cocktail | null>(null);
   const [forceUpdate, setForceUpdate] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [userRecipes, setUserRecipes] = useState<Cocktail[]>([]);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  // Memoize expensive calculations
+  const allRecipes = useMemo(() => [...classicCocktails, ...userRecipes], [userRecipes]);
+  
+  const favoriteRecipes = useMemo(() => 
+    user ? allRecipes.filter(recipe => favoriteIds.includes(recipe.id)) : [],
+    [allRecipes, favoriteIds, user]
+  );
 
-  useEffect(() => {
-    if (user) {
-      const loadUserRecipes = async () => {
-        const recipes = await getUserRecipesFromDB();
-        setUserRecipes(recipes);
-      };
-      loadUserRecipes();
-    } else {
-      setUserRecipes([]);
+  const filteredRecipes = useMemo(() => {
+    let recipes = library === "classics" ? classicCocktails 
+                 : library === "mine" ? userRecipes
+                 : library === "favorites" ? favoriteRecipes
+                 : allRecipes;
+
+    if (searchTerm) {
+      recipes = recipes.filter(recipe =>
+        recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        recipe.ingredients.some(ing => 
+          ing.toLowerCase().includes(searchTerm.toLowerCase())
+        ) ||
+        (recipe.tags && recipe.tags.some(tag =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        ))
+      );
     }
-  }, [user]);
+
+    if (selectedTags.length > 0) {
+      recipes = recipes.filter(recipe =>
+        recipe.tags && selectedTags.every(tag => recipe.tags!.includes(tag))
+      );
+    }
+
+    return recipes;
+  }, [library, userRecipes, favoriteRecipes, allRecipes, searchTerm, selectedTags]);
 
 
   const handleRecipeClick = (recipe: Cocktail) => {
@@ -56,27 +72,22 @@ export function useIndexPage() {
       return;
     }
     
-    console.log('Saving recipe:', recipe);
-    const success = await saveRecipeToDB(recipe);
-    console.log('Save result:', success);
-    
-    if (success) {
-      const recipes = await getUserRecipesFromDB();
-      setUserRecipes(recipes);
+    try {
+      await saveRecipeMutation.mutateAsync(recipe);
       setShowForm(false);
       setEditingRecipe(null);
       console.log('Recipe saved successfully, form closed');
-    } else {
-      console.error('Failed to save recipe');
+    } catch (error) {
+      console.error('Failed to save recipe:', error);
     }
   };
 
   const handleDeleteRecipe = async (id: string) => {
     if (!user) return;
-    const success = await deleteRecipeFromDB(id);
-    if (success) {
-      const recipes = await getUserRecipesFromDB();
-      setUserRecipes(recipes);
+    try {
+      await deleteRecipeMutation.mutateAsync(id);
+    } catch (error) {
+      console.error('Failed to delete recipe:', error);
     }
   };
 
@@ -104,37 +115,6 @@ export function useIndexPage() {
     }
   };
 
-  const allRecipes = [...classicCocktails, ...userRecipes];
-  const favoriteRecipes = user ? allRecipes.filter(recipe => 
-    favoriteIds.includes(recipe.id)
-  ) : [];
-
-  const getFilteredRecipes = () => {
-    let recipes = library === "classics" ? classicCocktails 
-                 : library === "mine" ? userRecipes
-                 : library === "favorites" ? favoriteRecipes
-                 : allRecipes;
-
-    if (searchTerm) {
-      recipes = recipes.filter(recipe =>
-        recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        recipe.ingredients.some(ing => 
-          ing.toLowerCase().includes(searchTerm.toLowerCase())
-        ) ||
-        (recipe.tags && recipe.tags.some(tag =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        ))
-      );
-    }
-
-    if (selectedTags.length > 0) {
-      recipes = recipes.filter(recipe =>
-        recipe.tags && selectedTags.every(tag => recipe.tags!.includes(tag))
-      );
-    }
-
-    return recipes;
-  };
 
   return {
     selectedRecipe,
@@ -154,6 +134,7 @@ export function useIndexPage() {
     forceUpdate,
     isMobile,
     userRecipes,
+    isLoading,
     handleRecipeClick,
     handleSaveRecipe,
     handleDeleteRecipe,
@@ -163,6 +144,6 @@ export function useIndexPage() {
     handleTagClick,
     allRecipes,
     favoriteRecipes,
-    getFilteredRecipes
+    filteredRecipes
   };
 }

@@ -41,25 +41,13 @@ export async function rateRecipe(recipeId: string, rating: number, review?: stri
   return true;
 }
 
-export async function getRecipeRatings(recipeId: string): Promise<RecipeRating[]> {
+// OPTIMIZED: Use database aggregation instead of client-side processing
+export async function getAggregatedRating(recipeId: string): Promise<AggregatedRating> {
   const { data, error } = await supabase
-    .from('recipe_ratings')
-    .select('*')
-    .eq('recipe_id', recipeId)
-    .order('created_at', { ascending: false });
+    .rpc('get_recipe_rating_stats', { recipe_id: recipeId });
 
   if (error) {
-    console.error('Error fetching recipe ratings:', error);
-    return [];
-  }
-
-  return data || [];
-}
-
-export async function getAggregatedRating(recipeId: string): Promise<AggregatedRating> {
-  const ratings = await getRecipeRatings(recipeId);
-  
-  if (ratings.length === 0) {
+    console.error('Error fetching aggregated rating:', error);
     return {
       averageRating: 0,
       totalRatings: 0,
@@ -67,19 +55,37 @@ export async function getAggregatedRating(recipeId: string): Promise<AggregatedR
     };
   }
 
-  const sum = ratings.reduce((acc, rating) => acc + rating.rating, 0);
-  const averageRating = sum / ratings.length;
-  
-  const ratingDistribution: { [key: number]: number } = {};
-  ratings.forEach(rating => {
-    ratingDistribution[rating.rating] = (ratingDistribution[rating.rating] || 0) + 1;
-  });
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return {
+      averageRating: 0,
+      totalRatings: 0,
+      ratingDistribution: {}
+    };
+  }
 
+  // Type guard for the expected structure
+  const result = data as Record<string, any>;
   return {
-    averageRating: Math.round(averageRating * 10) / 10,
-    totalRatings: ratings.length,
-    ratingDistribution
+    averageRating: typeof result.averageRating === 'number' ? result.averageRating : 0,
+    totalRatings: typeof result.totalRatings === 'number' ? result.totalRatings : 0,
+    ratingDistribution: typeof result.ratingDistribution === 'object' ? result.ratingDistribution : {}
   };
+}
+
+export async function getRecipeRatings(recipeId: string): Promise<RecipeRating[]> {
+  const { data, error } = await supabase
+    .from('recipe_ratings')
+    .select('*')
+    .eq('recipe_id', recipeId)
+    .order('created_at', { ascending: false })
+    .limit(50); // Add limit to prevent large data fetches
+
+  if (error) {
+    console.error('Error fetching recipe ratings:', error);
+    return [];
+  }
+
+  return data || [];
 }
 
 export async function getUserRating(recipeId: string): Promise<RecipeRating | null> {
@@ -92,9 +98,9 @@ export async function getUserRating(recipeId: string): Promise<RecipeRating | nu
     .select('*')
     .eq('recipe_id', recipeId)
     .eq('user_id', user.id)
-    .single();
+    .maybeSingle(); // Use maybeSingle instead of single
 
-  if (error && error.code !== 'PGRST116') {
+  if (error) {
     console.error('Error fetching user rating:', error);
     return null;
   }

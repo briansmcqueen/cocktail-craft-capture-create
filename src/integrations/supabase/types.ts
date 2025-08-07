@@ -461,6 +461,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_recipe_rating_stats: {
+        Args: { recipe_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _user_id: string
