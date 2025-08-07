@@ -126,8 +126,8 @@ export default function PrimaryIngredientCarousel({
                     {/* Gradient Overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-t ${
                       myBar[ingredient.id] 
-                        ? "from-available/80 via-available/20 to-transparent" 
-                        : "from-secondary-surface/90 via-secondary-surface/40 to-transparent"
+                        ? "from-available/90 via-available/60 via-available/30 to-transparent" 
+                        : "from-black/90 via-black/60 via-black/30 to-transparent"
                     } transition-all duration-200`} />
                     
                     {/* Content */}
