@@ -17,6 +17,9 @@ import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
 import RecipeScaling from "@/components/RecipeScaling";
 import { useRecipeScaling } from "@/hooks/useRecipeScaling";
+import RecipeOverallRating from "@/components/RecipeOverallRating";
+import RecipeUserRating from "@/components/RecipeUserRating";
+import RecipeComments from "@/components/RecipeComments";
 
 
 // Convert recipe name to URL slug
@@ -417,12 +420,32 @@ export default function RecipePage() {
                       )}
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
+                 )}
+
+                 {/* Ratings and Comments Section */}
+                 <div className="mt-8 space-y-6 border-t border-light-charcoal pt-6">
+                   {/* Overall Ratings */}
+                   <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-6">
+                     <h2 className="text-xl font-semibold text-foreground mb-4">Ratings</h2>
+                     <RecipeOverallRating recipeId={recipe.id} />
+                     {user && (
+                       <div className="mt-4 pt-4 border-t border-light-charcoal">
+                         <RecipeUserRating recipeId={recipe.id} />
+                       </div>
+                     )}
+                   </div>
+
+                   {/* Comments */}
+                   <div className="bg-medium-charcoal rounded-organic-md border border-light-charcoal p-6">
+                     <h2 className="text-xl font-semibold text-foreground mb-4">Comments & Reviews</h2>
+                     <RecipeComments recipeId={recipe.id} />
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </main>
+       </div>
       
       <AuthModal 
         open={showAuthModal} 
