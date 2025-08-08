@@ -44,6 +44,18 @@ export const articlesService = {
     return data;
   },
 
+  async getArticleBySlug(slug: string): Promise<Article | null> {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data || null;
+  },
+
   async createArticle(article: Omit<Article, 'id' | 'created_at' | 'updated_at' | 'author'>): Promise<Article> {
     const { data, error } = await supabase
       .from('articles')

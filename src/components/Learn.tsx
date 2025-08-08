@@ -3,9 +3,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { Article, articlesService } from "@/services/articlesService";
 import { articleFavoritesService } from "@/services/articleFavoritesService";
 import ArticleCard from "./ArticleCard";
-import ArticleModal from "./ArticleModal";
 import { BookOpen, TrendingUp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LearnProps {
   onShowAuthModal: () => void;

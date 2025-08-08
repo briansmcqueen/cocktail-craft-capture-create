@@ -15,6 +15,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const UserProfile = lazy(() => import("./components/UserProfile"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const RecipePage = lazy(() => import("./pages/RecipePage"));
+const ArticlePage = lazy(() => import("./pages/ArticlePage"));
 
 // Optimize React Query configuration
 const queryClient = new QueryClient({
@@ -56,6 +57,7 @@ const App = () => (
                 <Route path="/user/:userId" element={<UserProfile />} />
                 <Route path="/cocktail/:recipeName" element={<RecipePage />} />
                 <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
+                <Route path="/article/:slug" element={<ArticlePage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
