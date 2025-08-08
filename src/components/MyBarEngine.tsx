@@ -86,18 +86,22 @@ export default function MyBarEngine({
       </div>
 
       {/* Mobile Sticky Action Bar */}
-      <MyBarActionBar
-        canMakeCount={recipesICanMake.length}
-        oneAwayCount={recipesNeedingOneIngredient.length}
-        onOpenCanMake={() => {
-          setActiveTab("can");
-          setDrawerOpen(true);
-        }}
-        onOpenOneAway={() => {
-          setActiveTab("one");
-          setDrawerOpen(true);
-        }}
-      />
+      {!drawerOpen && (
+        <div className="md:hidden">
+          <MyBarActionBar
+            canMakeCount={recipesICanMake.length}
+            oneAwayCount={recipesNeedingOneIngredient.length}
+            onOpenCanMake={() => {
+              setActiveTab("can");
+              setDrawerOpen(true);
+            }}
+            onOpenOneAway={() => {
+              setActiveTab("one");
+              setDrawerOpen(true);
+            }}
+          />
+        </div>
+      )}
 
       {/* Mobile Results Drawer */}
       <ResultsDrawer

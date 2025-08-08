@@ -26,7 +26,7 @@ export default function ResultsDrawer({
 }: ResultsDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="bg-background border-border">
+      <DrawerContent className="bg-background border-border z-[60]">
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-pure-white">Your Results</DrawerTitle>
         </DrawerHeader>
