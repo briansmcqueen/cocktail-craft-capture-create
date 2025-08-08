@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ratingsCache } from '@/services/ratingsCache';
-import { getAggregatedRating } from '@/services/ratingsService';
+import { getAggregatedRating, getAggregatedRatingsBatch } from '@/services/ratingsService';
 
 interface RatingData {
   averageRating: number;
@@ -18,18 +18,40 @@ export function useRecipeRatings(recipeIds: string[]) {
     const fetchRatings = async () => {
       setLoading(true);
       try {
-        const ratingsMap = await ratingsCache.batchFetch(
-          recipeIds,
-          async (id) => {
-            const aggregated = await getAggregatedRating(id);
-            return {
+        const uniqueIds = Array.from(new Set(recipeIds));
+
+        // Pull from cache first
+        const cachedMap = new Map<string, RatingData>();
+        const toFetch: string[] = [];
+        for (const id of uniqueIds) {
+          const cached = ratingsCache.get(id);
+          if (cached) {
+            cachedMap.set(id, {
+              averageRating: cached.averageRating,
+              totalRatings: cached.totalRatings,
+              ratingDistribution: cached.ratingDistribution
+            });
+          } else {
+            toFetch.push(id);
+          }
+        }
+
+        // Batch fetch missing ids in a single RPC
+        if (toFetch.length > 0) {
+          const batch = await getAggregatedRatingsBatch(toFetch);
+          for (const id of toFetch) {
+            const aggregated = batch[id] || { averageRating: 0, totalRatings: 0, ratingDistribution: {} };
+            const data = {
               averageRating: aggregated.averageRating,
               totalRatings: aggregated.totalRatings,
               ratingDistribution: aggregated.ratingDistribution
             };
+            ratingsCache.set(id, data);
+            cachedMap.set(id, data);
           }
-        );
-        setRatings(ratingsMap);
+        }
+
+        setRatings(cachedMap);
       } catch (error) {
         console.error('Error batch fetching ratings:', error);
       } finally {

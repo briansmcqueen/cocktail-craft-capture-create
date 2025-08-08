@@ -1,5 +1,5 @@
 import { Cocktail } from "@/data/classicCocktails";
-import { getAggregatedRating } from "@/services/ratingsService";
+import { getAggregatedRatingsBatch } from "@/services/ratingsService";
 
 export interface RecipeWithPopularityScore extends Cocktail {
   popularityScore: number;
@@ -44,24 +44,22 @@ export async function getTrendingRecipesByRating(
   limit: number = 10
 ): Promise<RecipeWithPopularityScore[]> {
   try {
-    // Fetch rating data for all recipes in parallel
-    const recipesWithRatings = await Promise.all(
-      allRecipes.map(async (recipe) => {
-        const ratingData = await getAggregatedRating(recipe.id);
-        
-        const popularityScore = calculatePopularityScore(
-          ratingData.averageRating, 
-          ratingData.totalRatings
-        );
-        
-        return {
-          ...recipe,
-          popularityScore,
-          averageRating: ratingData.averageRating,
-          totalRatings: ratingData.totalRatings
-        } as RecipeWithPopularityScore;
-      })
-    );
+    const ids = allRecipes.map(r => r.id);
+    const batch = await getAggregatedRatingsBatch(ids);
+
+    const recipesWithRatings = allRecipes.map((recipe) => {
+      const ratingData = batch[recipe.id] || { averageRating: 0, totalRatings: 0, ratingDistribution: {} };
+      const popularityScore = calculatePopularityScore(
+        ratingData.averageRating,
+        ratingData.totalRatings
+      );
+      return {
+        ...recipe,
+        popularityScore,
+        averageRating: ratingData.averageRating,
+        totalRatings: ratingData.totalRatings
+      } as RecipeWithPopularityScore;
+    });
     
     // Filter out recipes with no ratings and sort by popularity score
     return recipesWithRatings

@@ -72,6 +72,58 @@ export async function getAggregatedRating(recipeId: string): Promise<AggregatedR
   };
 }
 
+// Batch fetch aggregated ratings for multiple recipes in a single RPC
+export async function getAggregatedRatingsBatch(recipeIds: string[]): Promise<Record<string, AggregatedRating>> {
+  if (recipeIds.length === 0) return {};
+
+  try {
+    const { data, error } = await supabase
+      .rpc('get_recipe_rating_stats_batch', { p_recipe_ids: recipeIds });
+
+    if (error) {
+      console.error('Error fetching batch aggregated ratings:', error);
+      // Fallback: fetch individually (slower but resilient)
+      const entries = await Promise.all(
+        recipeIds.map(async (id) => {
+          const single = await getAggregatedRating(id);
+          return [id, single] as const;
+        })
+      );
+      return Object.fromEntries(entries);
+    }
+
+    const result: Record<string, AggregatedRating> = {};
+    (data as any[] | null)?.forEach((row: any) => {
+      if (!row) return;
+      const rid = String(row.recipe_id);
+      result[rid] = {
+        averageRating: typeof row.averageRating === 'number' ? row.averageRating : 0,
+        totalRatings: typeof row.totalRatings === 'number' ? row.totalRatings : 0,
+        ratingDistribution: typeof row.ratingDistribution === 'object' && row.ratingDistribution !== null ? row.ratingDistribution : {}
+      };
+    });
+
+    // Ensure every requested id has an entry
+    for (const id of recipeIds) {
+      if (!result[id]) {
+        result[id] = { averageRating: 0, totalRatings: 0, ratingDistribution: {} };
+      }
+    }
+
+    return result;
+  } catch (err) {
+    console.error('Unexpected batch rating error:', err);
+    // Fallback to per-id
+    const entries = await Promise.all(
+      recipeIds.map(async (id) => {
+        const single = await getAggregatedRating(id);
+        return [id, single] as const;
+      })
+    );
+    return Object.fromEntries(entries);
+  }
+}
+
 export async function getRecipeRatings(recipeId: string): Promise<RecipeRating[]> {
   const { data, error } = await supabase
     .from('recipe_ratings')
