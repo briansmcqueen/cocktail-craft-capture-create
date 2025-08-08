@@ -477,6 +477,10 @@ export type Database = {
         Args: { p_recipe_id: string }
         Returns: Json
       }
+      get_recipe_rating_stats_batch: {
+        Args: { p_recipe_ids: string[] }
+        Returns: Json[]
+      }
       has_role: {
         Args: {
           _user_id: string
