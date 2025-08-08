@@ -1,9 +1,17 @@
 import React from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
+import WhatToBuyNext from "./WhatToBuyNext";
+
+interface RecommendedIngredient {
+  ingredient: Ingredient;
+  newRecipesUnlocked: Cocktail[];
+  score: number;
+}
 
 interface ResultsDrawerProps {
   open: boolean;
@@ -13,6 +21,8 @@ interface ResultsDrawerProps {
   recipesICanMake: Cocktail[];
   recipesNeedingOneIngredient: (Cocktail & { missingIngredient?: string })[];
   ingredientMap: { [id: string]: Ingredient };
+  whatToBuyNext?: RecommendedIngredient[];
+  onAddIngredient?: (ingredientId: string) => void;
 }
 
 export default function ResultsDrawer({
@@ -23,6 +33,8 @@ export default function ResultsDrawer({
   recipesICanMake,
   recipesNeedingOneIngredient,
   ingredientMap,
+  whatToBuyNext,
+  onAddIngredient,
 }: ResultsDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -30,7 +42,14 @@ export default function ResultsDrawer({
         <DrawerHeader className="pb-2">
           <DrawerTitle className="text-pure-white">Your Results</DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 pb-6">
+        <div className="px-4 pb-6 space-y-4">
+          {/* What to Buy Next (mobile quick picks) */}
+          {whatToBuyNext && whatToBuyNext.length > 0 && (
+            <WhatToBuyNext 
+              recommendations={whatToBuyNext}
+              onAddIngredient={(id) => onAddIngredient?.(id)}
+            />
+          )}
           <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as any)}>
             <TabsList className="w-full justify-start">
               <TabsTrigger value="can">Can Make ({recipesICanMake.length})</TabsTrigger>
@@ -58,8 +77,20 @@ export default function ResultsDrawer({
                     <div key={recipe.id} className="space-y-2">
                       <UniversalRecipeCard recipe={recipe} />
                       {recipe.missingIngredient && (
-                        <div className="text-xs text-soft-gray">
-                          Missing: {ingredientMap[recipe.missingIngredient]?.name || recipe.missingIngredient}
+                        <div className="text-xs text-soft-gray flex items-center justify-between">
+                          <span>
+                            Missing: {ingredientMap[recipe.missingIngredient]?.name || recipe.missingIngredient}
+                          </span>
+                          {onAddIngredient && (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="ml-2 rounded-organic-sm"
+                              onClick={() => onAddIngredient(recipe.missingIngredient!)}
+                            >
+                              Add
+                            </Button>
+                          )}
                         </div>
                       )}
                     </div>

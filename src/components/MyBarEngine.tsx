@@ -112,6 +112,8 @@ export default function MyBarEngine({
         recipesICanMake={recipesICanMake}
         recipesNeedingOneIngredient={recipesNeedingOneIngredient}
         ingredientMap={ingredientMap}
+        whatToBuyNext={whatToBuyNext}
+        onAddIngredient={toggleIngredient}
       />
     </div>
   );
