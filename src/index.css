@@ -67,6 +67,10 @@
     --sidebar-accent-foreground: 212 10% 82%;
     --sidebar-border: 217 16% 30%; /* Light Charcoal */
     --sidebar-ring: 160 84% 39%; /* Emerald Green */
+
+    /* Article content colors */
+    --article: 70 23% 95%; /* #f4f5ef as HSL */
+    --article-foreground: 0 0% 0%; /* Black text for legibility */
   }
 
   .light {

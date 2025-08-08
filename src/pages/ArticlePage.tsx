@@ -160,9 +160,11 @@ export default function ArticlePage() {
             )}
 
             {/* Content */}
-            <article className="prose prose-invert max-w-none">
-              <MarkdownPreview source={article.content} />
-            </article>
+            <div className="bg-[hsl(var(--article))] text-[hsl(var(--article-foreground))] rounded-organic-lg p-4 md:p-6 border border-border">
+              <article className="prose max-w-none">
+                <MarkdownPreview source={article.content} />
+              </article>
+            </div>
           </div>
         </main>
       </div>
