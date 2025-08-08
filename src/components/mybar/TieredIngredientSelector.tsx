@@ -25,7 +25,7 @@ export default function TieredIngredientSelector({
   toggleIngredient,
   user,
 }: TieredIngredientSelectorProps) {
-  const [showSecondary, setShowSecondary] = useState(DEFAULT_MYBAR_SETTINGS.showSecondaryByDefault);
+  const [showSecondary, setShowSecondary] = useState(false);
   const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -58,6 +58,29 @@ export default function TieredIngredientSelector({
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10 bg-secondary-surface border-border text-pure-white placeholder-light-text focus:border-available"
         />
+      </div>
+
+      {/* Quick Filters */}
+      <div className="-mt-2 flex items-center gap-2 overflow-x-auto py-1">
+        {[
+          "Gin",
+          "Vodka",
+          "Whiskey",
+          "Tequila",
+          "Rum",
+          "Vermouth",
+          "Bitters",
+          "Liqueur",
+          "Citrus",
+        ].map((chip) => (
+          <button
+            key={chip}
+            onClick={() => setSearchTerm(chip)}
+            className="px-3 py-1 rounded-organic-sm text-xs bg-card border border-border text-light-text hover:text-pure-white hover:bg-accent/10 transition-colors shrink-0"
+          >
+            {chip}
+          </button>
+        ))}
       </div>
 
       {/* Search Results */}

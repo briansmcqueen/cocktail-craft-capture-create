@@ -1,7 +1,12 @@
 import React from "react";
-import { Plus, Star } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Ingredient } from "@/data/ingredients";
 import { Cocktail } from "@/data/classicCocktails";
+import whiskeImage from "@/assets/ingredients/whiskey.jpg";
+import ginImage from "@/assets/ingredients/gin.jpg";
+import vodkaImage from "@/assets/ingredients/vodka.jpg";
+import liqueursImage from "@/assets/ingredients/liqueurs.jpg";
+import winesImage from "@/assets/ingredients/wines.jpg";
 
 interface RecommendedIngredient {
   ingredient: Ingredient;
@@ -15,6 +20,21 @@ interface WhatToBuyNextProps {
   loading?: boolean;
 }
 
+const getCategoryImage = (category: string, subCategory: string) => {
+  switch (category) {
+    case "Spirits":
+      if (subCategory.toLowerCase().includes("gin")) return ginImage;
+      if (subCategory.toLowerCase().includes("vodka")) return vodkaImage;
+      return whiskeImage;
+    case "Liqueurs":
+      return liqueursImage;
+    case "Wines & Vermouths":
+      return winesImage;
+    default:
+      return whiskeImage;
+  }
+};
+
 export default function WhatToBuyNext({ 
   recommendations, 
   onAddIngredient, 
@@ -23,34 +43,40 @@ export default function WhatToBuyNext({
   if (recommendations.length === 0) return null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Plus className="h-5 w-5 text-primary" />
-        <h2 className="text-xl font-serif font-semibold">What to Buy Next</h2>
+        <h2 className="text-xl font-serif font-semibold text-pure-white">What to Buy Next</h2>
       </div>
-      <div className="space-y-3">
-        {recommendations.slice(0, 3).map((recommendation) => (
-          <div
-            key={recommendation.ingredient.id}
-            className="flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm bg-card border-border hover:border-accent/50 hover:bg-accent/5"
-            onClick={() => onAddIngredient(recommendation.ingredient.id)}
+      <div className="grid grid-flow-col auto-cols-[240px] sm:auto-cols-[280px] gap-3 overflow-x-auto pb-2">
+        {recommendations.slice(0, 6).map((rec) => (
+          <button
+            key={rec.ingredient.id}
+            onClick={() => onAddIngredient(rec.ingredient.id)}
+            className="relative rounded-organic-md overflow-hidden border border-border bg-card group text-left"
           >
-            <div className="flex-1">
-              <div className="font-medium text-base text-pure-white mb-1">{recommendation.ingredient.name}</div>
-              <p className="text-sm text-light-text mb-2">{recommendation.ingredient.description}</p>
-              <div className="flex items-center gap-2 mb-2">
-                <Star className="h-4 w-4 text-pure-white" />
-                <span className="text-sm font-medium text-pure-white">
-                  Unlocks {recommendation.score} new cocktail{recommendation.score !== 1 ? 's' : ''}: {recommendation.newRecipesUnlocked.map(recipe => recipe.name).join(', ')}
-                </span>
+            {/* Image */}
+            <div
+              className="h-28 w-full bg-cover bg-center"
+              style={{ backgroundImage: `url(${getCategoryImage(rec.ingredient.category, rec.ingredient.subCategory)})` }}
+            />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+            {/* Content */}
+            <div className="absolute inset-0 p-3 flex flex-col justify-end">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <div className="text-sm font-medium text-pure-white line-clamp-1">{rec.ingredient.name}</div>
+                  <div className="text-xs text-light-text line-clamp-1">
+                    Unlocks {rec.score} new cocktail{rec.score !== 1 ? "s" : ""}
+                  </div>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 bg-accent/20 rounded-full border border-accent/40 group-hover:bg-accent/30 transition-colors">
+                  <Plus className="h-4 w-4 text-pure-white" />
+                </div>
               </div>
             </div>
-            <div className="ml-4">
-              <div className="flex items-center justify-center w-8 h-8 bg-accent/20 rounded-full">
-                <Plus className="h-4 w-4 text-pure-white" />
-              </div>
-            </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
