@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { User } from "lucide-react";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import TieredIngredientSelector from "./mybar/TieredIngredientSelector";
 import MyBarResults from "./mybar/MyBarResults";
+import MyBarActionBar from "./mybar/MyBarActionBar";
+import ResultsDrawer from "./mybar/ResultsDrawer";
 
 type MyBarEngineProps = {
   recipes: Cocktail[];
@@ -39,6 +41,10 @@ export default function MyBarEngine({
     whatToBuyNext
   } = useRecipeAnalysis(recipes, myBarIngredients, myBar);
 
+  // Mobile results drawer state
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"can" | "one">("can");
+
   return (
     <div className="space-y-6 px-4 sm:px-0">
       {/* Header */}
@@ -62,19 +68,46 @@ export default function MyBarEngine({
         user={user}
       />
 
-      {/* Results Section */}
-      <MyBarResults
-        myBarIngredients={myBarIngredients}
+      {/* Results Section (kept for larger screens) */}
+      <div className="hidden md:block">
+        <MyBarResults
+          myBarIngredients={myBarIngredients}
+          recipesICanMake={recipesICanMake}
+          recipesNeedingOneIngredient={recipesNeedingOneIngredient}
+          whatToBuyNext={whatToBuyNext}
+          ingredientMap={ingredientMap}
+          onRecipeClick={onRecipeClick}
+          onToggleFavorite={onToggleFavorite}
+          onTagClick={onTagClick}
+          onAddIngredient={toggleIngredient}
+          user={user}
+          loading={loading}
+        />
+      </div>
+
+      {/* Mobile Sticky Action Bar */}
+      <MyBarActionBar
+        canMakeCount={recipesICanMake.length}
+        oneAwayCount={recipesNeedingOneIngredient.length}
+        onOpenCanMake={() => {
+          setActiveTab("can");
+          setDrawerOpen(true);
+        }}
+        onOpenOneAway={() => {
+          setActiveTab("one");
+          setDrawerOpen(true);
+        }}
+      />
+
+      {/* Mobile Results Drawer */}
+      <ResultsDrawer
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         recipesICanMake={recipesICanMake}
         recipesNeedingOneIngredient={recipesNeedingOneIngredient}
-        whatToBuyNext={whatToBuyNext}
         ingredientMap={ingredientMap}
-        onRecipeClick={onRecipeClick}
-        onToggleFavorite={onToggleFavorite}
-        onTagClick={onTagClick}
-        onAddIngredient={toggleIngredient}
-        user={user}
-        loading={loading}
       />
     </div>
   );
