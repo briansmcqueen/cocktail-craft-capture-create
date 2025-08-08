@@ -162,7 +162,12 @@ export default function ArticlePage() {
             {/* Content */}
             <div className="bg-[hsl(var(--article))] text-[hsl(var(--article-foreground))] rounded-organic-lg p-4 md:p-6 border border-border">
               <article className="prose max-w-none">
-                <MarkdownPreview source={article.content} />
+                <MarkdownPreview
+                  source={article.content}
+                  className="!bg-transparent !text-[hsl(var(--article-foreground))]"
+                  style={{ backgroundColor: 'transparent', color: 'hsl(var(--article-foreground))' }}
+                  wrapperElement={{ 'data-color-mode': 'light' }}
+                />
               </article>
             </div>
           </div>
