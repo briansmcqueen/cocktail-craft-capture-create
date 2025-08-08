@@ -5,6 +5,7 @@ import { useRecipeRating } from '@/hooks/useRecipeRatings';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
+import { ratingsCache } from '@/services/ratingsCache';
 
 interface RecipeRatingDisplayProps {
   recipeId: string;
@@ -16,6 +17,16 @@ export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayPro
   const [userRating, setUserRating] = useState<RecipeRating | null>(null);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [userLoading, setUserLoading] = useState(false);
+
+  // Local optimistic aggregate state for instant UI updates
+  const [displayedAggregated, setDisplayedAggregated] = useState(aggregatedRating);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      setDisplayedAggregated(aggregatedRating);
+    }
+  }, [aggregatedRating, isSubmitting]);
 
   useEffect(() => {
     const fetchUserRating = async () => {
@@ -30,25 +41,71 @@ export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayPro
     fetchUserRating();
   }, [recipeId, user]);
 
-  const handleRating = async (rating: number) => {
+  const handleRating = async (newRating: number) => {
     if (!user) {
       toast({
-        title: "Login required",
-        description: "Please log in to rate this recipe",
-        variant: "destructive",
+        title: 'Login required',
+        description: 'Please log in to rate this recipe',
+        variant: 'destructive',
       });
       return;
     }
 
-    const success = await rateRecipe(recipeId, rating);
+    // Optimistic aggregate update
+    const prevUserRating = userRating?.rating;
+    const prevAgg = displayedAggregated;
+
+    const prevTotal = prevAgg.totalRatings;
+    const prevSum = prevAgg.averageRating * prevTotal;
+
+    const nextTotal = prevUserRating ? prevTotal : prevTotal + 1;
+    const adjustedSum = prevUserRating ? prevSum - prevUserRating + newRating : prevSum + newRating;
+    const nextAverage = nextTotal === 0 ? 0 : Math.round((adjustedSum / nextTotal) * 10) / 10;
+
+    const nextDist: Record<string, number> = { ...prevAgg.ratingDistribution };
+    if (prevUserRating) {
+      const key = String(prevUserRating);
+      nextDist[key] = Math.max(0, (nextDist[key] || 0) - 1);
+    }
+    const newKey = String(newRating);
+    nextDist[newKey] = (nextDist[newKey] || 0) + 1;
+
+    const optimisticAgg = {
+      averageRating: nextAverage,
+      totalRatings: nextTotal,
+      ratingDistribution: nextDist,
+    };
+
+    // Apply optimistic UI
+    setIsSubmitting(true);
+    setUserRating({
+      id: `temp-${Date.now()}`,
+      user_id: user.id,
+      recipe_id: recipeId,
+      rating: newRating,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      review: undefined,
+    });
+    setDisplayedAggregated(optimisticAgg);
+    ratingsCache.set(recipeId, optimisticAgg);
+    toast({ title: 'Submitting rating…', description: `You rated ${newRating}★` });
+
+    const success = await rateRecipe(recipeId, newRating);
     if (success) {
-      // Refresh user rating
-      const userRatingData = await getUserRating(recipeId);
-      setUserRating(userRatingData);
-      toast({
-        title: "Rating submitted",
-        description: `You rated this recipe ${rating} star${rating !== 1 ? 's' : ''}`,
-      });
+      const freshUser = await getUserRating(recipeId);
+      setUserRating(freshUser);
+      setIsSubmitting(false);
+      toast({ title: 'Rating submitted', description: 'Thanks for your feedback!' });
+    } else {
+      // Rollback on failure
+      setIsSubmitting(false);
+      setDisplayedAggregated(prevAgg);
+      ratingsCache.set(recipeId, prevAgg);
+      if (prevUserRating && userRating) {
+        setUserRating({ ...userRating, rating: prevUserRating });
+      }
+      toast({ title: 'Rating failed', description: 'We reverted your rating.', variant: 'destructive' });
     }
   };
 
