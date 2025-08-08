@@ -19,14 +19,15 @@ interface MyBarInventory {
 export function useRecipeAnalysis(
   recipes: Cocktail[], 
   myBarIngredients: string[], 
-  myBar: MyBarInventory
+  myBar: MyBarInventory,
+  includeAssumedIngredients: boolean = true
 ) {
 
   // Analyze all recipes with intelligent matching - memoize with stable key
   const recipeAnalyses = useMemo(() => {
     if (myBarIngredients.length === 0) return [];
-    return analyzeRecipes(recipes, myBarIngredients);
-  }, [recipes, myBarIngredients.join(',')]); // Use join for stable comparison
+    return analyzeRecipes(recipes, myBarIngredients, includeAssumedIngredients);
+  }, [recipes, includeAssumedIngredients, myBarIngredients.join(',')]); // Use join for stable comparison
 
   // Get recipes user can make
   const recipesICanMake = useMemo(() => {
@@ -54,7 +55,7 @@ export function useRecipeAnalysis(
     // Calculate value for each ingredient not in user's bar
     ingredientDatabase.forEach(ingredient => {
       if (!myBar[ingredient.id]) {
-        const value = calculateIngredientValue(ingredient.id, recipes, myBarIngredients);
+        const value = calculateIngredientValue(ingredient.id, recipes, myBarIngredients, includeAssumedIngredients);
         if (value.score > 0) {
           ingredientValues[ingredient.id] = {
             ingredient,
@@ -68,7 +69,7 @@ export function useRecipeAnalysis(
     return Object.values(ingredientValues)
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
-  }, [recipes, myBarIngredients.join(','), Object.keys(myBar).sort().join(',')]);
+  }, [recipes, includeAssumedIngredients, myBarIngredients.join(','), Object.keys(myBar).sort().join(',')]);
 
   return {
     recipesICanMake,

@@ -3,6 +3,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import { User } from "lucide-react";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
+import { DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
 import TieredIngredientSelector from "./mybar/TieredIngredientSelector";
 import MyBarResults from "./mybar/MyBarResults";
 import MyBarActionBar from "./mybar/MyBarActionBar";
@@ -35,11 +36,13 @@ export default function MyBarEngine({
     user
   } = useMyBarData(forceUpdate);
 
+  const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
+
   const {
     recipesICanMake,
     recipesNeedingOneIngredient,
     whatToBuyNext
-  } = useRecipeAnalysis(recipes, myBarIngredients, myBar);
+  } = useRecipeAnalysis(recipes, myBarIngredients, myBar, includeAssumed);
 
   // Mobile results drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -66,6 +69,8 @@ export default function MyBarEngine({
         ingredientMap={ingredientMap}
         toggleIngredient={toggleIngredient}
         user={user}
+        includeAssumed={includeAssumed}
+        onIncludeAssumedChange={setIncludeAssumed}
       />
 
       {/* Results Section (kept for larger screens) */}

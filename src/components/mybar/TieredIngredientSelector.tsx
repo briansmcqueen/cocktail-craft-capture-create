@@ -15,6 +15,8 @@ interface TieredIngredientSelectorProps {
   ingredientMap: { [ingredientId: string]: Ingredient };
   toggleIngredient: (ingredientId: string) => void;
   user: any;
+  includeAssumed?: boolean;
+  onIncludeAssumedChange?: (val: boolean) => void;
 }
 
 export default function TieredIngredientSelector({
@@ -24,10 +26,17 @@ export default function TieredIngredientSelector({
   ingredientMap,
   toggleIngredient,
   user,
+  includeAssumed: includeAssumedProp,
+  onIncludeAssumedChange,
 }: TieredIngredientSelectorProps) {
   const [showSecondary, setShowSecondary] = useState(false);
-  const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
+  const [internalIncludeAssumed, setInternalIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
+  const includeAssumed = includeAssumedProp ?? internalIncludeAssumed;
   const [searchTerm, setSearchTerm] = useState("");
+  const handleToggleAssumed = (val: boolean) => {
+    if (onIncludeAssumedChange) onIncludeAssumedChange(val);
+    else setInternalIncludeAssumed(val);
+  };
 
   const { primaryIngredients, secondaryIngredients } = useMemo(() => {
     const primary = allIngredients.filter(ing => 
@@ -118,7 +127,7 @@ export default function TieredIngredientSelector({
             showSecondary={showSecondary}
             onToggleSecondary={setShowSecondary}
             includeAssumed={includeAssumed}
-            onToggleAssumed={setIncludeAssumed}
+            onToggleAssumed={handleToggleAssumed}
             secondaryCount={secondaryIngredients.length}
             user={user}
           />
