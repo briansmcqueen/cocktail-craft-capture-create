@@ -11,11 +11,15 @@ interface LearnProps {
   onShowAuthModal: () => void;
 }
 
+function slugify(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 export default function Learn({ onShowAuthModal }: LearnProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [favoriteArticles, setFavoriteArticles] = useState<string[]>([]);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,7 +57,8 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
   };
 
   const handleArticleClick = (article: Article) => {
-    setSelectedArticle(article);
+    const slug = slugify(article.title || '');
+    navigate(`/article/${slug}`);
   };
 
   const handleToggleFavorite = async (articleId: string) => {
@@ -165,21 +170,6 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
         </section>
       </div>
 
-      {/* Article Modal */}
-      {selectedArticle && (
-        <ArticleModal
-          article={selectedArticle}
-          isOpen={!!selectedArticle}
-          onClose={() => setSelectedArticle(null)}
-          isFavorite={favoriteArticles.includes(selectedArticle.id)}
-          onToggleFavorite={handleToggleFavorite}
-          onShare={(article) => {
-            // Handle sharing logic here
-            console.log('Share article:', article.title);
-          }}
-          onShowAuthModal={onShowAuthModal}
-        />
-      )}
     </>
   );
 }
