@@ -77,7 +77,7 @@ export default function AuthenticatedView({
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-[100dvh] overflow-hidden bg-background">
       {/* Top Navigation for Mobile/Tablet */}
       <TopNavigation
         user={user}
@@ -91,7 +91,7 @@ export default function AuthenticatedView({
         onFavoritesClick={onFavoritesClick}
       />
       
-      <div className="flex h-screen">
+      <div className="flex h-full">
         {/* Desktop & Tablet Sidebar - Always visible on md+ screens */}
         <div className="hidden md:block">
           <Sidebar
