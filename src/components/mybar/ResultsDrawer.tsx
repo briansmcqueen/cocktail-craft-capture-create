@@ -23,6 +23,7 @@ interface ResultsDrawerProps {
   ingredientMap: { [id: string]: Ingredient };
   whatToBuyNext?: RecommendedIngredient[];
   onAddIngredient?: (ingredientId: string) => void;
+  onAddToShoppingList?: (ingredientId: string) => void;
 }
 
 export default function ResultsDrawer({
@@ -35,6 +36,7 @@ export default function ResultsDrawer({
   ingredientMap,
   whatToBuyNext,
   onAddIngredient,
+  onAddToShoppingList,
 }: ResultsDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -48,6 +50,7 @@ export default function ResultsDrawer({
             <WhatToBuyNext 
               recommendations={whatToBuyNext}
               onAddIngredient={(id) => onAddIngredient?.(id)}
+              onAddToShoppingList={(id) => onAddToShoppingList?.(id)}
             />
           )}
           <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as any)}>
@@ -82,14 +85,26 @@ export default function ResultsDrawer({
                             Missing: {ingredientMap[recipe.missingIngredient]?.name || recipe.missingIngredient}
                           </span>
                           {onAddIngredient && (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              className="ml-2 rounded-organic-sm"
-                              onClick={() => onAddIngredient(recipe.missingIngredient!)}
-                            >
-                              Add
-                            </Button>
+                            <div className="flex items-center gap-2 ml-2">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                className="rounded-organic-sm"
+                                onClick={() => onAddIngredient(recipe.missingIngredient!)}
+                              >
+                                Add
+                              </Button>
+                              {onAddToShoppingList && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="rounded-organic-sm"
+                                  onClick={() => onAddToShoppingList(recipe.missingIngredient!)}
+                                >
+                                  Add to List
+                                </Button>
+                              )}
+                            </div>
                           )}
                         </div>
                       )}

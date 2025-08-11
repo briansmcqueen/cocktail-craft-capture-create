@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus } from "lucide-react";
+import { Plus, ShoppingCart } from "lucide-react";
 import { Ingredient } from "@/data/ingredients";
 import { Cocktail } from "@/data/classicCocktails";
 import whiskeImage from "@/assets/ingredients/whiskey.jpg";
@@ -17,6 +17,7 @@ interface RecommendedIngredient {
 interface WhatToBuyNextProps {
   recommendations: RecommendedIngredient[];
   onAddIngredient: (ingredientId: string) => void;
+  onAddToShoppingList?: (ingredientId: string) => void;
   loading?: boolean;
 }
 
@@ -38,6 +39,7 @@ const getCategoryImage = (category: string, subCategory: string) => {
 export default function WhatToBuyNext({ 
   recommendations, 
   onAddIngredient, 
+  onAddToShoppingList,
   loading = false 
 }: WhatToBuyNextProps) {
   if (recommendations.length === 0) return null;
@@ -61,6 +63,18 @@ export default function WhatToBuyNext({
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+            {/* Quick add to Shopping List */}
+            {onAddToShoppingList && (
+              <button
+                type="button"
+                aria-label="Add to shopping list"
+                onClick={(e) => { e.stopPropagation(); onAddToShoppingList(rec.ingredient.id); }}
+                className="absolute top-2 right-2 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-background/80 border border-border hover:bg-background/90 transition-colors"
+              >
+                <ShoppingCart className="h-4 w-4 text-pure-white" />
+              </button>
+            )}
 
             {/* Content */}
             <div className="absolute inset-0 p-3 flex flex-col justify-end">

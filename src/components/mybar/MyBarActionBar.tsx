@@ -4,15 +4,19 @@ import { Button } from "@/components/ui/button";
 interface MyBarActionBarProps {
   canMakeCount: number;
   oneAwayCount: number;
+  shoppingCount?: number;
   onOpenCanMake: () => void;
   onOpenOneAway: () => void;
+  onOpenShopping?: () => void;
 }
 
 export default function MyBarActionBar({
   canMakeCount,
   oneAwayCount,
+  shoppingCount,
   onOpenCanMake,
   onOpenOneAway,
+  onOpenShopping,
 }: MyBarActionBarProps) {
   if (canMakeCount === 0 && oneAwayCount === 0) return null;
 
@@ -32,6 +36,11 @@ export default function MyBarActionBar({
         {oneAwayCount > 0 && (
           <Button variant="secondary" size="sm" className="rounded-organic-sm" onClick={onOpenOneAway}>
             +1 Away
+          </Button>
+        )}
+        {onOpenShopping && (
+          <Button variant="outline" size="sm" className="rounded-organic-sm" onClick={onOpenShopping}>
+            List{typeof shoppingCount === 'number' ? ` (${shoppingCount})` : ''}
           </Button>
         )}
       </div>

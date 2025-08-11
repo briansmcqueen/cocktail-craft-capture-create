@@ -24,6 +24,7 @@ interface MyBarResultsProps {
   onToggleFavorite: (recipe: Cocktail) => void;
   onTagClick: (tag: string) => void;
   onAddIngredient: (ingredientId: string) => void;
+  onAddToShoppingList?: (ingredientId: string) => void;
   user: any;
   loading?: boolean;
 }
@@ -38,6 +39,7 @@ export default function MyBarResults({
   onToggleFavorite,
   onTagClick,
   onAddIngredient,
+  onAddToShoppingList,
   user,
   loading = false
 }: MyBarResultsProps) {
@@ -62,6 +64,7 @@ export default function MyBarResults({
       <WhatToBuyNext 
         recommendations={whatToBuyNext}
         onAddIngredient={onAddIngredient}
+        onAddToShoppingList={onAddToShoppingList}
         loading={loading}
       />
 
