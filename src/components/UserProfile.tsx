@@ -71,12 +71,32 @@ export default function UserProfile() {
       .single();
 
     if (error) {
+      // Fallback for unauthenticated viewers: fetch only safe public fields via RPC
+      try {
+        const { data: publicData } = await supabase.rpc('get_public_profiles', { user_ids: [userId] as any });
+        const publicProfile = (publicData as any[] | null)?.[0];
+        if (publicProfile) {
+          setProfile({
+            id: publicProfile.id,
+            username: publicProfile.username,
+            full_name: null,
+            avatar_url: publicProfile.avatar_url,
+            bio: null,
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        // noop, fall through to error toast
+      }
+
       console.error('Error fetching profile:', error);
       toast({
         title: "Error",
         description: "Failed to load user profile",
         variant: "destructive",
       });
+      setLoading(false);
       return;
     }
 

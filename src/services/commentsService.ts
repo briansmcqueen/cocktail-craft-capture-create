@@ -18,20 +18,13 @@ export interface RecipeComment {
 }
 
 export async function getRecipeComments(recipeId: string): Promise<RecipeComment[]> {
-  // Optimized: Use parallel queries and limit results
-  const [commentsResult, profilesResult] = await Promise.all([
-    supabase
-      .from('recipe_comments')
-      .select('*')
-      .eq('recipe_id', recipeId)
-      .order('created_at', { ascending: false })
-      .limit(50), // Limit for better performance
-    
-    // Get all profiles that might be needed in a single query
-    supabase
-      .from('profiles')
-      .select('id, username, full_name, avatar_url')
-  ]);
+  // Optimized: Fetch comments first, then fetch only needed public profile fields via RPC
+  const commentsResult = await supabase
+    .from('recipe_comments')
+    .select('*')
+    .eq('recipe_id', recipeId)
+    .order('created_at', { ascending: false })
+    .limit(50); // Limit for better performance
 
   if (commentsResult.error) {
     console.error('Error fetching recipe comments:', commentsResult.error);
@@ -42,16 +35,26 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
     return [];
   }
 
-  // Create a lookup map for profiles for O(1) access
-  const profilesMap = new Map();
-  if (profilesResult.data) {
-    profilesResult.data.forEach(profile => {
-      profilesMap.set(profile.id, profile);
-    });
+  // Collect unique user_ids for the comments
+  const userIds = Array.from(new Set(commentsResult.data.map((c) => c.user_id)));
+
+  // Fetch only safe public fields for those users via SECURITY DEFINER RPC (bypasses RLS safely)
+  type PublicProfile = { id: string; username: string | null; avatar_url: string | null };
+  const { data: publicProfiles, error: profilesError } = await supabase
+    .rpc('get_public_profiles', { user_ids: userIds as any });
+
+  if (profilesError) {
+    console.warn('Warning fetching public profiles (fallback to anonymous):', profilesError);
   }
 
+  // Create a lookup map for profiles for O(1) access
+  const profilesMap = new Map<string, PublicProfile>();
+  (publicProfiles as PublicProfile[] | null)?.forEach((p) => {
+    profilesMap.set(p.id, p);
+  });
+
   // Map comments with user data using the lookup map
-  return commentsResult.data.map(comment => ({
+  return commentsResult.data.map((comment) => ({
     id: comment.id,
     recipe_id: comment.recipe_id,
     user_id: comment.user_id,
@@ -60,7 +63,7 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
     photo_url: comment.photo_url,
     created_at: comment.created_at,
     updated_at: comment.updated_at,
-    user: profilesMap.get(comment.user_id)
+    user: profilesMap.get(comment.user_id) as any,
   }));
 }
 

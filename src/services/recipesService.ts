@@ -115,15 +115,13 @@ export async function syncUserRecipesFromLocalStorage(): Promise<void> {
 
 export async function getRecipeByUsernameAndName(username: string, recipeName: string): Promise<Cocktail | null> {
   try {
-    // First, find the user by username
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, username, full_name')
-      .eq('username', username)
+    // First, find the user by username via safe public RPC
+    const { data: publicProfile, error: profileError } = await supabase
+      .rpc('get_public_profile_by_username', { p_username: username })
       .single();
 
-    if (profileError || !profile) {
-      console.error('User not found:', username);
+    if (profileError || !publicProfile) {
+      console.error('User not found:', username, profileError);
       return null;
     }
 
@@ -134,7 +132,7 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
     const { data: recipes, error: recipeError } = await supabase
       .from('recipes')
       .select('*')
-      .eq('user_id', profile.id)
+      .eq('user_id', publicProfile.id)
       .eq('is_public', true);
 
     if (recipeError || !recipes) {
@@ -157,7 +155,7 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
       steps: recipe.instructions,
       notes: recipe.description || undefined,
       tags: recipe.tags || [],
-      createdBy: profile.username || profile.full_name,
+      createdBy: publicProfile.username || undefined,
       isUserRecipe: true
     };
   } catch (error) {

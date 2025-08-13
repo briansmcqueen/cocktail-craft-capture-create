@@ -503,6 +503,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_public_profile_by_username: {
+        Args: { p_username: string }
+        Returns: {
+          id: string
+          username: string
+          avatar_url: string
+        }[]
+      }
+      get_public_profiles: {
+        Args: { user_ids: string[] }
+        Returns: {
+          id: string
+          username: string
+          avatar_url: string
+        }[]
+      }
       get_recipe_rating_stats: {
         Args: { p_recipe_id: string }
         Returns: Json
