@@ -457,7 +457,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
 
       {/* Comments Modal */}
       <Dialog open={showCommentsModal} onOpenChange={setShowCommentsModal}>
-        <DialogContent className="max-w-4xl bg-card border border-border rounded-organic-xl max-h-[90vh] overflow-y-auto w-[95vw] md:w-full p-4 md:p-6 shadow-glass pointer-events-auto">
+        <DialogContent className="max-w-[95vw] sm:max-w-2xl lg:max-w-4xl bg-card border border-border rounded-organic-xl max-h-[90vh] overflow-y-auto w-full p-3 sm:p-4 md:p-6 shadow-glass pointer-events-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="text-2xl font-semibold text-foreground">
