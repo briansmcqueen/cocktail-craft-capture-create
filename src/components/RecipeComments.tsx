@@ -488,9 +488,18 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
               </Select>
               
               <Button
-                onClick={() => setShowAddComment(true)}
+                onClick={() => {
+                  if (!user) {
+                    toast({
+                      title: "Login required",
+                      description: "Please log in or create an account to add a comment",
+                      variant: "destructive"
+                    });
+                    return;
+                  }
+                  setShowAddComment(true);
+                }}
                 className="bg-primary hover:bg-primary/90 text-white rounded-organic-sm"
-                disabled={!user}
               >
                 Add Comment
               </Button>
