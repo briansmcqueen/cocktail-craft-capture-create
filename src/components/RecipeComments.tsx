@@ -457,7 +457,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
 
       {/* Comments Modal */}
       <Dialog open={showCommentsModal} onOpenChange={setShowCommentsModal}>
-        <DialogContent className="max-w-[95vw] sm:max-w-2xl lg:max-w-4xl bg-card border border-border rounded-organic-xl max-h-[90vh] overflow-y-auto w-full p-3 sm:p-4 md:p-6 shadow-glass pointer-events-auto">
+        <DialogContent className="max-w-[95vw] w-[95vw] sm:max-w-2xl sm:w-full lg:max-w-4xl bg-card border border-border rounded-lg sm:rounded-organic-xl max-h-[90vh] overflow-y-auto p-3 sm:p-4 md:p-6 shadow-glass pointer-events-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="text-2xl font-semibold text-foreground">
@@ -476,9 +476,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
 
           <div className="space-y-4">
             {/* Sort Controls and Add Comment Button */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <Select value={sortBy} onValueChange={(value: 'newest' | 'helpful') => setSortBy(value)}>
-                <SelectTrigger className="w-40 bg-medium-charcoal border-light-charcoal">
+                <SelectTrigger className="w-full sm:w-40 bg-medium-charcoal border-light-charcoal">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -499,7 +499,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   }
                   setShowAddComment(true);
                 }}
-                className="bg-primary hover:bg-primary/90 text-white rounded-organic-sm"
+                className="bg-primary hover:bg-primary/90 text-white rounded-organic-sm w-full sm:w-auto"
               >
                 Add Comment
               </Button>
