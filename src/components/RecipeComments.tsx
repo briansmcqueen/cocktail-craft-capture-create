@@ -276,8 +276,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
           </AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 space-y-2">
-          <div className="flex items-center gap-2">
+        <div className="flex-1 space-y-2 min-w-0 overflow-hidden">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="font-medium text-sm text-foreground">
               {comment.user?.full_name || comment.user?.username || 'Anonymous'}
             </span>
@@ -316,7 +316,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
             </div>
           ) : (
             <>
-              <p className="text-card-foreground">{comment.content}</p>
+              <p className="text-card-foreground break-words">{comment.content}</p>
               {comment.photo_url && (
                 <img 
                   src={comment.photo_url} 
