@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { Ingredient } from "@/data/ingredients";
 import { INGREDIENT_TIERS, DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import PrimaryIngredientCarousel from "./PrimaryIngredientCarousel";
 import SecondaryIngredientCarousel from "./SecondaryIngredientCarousel";
 import IngredientTierToggle from "./IngredientTierToggle";
-import MyBarSearch from "./MyBarSearch";
+import AdvancedMyBarFilters from "./AdvancedMyBarFilters";
+import useAdvancedMyBarFilters from "@/hooks/useAdvancedMyBarFilters";
+import FilteredIngredientGrid from "./FilteredIngredientGrid";
 
 interface TieredIngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -32,11 +32,22 @@ export default function TieredIngredientSelector({
   const [showSecondary, setShowSecondary] = useState(false);
   const [internalIncludeAssumed, setInternalIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
   const includeAssumed = includeAssumedProp ?? internalIncludeAssumed;
-  const [searchTerm, setSearchTerm] = useState("");
+  
   const handleToggleAssumed = (val: boolean) => {
     if (onIncludeAssumedChange) onIncludeAssumedChange(val);
     else setInternalIncludeAssumed(val);
   };
+
+  // Advanced filtering hook
+  const {
+    filters,
+    setFilters,
+    filteredIngredients,
+    availableCategories,
+    availableSubCategories,
+    activeFilterCount,
+    hasActiveFilters
+  } = useAdvancedMyBarFilters(allIngredients, myBar);
 
   const { primaryIngredients, secondaryIngredients } = useMemo(() => {
     const primary = allIngredients.filter(ing => 
@@ -58,51 +69,24 @@ export default function TieredIngredientSelector({
 
   return (
     <div className="space-y-8">
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-light-text" />
-        <Input
-          placeholder="Search by ingredient name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 bg-secondary-surface border-border text-pure-white placeholder-light-text focus:border-available"
-        />
-      </div>
-
-      {/* Quick Filters */}
-      <div className="-mt-2 flex items-center gap-2 overflow-x-auto py-1">
-        {[
-          "Gin",
-          "Vodka",
-          "Whiskey",
-          "Tequila",
-          "Rum",
-          "Vermouth",
-          "Bitters",
-          "Liqueur",
-          "Citrus",
-        ].map((chip) => (
-          <button
-            key={chip}
-            onClick={() => setSearchTerm(chip)}
-            className="px-3 py-1 rounded-organic-sm text-xs bg-card border border-border text-light-text hover:text-pure-white hover:bg-accent/10 transition-colors shrink-0"
-          >
-            {chip}
-          </button>
-        ))}
-      </div>
-
-      {/* Search Results */}
-      <MyBarSearch
-        allIngredients={allIngredients}
-        myBar={myBar}
-        onToggle={toggleIngredient}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
+      {/* Advanced Filters */}
+      <AdvancedMyBarFilters
+        filters={filters}
+        onFiltersChange={setFilters}
+        availableCategories={availableCategories}
+        availableSubCategories={availableSubCategories}
+        activeFilterCount={activeFilterCount}
       />
 
-      {/* Main Ingredient Selection - Hidden when searching */}
-      {!searchTerm.trim() && (
+      {/* Show filtered results when filters are active */}
+      {hasActiveFilters ? (
+        <FilteredIngredientGrid
+          ingredients={filteredIngredients}
+          myBar={myBar}
+          onToggle={toggleIngredient}
+          filters={filters}
+        />
+      ) : (
         <>
           {/* Primary Ingredients Section */}
           <div>
