@@ -326,7 +326,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
               )}
               
               {/* Comment Actions */}
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex items-center gap-4 pt-2 flex-wrap">
                 <Button
                   size="sm"
                   variant="ghost"
