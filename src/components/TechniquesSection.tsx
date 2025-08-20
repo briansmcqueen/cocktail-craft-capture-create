@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Article, articlesService } from "@/services/articlesService";
 import { articleFavoritesService } from "@/services/articleFavoritesService";
 import ArticleCard from "./ArticleCard";
-import ArticleModal from "./ArticleModal";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -20,10 +20,9 @@ type TechniquesSectionProps = {
 
 export default function TechniquesSection({ onShowAuthModal }: TechniquesSectionProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [favoriteArticles, setFavoriteArticles] = useState<string[]>([]);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [showArticleModal, setShowArticleModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -56,8 +55,9 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
   };
 
   const handleArticleClick = (article: Article) => {
-    setSelectedArticle(article);
-    setShowArticleModal(true);
+    if (article.slug) {
+      navigate(`/article/${article.slug}`);
+    }
   };
 
   const handleToggleFavorite = async (articleId: string) => {
@@ -79,22 +79,6 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
         title: "Error",
         description: "Failed to update favorite status.",
         variant: "destructive",
-      });
-    }
-  };
-
-  const handleShareArticle = (article: Article) => {
-    if (navigator.share) {
-      navigator.share({
-        title: article.title,
-        text: article.excerpt,
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link copied",
-        description: "Article link copied to clipboard.",
       });
     }
   };
@@ -148,17 +132,6 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
           </div>
         </Carousel>
       </section>
-
-      {/* Article Modal */}
-      <ArticleModal
-        article={selectedArticle}
-        isOpen={showArticleModal}
-        onClose={() => setShowArticleModal(false)}
-        isFavorite={selectedArticle ? favoriteArticles.includes(selectedArticle.id) : false}
-        onToggleFavorite={handleToggleFavorite}
-        onShare={handleShareArticle}
-        onShowAuthModal={onShowAuthModal}
-      />
     </>
   );
 }
