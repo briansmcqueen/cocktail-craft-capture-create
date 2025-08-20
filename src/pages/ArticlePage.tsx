@@ -136,9 +136,30 @@ export default function ArticlePage() {
             {/* Header */}
             <header className="mb-6">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">{article.title}</h1>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-soft-gray">
-                {article.published_at && <span>{new Date(article.published_at).toLocaleDateString()}</span>}
-                {article.author?.full_name && <span>• By {article.author.full_name}</span>}
+              
+              {/* Byline */}
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                {article.author?.avatar_url && (
+                  <img 
+                    src={article.author.avatar_url} 
+                    alt={article.author.full_name || 'Author'} 
+                    className="w-8 h-8 rounded-full border border-border"
+                  />
+                )}
+                <div className="flex flex-col">
+                  {article.author?.full_name && (
+                    <span className="text-sm font-medium text-foreground">By {article.author.full_name}</span>
+                  )}
+                  {article.published_at && (
+                    <span className="text-xs text-soft-gray">
+                      Published {new Date(article.published_at).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </span>
+                  )}
+                </div>
                 <Button variant="secondary" size="sm" className="ml-auto rounded-organic-sm inline-flex items-center gap-2" onClick={() => setShareOpen(true)}>
                   <Share size={16} /> Share
                 </Button>

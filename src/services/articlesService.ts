@@ -25,7 +25,10 @@ export const articlesService = {
   async getPublishedArticles(): Promise<Article[]> {
     const { data, error } = await supabase
       .from('articles')
-      .select('*')
+      .select(`
+        *,
+        author:profiles(full_name, avatar_url)
+      `)
       .eq('is_published', true)
       .order('published_at', { ascending: false });
 
@@ -47,7 +50,10 @@ export const articlesService = {
   async getArticleBySlug(slug: string): Promise<Article | null> {
     const { data, error } = await supabase
       .from('articles')
-      .select('*')
+      .select(`
+        *,
+        author:profiles(full_name, avatar_url)
+      `)
       .eq('slug', slug)
       .eq('is_published', true)
       .maybeSingle();
