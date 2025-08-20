@@ -25,15 +25,29 @@ export const articlesService = {
   async getPublishedArticles(): Promise<Article[]> {
     const { data, error } = await supabase
       .from('articles')
-      .select(`
-        *,
-        author:profiles(full_name, avatar_url)
-      `)
+      .select('*')
       .eq('is_published', true)
       .order('published_at', { ascending: false });
 
     if (error) throw error;
-    return data || [];
+    
+    // Fetch author profiles separately
+    const enrichedArticles = await Promise.all(
+      (data || []).map(async (article) => {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, avatar_url')
+          .eq('id', article.author_id)
+          .single();
+        
+        return {
+          ...article,
+          author: profile || undefined
+        };
+      })
+    );
+    
+    return enrichedArticles;
   },
 
   async getArticleById(id: string): Promise<Article | null> {
@@ -50,16 +64,25 @@ export const articlesService = {
   async getArticleBySlug(slug: string): Promise<Article | null> {
     const { data, error } = await supabase
       .from('articles')
-      .select(`
-        *,
-        author:profiles(full_name, avatar_url)
-      `)
+      .select('*')
       .eq('slug', slug)
       .eq('is_published', true)
       .maybeSingle();
 
     if (error) throw error;
-    return data || null;
+    if (!data) return null;
+    
+    // Fetch author profile separately
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('full_name, avatar_url')
+      .eq('id', data.author_id)
+      .single();
+    
+    return {
+      ...data,
+      author: profile || undefined
+    };
   },
 
   async createArticle(article: Omit<Article, 'id' | 'created_at' | 'updated_at' | 'author'>): Promise<Article> {

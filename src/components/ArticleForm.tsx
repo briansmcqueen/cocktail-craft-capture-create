@@ -32,6 +32,7 @@ export default function ArticleForm({
   const [featuredImageUrl, setFeaturedImageUrl] = useState(article?.featured_image_url || "");
   const [sourceUrl, setSourceUrl] = useState(article?.source_url || "");
   const [sourceName, setSourceName] = useState(article?.source_name || "");
+  const [byline, setByline] = useState(article?.author?.full_name || "");
   
   const [tags, setTags] = useState<string[]>(article?.tags || []);
   const [newTag, setNewTag] = useState("");
@@ -113,6 +114,22 @@ export default function ArticleForm({
 
     setIsSubmitting(true);
     try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("User must be logged in to create articles");
+      }
+      
+      // Update user's profile with byline if provided
+      if (byline.trim()) {
+        await supabase
+          .from('profiles')
+          .upsert({ 
+            id: user.id, 
+            full_name: byline.trim() 
+          });
+      }
+
       const articleData = {
         title: title.trim(),
         content: content.trim(),
@@ -134,12 +151,6 @@ export default function ArticleForm({
           description: "Your article has been updated successfully.",
         });
       } else {
-        // Get current user
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          throw new Error("User must be logged in to create articles");
-        }
-        
         savedArticle = await articlesService.createArticle({
           ...articleData,
           author_id: user.id
@@ -171,6 +182,7 @@ export default function ArticleForm({
     setFeaturedImageUrl("");
     setSourceUrl("");
     setSourceName("");
+    setByline("");
     
     setTags([]);
     setNewTag("");
@@ -212,6 +224,17 @@ export default function ArticleForm({
               onChange={(e) => setExcerpt(e.target.value)}
               placeholder="Brief description of the article"
               className="min-h-[80px]"
+            />
+          </div>
+
+          {/* Byline */}
+          <div className="space-y-2">
+            <Label htmlFor="byline">Author/Byline</Label>
+            <Input
+              id="byline"
+              value={byline}
+              onChange={(e) => setByline(e.target.value)}
+              placeholder="Author name for byline"
             />
           </div>
 
