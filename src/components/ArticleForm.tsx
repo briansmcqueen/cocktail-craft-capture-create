@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,35 @@ export default function ArticleForm({
   const [tags, setTags] = useState<string[]>(article?.tags || []);
   const [newTag, setNewTag] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const resetForm = () => {
+    setTitle("");
+    setContent("");
+    setExcerpt("");
+    setFeaturedImageUrl("");
+    setSourceUrl("");
+    setSourceName("");
+    setByline("");
+    
+    setTags([]);
+    setNewTag("");
+  };
+
+  // Update form state when article prop changes
+  useEffect(() => {
+    if (article) {
+      setTitle(article.title || "");
+      setContent(article.content || "");
+      setExcerpt(article.excerpt || "");
+      setFeaturedImageUrl(article.featured_image_url || "");
+      setSourceUrl(article.source_url || "");
+      setSourceName(article.source_name || "");
+      setByline(article.author?.full_name || "");
+      setTags(article.tags || []);
+    } else {
+      // Reset form for new article
+      resetForm();
+    }
+  }, [article]);
 
   // Initialize Turndown service for converting HTML to Markdown
   const turndownService = new TurndownService({
@@ -175,18 +204,6 @@ export default function ArticleForm({
     }
   };
 
-  const resetForm = () => {
-    setTitle("");
-    setContent("");
-    setExcerpt("");
-    setFeaturedImageUrl("");
-    setSourceUrl("");
-    setSourceName("");
-    setByline("");
-    
-    setTags([]);
-    setNewTag("");
-  };
 
   const handleClose = () => {
     resetForm();
