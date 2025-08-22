@@ -420,6 +420,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_bar_presets: {
+        Row: {
+          created_at: string
+          id: string
+          ingredient_ids: string[]
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ingredient_ids: string[]
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ingredient_ids?: string[]
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_ingredients: {
         Row: {
           created_at: string

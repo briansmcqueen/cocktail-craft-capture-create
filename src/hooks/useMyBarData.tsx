@@ -11,6 +11,7 @@ import {
   getUserCustomIngredients,
   CustomIngredient 
 } from "@/services/customIngredientsService";
+import { barPresetsService, type BarPreset } from "@/services/barPresetsService";
 import { supabase } from "@/integrations/supabase/client";
 
 interface MyBarInventory {
@@ -22,6 +23,7 @@ export function useMyBarData(forceUpdate: number) {
   const { toast } = useToast();
   const [myBar, setMyBar] = useState<MyBarInventory>({});
   const [customIngredients, setCustomIngredients] = useState<CustomIngredient[]>([]);
+  const [presets, setPresets] = useState<BarPreset[]>([]);
   const [loading, setLoading] = useState(false);
   const pendingToggles = useRef<Set<string>>(new Set());
 
@@ -35,18 +37,30 @@ export function useMyBarData(forceUpdate: number) {
 
     const loadData = async () => {
       setLoading(true);
-      const [ingredientIds, customIngs] = await Promise.all([
-        getUserIngredients(),
-        getUserCustomIngredients()
-      ]);
-      
-      const newMyBar: MyBarInventory = {};
-      ingredientIds.forEach(id => {
-        newMyBar[id] = true;
-      });
-      setMyBar(newMyBar);
-      setCustomIngredients(customIngs);
-      setLoading(false);
+      try {
+        const [ingredientIds, customIngs, userPresets] = await Promise.all([
+          getUserIngredients(),
+          getUserCustomIngredients(),
+          barPresetsService.getUserPresets(user.id)
+        ]);
+        
+        const newMyBar: MyBarInventory = {};
+        ingredientIds.forEach(id => {
+          newMyBar[id] = true;
+        });
+        setMyBar(newMyBar);
+        setCustomIngredients(customIngs);
+        setPresets(userPresets);
+      } catch (error) {
+        console.error('Error loading bar data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load your bar data. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadData();
@@ -181,6 +195,82 @@ export function useMyBarData(forceUpdate: number) {
     }
   }, [user, myBar, ingredientMap, toast]);
 
+  // Preset management functions
+  const savePreset = useCallback(async (name: string): Promise<void> => {
+    if (!user?.id || myBarIngredients.length === 0) return;
+
+    try {
+      const newPreset = await barPresetsService.savePreset(user.id, name, myBarIngredients);
+      setPresets(prev => [newPreset, ...prev]);
+      toast({
+        title: "Preset Saved",
+        description: `"${name}" has been saved to your presets.`,
+      });
+    } catch (error) {
+      console.error('Error saving preset:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save preset. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [user, myBarIngredients, toast]);
+
+  const loadPreset = useCallback(async (preset: BarPreset) => {
+    if (!user?.id) return;
+
+    try {
+      // First, remove all current ingredients
+      const removePromises = myBarIngredients.map(ingredientId => 
+        removeUserIngredient(ingredientId)
+      );
+
+      // Then add preset ingredients
+      const addPromises = preset.ingredient_ids.map(ingredientId =>
+        addUserIngredient(ingredientId)
+      );
+
+      await Promise.all([...removePromises, ...addPromises]);
+
+      // Update local state
+      const newMyBar: MyBarInventory = {};
+      preset.ingredient_ids.forEach(id => {
+        newMyBar[id] = true;
+      });
+      setMyBar(newMyBar);
+
+      toast({
+        title: "Preset Loaded",
+        description: `"${preset.name}" has been loaded into your bar.`,
+      });
+    } catch (error) {
+      console.error('Error loading preset:', error);
+      toast({
+        title: "Error", 
+        description: "Failed to load preset. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [user, myBarIngredients, toast]);
+
+  const deletePreset = useCallback(async (presetId: string) => {
+    try {
+      await barPresetsService.deletePreset(presetId);
+      setPresets(prev => prev.filter(p => p.id !== presetId));
+      toast({
+        title: "Preset Deleted",
+        description: "Preset has been removed.",
+      });
+    } catch (error) {
+      console.error('Error deleting preset:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete preset. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
   return {
     myBar,
     customIngredients,
@@ -190,6 +280,10 @@ export function useMyBarData(forceUpdate: number) {
     ingredientMap,
     myBarIngredients,
     toggleIngredient,
-    user
+    user,
+    presets,
+    savePreset,
+    loadPreset,
+    deletePreset
   };
 }

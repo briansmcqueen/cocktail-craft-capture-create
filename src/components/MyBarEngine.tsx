@@ -33,7 +33,11 @@ export default function MyBarEngine({
     ingredientMap,
     myBarIngredients,
     toggleIngredient,
-    user
+    user,
+    presets,
+    savePreset,
+    loadPreset,
+    deletePreset
   } = useMyBarData(forceUpdate);
 
   const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
@@ -69,8 +73,13 @@ export default function MyBarEngine({
         ingredientMap={ingredientMap}
         toggleIngredient={toggleIngredient}
         user={user}
+        setCustomIngredients={setCustomIngredients}
         includeAssumed={includeAssumed}
-        onIncludeAssumedChange={setIncludeAssumed}
+        onToggleAssumed={setIncludeAssumed}
+        presets={presets}
+        onSavePreset={savePreset}
+        onLoadPreset={loadPreset}
+        onDeletePreset={deletePreset}
       />
 
       {/* Results Section (kept for larger screens) */}
