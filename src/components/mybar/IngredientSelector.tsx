@@ -116,15 +116,15 @@ export default function IngredientSelector({
   const examplePresets = [
     {
       name: "Home Bar Basics",
-      ingredients: ["vodka", "gin", "whiskey", "rum", "tequila", "lime-juice", "lemon-juice", "simple-syrup"]
+      ingredients: ["vodka", "gin", "whiskey", "rum", "tequila", "lime juice", "lemon juice", "simple syrup"]
     },
     {
       name: "Cocktail Essentials", 
-      ingredients: ["gin", "vodka", "dry-vermouth", "sweet-vermouth", "lime-juice", "lemon-juice", "simple-syrup", "angostura-bitters"]
+      ingredients: ["gin", "vodka", "dry vermouth", "sweet vermouth", "lime juice", "lemon juice", "simple syrup", "angostura bitters"]
     },
     {
       name: "Tiki Setup",
-      ingredients: ["rum", "dark-rum", "triple-sec", "lime-juice", "simple-syrup", "grenadine", "orange-juice"]
+      ingredients: ["rum", "dark rum", "triple sec", "lime juice", "simple syrup", "grenadine", "orange juice"]
     }
   ];
 
@@ -137,15 +137,32 @@ export default function IngredientSelector({
   };
 
   const loadExamplePreset = async (examplePreset: { name: string; ingredients: string[] }) => {
-    // Find matching ingredient IDs from the example names
+    // Find matching ingredient IDs using more flexible matching
     const matchingIngredients = examplePreset.ingredients
-      .map(name => allIngredients.find(ing => 
-        ing.name.toLowerCase().replace(/\s+/g, '-') === name ||
-        ing.id === name ||
-        ing.name.toLowerCase().includes(name.replace('-', ' '))
-      ))
+      .map(name => allIngredients.find(ing => {
+        const searchName = name.toLowerCase();
+        const ingName = ing.name.toLowerCase();
+        const ingId = ing.id.toLowerCase();
+        
+        // Direct name match
+        if (ingName === searchName) return true;
+        // Direct ID match  
+        if (ingId === searchName) return true;
+        // Partial name match
+        if (ingName.includes(searchName) || searchName.includes(ingName)) return true;
+        // Handle common variations
+        if (searchName.replace(/\s+/g, '-') === ingId.replace(/\s+/g, '-')) return true;
+        
+        return false;
+      }))
       .filter(Boolean)
       .map(ing => ing!.id);
+
+    console.log(`Loading ${examplePreset.name}:`, {
+      requested: examplePreset.ingredients,
+      found: matchingIngredients.map(id => allIngredients.find(ing => ing.id === id)?.name),
+      foundCount: matchingIngredients.length
+    });
 
     // First, remove all current ingredients (same as loadPreset behavior)
     for (const ingredientId of myBarIngredients) {
