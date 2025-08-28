@@ -61,8 +61,8 @@ export default function MyBarResults({
     <div className="space-y-6">
       {/* Recipes You Can Make */}
       {recipesICanMake.length > 0 && (
-        <Card className="p-6 bg-medium-charcoal border-light-charcoal">
-          <h3 className="text-lg font-semibold text-emerald mb-4 flex items-center gap-2">
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-pure-white mb-4 flex items-center gap-2">
             <ChefHat className="h-5 w-5" />
             You Can Make ({recipesICanMake.length})
           </h3>
@@ -96,7 +96,7 @@ export default function MyBarResults({
               </Button>
             </div>
           )}
-        </Card>
+        </div>
       )}
 
       {/* Almost There - Need 1 Ingredient */}
