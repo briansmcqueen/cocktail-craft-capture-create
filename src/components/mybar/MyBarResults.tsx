@@ -115,8 +115,10 @@ export default function MyBarResults({
                 
                 return (
                   <CarouselItem key={recipe.id} className="pl-2 md:pl-4 basis-[280px] md:basis-[320px]">
-                    <div className="relative group">
-                      <UniversalRecipeCard recipe={recipe} />
+                    <div className="relative group h-[320px]">
+                      <div className="h-full">
+                        <UniversalRecipeCard recipe={recipe} />
+                      </div>
                       {/* Missing ingredient overlay */}
                       <div className="absolute top-2 right-2 bg-golden-amber/90 text-rich-charcoal px-2 py-1 rounded-organic-sm text-xs font-medium">
                         Need: {missingIngredient.name}
