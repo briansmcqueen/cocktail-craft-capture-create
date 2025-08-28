@@ -216,45 +216,52 @@ export default function IngredientSelector({
           </Card>
         )}
 
-        {/* Example Bar Setups */}
-        {(myBarIngredients.length === 0 || presets.length === 0) && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-soft-gray">
-              {myBarIngredients.length === 0 ? "Try a Popular Bar Setup:" : "Popular Bar Setups:"}
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {examplePresets.map((preset) => (
-                <Button
-                  key={preset.name}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => loadExamplePreset(preset)}
-                  className="text-xs bg-medium-charcoal border-primary/30 hover:bg-primary/10 text-primary hover:text-primary"
-                >
-                  <Bookmark className="h-3 w-3 mr-1" />
-                  {preset.name} ({preset.ingredients.length})
-                </Button>
-              ))}
-            </div>
+        {/* Example Bar Setups - Always show */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-soft-gray">Popular Bar Setups:</h4>
+          <div className="flex flex-wrap gap-2">
+            {examplePresets.map((preset) => (
+              <Button
+                key={preset.name}
+                variant="outline"
+                size="sm"
+                onClick={() => loadExamplePreset(preset)}
+                className="text-xs bg-medium-charcoal border-primary/30 hover:bg-primary/10 text-primary hover:text-primary"
+              >
+                <Bookmark className="h-3 w-3 mr-1" />
+                {preset.name} ({preset.ingredients.length})
+              </Button>
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* User's Saved Presets */}
+        {/* User's Saved Presets with Management */}
         {presets.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-soft-gray">Your Saved Presets:</h4>
             <div className="flex flex-wrap gap-2">
               {presets.map((preset) => (
-                <Button
-                  key={preset.id}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => loadPreset(preset)}
-                  className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-light-text"
-                >
-                  <Bookmark className="h-3 w-3 mr-1" />
-                  {preset.name} ({preset.ingredient_ids.length})
-                </Button>
+                <div key={preset.id} className="group relative">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => loadPreset(preset)}
+                    className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-light-text pr-8"
+                  >
+                    <Bookmark className="h-3 w-3 mr-1" />
+                    {preset.name} ({preset.ingredient_ids.length})
+                  </Button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeletePreset(preset.id);
+                    }}
+                    className="absolute top-0.5 right-0.5 w-5 h-5 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                    title="Delete preset"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
               ))}
             </div>
           </div>
