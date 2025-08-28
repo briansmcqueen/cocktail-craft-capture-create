@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from "react";
-import { Search, X } from "lucide-react";
+import React, { useState, useMemo, useRef } from "react";
+import { Search, X, Save, Bookmark, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import type { BarPreset } from "@/services/barPresetsService";
 
 interface IngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -16,6 +17,10 @@ interface IngredientSelectorProps {
   toggleIngredient: (ingredientId: string) => void;
   user: any;
   setCustomIngredients: (ingredients: CustomIngredient[]) => void;
+  presets: BarPreset[];
+  onSavePreset: (name: string) => Promise<void>;
+  onLoadPreset: (preset: BarPreset) => Promise<void>;
+  onDeletePreset: (presetId: string) => Promise<void>;
 }
 
 export default function IngredientSelector({
@@ -25,168 +30,231 @@ export default function IngredientSelector({
   ingredientMap,
   toggleIngredient,
   user,
-  setCustomIngredients
+  setCustomIngredients,
+  presets,
+  onSavePreset,
+  onLoadPreset,
+  onDeletePreset
 }: IngredientSelectorProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("recipes");
+  const [searchValue, setSearchValue] = useState("");
+  const [open, setOpen] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [presetName, setPresetName] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Filter ingredients for display (including custom ones)
   const filteredIngredients = useMemo(() => {
-    let filtered = allIngredients;
+    if (!searchValue) return allIngredients;
+    
+    const searchLower = searchValue.toLowerCase();
+    return allIngredients.filter(ing => 
+      (ing.name.toLowerCase().includes(searchLower) ||
+       ing.aliases?.some(alias => alias.toLowerCase().includes(searchLower)) ||
+       ing.description?.toLowerCase().includes(searchLower)) &&
+      !myBarIngredients.includes(ing.id)
+    ).sort((a, b) => a.name.localeCompare(b.name));
+  }, [searchValue, allIngredients, myBarIngredients]);
 
-    if (selectedCategory !== "recipes") {
-      filtered = filtered.filter(ing => ing.category.toLowerCase() === selectedCategory);
+  const addIngredient = (ingredientId: string) => {
+    toggleIngredient(ingredientId);
+    setSearchValue("");
+    setOpen(false);
+    // Keep focus on input for continued searching
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
+  };
+
+  const removeIngredient = (ingredientId: string) => {
+    toggleIngredient(ingredientId);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    setOpen(value.length > 0 && filteredIngredients.length > 0);
+  };
+
+  const handleInputFocus = () => {
+    if (searchValue.length > 0 && filteredIngredients.length > 0) {
+      setOpen(true);
     }
+  };
 
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(ing => 
-        ing.name.toLowerCase().includes(searchLower) ||
-        ing.aliases.some(alias => alias.toLowerCase().includes(searchLower)) ||
-        ing.description.toLowerCase().includes(searchLower)
-      );
+  const handleInputBlur = () => {
+    // Delay closing to allow clicking on items
+    setTimeout(() => {
+      setOpen(false);
+    }, 200);
+  };
+
+  const savePreset = async () => {
+    if (presetName.trim()) {
+      try {
+        await onSavePreset(presetName.trim());
+        setPresetName("");
+        setShowSaveDialog(false);
+      } catch (error) {
+        console.error('Error saving preset:', error);
+      }
     }
+  };
 
-    return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [selectedCategory, searchTerm, allIngredients]);
-
-  const categories = ["recipes", "liqueurs", "mixers", "pantry", "produce", "spirits", "wines & vermouths"];
+  const loadPreset = async (preset: BarPreset) => {
+    try {
+      await onLoadPreset(preset);
+    } catch (error) {
+      console.error('Error loading preset:', error);
+    }
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder="Search ingredients..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <AddCustomIngredient onIngredientAdded={() => {
-          // Trigger reload of custom ingredients
-          if (user) {
-            getUserCustomIngredients().then(setCustomIngredients);
-          }
-        }} />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <User className="text-primary" size={24} />
+        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
+          My Bar
+        </h2>
       </div>
+      <p className="text-light-text text-sm mb-6">
+        Build your inventory and discover what cocktails you can make
+      </p>
 
-      {/* Category Filter */}
-      <div className="space-y-2">
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={cn(
-                "inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-colors min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm capitalize",
-                selectedCategory === category
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-card border border-border text-foreground hover:border-accent hover:text-foreground"
-              )}
-              aria-label={`Filter by ${category === "recipes" ? "all ingredients" : category}`}
-            >
-              {category === "recipes" ? "All" : category === "wines & vermouths" ? "Wines" : category}
-            </button>
-          ))}
+      {/* Search Interface */}
+      <div className="space-y-4">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
+            <Input
+              ref={inputRef}
+              placeholder="Search and add ingredients to your bar..."
+              value={searchValue}
+              onChange={handleSearchChange}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              className="pl-10 h-12 text-base bg-medium-charcoal border-light-charcoal text-light-text"
+            />
+            
+            {/* Custom Dropdown */}
+            {open && filteredIngredients.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
+                {filteredIngredients.map((ingredient) => (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => addIngredient(ingredient.id)}
+                    onMouseDown={(e) => e.preventDefault()} // Prevent input blur
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
+                  >
+                    <span className="text-light-text">{ingredient.name}</span>
+                    <Badge variant="outline" className="text-xs border-primary/30 text-soft-gray">
+                      {ingredient.category}
+                    </Badge>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <Button
+            variant="outline"
+            onClick={() => setShowSaveDialog(true)}
+            disabled={myBarIngredients.length === 0}
+            className="h-12 bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-light-text"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            Save
+          </Button>
         </div>
+
+        {/* Save Preset Dialog */}
+        {showSaveDialog && (
+          <Card className="p-4 border-2 border-primary/20 bg-medium-charcoal">
+            <div className="space-y-3">
+              <h4 className="font-medium text-light-text">Save Current Selection</h4>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter preset name..."
+                  value={presetName}
+                  onChange={(e) => setPresetName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && savePreset()}
+                  className="bg-light-charcoal border-light-charcoal text-light-text"
+                />
+                <Button onClick={savePreset} disabled={!presetName.trim()}>
+                  Save
+                </Button>
+                <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Saved Presets */}
+        {presets.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-soft-gray">Quick Load:</h4>
+            <div className="flex flex-wrap gap-2">
+              {presets.map((preset) => (
+                <Button
+                  key={preset.id}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadPreset(preset)}
+                  className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-light-text"
+                >
+                  <Bookmark className="h-3 w-3 mr-1" />
+                  {preset.name} ({preset.ingredient_ids.length})
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Selected Ingredients Pills */}
       {myBarIngredients.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium text-light-text">My Bar ({myBarIngredients.length} ingredients)</h3>
-          {/* Mobile: Horizontal Carousel */}
-          <div className="md:hidden">
-            <Carousel className="w-full">
-              <CarouselContent className="-ml-2">
-                {[...myBarIngredients]
-                  .sort((a, b) => {
-                    const ingredientA = ingredientMap[a];
-                    const ingredientB = ingredientMap[b];
-                    if (!ingredientA || !ingredientB) return 0;
-                    return ingredientA.name.localeCompare(ingredientB.name);
-                  })
-                  .map(ingredientId => {
-                    const ingredient = ingredientMap[ingredientId];
-                    if (!ingredient) return null;
-                    return (
-                      <CarouselItem key={ingredientId} className="pl-2 basis-auto">
-                        <span
-                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-organic-sm bg-primary/20 text-emerald border border-primary/30 cursor-pointer hover:bg-primary/30 transition-colors whitespace-nowrap"
-                          onClick={() => toggleIngredient(ingredientId)}
-                        >
-                          {ingredient.name}
-                          <X className="ml-1 h-3 w-3" />
-                        </span>
-                      </CarouselItem>
-                    );
-                  })}
-              </CarouselContent>
-            </Carousel>
-          </div>
-          {/* Desktop: Flex Wrap */}
-          <div className="hidden md:flex md:flex-wrap md:gap-2">
-            {[...myBarIngredients]
-              .sort((a, b) => {
-                const ingredientA = ingredientMap[a];
-                const ingredientB = ingredientMap[b];
-                if (!ingredientA || !ingredientB) return 0;
-                return ingredientA.name.localeCompare(ingredientB.name);
-              })
-              .map(ingredientId => {
-                const ingredient = ingredientMap[ingredientId];
-                if (!ingredient) return null;
-                return (
-                  <span
-                    key={ingredientId}
-                    className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-organic-sm bg-primary/20 text-emerald border border-primary/30 cursor-pointer hover:bg-primary/30 transition-colors"
-                    onClick={() => toggleIngredient(ingredientId)}
-                  >
-                    {ingredient.name}
-                    <X className="ml-1 h-3 w-3" />
-                  </span>
-                );
-              })}
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-soft-gray">
+            Your Bar ({myBarIngredients.length} ingredients)
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {myBarIngredients.map((ingredientId) => {
+              const ingredient = ingredientMap[ingredientId];
+              if (!ingredient) return null;
+              
+              return (
+                <Badge
+                  key={ingredientId}
+                  variant="secondary"
+                  className="px-3 py-1.5 text-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer"
+                  onClick={() => removeIngredient(ingredientId)}
+                >
+                  {ingredient.name}
+                  <button className="ml-2 hover:text-destructive transition-colors">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Ingredient List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
-        {filteredIngredients.map((ingredient) => (
-          <div
-            key={ingredient.id}
-            className={cn(
-              "flex items-center justify-between p-3 rounded-organic-sm border cursor-pointer transition-all hover:shadow-sm",
-              myBar[ingredient.id] 
-                ? 'bg-primary/20 border-primary/30' 
-                : 'bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal'
-            )}
-            onClick={() => toggleIngredient(ingredient.id)}
-          >
-            <div className="flex-1">
-              <div className="font-medium text-sm flex items-center gap-2 text-light-text">
-                {ingredient.name}
-                {ingredient.isCustom && (
-                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-organic-sm bg-primary/20 text-emerald border border-primary/30">Custom</span>
-                )}
-              </div>
-              <div className="text-xs text-soft-gray">{ingredient.subCategory}</div>
-            </div>
-            <div className="ml-2">
-              {myBar[ingredient.id] ? (
-                <div className="w-4 h-4 bg-emerald rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-primary rounded-full" />
-                </div>
-              ) : (
-                <div className="w-4 h-4 border-2 border-soft-gray rounded-full" />
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Empty State - No Ingredients */}
+      {myBarIngredients.length === 0 && (
+        <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
+          <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
+          <h3 className="text-lg font-medium text-light-text mb-2">
+            Start Building Your Bar
+          </h3>
+          <p className="text-soft-gray">
+            Search and add ingredients you have on hand to discover what cocktails you can make.
+          </p>
+        </Card>
+      )}
     </div>
   );
 }

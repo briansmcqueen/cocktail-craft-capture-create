@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Star, User } from "lucide-react";
+import { ChefHat, Plus, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Card } from "@/components/ui/card";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
-import WhatToBuyNext from "./WhatToBuyNext";
 
 interface RecommendedIngredient {
   ingredient: Ingredient;
@@ -60,33 +59,27 @@ export default function MyBarResults({
 
   return (
     <div className="space-y-6">
-      {/* What to Buy Next */}
-      <WhatToBuyNext 
-        recommendations={whatToBuyNext}
-        onAddIngredient={onAddIngredient}
-        onAddToShoppingList={onAddToShoppingList}
-        loading={loading}
-      />
-
-      {/* Recipes I Can Make */}
+      {/* Recipes You Can Make */}
       {recipesICanMake.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Star className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-serif font-semibold">
-              You Can Make {recipesICanMake.length} Cocktail{recipesICanMake.length !== 1 ? 's' : ''}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <Card className="p-6 bg-medium-charcoal border-light-charcoal">
+          <h3 className="text-lg font-semibold text-emerald mb-4 flex items-center gap-2">
+            <ChefHat className="h-5 w-5" />
+            You Can Make ({recipesICanMake.length})
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {(showAllRecipes ? recipesICanMake : recipesICanMake.slice(0, 6)).map((recipe) => (
-              <UniversalRecipeCard
+              <div
                 key={recipe.id}
-                recipe={recipe}
-              />
+                className="p-3 bg-primary/10 border border-primary/20 rounded-organic-md hover:bg-primary/20 transition-colors cursor-pointer"
+                onClick={() => onRecipeClick(recipe)}
+              >
+                <h4 className="font-medium text-emerald text-sm">{recipe.name}</h4>
+                <p className="text-xs text-primary">Ready to make!</p>
+              </div>
             ))}
           </div>
           {recipesICanMake.length > 6 && !showAllRecipes && (
-            <div className="text-center">
+            <div className="text-center mt-4">
               <Button
                 variant="outline"
                 onClick={() => setShowAllRecipes(true)}
@@ -97,7 +90,7 @@ export default function MyBarResults({
             </div>
           )}
           {showAllRecipes && recipesICanMake.length > 6 && (
-            <div className="text-center">
+            <div className="text-center mt-4">
               <Button
                 variant="outline"
                 onClick={() => setShowAllRecipes(false)}
@@ -107,17 +100,60 @@ export default function MyBarResults({
               </Button>
             </div>
           )}
-        </div>
+        </Card>
       )}
 
+      {/* Almost There - Need 1 Ingredient */}
+      {recipesNeedingOneIngredient.length > 0 && (
+        <Card className="p-4 bg-medium-charcoal border-light-charcoal">
+          <h3 className="text-base font-medium text-golden-amber mb-3 flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Almost There ({recipesNeedingOneIngredient.length})
+          </h3>
+          <div className="space-y-2">
+            {recipesNeedingOneIngredient.map((recipe) => {
+              const missingIngredient = ingredientMap[recipe.missingIngredient || ''];
+              if (!missingIngredient) return null;
+              
+              return (
+                <div
+                  key={recipe.id}
+                  className="flex items-center justify-between p-3 bg-golden-amber/10 border border-golden-amber/20 rounded-organic-md hover:bg-golden-amber/20 transition-colors group"
+                >
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-light-text text-sm">{recipe.name}</h4>
+                    <p className="text-xs text-soft-gray truncate">
+                      Need: {missingIngredient.name}
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => onAddIngredient(recipe.missingIngredient || '')}
+                    className="ml-3 text-xs h-7 px-2 text-golden-amber hover:bg-golden-amber/20 hover:text-golden-amber opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    Add
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
 
-      {/* Empty State */}
-      {myBarIngredients.length === 0 && recipesNeedingOneIngredient.length === 0 && user && (
-        <div className="text-center py-12 text-muted-foreground">
-          <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-medium mb-2">Your bar is just getting started!</h3>
-          <p>Add a few more ingredients to unlock your first cocktails.</p>
-        </div>
+      {/* Empty State - Has ingredients but no recipes */}
+      {myBarIngredients.length > 0 && recipesICanMake.length === 0 && recipesNeedingOneIngredient.length === 0 && (
+        <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
+          <ChefHat className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
+          <h3 className="text-lg font-medium text-light-text mb-2">
+            Add More Ingredients
+          </h3>
+          <p className="text-soft-gray">
+            You have {myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''} in your bar. 
+            Add a few more to unlock cocktails you can make!
+          </p>
+        </Card>
       )}
     </div>
   );
