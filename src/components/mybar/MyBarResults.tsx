@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChefHat, Plus, User } from "lucide-react";
+import { ChefHat, Plus, User, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,6 +7,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
+import BuyIngredientButton from "@/components/BuyIngredientButton";
+import WhatToBuyNext from "./WhatToBuyNext";
 
 interface RecommendedIngredient {
   ingredient: Ingredient;
@@ -60,6 +62,18 @@ export default function MyBarResults({
 
   return (
     <div className="space-y-6">
+      {/* What to Buy Next section */}
+      {whatToBuyNext.length > 0 && (
+        <div className="mb-6">
+          <WhatToBuyNext 
+            recommendations={whatToBuyNext}
+            onAddIngredient={onAddIngredient}
+            onAddToShoppingList={onAddToShoppingList}
+            userIngredients={myBarIngredients}
+            ingredientMap={new Map(Object.entries(ingredientMap))}
+          />
+        </div>
+      )}
       {/* Recipes You Can Make */}
       {recipesICanMake.length > 0 && (
         <div className="space-y-4">
@@ -123,13 +137,28 @@ export default function MyBarResults({
                       </div>
                       {/* Add button overlay */}
                       <div className="absolute inset-0 bg-rich-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-organic-md">
-                        <Button
-                          onClick={() => onAddIngredient(recipe.missingIngredient || '')}
-                          className="bg-golden-amber hover:bg-golden-amber/80 text-rich-charcoal font-medium"
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add {missingIngredient.name}
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => onAddIngredient(recipe.missingIngredient || '')}
+                            className="bg-golden-amber hover:bg-golden-amber/80 text-rich-charcoal font-medium"
+                            size="sm"
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add to Bar
+                          </Button>
+                          
+                          {/* Buy ingredient button */}
+                          <BuyIngredientButton
+                            ingredientId={recipe.missingIngredient || ''}
+                            ingredient={missingIngredient}
+                            userIngredients={myBarIngredients}
+                            ingredientMap={new Map(Object.entries(ingredientMap))}
+                            variant="secondary"
+                            size="sm"
+                            showPrice={false}
+                            className="bg-accent hover:bg-accent/80 text-pure-white"
+                          />
+                        </div>
                       </div>
                     </div>
                   </CarouselItem>
