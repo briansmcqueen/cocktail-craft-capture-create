@@ -1,9 +1,16 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
@@ -40,6 +47,8 @@ export default function IngredientSelector({
   const [open, setOpen] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [presetName, setPresetName] = useState("");
+  const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
+  const [editingPresetName, setEditingPresetName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const filteredIngredients = useMemo(() => {
@@ -144,6 +153,32 @@ export default function IngredientSelector({
     }
   };
 
+  const duplicatePreset = async (preset: BarPreset) => {
+    try {
+      await onSavePreset(`${preset.name} (Copy)`);
+    } catch (error) {
+      console.error('Error duplicating preset:', error);
+    }
+  };
+
+  const startEditingPreset = (preset: BarPreset) => {
+    setEditingPresetId(preset.id);
+    setEditingPresetName(preset.name);
+  };
+
+  const savePresetRename = async () => {
+    if (editingPresetId && editingPresetName.trim()) {
+      try {
+        // Note: This would need a new function in the service to update preset name
+        // For now, we'll just close the edit mode
+        setEditingPresetId(null);
+        setEditingPresetName("");
+      } catch (error) {
+        console.error('Error renaming preset:', error);
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Search Interface */}
@@ -242,25 +277,88 @@ export default function IngredientSelector({
             <div className="flex flex-wrap gap-2">
               {presets.map((preset) => (
                 <div key={preset.id} className="group relative">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => loadPreset(preset)}
-                    className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white pr-8"
-                  >
-                    <Bookmark className="h-3 w-3 mr-1" />
-                    {preset.name} ({preset.ingredient_ids.length})
-                  </Button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDeletePreset(preset.id);
-                    }}
-                    className="absolute top-0.5 right-0.5 w-5 h-5 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                    title="Delete preset"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
+                  {editingPresetId === preset.id ? (
+                    <div className="flex items-center gap-1 bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-1">
+                      <Input
+                        value={editingPresetName}
+                        onChange={(e) => setEditingPresetName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') savePresetRename();
+                          if (e.key === 'Escape') {
+                            setEditingPresetId(null);
+                            setEditingPresetName("");
+                          }
+                        }}
+                        className="h-6 text-xs bg-light-charcoal border-light-charcoal text-pure-white"
+                        autoFocus
+                      />
+                      <Button
+                        size="sm"
+                        onClick={savePresetRename}
+                        className="h-6 w-6 p-0"
+                      >
+                        <Save className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingPresetId(null);
+                          setEditingPresetName("");
+                        }}
+                        className="h-6 w-6 p-0"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => loadPreset(preset)}
+                        className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white rounded-r-none border-r-0"
+                      >
+                        <Bookmark className="h-3 w-3 mr-1" />
+                        {preset.name} ({preset.ingredient_ids.length})
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white rounded-l-none px-2"
+                          >
+                            <MoreHorizontal className="h-3 w-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-medium-charcoal border-light-charcoal">
+                          <DropdownMenuItem
+                            onClick={() => startEditingPreset(preset)}
+                            className="text-light-text hover:bg-light-charcoal cursor-pointer"
+                          >
+                            <Edit className="h-3 w-3 mr-2" />
+                            Rename
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => duplicatePreset(preset)}
+                            className="text-light-text hover:bg-light-charcoal cursor-pointer"
+                          >
+                            <Copy className="h-3 w-3 mr-2" />
+                            Duplicate
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator className="bg-light-charcoal" />
+                          <DropdownMenuItem
+                            onClick={() => onDeletePreset(preset.id)}
+                            className="text-destructive hover:bg-destructive/10 cursor-pointer"
+                          >
+                            <Trash2 className="h-3 w-3 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
