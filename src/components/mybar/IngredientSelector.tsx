@@ -385,7 +385,7 @@ export default function IngredientSelector({
                 <Badge
                   key={ingredientId}
                   variant="secondary"
-                  className="px-3 py-1.5 text-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-sm bg-primary/10 text-pure-white border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer"
                   onClick={() => removeIngredient(ingredientId)}
                 >
                   {ingredient.name}
