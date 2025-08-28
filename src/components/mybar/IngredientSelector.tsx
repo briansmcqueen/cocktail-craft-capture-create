@@ -101,6 +101,22 @@ export default function IngredientSelector({
     }
   };
 
+  // Example bar configurations for new users
+  const examplePresets = [
+    {
+      name: "Home Bar Basics",
+      ingredients: ["vodka", "gin", "whiskey", "rum", "tequila", "lime-juice", "lemon-juice", "simple-syrup"]
+    },
+    {
+      name: "Cocktail Essentials", 
+      ingredients: ["gin", "vodka", "dry-vermouth", "sweet-vermouth", "lime-juice", "lemon-juice", "simple-syrup", "angostura-bitters"]
+    },
+    {
+      name: "Tiki Setup",
+      ingredients: ["rum", "dark-rum", "triple-sec", "lime-juice", "simple-syrup", "grenadine", "orange-juice"]
+    }
+  ];
+
   const loadPreset = async (preset: BarPreset) => {
     try {
       await onLoadPreset(preset);
@@ -109,19 +125,27 @@ export default function IngredientSelector({
     }
   };
 
+  const loadExamplePreset = async (examplePreset: { name: string; ingredients: string[] }) => {
+    // Find matching ingredient IDs from the example names
+    const matchingIngredients = examplePreset.ingredients
+      .map(name => allIngredients.find(ing => 
+        ing.name.toLowerCase().replace(/\s+/g, '-') === name ||
+        ing.id === name ||
+        ing.name.toLowerCase().includes(name.replace('-', ' '))
+      ))
+      .filter(Boolean)
+      .map(ing => ing!.id);
+
+    // Add all matching ingredients
+    for (const ingredientId of matchingIngredients) {
+      if (!myBarIngredients.includes(ingredientId)) {
+        await toggleIngredient(ingredientId);
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <User className="text-primary" size={24} />
-        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
-          My Bar
-        </h2>
-      </div>
-      <p className="text-light-text text-sm mb-6">
-        Build your inventory and discover what cocktails you can make
-      </p>
-
       {/* Search Interface */}
       <div className="space-y-4">
         <div className="flex gap-2">
@@ -192,10 +216,31 @@ export default function IngredientSelector({
           </Card>
         )}
 
-        {/* Saved Presets */}
+        {/* Example Bar Setups for new users */}
+        {myBarIngredients.length === 0 && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-soft-gray">Try a Popular Bar Setup:</h4>
+            <div className="flex flex-wrap gap-2">
+              {examplePresets.map((preset) => (
+                <Button
+                  key={preset.name}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadExamplePreset(preset)}
+                  className="text-xs bg-medium-charcoal border-primary/30 hover:bg-primary/10 text-primary hover:text-primary"
+                >
+                  <Bookmark className="h-3 w-3 mr-1" />
+                  {preset.name} ({preset.ingredients.length})
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* User's Saved Presets */}
         {presets.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-soft-gray">Quick Load:</h4>
+            <h4 className="text-sm font-medium text-soft-gray">Your Saved Presets:</h4>
             <div className="flex flex-wrap gap-2">
               {presets.map((preset) => (
                 <Button
