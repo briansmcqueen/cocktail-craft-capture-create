@@ -3,6 +3,7 @@ import { ChefHat, Plus, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
@@ -106,35 +107,38 @@ export default function MyBarResults({
             <Plus className="h-4 w-4" />
             Almost There ({recipesNeedingOneIngredient.length})
           </h3>
-          <div className="space-y-2">
-            {recipesNeedingOneIngredient.map((recipe) => {
-              const missingIngredient = ingredientMap[recipe.missingIngredient || ''];
-              if (!missingIngredient) return null;
-              
-              return (
-                <div
-                  key={recipe.id}
-                  className="flex items-center justify-between p-3 bg-golden-amber/10 border border-golden-amber/20 rounded-organic-md hover:bg-golden-amber/20 transition-colors group"
-                >
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-light-text text-sm">{recipe.name}</h4>
-                    <p className="text-xs text-soft-gray truncate">
-                      Need: {missingIngredient.name}
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => onAddIngredient(recipe.missingIngredient || '')}
-                    className="ml-3 text-xs h-7 px-2 text-golden-amber hover:bg-golden-amber/20 hover:text-golden-amber opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Plus className="h-3 w-3 mr-1" />
-                    Add
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
+          <Carousel className="w-full" opts={{ align: "start", loop: false }}>
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {recipesNeedingOneIngredient.map((recipe) => {
+                const missingIngredient = ingredientMap[recipe.missingIngredient || ''];
+                if (!missingIngredient) return null;
+                
+                return (
+                  <CarouselItem key={recipe.id} className="pl-2 md:pl-4 basis-[280px] md:basis-[320px]">
+                    <div className="relative group">
+                      <UniversalRecipeCard recipe={recipe} />
+                      {/* Missing ingredient overlay */}
+                      <div className="absolute top-2 right-2 bg-golden-amber/90 text-rich-charcoal px-2 py-1 rounded-organic-sm text-xs font-medium">
+                        Need: {missingIngredient.name}
+                      </div>
+                      {/* Add button overlay */}
+                      <div className="absolute inset-0 bg-rich-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-organic-md">
+                        <Button
+                          onClick={() => onAddIngredient(recipe.missingIngredient || '')}
+                          className="bg-golden-amber hover:bg-golden-amber/80 text-rich-charcoal font-medium"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add {missingIngredient.name}
+                        </Button>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </div>
       )}
 
