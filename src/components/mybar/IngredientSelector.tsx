@@ -216,10 +216,12 @@ export default function IngredientSelector({
           </Card>
         )}
 
-        {/* Example Bar Setups for new users */}
-        {myBarIngredients.length === 0 && (
+        {/* Example Bar Setups */}
+        {(myBarIngredients.length === 0 || presets.length === 0) && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-soft-gray">Try a Popular Bar Setup:</h4>
+            <h4 className="text-sm font-medium text-soft-gray">
+              {myBarIngredients.length === 0 ? "Try a Popular Bar Setup:" : "Popular Bar Setups:"}
+            </h4>
             <div className="flex flex-wrap gap-2">
               {examplePresets.map((preset) => (
                 <Button
