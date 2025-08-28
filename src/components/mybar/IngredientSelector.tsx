@@ -226,7 +226,7 @@ export default function IngredientSelector({
                 variant="outline"
                 size="sm"
                 onClick={() => loadExamplePreset(preset)}
-                className="text-xs bg-medium-charcoal border-primary/30 hover:bg-primary/10 text-primary hover:text-primary"
+                className="text-xs bg-medium-charcoal border-primary/30 hover:bg-primary/10 text-pure-white hover:text-pure-white"
               >
                 <Bookmark className="h-3 w-3 mr-1" />
                 {preset.name} ({preset.ingredients.length})
@@ -246,7 +246,7 @@ export default function IngredientSelector({
                     variant="outline"
                     size="sm"
                     onClick={() => loadPreset(preset)}
-                    className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-light-text pr-8"
+                    className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white pr-8"
                   >
                     <Bookmark className="h-3 w-3 mr-1" />
                     {preset.name} ({preset.ingredient_ids.length})
