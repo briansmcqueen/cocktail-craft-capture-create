@@ -101,8 +101,8 @@ export default function MyBarResults({
 
       {/* Almost There - Need 1 Ingredient */}
       {recipesNeedingOneIngredient.length > 0 && (
-        <Card className="p-4 bg-medium-charcoal border-light-charcoal">
-          <h3 className="text-base font-medium text-golden-amber mb-3 flex items-center gap-2">
+        <div className="space-y-3">
+          <h3 className="text-base font-medium text-pure-white mb-3 flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Almost There ({recipesNeedingOneIngredient.length})
           </h3>
@@ -135,7 +135,7 @@ export default function MyBarResults({
               );
             })}
           </div>
-        </Card>
+        </div>
       )}
 
       {/* Empty State - Has ingredients but no recipes */}
