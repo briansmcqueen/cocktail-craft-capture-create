@@ -66,16 +66,12 @@ export default function MyBarResults({
             <ChefHat className="h-5 w-5" />
             You Can Make ({recipesICanMake.length})
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {(showAllRecipes ? recipesICanMake : recipesICanMake.slice(0, 6)).map((recipe) => (
-              <div
+              <UniversalRecipeCard
                 key={recipe.id}
-                className="p-3 bg-primary/10 border border-primary/20 rounded-organic-md hover:bg-primary/20 transition-colors cursor-pointer"
-                onClick={() => onRecipeClick(recipe)}
-              >
-                <h4 className="font-medium text-emerald text-sm">{recipe.name}</h4>
-                <p className="text-xs text-primary">Ready to make!</p>
-              </div>
+                recipe={recipe}
+              />
             ))}
           </div>
           {recipesICanMake.length > 6 && !showAllRecipes && (
