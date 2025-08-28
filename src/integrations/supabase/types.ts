@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_conversions: {
+        Row: {
+          actual_total_cents: number | null
+          commission_cents: number | null
+          conversion_date: string | null
+          id: string
+          order_id: string | null
+          shopping_session_id: string
+        }
+        Insert: {
+          actual_total_cents?: number | null
+          commission_cents?: number | null
+          conversion_date?: string | null
+          id?: string
+          order_id?: string | null
+          shopping_session_id: string
+        }
+        Update: {
+          actual_total_cents?: number | null
+          commission_cents?: number | null
+          conversion_date?: string | null
+          id?: string
+          order_id?: string | null
+          shopping_session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_conversions_shopping_session_id_fkey"
+            columns: ["shopping_session_id"]
+            isOneToOne: false
+            referencedRelation: "shopping_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       article_comments: {
         Row: {
           article_id: string
@@ -228,6 +263,65 @@ export type Database = {
         }
         Relationships: []
       }
+      product_mappings: {
+        Row: {
+          affiliate_url: string
+          created_at: string | null
+          id: string
+          in_stock: boolean | null
+          ingredient_id: string
+          price_cents: number | null
+          priority: number | null
+          product_id: string
+          product_name: string
+          product_url: string
+          retailer_id: string
+          size_description: string | null
+          size_ml: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          affiliate_url: string
+          created_at?: string | null
+          id?: string
+          in_stock?: boolean | null
+          ingredient_id: string
+          price_cents?: number | null
+          priority?: number | null
+          product_id: string
+          product_name: string
+          product_url: string
+          retailer_id: string
+          size_description?: string | null
+          size_ml?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          affiliate_url?: string
+          created_at?: string | null
+          id?: string
+          in_stock?: boolean | null
+          ingredient_id?: string
+          price_cents?: number | null
+          priority?: number | null
+          product_id?: string
+          product_name?: string
+          product_url?: string
+          retailer_id?: string
+          size_description?: string | null
+          size_ml?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_mappings_retailer_id_fkey"
+            columns: ["retailer_id"]
+            isOneToOne: false
+            referencedRelation: "retailers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -390,6 +484,48 @@ export type Database = {
         }
         Relationships: []
       }
+      retailers: {
+        Row: {
+          affiliate_id: string
+          base_url: string
+          commission_rate: number | null
+          created_at: string | null
+          delivery_fee_cents: number | null
+          id: string
+          logo_url: string | null
+          min_order_for_delivery: number | null
+          name: string
+          supports_api: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          affiliate_id: string
+          base_url: string
+          commission_rate?: number | null
+          created_at?: string | null
+          delivery_fee_cents?: number | null
+          id: string
+          logo_url?: string | null
+          min_order_for_delivery?: number | null
+          name: string
+          supports_api?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          affiliate_id?: string
+          base_url?: string
+          commission_rate?: number | null
+          created_at?: string | null
+          delivery_fee_cents?: number | null
+          id?: string
+          logo_url?: string | null
+          min_order_for_delivery?: number | null
+          name?: string
+          supports_api?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       shopping_list_items: {
         Row: {
           created_at: string
@@ -419,6 +555,53 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      shopping_sessions: {
+        Row: {
+          affiliate_url: string | null
+          completed_at: string | null
+          created_at: string | null
+          estimated_total_cents: number | null
+          id: string
+          ingredient_ids: string[] | null
+          recipe_ids: string[] | null
+          retailer_id: string
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          affiliate_url?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          estimated_total_cents?: number | null
+          id?: string
+          ingredient_ids?: string[] | null
+          recipe_ids?: string[] | null
+          retailer_id: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          affiliate_url?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          estimated_total_cents?: number | null
+          id?: string
+          ingredient_ids?: string[] | null
+          recipe_ids?: string[] | null
+          retailer_id?: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shopping_sessions_retailer_id_fkey"
+            columns: ["retailer_id"]
+            isOneToOne: false
+            referencedRelation: "retailers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_bar_presets: {
         Row: {

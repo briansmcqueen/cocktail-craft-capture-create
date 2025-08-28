@@ -2,6 +2,9 @@ import React from "react";
 import { Plus, ShoppingCart } from "lucide-react";
 import { Ingredient } from "@/data/ingredients";
 import { Cocktail } from "@/data/classicCocktails";
+import { useAffiliateCart } from "@/hooks/useAffiliateCart";
+import { Badge } from "@/components/ui/badge";
+import { formatPrice } from "@/services/affiliateService";
 import whiskeImage from "@/assets/ingredients/whiskey.jpg";
 import ginImage from "@/assets/ingredients/gin.jpg";
 import vodkaImage from "@/assets/ingredients/vodka.jpg";
@@ -18,6 +21,8 @@ interface WhatToBuyNextProps {
   recommendations: RecommendedIngredient[];
   onAddIngredient: (ingredientId: string) => void;
   onAddToShoppingList?: (ingredientId: string) => void;
+  userIngredients: string[];
+  ingredientMap: Map<string, Ingredient>;
   loading?: boolean;
 }
 
@@ -40,8 +45,11 @@ export default function WhatToBuyNext({
   recommendations, 
   onAddIngredient, 
   onAddToShoppingList,
+  userIngredients,
+  ingredientMap,
   loading = false 
 }: WhatToBuyNextProps) {
+  const { buildCartForIngredients, selectedRetailer } = useAffiliateCart();
   if (recommendations.length === 0) return null;
 
   return (
@@ -64,26 +72,44 @@ export default function WhatToBuyNext({
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-            {/* Quick add to Shopping List */}
+            {/* Buy Now Button */}
+            <button
+              type="button"
+              aria-label="Buy this ingredient"
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                buildCartForIngredients([rec.ingredient.id], userIngredients, ingredientMap);
+              }}
+              className="absolute top-2 right-2 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-accent/20 border border-accent/40 hover:bg-accent/30 transition-colors"
+            >
+              <ShoppingCart className="h-4 w-4 text-pure-white" />
+            </button>
+
+            {/* Shopping List Button */}
             {onAddToShoppingList && (
               <button
                 type="button"
                 aria-label="Add to shopping list"
                 onClick={(e) => { e.stopPropagation(); onAddToShoppingList(rec.ingredient.id); }}
-                className="absolute top-2 right-2 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-background/80 border border-border hover:bg-background/90 transition-colors"
+                className="absolute top-2 right-10 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-background/80 border border-border hover:bg-background/90 transition-colors"
               >
-                <ShoppingCart className="h-4 w-4 text-pure-white" />
+                <Plus className="h-4 w-4 text-pure-white" />
               </button>
             )}
 
             {/* Content */}
             <div className="absolute inset-0 p-3 flex flex-col justify-end">
               <div className="flex items-center justify-between gap-2">
-                <div>
+                <div className="flex-1">
                   <div className="text-sm font-medium text-pure-white line-clamp-1">{rec.ingredient.name}</div>
                   <div className="text-xs text-light-text line-clamp-1">
                     Unlocks {rec.score} new cocktail{rec.score !== 1 ? "s" : ""}
                   </div>
+                  {selectedRetailer && (
+                    <div className="text-xs text-accent mt-1">
+                      Available at {selectedRetailer.name}
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 bg-accent/20 rounded-full border border-accent/40 group-hover:bg-accent/30 transition-colors">
                   <Plus className="h-4 w-4 text-pure-white" />

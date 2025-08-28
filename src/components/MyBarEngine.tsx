@@ -128,6 +128,7 @@ export default function MyBarEngine({
         recipesICanMake={recipesICanMake}
         recipesNeedingOneIngredient={recipesNeedingOneIngredient}
         ingredientMap={ingredientMap}
+        userIngredients={myBarIngredients}
         whatToBuyNext={whatToBuyNext}
         onAddIngredient={toggleIngredient}
       />

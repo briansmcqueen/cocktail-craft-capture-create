@@ -21,6 +21,7 @@ interface ResultsDrawerProps {
   recipesICanMake: Cocktail[];
   recipesNeedingOneIngredient: (Cocktail & { missingIngredient?: string })[];
   ingredientMap: { [id: string]: Ingredient };
+  userIngredients: string[];
   whatToBuyNext?: RecommendedIngredient[];
   onAddIngredient?: (ingredientId: string) => void;
   onAddToShoppingList?: (ingredientId: string) => void;
@@ -34,6 +35,7 @@ export default function ResultsDrawer({
   recipesICanMake,
   recipesNeedingOneIngredient,
   ingredientMap,
+  userIngredients,
   whatToBuyNext,
   onAddIngredient,
   onAddToShoppingList,
@@ -51,6 +53,8 @@ export default function ResultsDrawer({
               recommendations={whatToBuyNext}
               onAddIngredient={(id) => onAddIngredient?.(id)}
               onAddToShoppingList={(id) => onAddToShoppingList?.(id)}
+              userIngredients={userIngredients}
+              ingredientMap={new Map(Object.entries(ingredientMap))}
             />
           )}
           <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as any)}>
