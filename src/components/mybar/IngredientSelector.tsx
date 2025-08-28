@@ -14,7 +14,7 @@ import {
 import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
-import type { BarPreset } from "@/services/barPresetsService";
+import { barPresetsService, type BarPreset } from "@/services/barPresetsService";
 
 interface IngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -28,6 +28,7 @@ interface IngredientSelectorProps {
   onSavePreset: (name: string) => Promise<void>;
   onLoadPreset: (preset: BarPreset) => Promise<void>;
   onDeletePreset: (presetId: string) => Promise<void>;
+  onUpdatePreset: (presetId: string, name: string) => Promise<void>;
 }
 
 export default function IngredientSelector({
@@ -41,7 +42,8 @@ export default function IngredientSelector({
   presets,
   onSavePreset,
   onLoadPreset,
-  onDeletePreset
+  onDeletePreset,
+  onUpdatePreset
 }: IngredientSelectorProps) {
   const [searchValue, setSearchValue] = useState("");
   const [open, setOpen] = useState(false);
@@ -172,8 +174,7 @@ export default function IngredientSelector({
   const savePresetRename = async () => {
     if (editingPresetId && editingPresetName.trim()) {
       try {
-        // Note: This would need a new function in the service to update preset name
-        // For now, we'll just close the edit mode
+        await onUpdatePreset(editingPresetId, editingPresetName.trim());
         setEditingPresetId(null);
         setEditingPresetName("");
       } catch (error) {

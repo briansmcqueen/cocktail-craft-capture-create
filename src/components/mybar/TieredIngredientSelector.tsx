@@ -18,6 +18,7 @@ interface TieredIngredientSelectorProps {
   onSavePreset: (name: string) => Promise<void>;
   onLoadPreset: (preset: BarPreset) => Promise<void>;
   onDeletePreset: (presetId: string) => Promise<void>;
+  onUpdatePreset: (presetId: string, name: string) => Promise<void>;
 }
 
 export default function TieredIngredientSelector({
@@ -32,6 +33,7 @@ export default function TieredIngredientSelector({
   onSavePreset,
   onLoadPreset,
   onDeletePreset,
+  onUpdatePreset,
 }: TieredIngredientSelectorProps) {
   return (
     <IngredientSelector
@@ -46,6 +48,7 @@ export default function TieredIngredientSelector({
       onSavePreset={onSavePreset}
       onLoadPreset={onLoadPreset}
       onDeletePreset={onDeletePreset}
+      onUpdatePreset={onUpdatePreset}
     />
   );
 }

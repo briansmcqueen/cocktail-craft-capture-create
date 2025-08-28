@@ -37,7 +37,8 @@ export default function MyBarEngine({
     presets,
     savePreset,
     loadPreset,
-    deletePreset
+    deletePreset,
+    updatePreset
   } = useMyBarData(forceUpdate);
 
   const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
@@ -80,6 +81,7 @@ export default function MyBarEngine({
         onSavePreset={savePreset}
         onLoadPreset={loadPreset}
         onDeletePreset={deletePreset}
+        onUpdatePreset={updatePreset}
       />
 
       {/* Results Section (kept for larger screens) */}

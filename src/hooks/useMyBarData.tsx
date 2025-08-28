@@ -253,6 +253,31 @@ export function useMyBarData(forceUpdate: number) {
     }
   }, [user, myBarIngredients, toast]);
 
+  // Update preset function
+  const updatePreset = useCallback(async (presetId: string, name: string) => {
+    if (!user?.id) return;
+
+    try {
+      const currentPreset = presets.find(p => p.id === presetId);
+      if (!currentPreset) return;
+
+      const updatedPreset = await barPresetsService.updatePreset(presetId, name, currentPreset.ingredient_ids);
+      setPresets(prev => prev.map(p => p.id === presetId ? updatedPreset : p));
+      
+      toast({
+        title: "Preset Updated",
+        description: `"${name}" has been updated.`,
+      });
+    } catch (error) {
+      console.error('Error updating preset:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update preset. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [user, presets, toast]);
+
   const deletePreset = useCallback(async (presetId: string) => {
     try {
       await barPresetsService.deletePreset(presetId);
@@ -284,6 +309,7 @@ export function useMyBarData(forceUpdate: number) {
     presets,
     savePreset,
     loadPreset,
-    deletePreset
+    deletePreset,
+    updatePreset
   };
 }
