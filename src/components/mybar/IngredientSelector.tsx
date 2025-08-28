@@ -145,11 +145,14 @@ export default function IngredientSelector({
       .filter(Boolean)
       .map(ing => ing!.id);
 
-    // Add all matching ingredients
+    // First, remove all current ingredients (same as loadPreset behavior)
+    for (const ingredientId of myBarIngredients) {
+      await toggleIngredient(ingredientId);
+    }
+
+    // Then add preset ingredients
     for (const ingredientId of matchingIngredients) {
-      if (!myBarIngredients.includes(ingredientId)) {
-        await toggleIngredient(ingredientId);
-      }
+      await toggleIngredient(ingredientId);
     }
   };
 
