@@ -123,7 +123,7 @@ export default function AffiliateEnhancedDemo() {
                           <div className="text-sm text-muted-foreground">{ingredient.category}</div>
                         </div>
                       </Button>
-                    ))
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -165,7 +165,7 @@ export default function AffiliateEnhancedDemo() {
                         Compare
                       </Button>
                     </div>
-                  ))
+                  ))}
               </CardContent>
             </Card>
             
