@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Edit, Trash2, Eye, EyeOff, Settings, Zap, Brain } from "lucide-react";
 import { Article, articlesService } from "@/services/articlesService";
 import { userRolesService } from "@/services/userRolesService";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ArticleForm from "./ArticleForm";
+import AffiliatePhase4Demo from "./affiliate/AffiliatePhase4Demo";
+import AffiliateEnhancedDemo from "./affiliate/AffiliateEnhancedDemo";
+import AffiliateAdminPanel from "./admin/AffiliateAdminPanel";
 
 export default function AdminView() {
   const { user } = useAuth();
@@ -199,85 +203,133 @@ export default function AdminView() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Article Management</h1>
-        <Button onClick={handleCreateArticle} className="gap-2">
-          <Plus size={16} />
-          New Article
-        </Button>
+        <h1 className="text-3xl font-bold">Admin Panel</h1>
       </div>
 
-      <div className="grid gap-4">
-        {articles.length === 0 ? (
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <p className="text-muted-foreground">No articles found. Create your first article!</p>
-            </CardContent>
-          </Card>
-        ) : (
-          articles.map((article) => (
-            <Card key={article.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <CardTitle className="text-xl">{article.title}</CardTitle>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>By {article.author?.full_name || 'Unknown'}</span>
-                      <span>Created {formatDate(article.created_at)}</span>
-                      {article.published_at && (
-                        <span>Published {formatDate(article.published_at)}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant={article.is_published ? "default" : "secondary"}>
-                        {article.is_published ? "Published" : "Draft"}
-                      </Badge>
-                      {article.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleTogglePublished(article)}
-                      className="gap-1"
-                    >
-                      {article.is_published ? <EyeOff size={14} /> : <Eye size={14} />}
-                      {article.is_published ? 'Unpublish' : 'Publish'}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEditArticle(article)}
-                      className="gap-1"
-                    >
-                      <Edit size={14} />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteArticle(article.id)}
-                      className="gap-1 text-destructive hover:text-destructive"
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              {article.excerpt && (
-                <CardContent>
-                  <p className="text-muted-foreground">{article.excerpt}</p>
+      <Tabs defaultValue="articles" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="articles" className="flex items-center gap-2">
+            <Edit size={16} />
+            Articles
+          </TabsTrigger>
+          <TabsTrigger value="phase4" className="flex items-center gap-2">
+            <Brain size={16} />
+            Phase 4 Demo
+          </TabsTrigger>
+          <TabsTrigger value="enhanced" className="flex items-center gap-2">
+            <Zap size={16} />
+            Enhanced Demo
+          </TabsTrigger>
+          <TabsTrigger value="management" className="flex items-center gap-2">
+            <Settings size={16} />
+            Management
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="articles" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Article Management</h2>
+            <Button onClick={handleCreateArticle} className="gap-2">
+              <Plus size={16} />
+              New Article
+            </Button>
+          </div>
+
+          <div className="grid gap-4">
+            {articles.length === 0 ? (
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <p className="text-muted-foreground">No articles found. Create your first article!</p>
                 </CardContent>
-              )}
-            </Card>
-          ))
-        )}
-      </div>
+              </Card>
+            ) : (
+              articles.map((article) => (
+                <Card key={article.id}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2">
+                        <CardTitle className="text-xl">{article.title}</CardTitle>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span>By {article.author?.full_name || 'Unknown'}</span>
+                          <span>Created {formatDate(article.created_at)}</span>
+                          {article.published_at && (
+                            <span>Published {formatDate(article.published_at)}</span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={article.is_published ? "default" : "secondary"}>
+                            {article.is_published ? "Published" : "Draft"}
+                          </Badge>
+                          {article.tags.map((tag) => (
+                            <Badge key={tag} variant="outline" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleTogglePublished(article)}
+                          className="gap-1"
+                        >
+                          {article.is_published ? <EyeOff size={14} /> : <Eye size={14} />}
+                          {article.is_published ? 'Unpublish' : 'Publish'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditArticle(article)}
+                          className="gap-1"
+                        >
+                          <Edit size={14} />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteArticle(article.id)}
+                          className="gap-1 text-destructive hover:text-destructive"
+                        >
+                          <Trash2 size={14} />
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  {article.excerpt && (
+                    <CardContent>
+                      <p className="text-muted-foreground">{article.excerpt}</p>
+                    </CardContent>
+                  )}
+                </Card>
+              ))
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="phase4" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Phase 4: AI-Powered Commerce</h2>
+          </div>
+          <AffiliatePhase4Demo />
+        </TabsContent>
+
+        <TabsContent value="enhanced" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Enhanced Affiliate Features</h2>
+          </div>
+          <AffiliateEnhancedDemo />
+        </TabsContent>
+
+        <TabsContent value="management" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Affiliate Management</h2>
+          </div>
+          <AffiliateAdminPanel />
+        </TabsContent>
+      </Tabs>
 
       <ArticleForm
         isOpen={showArticleForm}
