@@ -46,17 +46,23 @@ export interface EstimatedCart {
 
 // Get all available retailers
 export async function getRetailers(): Promise<Retailer[]> {
-  const { data, error } = await supabase
-    .from('retailers')
-    .select('*')
-    .order('name');
+  try {
+    const { data, error } = await supabase
+      .from('retailers')
+      .select('*')
+      .order('name');
 
-  if (error) {
-    console.error('Error fetching retailers:', error);
-    return [];
+    if (error) {
+      console.error('Error fetching retailers:', error);
+      throw error;
+    }
+
+    console.log('Retrieved retailers from database:', data);
+    return data || [];
+  } catch (error) {
+    console.error('Failed to get retailers:', error);
+    throw error;
   }
-
-  return data || [];
 }
 
 // Find products for a specific ingredient

@@ -49,13 +49,55 @@ export function useAffiliateCart(): UseAffiliateCartResult {
   // Initialize retailers on first use
   const initializeRetailers = useCallback(async () => {
     if (retailers.length === 0) {
-      const fetchedRetailers = await getRetailers();
-      setRetailers(fetchedRetailers);
-      
-      // Default to Total Wine for MVP
-      const totalWine = fetchedRetailers.find(r => r.id === 'total-wine');
-      if (totalWine && !selectedRetailer) {
-        setSelectedRetailer(totalWine);
+      try {
+        const fetchedRetailers = await getRetailers();
+        console.log('Fetched retailers:', fetchedRetailers);
+        
+        if (fetchedRetailers.length === 0) {
+          // Create a default retailer if none exist
+          const defaultRetailer: Retailer = {
+            id: 'total-wine',
+            name: 'Total Wine & More',
+            logo_url: null,
+            base_url: 'https://www.totalwine.com',
+            affiliate_id: 'barbook_affiliate',
+            commission_rate: 0.05,
+            supports_api: false,
+            min_order_for_delivery: 5000, // $50
+            delivery_fee_cents: 999 // $9.99
+          };
+          setRetailers([defaultRetailer]);
+          setSelectedRetailer(defaultRetailer);
+          console.log('Using default retailer:', defaultRetailer);
+        } else {
+          setRetailers(fetchedRetailers);
+          
+          // Default to Total Wine for MVP, or first available retailer
+          const totalWine = fetchedRetailers.find(r => r.id === 'total-wine');
+          const defaultRetailer = totalWine || fetchedRetailers[0];
+          
+          if (defaultRetailer && !selectedRetailer) {
+            setSelectedRetailer(defaultRetailer);
+            console.log('Selected retailer:', defaultRetailer);
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing retailers:', error);
+        // Create a fallback retailer
+        const fallbackRetailer: Retailer = {
+          id: 'total-wine',
+          name: 'Total Wine & More',
+          logo_url: null,
+          base_url: 'https://www.totalwine.com',
+          affiliate_id: 'barbook_affiliate',
+          commission_rate: 0.05,
+          supports_api: false,
+          min_order_for_delivery: 5000,
+          delivery_fee_cents: 999
+        };
+        setRetailers([fallbackRetailer]);
+        setSelectedRetailer(fallbackRetailer);
+        toast.info('Using default retailer for shopping');
       }
     }
   }, [retailers.length, selectedRetailer]);
