@@ -526,6 +526,42 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       shopping_list_items: {
         Row: {
           created_at: string
@@ -567,7 +603,7 @@ export type Database = {
           recipe_ids: string[] | null
           retailer_id: string
           status: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           affiliate_url?: string | null
@@ -579,7 +615,7 @@ export type Database = {
           recipe_ids?: string[] | null
           retailer_id: string
           status?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           affiliate_url?: string | null
@@ -591,7 +627,7 @@ export type Database = {
           recipe_ids?: string[] | null
           retailer_id?: string
           status?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -737,11 +773,33 @@ export type Database = {
         Args: { p_recipe_ids: string[] }
         Returns: Json[]
       }
+      get_safe_comment_data: {
+        Args: { p_recipe_id: string }
+        Returns: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          photo_url: string
+          recipe_id: string
+          updated_at: string
+          user_avatar_url: string
+          user_display_name: string
+        }[]
+      }
+      get_safe_rating_stats: {
+        Args: { p_recipe_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      verify_admin_access: {
+        Args: { p_user_id?: string }
         Returns: boolean
       }
     }
