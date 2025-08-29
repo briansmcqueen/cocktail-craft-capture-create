@@ -749,6 +749,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          p_action: string
+          p_limit?: number
+          p_user_id: string
+          p_window_minutes?: number
+        }
+        Returns: boolean
+      }
       get_public_profile_by_username: {
         Args: { p_username: string }
         Returns: {
@@ -796,6 +805,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      validate_affiliate_url: {
+        Args: { url: string }
         Returns: boolean
       }
       verify_admin_access: {

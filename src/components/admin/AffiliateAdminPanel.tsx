@@ -21,6 +21,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/services/affiliateService";
 import { toast } from "sonner";
 
+// Input sanitization utility
+const sanitizeInput = (input: string, maxLength: number = 100): string => {
+  return input
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+    .replace(/[<>]/g, '') // Remove < and > characters
+    .slice(0, maxLength)
+    .trim();
+};
+
+const validateUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    const allowedDomains = ['totalwine.com', 'wine.com', 'drizly.com', 'instacart.com'];
+    const domain = new URL(url).hostname.replace('www.', '');
+    return allowedDomains.includes(domain);
+  } catch {
+    return false;
+  }
+};
+
 interface RetailerData {
   id: string;
   name: string;
@@ -89,102 +109,125 @@ export default function AffiliateAdminPanel() {
   };
 
   const fetchRetailers = async () => {
-    const { data, error } = await supabase
-      .from('retailers')
-      .select('*')
-      .order('name');
-    
-    if (error) throw error;
-    setRetailers(data || []);
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: JSON.stringify({})
+      });
+      
+      if (error) throw error;
+      setRetailers(data || []);
+    } catch (error) {
+      console.error('Error fetching retailers:', error);
+      toast.error('Failed to load retailers');
+    }
   };
 
   const fetchProducts = async () => {
-    const { data, error } = await supabase
-      .from('product_mappings')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
-    
-    if (error) throw error;
-    setProducts(data || []);
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: JSON.stringify({ action: 'products' })
+      });
+      
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);  
+      toast.error('Failed to load products');
+    }
   };
 
   const fetchStats = async () => {
-    // Fetch shopping sessions
-    const { data: sessions, error: sessionsError } = await supabase
-      .from('shopping_sessions')
-      .select('*');
-    
-    if (sessionsError) throw sessionsError;
-
-    // Fetch conversions
-    const { data: conversions, error: conversionsError } = await supabase
-      .from('affiliate_conversions')
-      .select('*');
-    
-    if (conversionsError) throw conversionsError;
-
-    // Calculate stats
-    const totalSessions = sessions?.length || 0;
-    const totalConversions = conversions?.length || 0;
-    const totalRevenue = conversions?.reduce((sum, c) => sum + (c.actual_total_cents || 0), 0) || 0;
-    const totalCommission = conversions?.reduce((sum, c) => sum + (c.commission_cents || 0), 0) || 0;
-    const conversionRate = totalSessions > 0 ? (totalConversions / totalSessions) * 100 : 0;
-    const avgOrderValue = totalConversions > 0 ? totalRevenue / totalConversions : 0;
-
-    setStats({
-      total_sessions: totalSessions,
-      total_conversions: totalConversions,
-      total_revenue_cents: totalRevenue,
-      total_commission_cents: totalCommission,
-      conversion_rate: conversionRate,
-      avg_order_value_cents: avgOrderValue
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: JSON.stringify({ action: 'analytics' })
+      });
+      
+      if (error) throw error;
+      
+      setStats({
+        total_sessions: data.totalSessions || 0,
+        total_conversions: data.totalConversions || 0,
+        total_revenue_cents: data.totalRevenue || 0,
+        total_commission_cents: data.totalCommission || 0,
+        conversion_rate: data.conversionRate || 0,
+        avg_order_value_cents: data.avgOrderValue || 0
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+      toast.error('Failed to load analytics');
+    }
   };
 
   const saveRetailer = async (retailerData: Partial<RetailerData>) => {
+    // Input validation and sanitization
+    const sanitizedName = sanitizeInput(retailerData.name || '', 100);
+    const sanitizedBaseUrl = sanitizeInput(retailerData.base_url || '', 500);
+    const sanitizedAffiliateId = sanitizeInput(retailerData.affiliate_id || '', 100);
+    
+    if (!sanitizedName || !sanitizedBaseUrl || !sanitizedAffiliateId) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if (!validateUrl(sanitizedBaseUrl)) {
+      toast.error('Please enter a valid URL from an allowed domain');
+      return;
+    }
+
+    const sanitizedData = {
+      ...retailerData,
+      name: sanitizedName,
+      base_url: sanitizedBaseUrl,
+      affiliate_id: sanitizedAffiliateId,
+      logo_url: retailerData.logo_url ? sanitizeInput(retailerData.logo_url, 500) : '',
+      commission_rate: Math.max(0, Math.min(1, (retailerData.commission_rate || 0) / 100)),
+      min_order_for_delivery: Math.max(0, retailerData.min_order_for_delivery || 0),
+      delivery_fee_cents: Math.max(0, retailerData.delivery_fee_cents || 0),
+    };
+
     try {
-      if (retailerData.id) {
-        // Update existing
-        const { error } = await supabase
-          .from('retailers')
-          .update(retailerData)
-          .eq('id', retailerData.id);
-        
-        if (error) throw error;
-        toast.success("Retailer updated successfully");
-      } else {
-        // Create new
-        const { error } = await supabase
-          .from('retailers')
-          .insert(retailerData as any);
-        
-        if (error) throw error;
-        toast.success("Retailer created successfully");
-      }
+      const action = retailerData.id ? 'update_retailer' : 'create_retailer';
       
-      await fetchRetailers();
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: JSON.stringify({ 
+          action, 
+          id: retailerData.id,
+          data: sanitizedData 
+        })
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`Retailer ${retailerData.id ? 'updated' : 'created'} successfully`);
       setEditingRetailer(null);
       setNewRetailer({});
+      await fetchRetailers();
     } catch (error) {
       console.error('Error saving retailer:', error);
-      toast.error("Failed to save retailer");
+      toast.error('Failed to save retailer');
     }
   };
 
   const deleteRetailer = async (retailerId: string) => {
+    if (!confirm('Are you sure you want to delete this retailer? This action cannot be undone.')) {
+      return;
+    }
+
     try {
-      const { error } = await supabase
-        .from('retailers')
-        .delete()
-        .eq('id', retailerId);
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: JSON.stringify({ 
+          action: 'delete_retailer',
+          id: retailerId 
+        })
+      });
       
       if (error) throw error;
-      toast.success("Retailer deleted successfully");
+      
+      toast.success('Retailer deleted successfully');
       await fetchRetailers();
     } catch (error) {
       console.error('Error deleting retailer:', error);
-      toast.error("Failed to delete retailer");
+      toast.error('Failed to delete retailer');
     }
   };
 
