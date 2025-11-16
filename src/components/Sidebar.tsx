@@ -1,4 +1,4 @@
-import { Book, Plus, Edit, Star, TrendingUp, Home, ChefHat, User, LogIn } from "lucide-react";
+import { Book, Plus, Edit, Star, TrendingUp, Home, Martini, User, LogIn } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ type SidebarProps = {
 const nav = [
   { id: "featured", label: "Featured", icon: Home, path: "/" },
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
-  { id: "ingredients", label: "My Bar", icon: ChefHat, path: "/mybar" },
+  { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
   { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
