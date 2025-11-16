@@ -134,9 +134,11 @@ export default function UniversalRecipeCard({
               size="sm"
               onClick={handleToggleFavorite}
               className={cn(
-                "h-8 w-8 p-0 rounded-organic-sm",
-                isFavorite(recipe.id) && "text-red-500 hover:text-red-600"
+                "h-8 w-8 p-0 rounded-organic-sm transition-colors",
+                isFavorite(recipe.id) && "text-heart-red hover:text-heart-red/80"
               )}
+              aria-label={isFavorite(recipe.id) ? "Remove from favorites" : "Add to favorites"}
+              title={isFavorite(recipe.id) ? "Remove from favorites" : "Save to favorites"}
             >
               <Heart size={16} fill={isFavorite(recipe.id) ? "currentColor" : "none"} />
             </Button>

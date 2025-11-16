@@ -1,8 +1,10 @@
-
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { Heart } from "lucide-react";
+import { Heart, LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import UniversalRecipeCard from "./UniversalRecipeCard";
+import { useAuth } from "@/hooks/useAuth";
+import { useAuthModal } from "@/contexts/AuthModalContext";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -13,6 +15,38 @@ type FavoritesProps = {
 };
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
+  const { user } = useAuth();
+  const { openAuthModal } = useAuthModal();
+
+  if (!user) {
+    return (
+      <div className="container mx-auto px-md py-xl text-center">
+        <Heart className="mx-auto mb-lg text-available" size={64} />
+        <h2 className="text-3xl font-medium mb-md text-pure-white">Save Your Favorite Cocktails</h2>
+        <p className="text-light-text text-base max-w-md mx-auto mb-lg">
+          Create a free account to save your favorite recipes and access them from any device.
+        </p>
+        <div className="flex gap-4 justify-center">
+          <Button
+            onClick={() => openAuthModal('signup')}
+            size="lg"
+            className="rounded-organic-md"
+          >
+            <LogIn className="mr-2 h-5 w-5" />
+            Create Free Account
+          </Button>
+          <Button
+            onClick={() => openAuthModal('signin')}
+            variant="outline"
+            size="lg"
+            className="rounded-organic-md"
+          >
+            Sign In
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (favoriteRecipes.length === 0) {
     return (
