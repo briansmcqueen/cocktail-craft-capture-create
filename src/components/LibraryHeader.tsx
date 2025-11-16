@@ -15,7 +15,7 @@ function getLibraryTitle(library: Library): string {
     case "all": return "Recipes";
     case "classics": return "Classic Collection";
     case "favorites": return "Your Favorites";
-    case "mine": return "My Creations";
+    case "mine": return "My Drinks";
     default: return "Cocktails";
   }
 }
