@@ -27,11 +27,9 @@ export interface SearchFilters {
   occasions: Occasion[];
   maxMissingIngredients: number | null;
   noEggWhites: boolean;
-  noAbsinthe: boolean;
   lowAlcohol: boolean;
   noCream: boolean;
-  batchFriendly: boolean;
-  makeAhead: boolean;
+  nonAlcoholic: boolean;
 }
 
 export interface SearchState extends SearchFilters {
@@ -71,11 +69,9 @@ export const DEFAULT_SEARCH_FILTERS: SearchFilters = {
   occasions: [],
   maxMissingIngredients: null,
   noEggWhites: false,
-  noAbsinthe: false,
   lowAlcohol: false,
   noCream: false,
-  batchFriendly: false,
-  makeAhead: false,
+  nonAlcoholic: false,
 };
 
 export const SPIRIT_ICONS: Record<BaseSpirit, string> = {

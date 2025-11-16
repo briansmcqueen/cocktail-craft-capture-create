@@ -147,18 +147,20 @@ export function matchesFilters(
     if (hasEgg) return false;
   }
 
-  if (filters.noAbsinthe) {
-    const hasAbsinthe = recipe.ingredients.some(ing => 
-      ing.toLowerCase().includes('absinthe')
-    );
-    if (hasAbsinthe) return false;
-  }
-
   if (filters.noCream) {
     const hasCream = recipe.ingredients.some(ing => 
       ing.toLowerCase().includes('cream') || ing.toLowerCase().includes('milk')
     );
     if (hasCream) return false;
+  }
+
+  if (filters.nonAlcoholic) {
+    // Check if recipe has any alcoholic ingredients
+    const alcoholKeywords = ['vodka', 'gin', 'rum', 'whiskey', 'bourbon', 'tequila', 'brandy', 'wine', 'champagne', 'prosecco', 'beer', 'sake', 'liqueur', 'vermouth', 'absinthe', 'mezcal', 'cognac', 'scotch'];
+    const hasAlcohol = recipe.ingredients.some(ing => 
+      alcoholKeywords.some(keyword => ing.toLowerCase().includes(keyword))
+    );
+    if (hasAlcohol) return false;
   }
 
   return true;

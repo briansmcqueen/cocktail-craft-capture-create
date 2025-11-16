@@ -355,11 +355,9 @@ export default function AdvancedFilters({
           <div className="grid grid-cols-2 gap-2">
             {[
               { key: 'noEggWhites', label: 'No egg whites' },
-              { key: 'noAbsinthe', label: 'No absinthe' },
               { key: 'lowAlcohol', label: 'Low alcohol' },
               { key: 'noCream', label: 'No cream' },
-              { key: 'batchFriendly', label: 'Batch-friendly' },
-              { key: 'makeAhead', label: 'Make-ahead' },
+              { key: 'nonAlcoholic', label: 'Non Alcoholic N/A' },
             ].map(({ key, label }) => (
               <Button
                 key={key}
