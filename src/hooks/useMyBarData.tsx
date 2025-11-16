@@ -141,9 +141,8 @@ export function useMyBarData(forceUpdate: number) {
   const toggleIngredient = useCallback(async (ingredientId: string) => {
     if (!user) {
       toast({
-        title: "Authentication Required",
-        description: "Please sign in to manage your bar inventory.",
-        variant: "destructive"
+        title: "🍸 Join BarBook!",
+        description: "Create a free account to build your personal bar and discover cocktails you can make!",
       });
       return;
     }

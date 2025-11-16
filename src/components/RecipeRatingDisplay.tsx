@@ -44,9 +44,8 @@ export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayPro
   const handleRating = async (newRating: number) => {
     if (!user) {
       toast({
-        title: 'Login required',
-        description: 'Please log in to rate this recipe',
-        variant: 'destructive',
+        title: '🍸 Join the Community!',
+        description: 'Create a free account to rate recipes and share your feedback with other bartenders!',
       });
       return;
     }
