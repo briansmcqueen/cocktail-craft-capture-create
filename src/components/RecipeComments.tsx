@@ -82,9 +82,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     if (!newComment.trim() || !user) {
       if (!user) {
         toast({
-          title: "Login required",
-          description: "Please log in to add a comment",
-          variant: "destructive"
+          title: "🍸 Join the Conversation!",
+          description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
         });
       }
       return;
@@ -145,9 +144,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     if (!newComment.trim() || !user) {
       if (!user) {
         toast({
-          title: "Login required",
-          description: "Please log in to add a comment",
-          variant: "destructive"
+          title: "🍸 Join the Conversation!",
+          description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
         });
       }
       return;
@@ -496,9 +494,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   onClick={() => {
                     if (!user) {
                       toast({
-                        title: "Login required",
-                        description: "Please log in or create an account to add a comment",
-                        variant: "destructive"
+                        title: "🍸 Join the Conversation!",
+                        description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
                       });
                       return;
                     }
@@ -517,7 +514,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                     <Textarea
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      placeholder={user ? "Leave a comment..." : "Please log in to add a comment"}
+                      placeholder={user ? "Leave a comment..." : "Sign in to join the conversation"}
                       className="min-h-[100px] rounded-organic-sm bg-light-charcoal border-light-charcoal text-light-text placeholder:text-soft-gray"
                       disabled={!user}
                     />
@@ -637,9 +634,8 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                   onClick={() => {
                     if (!user) {
                       toast({
-                        title: "Login required",
-                        description: "Please log in or create an account to add a comment",
-                        variant: "destructive"
+                        title: "🍸 Join the Conversation!",
+                        description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
                       });
                       return;
                     }
@@ -658,7 +654,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                     <Textarea
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      placeholder={user ? "Leave a comment..." : "Please log in to add a comment"}
+                      placeholder={user ? "Leave a comment..." : "Sign in to join the conversation"}
                       className="min-h-[100px] rounded-organic-sm bg-light-charcoal border-light-charcoal text-light-text placeholder:text-soft-gray"
                       disabled={!user}
                     />

@@ -58,9 +58,8 @@ export default function RecipeRating({ recipeId, recipeName, trigger }: RecipeRa
   const handleSubmit = async () => {
     if (!user) {
       toast({
-        title: "Authentication Required",
-        description: "Please sign in to rate recipes.",
-        variant: "destructive"
+        title: "🍸 Join the Community!",
+        description: "Create a free account to rate recipes and share your feedback with other bartenders!",
       });
       return;
     }

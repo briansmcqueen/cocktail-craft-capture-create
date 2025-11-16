@@ -243,7 +243,7 @@ export default function ArticleModal({
             {/* Add Comment */}
             <div className="space-y-3">
               <Textarea
-                placeholder={user ? "Share your thoughts..." : "Please sign in to comment"}
+                placeholder={user ? "Share your thoughts..." : "Sign in to join the conversation"}
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 className="min-h-[100px]"
