@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, X, Clock, TrendingUp } from 'lucide-react';
+import { Search, Clock, TrendingUp } from 'lucide-react';
+import { SearchInput } from '@/components/ui/search-input';
 import FilterPills from './FilterPills';
 import AdvancedFilters from './AdvancedFilters';
 import SearchResults from './SearchResults';
@@ -86,35 +86,19 @@ export default function SearchInterface({
     <div className={cn("space-y-6", className)}>
       {/* Main search bar */}
       <div className="relative">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            ref={searchInputRef}
-            type="text"
-            placeholder={placeholder}
-            value={filters.query}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            onFocus={() => setShowSuggestions(filters.query.length > 0)}
-            onBlur={() => {
-              // Delay hiding suggestions to allow clicks
-              setTimeout(() => setShowSuggestions(false), 200);
-            }}
-            className="pl-10 pr-20 h-12 bg-card border-border text-card-foreground rounded-organic-md"
-          />
-          
-          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-            {filters.query && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearSearch}
-                className="h-8 w-8 p-0 hover:bg-muted"
-              >
-                <X size={16} />
-              </Button>
-            )}
-          </div>
-        </div>
+        <SearchInput
+          ref={searchInputRef}
+          placeholder={placeholder}
+          value={filters.query}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          onClear={handleClearSearch}
+          onFocus={() => setShowSuggestions(filters.query.length > 0)}
+          onBlur={() => {
+            // Delay hiding suggestions to allow clicks
+            setTimeout(() => setShowSuggestions(false), 200);
+          }}
+          aria-label="Search cocktails"
+        />
 
         {/* Search suggestions dropdown */}
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (

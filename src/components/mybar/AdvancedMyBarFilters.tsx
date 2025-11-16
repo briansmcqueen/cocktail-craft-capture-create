@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, X, Filter, ChevronDown } from "lucide-react";
+import { SearchInput } from "@/components/ui/search-input";
+import { Filter, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export interface FilterState {
@@ -87,23 +87,13 @@ export default function AdvancedMyBarFilters({
   return (
     <div className="space-y-4">
       {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-light-text" />
-        <Input
-          placeholder="Search ingredients..."
-          value={filters.searchTerm}
-          onChange={(e) => updateFilters({ searchTerm: e.target.value })}
-          className="pl-10 bg-secondary-surface border-border text-pure-white placeholder-light-text focus:border-available"
-        />
-        {filters.searchTerm && (
-          <button
-            onClick={() => updateFilters({ searchTerm: "" })}
-            className="absolute right-3 top-3 text-light-text hover:text-pure-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
+      <SearchInput
+        placeholder="Search ingredients..."
+        value={filters.searchTerm}
+        onChange={(e) => updateFilters({ searchTerm: e.target.value })}
+        onClear={() => updateFilters({ searchTerm: "" })}
+        aria-label="Search bar ingredients"
+      />
 
       {/* Filter Status & Clear */}
       {hasActiveFilters && (

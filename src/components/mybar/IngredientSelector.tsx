@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef } from "react";
 import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2 } from "lucide-react";
+import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
