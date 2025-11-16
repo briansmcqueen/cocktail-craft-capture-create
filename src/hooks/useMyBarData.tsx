@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { ingredientDatabase, Ingredient } from "@/data/ingredients";
 import { 
   getUserIngredients, 
@@ -138,11 +139,18 @@ export function useMyBarData(forceUpdate: number) {
   // Get current user's ingredients
   const myBarIngredients = Object.keys(myBar).filter(id => myBar[id]);
 
+  const { toast: showToast } = useToast();
+  
   const toggleIngredient = useCallback(async (ingredientId: string) => {
     if (!user) {
-      toast({
+      showToast({
         title: "🍸 Join BarBook!",
         description: "Create a free account to build your personal bar and discover cocktails you can make!",
+        action: (
+          <ToastAction altText="Sign up" onClick={() => window.location.href = '/auth'}>
+            Sign Up
+          </ToastAction>
+        ),
       });
       return;
     }
