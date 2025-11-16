@@ -25,9 +25,9 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           type="search"
           value={value}
           className={cn(
-            "pl-10 pr-10 h-12 bg-secondary-surface border-border text-pure-white placeholder:text-soft-gray",
+            "pl-10 pr-10 h-12 bg-card border-border text-card-foreground placeholder:text-muted-foreground",
             "rounded-organic-md",
-            "focus:border-available focus:ring-1 focus:ring-available/20",
+            "focus:border-primary focus:ring-1 focus:ring-primary/20",
             "transition-all duration-300",
             className
           )}

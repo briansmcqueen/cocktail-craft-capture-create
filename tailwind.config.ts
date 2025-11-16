@@ -95,6 +95,10 @@ export default {
 				'soft-gray': '#6B7280',
 				'light-text': '#D1D5DB',
 				'pure-white': '#FFFFFF',
+				// Secondary surfaces
+				'secondary-surface': '#374151', // Medium Charcoal
+				'border-hover': '#6B7280', // Soft Gray for hover states
+				'available': '#10B981', // Emerald Green for availability
 				// Spirit category colors (with opacity)
 				'gin-clear': 'rgba(6, 95, 70, 0.1)',
 				'whiskey-amber': 'rgba(245, 158, 11, 0.1)',
