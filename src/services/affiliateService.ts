@@ -31,11 +31,11 @@ export function generateAffiliateUrl(
     
     // Example Total Wine affiliate URL structure
     // This is a simplified version - real implementation would use their actual format
-    return `${baseUrl}/cart/add?products=${productIds}&affiliate=${affiliateId}&session=${sessionId}`;
+    return `${baseUrl}/cart/add?products=${encodeURIComponent(productIds)}&affiliate=${encodeURIComponent(affiliateId)}&session=${encodeURIComponent(sessionId)}`;
   }
   
   // Default fallback
-  return `${baseUrl}?ref=${affiliateId}`;
+  return `${baseUrl}?ref=${encodeURIComponent(affiliateId)}`;
 }
 
 // Create a shopping session for tracking
