@@ -7,7 +7,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { FavoritesProvider } from "@/hooks/useFavoritesRefactored";
+import { AuthModalProvider } from "@/contexts/AuthModalContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import AuthModal from "@/components/auth/AuthModal";
+import { useAuthModal } from "@/contexts/AuthModalContext";
 
 // Lazy load components for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -37,32 +40,49 @@ const queryClient = new QueryClient({
   },
 });
 
+function AuthModalWrapper() {
+  const { isOpen, mode, closeAuthModal, openAuthModal } = useAuthModal();
+  
+  // Expose the openAuthModal function globally so it can be accessed from toast actions
+  React.useEffect(() => {
+    window.__openAuthModal = openAuthModal;
+    return () => {
+      delete window.__openAuthModal;
+    };
+  }, [openAuthModal]);
+  
+  return <AuthModal open={isOpen} onOpenChange={closeAuthModal} initialMode={mode} />;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <FavoritesProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/recipes" element={<Index />} />
-                <Route path="/mybar" element={<Index />} />
-                <Route path="/favorites" element={<Index />} />
-                <Route path="/recipes/my-drinks" element={<Index />} />
-                <Route path="/learn" element={<Index />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/user/:userId" element={<UserProfile />} />
-                <Route path="/cocktail/:recipeName" element={<RecipePage />} />
-                <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
-                <Route path="/article/:slug" element={<ArticlePage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </TooltipProvider>
+        <AuthModalProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <AuthModalWrapper />
+            <BrowserRouter>
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/recipes" element={<Index />} />
+                  <Route path="/mybar" element={<Index />} />
+                  <Route path="/favorites" element={<Index />} />
+                  <Route path="/recipes/my-drinks" element={<Index />} />
+                  <Route path="/learn" element={<Index />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/user/:userId" element={<UserProfile />} />
+                  <Route path="/cocktail/:recipeName" element={<RecipePage />} />
+                  <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
+                  <Route path="/article/:slug" element={<ArticlePage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthModalProvider>
       </FavoritesProvider>
     </AuthProvider>
   </QueryClientProvider>
