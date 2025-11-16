@@ -15,6 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
 import { useOptimizedComments } from '@/hooks/useOptimizedComments';
 import { toast } from '@/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -84,6 +85,11 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         toast({
           title: "🍸 Join the Conversation!",
           description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
+          action: (
+            <ToastAction altText="Sign up" onClick={() => window.location.href = '/auth'}>
+              Sign Up
+            </ToastAction>
+          ),
         });
       }
       return;
@@ -146,6 +152,11 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         toast({
           title: "🍸 Join the Conversation!",
           description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
+          action: (
+            <ToastAction altText="Sign up" onClick={() => window.location.href = '/auth'}>
+              Sign Up
+            </ToastAction>
+          ),
         });
       }
       return;
@@ -496,6 +507,11 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                       toast({
                         title: "🍸 Join the Conversation!",
                         description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
+                        action: (
+                          <ToastAction altText="Sign up" onClick={() => window.location.href = '/auth'}>
+                            Sign Up
+                          </ToastAction>
+                        ),
                       });
                       return;
                     }
@@ -636,6 +652,11 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                       toast({
                         title: "🍸 Join the Conversation!",
                         description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
+                        action: (
+                          <ToastAction altText="Sign up" onClick={() => window.location.href = '/auth'}>
+                            Sign Up
+                          </ToastAction>
+                        ),
                       });
                       return;
                     }
