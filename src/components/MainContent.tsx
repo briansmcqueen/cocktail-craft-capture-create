@@ -90,7 +90,7 @@ export default function MainContent({
           onCopyDialogOpen={() => {}}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && !(library === "mine" && !user) && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
