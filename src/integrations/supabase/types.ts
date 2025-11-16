@@ -531,7 +531,7 @@ export type Database = {
           action: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           metadata: Json | null
           resource_id: string | null
           resource_type: string
@@ -542,7 +542,7 @@ export type Database = {
           action: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           metadata?: Json | null
           resource_id?: string | null
           resource_type: string
@@ -553,7 +553,7 @@ export type Database = {
           action?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           metadata?: Json | null
           resource_id?: string | null
           resource_type?: string
@@ -774,10 +774,7 @@ export type Database = {
           username: string
         }[]
       }
-      get_recipe_rating_stats: {
-        Args: { p_recipe_id: string }
-        Returns: Json
-      }
+      get_recipe_rating_stats: { Args: { p_recipe_id: string }; Returns: Json }
       get_recipe_rating_stats_batch: {
         Args: { p_recipe_ids: string[] }
         Returns: Json[]
@@ -796,10 +793,7 @@ export type Database = {
           user_display_name: string
         }[]
       }
-      get_safe_rating_stats: {
-        Args: { p_recipe_id: string }
-        Returns: Json
-      }
+      get_safe_rating_stats: { Args: { p_recipe_id: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -807,14 +801,8 @@ export type Database = {
         }
         Returns: boolean
       }
-      validate_affiliate_url: {
-        Args: { url: string }
-        Returns: boolean
-      }
-      verify_admin_access: {
-        Args: { p_user_id?: string }
-        Returns: boolean
-      }
+      validate_affiliate_url: { Args: { url: string }; Returns: boolean }
+      verify_admin_access: { Args: { p_user_id?: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

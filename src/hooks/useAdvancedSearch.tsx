@@ -129,11 +129,9 @@ export function useAdvancedSearch({
       filters.occasions.length > 0 ||
       filters.maxMissingIngredients !== null ||
       filters.noEggWhites ||
-      filters.noAbsinthe ||
       filters.lowAlcohol ||
       filters.noCream ||
-      filters.batchFriendly ||
-      filters.makeAhead
+      filters.nonAlcoholic
     );
   }, [filters]);
 
@@ -149,11 +147,9 @@ export function useAdvancedSearch({
     if (filters.occasions.length > 0) count++;
     if (filters.maxMissingIngredients !== null) count++;
     if (filters.noEggWhites) count++;
-    if (filters.noAbsinthe) count++;
     if (filters.lowAlcohol) count++;
     if (filters.noCream) count++;
-    if (filters.batchFriendly) count++;
-    if (filters.makeAhead) count++;
+    if (filters.nonAlcoholic) count++;
     return count;
   }, [filters]);
 
