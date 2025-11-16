@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Mic, X, Clock, TrendingUp } from 'lucide-react';
+import { Search, X, Clock, TrendingUp } from 'lucide-react';
 import FilterPills from './FilterPills';
 import AdvancedFilters from './AdvancedFilters';
 import SearchResults from './SearchResults';
@@ -81,10 +81,6 @@ export default function SearchInterface({
     searchInputRef.current?.focus();
   };
 
-  const handleVoiceSearch = () => {
-    // Voice search functionality would go here
-    console.log('Voice search not implemented yet');
-  };
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -117,15 +113,6 @@ export default function SearchInterface({
                 <X size={16} />
               </Button>
             )}
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleVoiceSearch}
-              className="h-8 w-8 p-0 hover:bg-muted"
-            >
-              <Mic size={16} />
-            </Button>
           </div>
         </div>
 
