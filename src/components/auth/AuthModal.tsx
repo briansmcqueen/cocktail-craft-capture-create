@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,11 +23,12 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
   const { signIn, signUp } = useAuth();
 
   // Reset mode when modal opens with new initialMode
-  useState(() => {
+  useEffect(() => {
     if (open) {
       setMode(initialMode);
+      resetForm();
     }
-  });
+  }, [open, initialMode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

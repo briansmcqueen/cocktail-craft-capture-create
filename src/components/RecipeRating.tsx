@@ -8,7 +8,7 @@ import { rateRecipe, getUserRating } from "@/services/ratingsService";
 import { useRecipeRating } from "@/hooks/useRecipeRatings";
 import { ratingsCache } from "@/services/ratingsCache";
 import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+import { createAuthToastAction } from "@/utils/authToast";
 import { useAuth } from "@/hooks/useAuth";
 
 interface RecipeRatingProps {
@@ -61,11 +61,7 @@ export default function RecipeRating({ recipeId, recipeName, trigger }: RecipeRa
       toast({
         title: "🍸 Join the Community!",
         description: "Create a free account to rate recipes and share your feedback with other bartenders!",
-        action: (
-          <ToastAction altText="Sign up" onClick={() => window.location.href = '/auth'}>
-            Sign Up
-          </ToastAction>
-        ),
+        action: createAuthToastAction(),
       });
       return;
     }
