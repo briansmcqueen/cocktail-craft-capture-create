@@ -52,7 +52,7 @@ export default function Index() {
       setLibrary('ingredients');
     } else if (path === '/favorites') {
       setLibrary('favorites');
-    } else if (path === '/recipes/mine') {
+    } else if (path === '/recipes/my-drinks') {
       setLibrary('mine');
     } else if (path === '/learn') {
       setLibrary('learn');

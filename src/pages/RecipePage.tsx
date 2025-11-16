@@ -163,7 +163,7 @@ export default function RecipePage() {
 
   const handleEdit = () => {
     // Navigate to main app with editing state
-    navigate('/recipes/mine', { 
+    navigate('/recipes/my-drinks', { 
       state: { 
         editingRecipe: recipe,
         showForm: true
@@ -179,7 +179,7 @@ export default function RecipePage() {
       name: `${recipe.name} (Remix)`
     };
     
-    navigate('/recipes/mine', { 
+    navigate('/recipes/my-drinks', { 
       state: { 
         editingRecipe: remixedRecipe,
         showForm: true
@@ -218,11 +218,11 @@ export default function RecipePage() {
         user={user}
         activeLibrary="recipe"
         onLibrarySelect={() => {}}
-        onAddRecipe={() => navigate('/recipes/mine')}
+        onAddRecipe={() => navigate('/recipes/my-drinks')}
         onSignInClick={() => setShowAuthModal(true)}
         onSignUpClick={() => setShowAuthModal(true)}
         onProfileClick={() => navigate('/profile')}
-        onMyRecipesClick={() => navigate('/recipes/mine')}
+        onMyRecipesClick={() => navigate('/recipes/my-drinks')}
         onFavoritesClick={() => navigate('/favorites')}
       />
       
@@ -232,12 +232,12 @@ export default function RecipePage() {
           <Sidebar 
             active="recipe" 
             onSelect={() => {}} 
-            onAdd={() => navigate('/recipes/mine')}
+            onAdd={() => navigate('/recipes/my-drinks')}
             user={user}
             onSignInClick={() => setShowAuthModal(true)}
             onSignUpClick={() => setShowAuthModal(true)}
             onProfileClick={() => navigate('/profile')}
-            onMyRecipesClick={() => navigate('/recipes/mine')}
+            onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />
         </div>

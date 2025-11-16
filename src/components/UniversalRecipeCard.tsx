@@ -116,7 +116,7 @@ export default function UniversalRecipeCard({
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate('/recipes/mine', { 
+                  navigate('/recipes/my-drinks', { 
                     state: { 
                       editingRecipe: recipe,
                       showForm: true
