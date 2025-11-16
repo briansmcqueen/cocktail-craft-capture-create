@@ -121,29 +121,53 @@ export default function MainContent({
             forceUpdate={forceUpdate}
           />
         ) : library === "favorites" ? (
-          user ? null : (
-            <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
-              <UserIcon className="mx-auto mb-4 text-light-text/60" size={48} />
-              <h2 className="text-xl font-serif font-normal mb-2 text-pure-white">Sign in to view favorites</h2>
-              <p className="mb-4 text-sm lg:text-base">
-                Create an account or sign in to save your favorite cocktail recipes!
-              </p>
-              <Button 
-                onClick={() => setShowAuthModal(true)}
-                className="gap-2"
-              >
-                <UserIcon className="h-4 w-4" />
-                Sign In
-              </Button>
-            </div>
-          )
+          <Favorites
+            favoriteRecipes={favoriteRecipes}
+            onRecipeClick={handleRecipeClick}
+            onEditRecipe={handleEditRecipe}
+            onShareRecipe={handleShareRecipe}
+            userRecipes={userRecipes}
+          />
         ) : library === "learn" ? (
           <Learn
             onShowAuthModal={() => setShowAuthModal(true)}
           />
-        ) : library === "all" ? null : library === "mine" ? null : (
+        ) : library === "mine" ? (
+          user ? (
+            <LazyRecipeGrid
+              recipes={userRecipes}
+              onRecipeClick={handleRecipeClick}
+              onToggleFavorite={() => {}}
+              onLike={handleLikeWithAuth}
+              onShareRecipe={handleShareRecipe}
+              onTagClick={handleTagClick}
+              onShowForm={handleAddRecipe}
+              forceUpdate={forceUpdate}
+              library={library}
+              onShowAuthModal={() => setShowAuthModal(true)}
+            />
+          ) : (
+            <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
+              <UserIcon className="mx-auto mb-4 text-available" size={64} />
+              <h2 className="text-2xl font-semibold mb-2 text-pure-white">Create & Share Your Recipes</h2>
+              <p className="mb-6 text-sm lg:text-base max-w-md mx-auto">
+                Sign up for a free account to create your own cocktail recipes and share them with the community.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Button 
+                  onClick={() => setShowAuthModal(true)}
+                  size="lg"
+                  className="gap-2 rounded-organic-md"
+                >
+                  <UserIcon className="h-5 w-5" />
+                  Create Free Account
+                </Button>
+              </div>
+            </div>
+          )
+        ) : (
           <LazyRecipeGrid
-            recipes={library === "mine" ? userRecipes : getFilteredRecipes()}
+            recipes={getFilteredRecipes()}
             onRecipeClick={handleRecipeClick}
             onToggleFavorite={() => {}}
             onLike={handleLikeWithAuth}
