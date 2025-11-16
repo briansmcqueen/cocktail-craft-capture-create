@@ -71,19 +71,19 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
         {/* Authentication section */}
         <div className="border-t border-light-charcoal pt-3">
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <UserMenu
                 onProfileClick={onProfileClick}
                 onMyRecipesClick={onMyRecipesClick}
                 onFavoritesClick={onFavoritesClick}
               />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-foreground truncate">
+              <div className="flex-1 min-w-0 flex flex-col justify-center -space-y-0.5">
+                <p className="font-medium text-foreground truncate text-sm leading-tight">
                   {user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'}
                 </p>
                 <button 
                   onClick={onProfileClick}
-                  className="text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors"
+                  className="text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors text-left leading-tight"
                 >
                   View Account
                 </button>
