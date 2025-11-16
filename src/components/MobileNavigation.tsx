@@ -5,7 +5,7 @@ import { Menu, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Book, Edit, Star, TrendingUp, Home, ChefHat, User, LogIn } from "lucide-react";
+import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
 
@@ -24,7 +24,7 @@ interface MobileNavigationProps {
 const nav = [
   { id: "featured", label: "Featured", icon: Home, path: "/" },
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
-  { id: "ingredients", label: "My Bar", icon: ChefHat, path: "/mybar" },
+  { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
   { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
@@ -66,7 +66,7 @@ export default function MobileNavigation({
           <div className="px-6 py-6 border-b border-border relative">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
-                <ChefHat className="text-primary-foreground" size={20} />
+                <Martini className="text-primary-foreground" size={20} />
               </div>
               <h1 className="text-3xl font-medium text-primary tracking-tight">BARBOOK</h1>
             </div>
