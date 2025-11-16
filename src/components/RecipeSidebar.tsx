@@ -17,7 +17,7 @@ const navigationItems = [
   { id: "all", title: "All Recipes", url: "/recipes", icon: Search },
   { id: "mybar", title: "My Bar", url: "/mybar", icon: Martini },
   { id: "favorites", title: "Favorites", url: "/favorites", icon: Heart },
-  { id: "mine", title: "My Creations", url: "/recipes/mine", icon: ChefHat },
+  { id: "mine", title: "My Creations", url: "/recipes/my-drinks", icon: ChefHat },
   { id: "learn", title: "Learn", url: "/learn", icon: BookOpen },
 ];
 

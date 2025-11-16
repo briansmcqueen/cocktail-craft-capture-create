@@ -24,7 +24,7 @@ const nav = [
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
   { id: "ingredients", label: "My Bar", icon: ChefHat, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
-  { id: "mine", label: "My Creations", icon: Edit, path: "/recipes/mine" },
+  { id: "mine", label: "My Creations", icon: Edit, path: "/recipes/my-drinks" },
   { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
 ];
 

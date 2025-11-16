@@ -51,7 +51,7 @@ const App = () => (
                 <Route path="/recipes" element={<Index />} />
                 <Route path="/mybar" element={<Index />} />
                 <Route path="/favorites" element={<Index />} />
-                <Route path="/recipes/mine" element={<Index />} />
+                <Route path="/recipes/my-drinks" element={<Index />} />
                 <Route path="/learn" element={<Index />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/user/:userId" element={<UserProfile />} />

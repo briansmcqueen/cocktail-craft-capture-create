@@ -101,11 +101,11 @@ export default function ArticlePage() {
         user={user}
         activeLibrary="learn"
         onLibrarySelect={() => {}}
-        onAddRecipe={() => navigate('/recipes/mine')}
+        onAddRecipe={() => navigate('/recipes/my-drinks')}
         onSignInClick={() => navigate('/?auth=signin')}
         onSignUpClick={() => navigate('/?auth=signup')}
         onProfileClick={() => navigate('/profile')}
-        onMyRecipesClick={() => navigate('/recipes/mine')}
+        onMyRecipesClick={() => navigate('/recipes/my-drinks')}
         onFavoritesClick={() => navigate('/favorites')}
       />
 
@@ -114,12 +114,12 @@ export default function ArticlePage() {
           <Sidebar
             active="learn"
             onSelect={() => {}}
-            onAdd={() => navigate('/recipes/mine')}
+            onAdd={() => navigate('/recipes/my-drinks')}
             user={user}
             onSignInClick={() => navigate('/?auth=signin')}
             onSignUpClick={() => navigate('/?auth=signup')}
             onProfileClick={() => navigate('/profile')}
-            onMyRecipesClick={() => navigate('/recipes/mine')}
+            onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />
         </div>
