@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Share, Copy, Check, Facebook, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ type ShareRecipeProps = {
 
 export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeProps) {
   const [copied, setCopied] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   // Early return if recipe is null
   if (!recipe) {
@@ -64,6 +65,52 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
   
   // Check if user is on mobile device
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // Check if native share is supported
+  const canNativeShare = typeof navigator !== 'undefined' && 'share' in navigator;
+
+  // Handle native share
+  const handleNativeShare = async () => {
+    if (!canNativeShare) {
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title: `${recipe.name} Recipe`,
+        text: `🍸 Check out this ${recipe.name} recipe on Barbook!`,
+        url: shareUrl,
+      });
+      
+      toast({
+        title: "Thanks for sharing!",
+        description: "Recipe shared successfully"
+      });
+      onOpenChange(false);
+    } catch (err: any) {
+      // User cancelled or share failed
+      if (err.name !== 'AbortError') {
+        // If share fails for any reason other than user cancellation, show modal
+        setShowModal(true);
+      }
+    }
+  };
+
+  // Trigger native share when modal opens on supported devices
+  React.useEffect(() => {
+    if (open && canNativeShare && !showModal) {
+      handleNativeShare();
+    } else if (open && !canNativeShare) {
+      setShowModal(true);
+    }
+  }, [open]);
+
+  // Close modal handler
+  const handleCloseModal = () => {
+    setShowModal(false);
+    onOpenChange(false);
+  };
 
   const handleCopyLink = async () => {
     try {
@@ -169,7 +216,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={showModal} onOpenChange={handleCloseModal}>
       <DialogContent className="max-w-md w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-card border-border sm:w-full rounded-[16px_32px_24px_40px]">
         <DialogHeader className="space-y-2">
           <DialogTitle className="flex items-center gap-2 text-white text-lg">
