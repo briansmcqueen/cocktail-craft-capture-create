@@ -107,7 +107,6 @@ export default function IngredientInput({
         onChange={(e) => handleInputChange(e.target.value)}
         placeholder={placeholder}
         required
-        className="bg-white border-gray-300 text-gray-700"
         onFocus={() => {
           if (currentLine.trim().length > 0) {
             const filtered = commonIngredients.filter(ingredient =>

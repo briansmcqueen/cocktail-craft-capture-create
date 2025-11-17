@@ -71,7 +71,6 @@ export default function RecipeFormFields({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
-          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
           required
         />
       </div>
@@ -140,7 +139,6 @@ export default function RecipeFormFields({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Invented at Soho Brasserie, London, 1980s"
-          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
         />
       </div>
       
@@ -152,7 +150,6 @@ export default function RecipeFormFields({
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="e.g. Italy"
-          className="bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
         />
       </div>
       
