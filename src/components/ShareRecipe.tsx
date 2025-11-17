@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
+import { trackShare, type SharePlatform } from "@/services/shareTrackingService";
+import { useAuth } from "@/hooks/useAuth";
 
 // Custom X (Twitter) Icon Component
 const XIcon = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
@@ -50,6 +52,7 @@ type ShareRecipeProps = {
 export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeProps) {
   const [copied, setCopied] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const { user } = useAuth();
 
   // Early return if recipe is null
   if (!recipe) {
@@ -82,6 +85,9 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
         text: `🍸 Check out this ${recipe.name} recipe on Barbook!`,
         url: shareUrl,
       });
+      
+      // Track the native share
+      await trackShare(recipe.id, 'native', user?.id);
       
       toast({
         title: "Thanks for sharing!",
@@ -116,6 +122,10 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
+      
+      // Track the copy link action
+      await trackShare(recipe.id, 'copy_link', user?.id);
+      
       toast({
         title: "Link copied!",
         description: "Share this recipe with your friends"
@@ -180,11 +190,26 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
     },
   ];
 
-  const handleSocialShare = (social: typeof socialShares[0]) => {
+  const handleSocialShare = async (social: typeof socialShares[0]) => {
     // If it's a custom action (like copy link), execute it
     if (social.action) {
       social.action();
       return;
+    }
+
+    // Track the share (map social name to platform type)
+    const platformMap: Record<string, SharePlatform> = {
+      'WhatsApp': 'whatsapp',
+      'X': 'x',
+      'Facebook': 'facebook',
+      'Pinterest': 'pinterest',
+      'TikTok': 'tiktok',
+      'Instagram': 'instagram',
+    };
+    
+    const platform = platformMap[social.name];
+    if (platform) {
+      await trackShare(recipe.id, platform, user?.id);
     }
 
     // Otherwise open the URL

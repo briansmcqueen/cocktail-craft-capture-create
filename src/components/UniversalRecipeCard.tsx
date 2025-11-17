@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
 import { getRecipeUrl } from '@/pages/RecipePage';
+import { ShareCount } from './ShareCount';
 
 interface UniversalRecipeCardProps {
   recipe: Cocktail;
@@ -85,25 +86,28 @@ export default function UniversalRecipeCard({
           </p>
 
           {/* Review stars and count */}
-          <div className="flex items-center gap-1 mb-3">
-            <div className="flex items-center">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  size={16}
-                  className={cn(
-                    "text-golden-amber",
-                    star <= Math.round(ratingData.averageRating) ? "fill-current" : "fill-none"
-                  )}
-                />
-              ))}
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-1">
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={16}
+                    className={cn(
+                      "text-golden-amber",
+                      star <= Math.round(ratingData.averageRating) ? "fill-current" : "fill-none"
+                    )}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-pure-white ml-1">
+                {ratingData.totalRatings > 0 
+                  ? `${ratingData.totalRatings} review${ratingData.totalRatings === 1 ? '' : 's'}`
+                  : 'No reviews yet'
+                }
+              </span>
             </div>
-            <span className="text-xs text-pure-white ml-1">
-              {ratingData.totalRatings > 0 
-                ? `${ratingData.totalRatings} review${ratingData.totalRatings === 1 ? '' : 's'}`
-                : 'No reviews yet'
-              }
-            </span>
+            <ShareCount recipeId={recipe.id} />
           </div>
 
           {/* Action buttons */}
