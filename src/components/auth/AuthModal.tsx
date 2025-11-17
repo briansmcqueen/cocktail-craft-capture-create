@@ -111,7 +111,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
             {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
           {contextMessage ? (
-            <p id="auth-description" className="text-sm text-emerald text-center font-medium animate-fade-in">
+            <p id="auth-description" className="text-sm text-light-text text-center font-medium animate-fade-in">
               {contextMessage}
             </p>
           ) : (

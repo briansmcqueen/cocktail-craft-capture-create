@@ -24,7 +24,13 @@ export default function RecipeCardWithFavorite({
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await toggleFavorite(recipe.id, onShowAuthModal);
+    await toggleFavorite(recipe.id, () => {
+      if (window.__openAuthModal) {
+        window.__openAuthModal('signup', "Love this drink? Save it to your favorites!");
+      } else if (onShowAuthModal) {
+        onShowAuthModal();
+      }
+    });
   };
 
   const handleCardClick = () => {
