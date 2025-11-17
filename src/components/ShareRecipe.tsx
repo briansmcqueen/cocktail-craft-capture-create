@@ -170,14 +170,14 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-card border-border">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-white">
-            <Share size={20} />
+      <DialogContent className="max-w-md w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-card border-border sm:w-full">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="flex items-center gap-2 text-white text-lg">
+            <Share size={18} />
             Share {recipe.name}
           </DialogTitle>
-          <DialogDescription className="text-light-text">
-            Share this delicious recipe with friends and fellow cocktail enthusiasts! 🍹
+          <DialogDescription className="text-light-text text-xs sm:text-sm">
+            Share this recipe with friends! 🍹
           </DialogDescription>
         </DialogHeader>
         
@@ -189,34 +189,34 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
                 key={social.name}
                 variant="outline"
                 onClick={() => handleSocialShare(social)}
-                className={`flex items-center gap-2 h-11 justify-center border-border-gray bg-medium-charcoal transition-all duration-300 hover:bg-light-charcoal hover:scale-[1.02] rounded-[8px_16px_12px_20px] ${
+                className={`flex items-center gap-1.5 h-10 justify-center border-border-gray bg-medium-charcoal transition-all duration-300 hover:bg-light-charcoal active:scale-95 rounded-[8px_16px_12px_20px] ${
                   social.isPrimary && copied ? 'border-available bg-available/20' : ''
                 }`}
               >
-                <social.icon size={18} className={social.color} />
-                <span className="text-sm font-medium text-white truncate">
+                <social.icon size={16} className={social.color} />
+                <span className="text-xs sm:text-sm font-medium text-white truncate">
                   {social.isPrimary && copied ? "Copied!" : social.name}
                 </span>
               </Button>
             ))}
           </div>
 
-          <Separator className="bg-border-gray" />
+          <Separator className="bg-border-gray my-2" />
             
           {/* Link preview - Organic design */}
-          <div className="bg-medium-charcoal rounded-[12px_24px_18px_30px] p-3 border border-border-gray">
-            <div className="flex items-start gap-2">
+          <div className="bg-medium-charcoal rounded-[12px_24px_18px_30px] p-2.5 border border-border-gray">
+            <div className="flex items-center gap-2">
               <img
                 src={recipe.image}
                 alt={recipe.name}
-                className="w-12 h-12 object-cover rounded-[6px_12px_9px_15px] flex-shrink-0"
+                className="w-10 h-10 object-cover rounded-[6px_12px_9px_15px] flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-sm text-white line-clamp-1">
+                <h4 className="font-semibold text-xs sm:text-sm text-white line-clamp-1">
                   {recipe.name}
                 </h4>
-                <p className="text-xs text-light-text line-clamp-1 mt-0.5">
-                  Share this recipe on Barbook
+                <p className="text-[10px] sm:text-xs text-light-text line-clamp-1">
+                  Share on Barbook
                 </p>
               </div>
             </div>
