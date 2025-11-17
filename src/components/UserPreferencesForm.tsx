@@ -66,9 +66,9 @@ export default function UserPreferencesForm() {
   }
 
   return (
-    <Card>
+    <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle>Your Preferences</CardTitle>
+        <CardTitle className="text-pure-white">Your Preferences</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">

@@ -98,9 +98,9 @@ export default function ProfileSettings() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
-      <Card>
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-2xl font-serif">Profile Settings</CardTitle>
+          <CardTitle className="text-2xl font-serif text-pure-white">Profile Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <AvatarUpload
