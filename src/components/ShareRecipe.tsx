@@ -181,27 +181,22 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Social sharing options - Organic design */}
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {socialShares.map((social) => (
               <Button
                 key={social.name}
                 variant="outline"
                 onClick={() => handleSocialShare(social)}
-                className={`flex items-center gap-3 h-12 justify-start border-border-gray bg-medium-charcoal transition-all duration-300 hover:bg-light-charcoal hover:scale-[1.02] rounded-[8px_16px_12px_20px] ${
+                className={`flex items-center gap-2 h-11 justify-center border-border-gray bg-medium-charcoal transition-all duration-300 hover:bg-light-charcoal hover:scale-[1.02] rounded-[8px_16px_12px_20px] ${
                   social.isPrimary && copied ? 'border-available bg-available/20' : ''
                 }`}
               >
-                <social.icon size={20} className={social.color} />
-                <span className="text-sm font-medium text-white">
-                  {social.isPrimary && copied ? "Link Copied!" : social.name}
+                <social.icon size={18} className={social.color} />
+                <span className="text-sm font-medium text-white truncate">
+                  {social.isPrimary && copied ? "Copied!" : social.name}
                 </span>
-                {social.note && !social.isPrimary && (
-                  <span className="text-xs text-soft-gray ml-auto">
-                    📋
-                  </span>
-                )}
               </Button>
             ))}
           </div>
@@ -209,34 +204,22 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
           <Separator className="bg-border-gray" />
             
           {/* Link preview - Organic design */}
-          <div className="bg-medium-charcoal rounded-[12px_24px_18px_30px] p-4 border border-border-gray">
-            <div className="flex items-start gap-3">
+          <div className="bg-medium-charcoal rounded-[12px_24px_18px_30px] p-3 border border-border-gray">
+            <div className="flex items-start gap-2">
               <img
                 src={recipe.image}
                 alt={recipe.name}
-                className="w-16 h-16 object-cover rounded-[8px_16px_12px_20px]"
+                className="w-12 h-12 object-cover rounded-[6px_12px_9px_15px] flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
                 <h4 className="font-semibold text-sm text-white line-clamp-1">
-                  {recipe.name} Recipe
+                  {recipe.name}
                 </h4>
-                <p className="text-xs text-light-text line-clamp-2 mt-1">
-                  Discover this delicious {recipe.name} recipe on Barbook - your digital cocktail companion
+                <p className="text-xs text-light-text line-clamp-1 mt-0.5">
+                  Share this recipe on Barbook
                 </p>
-                <div className="flex items-center gap-1 mt-2">
-                  <ExternalLink size={12} className="text-soft-gray" />
-                  <span className="text-xs text-soft-gray font-mono truncate">
-                    {shareUrl.replace('https://', '')}
-                  </span>
-                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="border-t border-border-gray pt-4">
-            <p className="text-xs text-soft-gray text-center">
-              💡 Love discovering new recipes? Share your favorites to help others find great cocktails too.
-            </p>
           </div>
         </div>
       </DialogContent>
