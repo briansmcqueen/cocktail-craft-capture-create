@@ -170,7 +170,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-card border-border sm:w-full">
+      <DialogContent className="max-w-md w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-card border-border sm:w-full rounded-[16px_32px_24px_40px]">
         <DialogHeader className="space-y-2">
           <DialogTitle className="flex items-center gap-2 text-white text-lg">
             <Share size={18} />
