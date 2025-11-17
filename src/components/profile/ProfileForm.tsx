@@ -17,7 +17,8 @@ const sanitizeInput = (input: string, maxLength: number = 100): string => {
 const validateProfileInput = (field: string, value: string): boolean => {
   switch (field) {
     case 'username':
-      return /^[a-zA-Z0-9_.-]{1,30}$/.test(value);
+      // Username: 3-30 chars, only letters, numbers, hyphens, and underscores
+      return /^[a-zA-Z0-9_-]{3,30}$/.test(value);
     case 'full_name':
       return /^[a-zA-Z\s'-]{1,50}$/.test(value);
     case 'bio':
@@ -79,12 +80,23 @@ export default function ProfileForm({
           id="username"
           value={profile.username || ''}
           onChange={(e) => handleSecureInputChange('username', e.target.value)}
-          placeholder="Choose a username (letters, numbers, _, -, . only)"
+          placeholder="Choose a username (3-30 characters)"
           maxLength={30}
+          disabled={!!profile.username}
+          className={profile.username ? 'bg-muted cursor-not-allowed' : ''}
         />
-        <p className="text-xs text-muted-foreground mt-1">
-          Only letters, numbers, underscores, hyphens, and periods allowed
-        </p>
+        {profile.username ? (
+          <p className="text-xs text-amber-500 mt-1 flex items-center gap-1">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+            Username cannot be changed once set
+          </p>
+        ) : (
+          <p className="text-xs text-muted-foreground mt-1">
+            3-30 characters: letters, numbers, hyphens, and underscores only
+          </p>
+        )}
       </div>
 
       <div>
