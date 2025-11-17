@@ -41,7 +41,7 @@ const queryClient = new QueryClient({
 });
 
 function AuthModalWrapper() {
-  const { isOpen, mode, closeAuthModal, openAuthModal } = useAuthModal();
+  const { isOpen, mode, contextMessage, closeAuthModal, openAuthModal } = useAuthModal();
   
   // Expose the openAuthModal function globally so it can be accessed from toast actions
   React.useEffect(() => {
@@ -51,7 +51,7 @@ function AuthModalWrapper() {
     };
   }, [openAuthModal]);
   
-  return <AuthModal open={isOpen} onOpenChange={closeAuthModal} initialMode={mode} />;
+  return <AuthModal open={isOpen} onOpenChange={closeAuthModal} initialMode={mode} contextMessage={contextMessage} />;
 }
 
 const App = () => (

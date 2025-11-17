@@ -15,7 +15,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { addComment, updateComment, deleteComment, type RecipeComment } from '@/services/commentsService';
 import { useOptimizedComments } from '@/hooks/useOptimizedComments';
 import { toast } from '@/hooks/use-toast';
-import { createAuthToastAction } from '@/utils/authToast';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -82,11 +81,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const handleAddComment = async () => {
     if (!newComment.trim() || !user) {
       if (!user) {
-        toast({
-          title: "🍸 Join the Conversation!",
-          description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
-          action: createAuthToastAction(),
-        });
+        if (window.__openAuthModal) {
+          window.__openAuthModal('signup', "Join the conversation and share your cocktail experiences!");
+        }
       }
       return;
     }
@@ -145,11 +142,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const handleSubmitComment = async () => {
     if (!newComment.trim() || !user) {
       if (!user) {
-        toast({
-          title: "🍸 Join the Conversation!",
-          description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
-          action: createAuthToastAction(),
-        });
+        if (window.__openAuthModal) {
+          window.__openAuthModal('signup', "Join the conversation and share your cocktail experiences!");
+        }
       }
       return;
     }
@@ -496,11 +491,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                 <Button
                   onClick={() => {
                     if (!user) {
-                      toast({
-                        title: "🍸 Join the Conversation!",
-                        description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
-                        action: createAuthToastAction(),
-                      });
+                      if (window.__openAuthModal) {
+                        window.__openAuthModal('signup', "Join the conversation and share your cocktail experiences!");
+                      }
                       return;
                     }
                     setShowAddComment(true);
@@ -637,11 +630,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
                 <Button
                   onClick={() => {
                     if (!user) {
-                      toast({
-                        title: "🍸 Join the Conversation!",
-                        description: "Create a free account to share your thoughts and connect with fellow cocktail enthusiasts!",
-                        action: createAuthToastAction(),
-                      });
+                      if (window.__openAuthModal) {
+                        window.__openAuthModal('signup', "Join the conversation and share your cocktail experiences!");
+                      }
                       return;
                     }
                     setShowAddComment(true);

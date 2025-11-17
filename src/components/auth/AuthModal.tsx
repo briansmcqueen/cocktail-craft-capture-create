@@ -12,9 +12,10 @@ interface AuthModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialMode?: 'signin' | 'signup';
+  contextMessage?: string;
 }
 
-export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }: AuthModalProps) {
+export default function AuthModal({ open, onOpenChange, initialMode = 'signin', contextMessage }: AuthModalProps) {
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -109,9 +110,15 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin' }
           <DialogTitle className="text-2xl font-serif text-center text-pure-white">
             {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
-          <p id="auth-description" className="text-sm text-light-text text-center">
-            {mode === 'signin' ? 'Sign in to your account to access your recipes and preferences.' : 'Create a new account to save recipes and track your bar inventory.'}
-          </p>
+          {contextMessage ? (
+            <p id="auth-description" className="text-sm text-emerald text-center font-medium animate-fade-in">
+              {contextMessage}
+            </p>
+          ) : (
+            <p id="auth-description" className="text-sm text-light-text text-center">
+              {mode === 'signin' ? 'Sign in to your account to access your recipes and preferences.' : 'Create a new account to save recipes and track your bar inventory.'}
+            </p>
+          )}
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -21,6 +21,6 @@ export function createAuthToastAction() {
 // Extend the Window interface to include our global function
 declare global {
   interface Window {
-    __openAuthModal?: (mode: 'signin' | 'signup') => void;
+    __openAuthModal?: (mode: 'signin' | 'signup', contextMessage?: string) => void;
   }
 }

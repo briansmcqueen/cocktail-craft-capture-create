@@ -142,7 +142,7 @@ export function useMyBarData(forceUpdate: number) {
     if (!user) {
       // Open auth modal directly for more prominent signup prompt
       if (window.__openAuthModal) {
-        window.__openAuthModal('signup');
+        window.__openAuthModal('signup', "Build your personal bar and discover cocktails you can make!");
       }
       return;
     }
