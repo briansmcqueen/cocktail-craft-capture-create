@@ -45,6 +45,7 @@ export default function FilterPills({
   };
 
   const clearFilter = (filterType: keyof SearchFilters) => {
+    setOpenDropdown(null); // Close any open dropdown
     switch (filterType) {
       case 'canMakeOnly':
         onFiltersChange({ canMakeOnly: false });
@@ -88,6 +89,7 @@ export default function FilterPills({
               size={14} 
               className="ml-1 cursor-pointer hover:text-destructive" 
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 clearFilter('canMakeOnly');
               }}
@@ -122,6 +124,7 @@ export default function FilterPills({
                   size={14} 
                   className="ml-1 cursor-pointer hover:text-destructive" 
                   onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     clearFilter('baseSpirits');
                   }}
@@ -174,6 +177,7 @@ export default function FilterPills({
                   size={14} 
                   className="ml-1 cursor-pointer hover:text-destructive" 
                   onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     clearFilter('difficulty');
                   }}
@@ -233,6 +237,7 @@ export default function FilterPills({
                   size={14} 
                   className="ml-1 cursor-pointer hover:text-destructive" 
                   onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     clearFilter('glassType');
                   }}
