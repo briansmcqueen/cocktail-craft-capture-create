@@ -3,7 +3,6 @@ import { Star } from 'lucide-react';
 import { getUserRating, rateRecipe, type RecipeRating } from '@/services/ratingsService';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import { createAuthToastAction } from '@/utils/authToast';
 
 interface RecipeUserRatingProps {
   recipeId: string;
@@ -30,11 +29,9 @@ export default function RecipeUserRating({ recipeId }: RecipeUserRatingProps) {
 
   const handleRating = async (rating: number) => {
     if (!user) {
-      toast({
-        title: "🍸 Join the Community!",
-        description: "Create a free account to rate recipes and share your feedback with other bartenders!",
-        action: createAuthToastAction(),
-      });
+      if (window.__openAuthModal) {
+        window.__openAuthModal('signup', "Rate this cocktail and become part of our bartending community!");
+      }
       return;
     }
 

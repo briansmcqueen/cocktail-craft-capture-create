@@ -5,7 +5,6 @@ import { useRecipeRating } from '@/hooks/useRecipeRatings';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
-import { createAuthToastAction } from '@/utils/authToast';
 import { ratingsCache } from '@/services/ratingsCache';
 
 interface RecipeRatingDisplayProps {
@@ -44,11 +43,9 @@ export default function RecipeRatingDisplay({ recipeId }: RecipeRatingDisplayPro
 
   const handleRating = async (newRating: number) => {
     if (!user) {
-      toast({
-        title: '🍸 Join the Community!',
-        description: 'Create a free account to rate recipes and share your feedback with other bartenders!',
-        action: createAuthToastAction(),
-      });
+      if (window.__openAuthModal) {
+        window.__openAuthModal('signup', "Rate this cocktail and share your expertise with the community!");
+      }
       return;
     }
 

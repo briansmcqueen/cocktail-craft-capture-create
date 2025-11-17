@@ -3,7 +3,8 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface AuthModalContextType {
   isOpen: boolean;
   mode: 'signin' | 'signup';
-  openAuthModal: (mode: 'signin' | 'signup') => void;
+  contextMessage?: string;
+  openAuthModal: (mode: 'signin' | 'signup', contextMessage?: string) => void;
   closeAuthModal: () => void;
 }
 
@@ -12,18 +13,21 @@ const AuthModalContext = createContext<AuthModalContextType | undefined>(undefin
 export function AuthModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<'signin' | 'signup'>('signup');
+  const [contextMessage, setContextMessage] = useState<string | undefined>(undefined);
 
-  const openAuthModal = (newMode: 'signin' | 'signup') => {
+  const openAuthModal = (newMode: 'signin' | 'signup', message?: string) => {
     setMode(newMode);
+    setContextMessage(message);
     setIsOpen(true);
   };
 
   const closeAuthModal = () => {
     setIsOpen(false);
+    setContextMessage(undefined);
   };
 
   return (
-    <AuthModalContext.Provider value={{ isOpen, mode, openAuthModal, closeAuthModal }}>
+    <AuthModalContext.Provider value={{ isOpen, mode, contextMessage, openAuthModal, closeAuthModal }}>
       {children}
     </AuthModalContext.Provider>
   );
