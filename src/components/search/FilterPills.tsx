@@ -88,7 +88,7 @@ export default function FilterPills({
             <button
               type="button"
               aria-label="Clear Can Make Now filter"
-              className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+              className="inline-flex items-center justify-center ml-1 -mr-1 p-0 hover:text-destructive transition-colors"
               onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
               onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
               onClick={(e) => {
@@ -128,7 +128,7 @@ export default function FilterPills({
                 <button
                   type="button"
                   aria-label="Clear Base Spirit filter"
-                  className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+                  className="inline-flex items-center justify-center ml-1 -mr-1 p-0 hover:text-destructive transition-colors"
                   onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onClick={(e) => {
@@ -186,7 +186,7 @@ export default function FilterPills({
                 <button
                   type="button"
                   aria-label="Clear Difficulty filter"
-                  className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+                  className="inline-flex items-center justify-center ml-1 -mr-1 p-0 hover:text-destructive transition-colors"
                   onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onClick={(e) => {
@@ -251,7 +251,7 @@ export default function FilterPills({
                 <button
                   type="button"
                   aria-label="Clear Glass Type filter"
-                  className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+                  className="inline-flex items-center justify-center ml-1 -mr-1 p-0 hover:text-destructive transition-colors"
                   onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onClick={(e) => {
