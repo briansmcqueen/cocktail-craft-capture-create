@@ -238,15 +238,12 @@ export default function IngredientSelector({
             )}
           </div>
           
-          <Button
-            variant="outline"
-            onClick={() => setShowSaveDialog(true)}
-            disabled={myBarIngredients.length === 0}
-            className="h-12 bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-light-text"
-          >
-            <Save className="h-4 w-4 mr-2" />
-            Save
-          </Button>
+          <AddCustomIngredient 
+            onIngredientAdded={async () => {
+              const customIngs = await getUserCustomIngredients();
+              setCustomIngredients(customIngs);
+            }}
+          />
         </div>
 
         {/* Save Preset Dialog */}
@@ -275,7 +272,7 @@ export default function IngredientSelector({
 
         {/* Example Bar Setups - Always show */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-soft-gray">Popular Bar Setups:</h4>
+          <h4 className="text-sm font-medium text-pure-white">Popular Bar Setups:</h4>
           <div className="flex flex-wrap gap-2">
             {examplePresets.map((preset) => (
               <Button
@@ -295,7 +292,7 @@ export default function IngredientSelector({
         {/* User's Saved Presets with Management */}
         {presets.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-soft-gray">Your Saved Presets:</h4>
+            <h4 className="text-sm font-medium text-pure-white">Your Saved Presets:</h4>
             <div className="flex flex-wrap gap-2">
               {presets.map((preset) => (
                 <div key={preset.id} className="group relative">
@@ -391,9 +388,22 @@ export default function IngredientSelector({
       {/* Selected Ingredients Pills */}
       {myBarIngredients.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-soft-gray">
-            Your Bar ({myBarIngredients.length} ingredients)
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-pure-white">
+              Your Bar ({myBarIngredients.length} ingredients)
+            </h3>
+            {user && !showSaveDialog && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowSaveDialog(true)}
+                className="text-xs"
+              >
+                <Save className="h-3 w-3 mr-1" />
+                Save as Preset
+              </Button>
+            )}
+          </div>
           <div className="flex flex-wrap gap-2">
             {myBarIngredients.map((ingredientId) => {
               const ingredient = ingredientMap[ingredientId];
