@@ -60,7 +60,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 bg-pure-white text-rich-charcoal placeholder:text-soft-gray border-border"
+          className="flex-1"
         />
         <Button 
           type="button" 
