@@ -318,11 +318,11 @@ export default function RecipePage() {
 
                   <Button
                     variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm relative overflow-hidden border border-accent/30 bg-card hover:scale-105 transition-transform"
+                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary"
                     onClick={handleRiff}
                   >
-                    <Martini size={16} className="rainbow-gradient-icon" />
-                    <span className="rainbow-gradient font-semibold">Riff</span>
+                    <Martini size={16} />
+                    Riff
                   </Button>
 
                   {isUserRecipe && (
