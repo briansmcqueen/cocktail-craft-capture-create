@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit, Trash2, Eye, EyeOff, Settings, Zap, Brain } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Settings, Zap, Brain, BarChart3 } from "lucide-react";
 import { Article, articlesService } from "@/services/articlesService";
 import { userRolesService } from "@/services/userRolesService";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,6 +13,7 @@ import ArticleForm from "./ArticleForm";
 import AffiliatePhase4Demo from "./affiliate/AffiliatePhase4Demo";
 import AffiliateEnhancedDemo from "./affiliate/AffiliateEnhancedDemo";
 import AffiliateAdminPanel from "./admin/AffiliateAdminPanel";
+import { ShareAnalyticsDashboard } from "./admin/ShareAnalyticsDashboard";
 
 export default function AdminView() {
   const { user } = useAuth();
@@ -207,10 +208,14 @@ export default function AdminView() {
       </div>
 
       <Tabs defaultValue="articles" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="articles" className="flex items-center gap-2">
             <Edit size={16} />
             Articles
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart3 size={16} />
+            Analytics
           </TabsTrigger>
           <TabsTrigger value="phase4" className="flex items-center gap-2">
             <Brain size={16} />
@@ -307,6 +312,10 @@ export default function AdminView() {
               ))
             )}
           </div>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <ShareAnalyticsDashboard />
         </TabsContent>
 
         <TabsContent value="phase4" className="space-y-6">
