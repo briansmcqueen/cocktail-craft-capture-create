@@ -154,7 +154,11 @@ export default function RecipePage() {
 
   const handleToggleFavorite = async () => {
     if (!hasValidRecipe) return;
-    await toggleFavorite(recipe.id, () => setShowAuthModal(true));
+    await toggleFavorite(recipe.id, () => {
+      if (window.__openAuthModal) {
+        window.__openAuthModal('signup', "Love this drink? Save it to your favorites!");
+      }
+    });
   };
 
   const handleShare = () => {
