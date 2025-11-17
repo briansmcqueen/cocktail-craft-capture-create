@@ -75,7 +75,7 @@ export default function FilterPills({
             ? "bg-primary text-primary-foreground shadow-md" 
             : "border-border text-light-text hover:bg-card/50"
         )}
-        disabled={availableIngredients.length === 0}
+        disabled={availableIngredients.length === 0 && !filters.canMakeOnly}
       >
         <span className="flex items-center gap-2">
           ✓ Can Make Now
@@ -85,15 +85,20 @@ export default function FilterPills({
              </Badge>
            )}
           {filters.canMakeOnly && (
-            <X 
-              size={14} 
-              className="ml-1 cursor-pointer hover:text-destructive" 
+            <button
+              type="button"
+              aria-label="Clear Can Make Now filter"
+              className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+              onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 clearFilter('canMakeOnly');
               }}
-            />
+            >
+              <X size={14} />
+            </button>
           )}
         </span>
       </Button>
@@ -120,15 +125,20 @@ export default function FilterPills({
                )}
               <ChevronDown size={14} />
               {filters.baseSpirits.length > 0 && (
-                <X 
-                  size={14} 
-                  className="ml-1 cursor-pointer hover:text-destructive" 
+                <button
+                  type="button"
+                  aria-label="Clear Base Spirit filter"
+                  className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                  onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     clearFilter('baseSpirits');
                   }}
-                />
+                >
+                  <X size={14} />
+                </button>
               )}
             </span>
           </Button>
@@ -173,15 +183,20 @@ export default function FilterPills({
               )}
               <ChevronDown size={14} />
               {filters.difficulty !== 'any' && (
-                <X 
-                  size={14} 
-                  className="ml-1 cursor-pointer hover:text-destructive" 
+                <button
+                  type="button"
+                  aria-label="Clear Difficulty filter"
+                  className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                  onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     clearFilter('difficulty');
                   }}
-                />
+                >
+                  <X size={14} />
+                </button>
               )}
             </span>
           </Button>
@@ -233,15 +248,20 @@ export default function FilterPills({
               )}
               <ChevronDown size={14} />
               {filters.glassType !== 'any' && (
-                <X 
-                  size={14} 
-                  className="ml-1 cursor-pointer hover:text-destructive" 
+                <button
+                  type="button"
+                  aria-label="Clear Glass Type filter"
+                  className="ml-1 inline-flex p-0.5 rounded hover:text-destructive"
+                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                  onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     clearFilter('glassType');
                   }}
-                />
+                >
+                  <X size={14} />
+                </button>
               )}
             </span>
           </Button>
