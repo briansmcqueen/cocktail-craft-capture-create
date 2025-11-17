@@ -193,17 +193,24 @@ export default function RecipePage() {
 
   // Convert measurements based on toggle
   const convertMeasurement = (ingredient: string) => {
-    if (!isMetric) return ingredient;
-    
-    return ingredient
-      .replace(/(\d+(?:\.\d+)?)\s*oz/g, (match, num) => `${Math.round(parseFloat(num) * 30)}ml`)
-      .replace(/(\d+(?:\/\d+)?)\s*oz/g, (match, frac) => {
-        const decimal = frac.includes('/') ? eval(frac) : parseFloat(frac);
-        return `${Math.round(decimal * 30)}ml`;
-      })
-      .replace(/(\d+)\s*dash/g, '$1 dash')
-      .replace(/(\d+)\s*tsp/g, (match, num) => `${Math.round(parseFloat(num) * 5)}ml`)
-      .replace(/(\d+)\s*tbsp/g, (match, num) => `${Math.round(parseFloat(num) * 15)}ml`);
+    if (isMetric) {
+      // Convert oz to ml
+      return ingredient
+        .replace(/(\d+(?:\.\d+)?)\s*oz/gi, (match, num) => `${Math.round(parseFloat(num) * 30)}ml`)
+        .replace(/(\d+(?:\s+\d+)?\/\d+)\s*oz/gi, (match, frac) => {
+          const decimal = frac.includes('/') ? eval(frac.replace(/\s+/g, '+')) : parseFloat(frac);
+          return `${Math.round(decimal * 30)}ml`;
+        })
+        .replace(/(\d+)\s*tsp/gi, (match, num) => `${Math.round(parseFloat(num) * 5)}ml`)
+        .replace(/(\d+)\s*tbsp/gi, (match, num) => `${Math.round(parseFloat(num) * 15)}ml`);
+    } else {
+      // Convert ml to oz
+      return ingredient
+        .replace(/(\d+(?:\.\d+)?)\s*ml/gi, (match, num) => {
+          const oz = parseFloat(num) / 30;
+          return oz >= 1 ? `${oz.toFixed(1).replace(/\.0$/, '')} oz` : `${(oz).toFixed(2)} oz`;
+        });
+    }
   };
 
   // Show loading state when no valid recipe
