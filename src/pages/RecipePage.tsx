@@ -7,7 +7,7 @@ import { classicCocktails } from "@/data/classicCocktails";
 import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
-import { getUserPreferences } from "@/services/userPreferencesService";
+import { getUserPreferences, updateUserPreferences } from "@/services/userPreferencesService";
 import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";
 import ShareRecipe from "@/components/ShareRecipe";
@@ -361,18 +361,26 @@ export default function RecipePage() {
                      <div className="relative">
                        <div className="toggle-button-cover">
                          <div className="button-cover">
-                           <div className="button custom-toggle">
-                             <input 
-                               type="checkbox" 
-                               className="checkbox" 
-                               checked={isMetric}
-                               onChange={(e) => setIsMetric(e.target.checked)}
-                             />
-                             <div className="knobs">
-                               <span>{isMetric ? 'ML' : 'OZ'}</span>
-                             </div>
-                             <div className="layer"></div>
-                           </div>
+                            <div className="button custom-toggle">
+                              <input 
+                                type="checkbox" 
+                                className="checkbox" 
+                                checked={isMetric}
+                                onChange={async (e) => {
+                                  const newIsMetric = e.target.checked;
+                                  setIsMetric(newIsMetric);
+                                  if (user) {
+                                    await updateUserPreferences({
+                                      preferred_unit: newIsMetric ? 'ml' : 'oz'
+                                    });
+                                  }
+                                }}
+                              />
+                              <div className="knobs">
+                                <span>{isMetric ? 'ML' : 'OZ'}</span>
+                              </div>
+                              <div className="layer"></div>
+                            </div>
                          </div>
                        </div>
                      </div>
