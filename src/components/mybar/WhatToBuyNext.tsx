@@ -69,21 +69,8 @@ export default function WhatToBuyNext({
               className="h-28 w-full bg-cover bg-center"
               style={{ backgroundImage: `url(${getCategoryImage(rec.ingredient.category, rec.ingredient.subCategory)})` }}
             />
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-            {/* Buy Now Button */}
-            <button
-              type="button"
-              aria-label="Buy this ingredient"
-              onClick={(e) => { 
-                e.stopPropagation(); 
-                buildCartForIngredients([rec.ingredient.id], userIngredients, ingredientMap);
-              }}
-              className="absolute top-2 right-2 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-accent/20 border border-accent/40 hover:bg-accent/30 transition-colors"
-            >
-              <ShoppingCart className="h-4 w-4 text-pure-white" />
-            </button>
+            {/* Overlay with stronger gradient at bottom for text legibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
             {/* Shopping List Button */}
             {onAddToShoppingList && (
@@ -91,7 +78,7 @@ export default function WhatToBuyNext({
                 type="button"
                 aria-label="Add to shopping list"
                 onClick={(e) => { e.stopPropagation(); onAddToShoppingList(rec.ingredient.id); }}
-                className="absolute top-2 right-10 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-background/80 border border-border hover:bg-background/90 transition-colors"
+                className="absolute top-2 right-2 z-10 w-8 h-8 inline-flex items-center justify-center rounded-full bg-background/80 border border-border hover:bg-background/90 transition-colors"
               >
                 <Plus className="h-4 w-4 text-pure-white" />
               </button>
