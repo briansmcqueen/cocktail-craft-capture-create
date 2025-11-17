@@ -418,6 +418,30 @@ export type Database = {
         }
         Relationships: []
       }
+      recipe_shares: {
+        Row: {
+          created_at: string
+          id: string
+          platform: string
+          recipe_id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          platform: string
+          recipe_id: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          platform?: string
+          recipe_id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       recipes: {
         Row: {
           created_at: string | null
@@ -782,6 +806,7 @@ export type Database = {
         Args: { p_recipe_ids: string[] }
         Returns: Json[]
       }
+      get_recipe_share_stats: { Args: { p_recipe_id: string }; Returns: Json }
       get_safe_comment_data: {
         Args: { p_recipe_id: string }
         Returns: {

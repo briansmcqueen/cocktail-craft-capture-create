@@ -7,6 +7,7 @@ import { getLikeCount } from "@/utils/likes";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRecipeUrl } from "@/pages/RecipePage";
+import { ShareCount } from "./ShareCount";
 
 type RecipeCardProps = {
   recipe: Cocktail;
@@ -104,6 +105,7 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
             {recipe.abv && (
               <span className="text-emerald text-xs font-medium">{recipe.abv}</span>
             )}
+            <ShareCount recipeId={recipe.id} />
           </div>
           {/* {likeCount > 0 && (
             <div className="text-xs text-muted-foreground flex items-center gap-1">
