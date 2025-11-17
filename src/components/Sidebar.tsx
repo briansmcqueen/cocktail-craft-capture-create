@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import UserMenu from "@/components/auth/UserMenu";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 type SidebarProps = {
   active: string;
@@ -30,6 +31,29 @@ const nav = [
 
 const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, user, onSignInClick, onSignUpClick, onProfileClick, onMyRecipesClick, onFavoritesClick }: SidebarProps) {
   const location = useLocation();
+  const [username, setUsername] = useState<string | null>(null);
+
+  // Fetch username from profiles table
+  useEffect(() => {
+    if (!user) {
+      setUsername(null);
+      return;
+    }
+
+    const fetchUsername = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .single();
+      
+      if (data?.username) {
+        setUsername(data.username);
+      }
+    };
+
+    fetchUsername();
+  }, [user]);
 
   return (
     <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg overflow-hidden">
@@ -79,7 +103,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
               />
               <div className="flex-1 min-w-0 flex flex-col justify-center -space-y-0.5">
                 <p className="font-medium text-foreground truncate text-sm leading-tight">
-                  {user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'}
+                  {username || user.email?.split('@')[0] || 'User'}
                 </p>
                 <button 
                   onClick={onProfileClick}
