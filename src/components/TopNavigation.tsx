@@ -4,7 +4,7 @@ import { Menu, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn, LogOut } from "lucide-react";
+import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
 
@@ -152,20 +152,6 @@ const TopNavigation = memo(function TopNavigation({
                         >
                           <User className="h-4 w-4 mr-2" />
                           View Profile
-                        </Button>
-
-                        {/* Sign Out Button */}
-                        <Button
-                          onClick={async () => {
-                            const { supabase } = await import("@/integrations/supabase/client");
-                            await supabase.auth.signOut();
-                            setOpen(false);
-                          }}
-                          variant="ghost"
-                          className="w-full rounded-organic-sm text-muted-foreground hover:text-foreground hover:bg-medium-charcoal"
-                        >
-                          <LogOut className="h-4 w-4 mr-2" />
-                          Sign Out
                         </Button>
                       </div>
                     ) : (

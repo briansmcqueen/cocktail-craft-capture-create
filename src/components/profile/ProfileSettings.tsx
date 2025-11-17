@@ -1,6 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -88,6 +91,22 @@ export default function ProfileSettings() {
     setSaving(false);
   };
 
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed out successfully",
+        description: "See you next time!",
+      });
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center p-8">Loading...</div>;
   }
@@ -122,6 +141,30 @@ export default function ProfileSettings() {
       </Card>
 
       <UserPreferencesForm />
+
+      {/* Sign Out Section */}
+      <Card className="bg-card border-border">
+        <CardHeader>
+          <CardTitle className="text-xl font-serif text-pure-white">Account</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Separator className="mb-4 bg-border" />
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-foreground">Sign Out</h3>
+              <p className="text-sm text-muted-foreground">Sign out of your account</p>
+            </div>
+            <Button
+              onClick={handleSignOut}
+              variant="outline"
+              className="rounded-organic-sm border-error text-error hover:bg-error/10"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
