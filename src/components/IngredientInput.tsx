@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { parseIngredientLine } from "@/utils/ingredientParser";
 
 type IngredientInputProps = {
   value: string;
@@ -61,6 +62,17 @@ export default function IngredientInput({
     }
   };
 
+  const handleBlur = () => {
+    // Normalize all ingredient lines on blur
+    const lines = value.split('\n');
+    const normalizedLines = lines.map(line => line.trim() ? parseIngredientLine(line) : line);
+    const normalizedValue = normalizedLines.join('\n');
+    
+    if (normalizedValue !== value) {
+      onChange(normalizedValue);
+    }
+  };
+
   const addIngredient = (ingredient: string) => {
     const lines = value.split('\n');
     const cursorPosition = textareaRef.current?.selectionStart || 0;
@@ -105,6 +117,7 @@ export default function IngredientInput({
         ref={textareaRef}
         value={value}
         onChange={(e) => handleInputChange(e.target.value)}
+        onBlur={handleBlur}
         placeholder={placeholder}
         required
         onFocus={() => {
