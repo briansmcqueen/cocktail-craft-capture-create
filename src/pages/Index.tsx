@@ -7,6 +7,9 @@ import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import ProfileSettings from "@/components/profile/ProfileSettings";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -14,6 +17,14 @@ export default function Index() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
   const [showProfileSettings, setShowProfileSettings] = useState(false);
+  
+  // Onboarding for new users
+  const {
+    showOnboarding,
+    loading: onboardingLoading,
+    completeOnboarding,
+    skipOnboarding,
+  } = useOnboarding(user);
   
   const {
     library,
@@ -132,12 +143,8 @@ export default function Index() {
     setShowForm(true);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+  if (loading || onboardingLoading) {
+    return <LoadingSpinner />;
   }
 
   if (showProfileSettings) {
@@ -199,6 +206,13 @@ export default function Index() {
         recipe={shareRecipe} 
         open={!!shareRecipe} 
         onOpenChange={(open) => !open && setShareRecipe(null)} 
+      />
+      
+      {/* Onboarding Modal for new users */}
+      <OnboardingModal
+        open={showOnboarding}
+        onComplete={completeOnboarding}
+        onSkip={skipOnboarding}
       />
     </>
   );
