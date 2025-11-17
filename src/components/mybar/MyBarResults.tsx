@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChefHat, Plus, User, ShoppingCart } from "lucide-react";
+import { Plus, User, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
 import BuyIngredientButton from "@/components/BuyIngredientButton";
 import WhatToBuyNext from "./WhatToBuyNext";
+import QuickAddCarousel from "./QuickAddCarousel";
 
 interface RecommendedIngredient {
   ingredient: Ingredient;
@@ -29,6 +30,7 @@ interface MyBarResultsProps {
   onAddToShoppingList?: (ingredientId: string) => void;
   user: any;
   loading?: boolean;
+  allIngredients: Ingredient[];
 }
 
 export default function MyBarResults({
@@ -43,7 +45,8 @@ export default function MyBarResults({
   onAddIngredient,
   onAddToShoppingList,
   user,
-  loading = false
+  loading = false,
+  allIngredients
 }: MyBarResultsProps) {
   const [showAllRecipes, setShowAllRecipes] = useState(false);
   
@@ -62,6 +65,13 @@ export default function MyBarResults({
 
   return (
     <div className="space-y-6">
+      {/* Quick Add Carousel */}
+      <QuickAddCarousel 
+        allIngredients={allIngredients}
+        myBarIngredients={myBarIngredients}
+        onAddIngredient={onAddIngredient}
+      />
+      
       {/* What to Buy Next section */}
       {whatToBuyNext.length > 0 && (
         <div className="mb-6">
@@ -77,8 +87,7 @@ export default function MyBarResults({
       {/* Recipes You Can Make */}
       {recipesICanMake.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-pure-white mb-4 flex items-center gap-2">
-            <ChefHat className="h-5 w-5" />
+          <h3 className="text-lg font-semibold text-pure-white mb-4">
             You Can Make ({recipesICanMake.length})
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -174,7 +183,7 @@ export default function MyBarResults({
       {/* Empty State - Has ingredients but no recipes */}
       {myBarIngredients.length > 0 && recipesICanMake.length === 0 && recipesNeedingOneIngredient.length === 0 && (
         <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
-          <ChefHat className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
+          <User className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
           <h3 className="text-lg font-medium text-light-text mb-2">
             Add More Ingredients
           </h3>

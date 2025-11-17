@@ -98,6 +98,7 @@ export default function MyBarEngine({
           onAddIngredient={toggleIngredient}
           user={user}
           loading={loading}
+          allIngredients={allIngredients}
         />
       </div>
 
