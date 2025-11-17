@@ -50,8 +50,8 @@ const TopNavigation = memo(function TopNavigation({
 
   return (
     <>
-      {/* Top Navigation Bar - Hidden on desktop */}
-      <div className="lg:hidden bg-background border-b border-border px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+      {/* Top Navigation Bar - Mobile only */}
+      <div className="md:hidden bg-background border-b border-border px-4 py-3 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>

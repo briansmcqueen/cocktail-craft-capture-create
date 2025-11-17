@@ -78,7 +78,7 @@ export default function AuthenticatedView({
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
-      {/* Top Navigation for Mobile/Tablet */}
+      {/* Top Navigation for Mobile Only */}
       <TopNavigation
         user={user}
         activeLibrary={library}
@@ -92,7 +92,7 @@ export default function AuthenticatedView({
       />
       
       <div className="flex h-full">
-        {/* Desktop & Tablet Sidebar - Always visible on md+ screens */}
+        {/* Sidebar - Visible on tablet and desktop */}
         <div className="hidden md:block">
           <Sidebar
             active={library}
