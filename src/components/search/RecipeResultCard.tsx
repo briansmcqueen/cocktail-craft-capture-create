@@ -88,7 +88,13 @@ export default function RecipeResultCard({
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await toggleFavorite(cocktail.id, onShowAuthModal);
+    await toggleFavorite(cocktail.id, () => {
+      if (window.__openAuthModal) {
+        window.__openAuthModal('signup', "Love this drink? Save it to your favorites!");
+      } else if (onShowAuthModal) {
+        onShowAuthModal();
+      }
+    });
   };
 
   const handleTagClick = (tag: string, e: React.MouseEvent) => {
