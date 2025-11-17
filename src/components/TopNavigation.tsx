@@ -111,20 +111,49 @@ const TopNavigation = memo(function TopNavigation({
                   {/* Authentication section */}
                   <div className="border-t border-light-charcoal pt-3">
                     {user ? (
-                      <UserMenu
-                        onProfileClick={() => {
-                          onProfileClick();
-                          setOpen(false);
-                        }}
-                        onMyRecipesClick={() => {
-                          onMyRecipesClick();
-                          setOpen(false);
-                        }}
-                        onFavoritesClick={() => {
-                          onFavoritesClick();
-                          setOpen(false);
-                        }}
-                      />
+                      <div className="space-y-3">
+                        {/* User info display */}
+                        <div className="flex items-center gap-3 px-3 py-2">
+                          <div className="relative h-12 w-12 rounded-full overflow-hidden bg-primary flex items-center justify-center">
+                            {user.user_metadata?.avatar_url ? (
+                              <img 
+                                src={user.user_metadata.avatar_url} 
+                                alt={user.user_metadata?.full_name || 'User'}
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-primary-foreground font-bold text-lg">
+                                {user.user_metadata?.full_name
+                                  ?.split(' ')
+                                  .map((n: string) => n[0])
+                                  .join('')
+                                  .toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-foreground truncate">
+                              {user.user_metadata?.full_name || 'User'}
+                            </p>
+                            <p className="text-sm text-muted-foreground truncate">
+                              {user.email}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* View Profile Button */}
+                        <Button
+                          onClick={() => {
+                            onProfileClick();
+                            setOpen(false);
+                          }}
+                          variant="outline"
+                          className="w-full rounded-organic-sm border-border hover:bg-medium-charcoal"
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          View Profile
+                        </Button>
+                      </div>
                     ) : (
                       <div className="space-y-2">
                         <Button 
