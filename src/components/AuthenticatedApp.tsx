@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import UserMenu from './auth/UserMenu';
 import ProfileSettings from './profile/ProfileSettings';
 import { toast } from '@/hooks/use-toast';
+import { BackButton } from '@/components/ui/back-button';
 
 interface AuthenticatedAppProps {
   children: React.ReactNode;
@@ -200,12 +201,9 @@ export default function AuthenticatedApp({
     <div className="min-h-screen">
       {viewMode !== 'main' && (
         <div className="p-4 border-b">
-          <button
-            onClick={() => setViewMode('main')}
-            className="text-available hover:text-available/80 font-medium"
-          >
-            ← Back to Barbook
-          </button>
+          <BackButton onClick={() => setViewMode('main')}>
+            Back to Barbook
+          </BackButton>
         </div>
       )}
       {renderContent()}
