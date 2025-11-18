@@ -22,6 +22,8 @@ interface SearchInterfaceProps {
   showCanMakeFirst?: boolean;
   className?: string;
   user?: any;
+  hideResults?: boolean;
+  onFilteredRecipesChange?: (recipes: Cocktail[]) => void;
 }
 
 export default function SearchInterface({
@@ -35,7 +37,9 @@ export default function SearchInterface({
   emptyStateDescription,
   showCanMakeFirst = false,
   className,
-  user
+  user,
+  hideResults = false,
+  onFilteredRecipesChange
 }: SearchInterfaceProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   
