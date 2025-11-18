@@ -176,6 +176,11 @@ export default function RecipePage() {
   };
 
   const handleRiff = () => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+    
     // Navigate to main app with remix state
     const remixedRecipe = { 
       ...recipe, 
