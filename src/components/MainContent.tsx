@@ -87,7 +87,6 @@ export default function MainContent({
       <div className="space-y-4 lg:space-y-6">
         <LibraryHeader
           library={library as any}
-          onCopyDialogOpen={() => {}}
         />
 
         {library !== "featured" && library !== "ingredients" && library !== "learn" && (
