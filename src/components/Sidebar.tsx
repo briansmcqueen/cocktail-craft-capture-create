@@ -6,6 +6,7 @@ import UserMenu from "@/components/auth/UserMenu";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { memo } from "react";
 import UserProfileDisplay from "@/components/auth/UserProfileDisplay";
+import NotificationsDropdown from "@/components/NotificationsDropdown";
 
 type SidebarProps = {
   active: string;
@@ -36,8 +37,9 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
   return (
     <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg overflow-hidden">
       <div className="px-6 mb-8 flex-shrink-0">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center justify-between gap-3 mb-2">
           <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
+          {user && <NotificationsDropdown />}
         </div>
       </div>
       <nav className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 px-3">
