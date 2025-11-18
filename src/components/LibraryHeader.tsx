@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-type Library = "featured" | "all" | "classics" | "favorites" | "mine" | "ingredients";
+type Library = "featured" | "all" | "classics" | "favorites" | "mine" | "ingredients" | "feed" | "learn";
 
 type LibraryHeaderProps = {
   library: Library;
@@ -15,13 +15,15 @@ function getLibraryTitle(library: Library): string {
     case "classics": return "Classic Collection";
     case "favorites": return "Your Favorites";
     case "mine": return "My Drinks";
+    case "feed": return "Your Feed";
+    case "learn": return "Learn";
     default: return "Cocktails";
   }
 }
 
 export default function LibraryHeader({ library }: LibraryHeaderProps) {
-  // Don't render anything for the featured page or ingredients page since they have their own section headings
-  if (library === "featured" || library === "ingredients") {
+  // Don't render anything for the featured page, ingredients page, feed, or learn since they have their own section headings
+  if (library === "featured" || library === "ingredients" || library === "feed" || library === "learn") {
     return null;
   }
 
