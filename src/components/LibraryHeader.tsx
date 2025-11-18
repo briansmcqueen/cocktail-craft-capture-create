@@ -6,7 +6,6 @@ type Library = "featured" | "all" | "classics" | "favorites" | "mine" | "ingredi
 
 type LibraryHeaderProps = {
   library: Library;
-  onCopyDialogOpen: () => void;
 };
 
 function getLibraryTitle(library: Library): string {
@@ -20,7 +19,7 @@ function getLibraryTitle(library: Library): string {
   }
 }
 
-export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHeaderProps) {
+export default function LibraryHeader({ library }: LibraryHeaderProps) {
   // Don't render anything for the featured page or ingredients page since they have their own section headings
   if (library === "featured" || library === "ingredients") {
     return null;
@@ -33,16 +32,6 @@ export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHead
         <h2 className="text-xl font-display font-semibold text-pure-white">
           {getLibraryTitle(library)}
         </h2>
-        {library === "mine" && (
-          <Button 
-            variant="secondary" 
-            size="sm"
-            className="mt-2"
-            onClick={onCopyDialogOpen}
-          >
-            Copy from…
-          </Button>
-        )}
       </div>
 
       {/* Desktop header with NYT styling */}
@@ -52,14 +41,6 @@ export default function LibraryHeader({ library, onCopyDialogOpen }: LibraryHead
             {getLibraryTitle(library)}
           </h2>
         </div>
-        {library === "mine" && (
-          <Button 
-            variant="secondary" 
-            onClick={onCopyDialogOpen}
-          >
-            Copy from…
-          </Button>
-        )}
       </div>
     </>
   );
