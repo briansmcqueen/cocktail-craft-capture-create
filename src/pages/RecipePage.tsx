@@ -305,7 +305,7 @@ export default function RecipePage() {
                 <div className="flex flex-wrap gap-3 mb-6">
                   <Button
                     variant="secondary"
-                    className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 hover:scale-[1.02] hover:rotate-[0.5deg] ${
                       isRecipeFavorited ? 'text-heart-red border-heart-red/30 bg-heart-red/10 hover:bg-heart-red/20' : 'text-pure-white hover:text-heart-red'
                     }`}
                     onClick={handleToggleFavorite}
@@ -316,7 +316,7 @@ export default function RecipePage() {
                   
                   <Button
                     variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary"
+                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
                     onClick={handleShare}
                   >
                     <Share size={16} />
@@ -325,7 +325,7 @@ export default function RecipePage() {
 
                   <Button
                     variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary"
+                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
                     onClick={handleRiff}
                   >
                     <Martini size={16} />

@@ -34,7 +34,7 @@ export default function MyBarActionBar({
           View
         </Button>
         {oneAwayCount > 0 && (
-          <Button variant="secondary" size="sm" className="rounded-organic-sm" onClick={onOpenOneAway}>
+          <Button variant="secondary" size="sm" className="rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300" onClick={onOpenOneAway}>
             +1 Away
           </Button>
         )}

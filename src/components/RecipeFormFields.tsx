@@ -186,7 +186,7 @@ export default function RecipeFormFields({
               type="button"
               onClick={() => inputRef.current?.click()}
               variant="secondary"
-              className="flex items-center gap-1 text-pure-white hover:text-pure-white"
+              className="flex items-center gap-1 text-pure-white hover:text-pure-white hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
               disabled={uploading}
             >
               {uploading ? (

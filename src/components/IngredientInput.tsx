@@ -106,7 +106,7 @@ export default function IngredientInput({
           type="button"
           variant="secondary"
           size="sm"
-          className="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
+          className="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
           onClick={toggleQuickAdd}
         >
           Quick Add

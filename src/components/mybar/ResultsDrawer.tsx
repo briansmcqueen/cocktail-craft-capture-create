@@ -93,7 +93,7 @@ export default function ResultsDrawer({
                               <Button
                                 variant="secondary"
                                 size="sm"
-                                className="rounded-organic-sm"
+                                className="rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
                                 onClick={() => onAddIngredient(recipe.missingIngredient!)}
                               >
                                 Add

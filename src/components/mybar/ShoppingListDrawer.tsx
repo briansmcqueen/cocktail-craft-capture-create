@@ -49,7 +49,7 @@ export default function ShoppingListDrawer({
                       ) : null}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="secondary" className="rounded-organic-sm" onClick={() => onPurchased(item.id)}>
+                      <Button size="sm" variant="secondary" className="rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300" onClick={() => onPurchased(item.id)}>
                         <CheckCircle2 className="h-4 w-4 mr-1" /> Bought
                       </Button>
                       <Button size="sm" variant="outline" className="rounded-organic-sm" onClick={() => onRemove(item.ingredient_id)}>

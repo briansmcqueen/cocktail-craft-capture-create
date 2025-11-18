@@ -67,7 +67,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
           onClick={handleAdd} 
           size="sm" 
           variant="secondary" 
-          className="rounded-organic-sm text-pure-white hover:text-pure-white"
+          className="rounded-organic-sm text-pure-white hover:text-pure-white hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
         >
           <Tag size={16} />
         </Button>
