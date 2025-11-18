@@ -9,7 +9,7 @@ import Favorites from "@/components/Favorites";
 import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
 import Learn from "@/components/Learn";
-import { ChefHat } from "lucide-react";
+import { Edit } from "lucide-react";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 
 interface MainContentProps {
@@ -149,7 +149,7 @@ export default function MainContent({
             />
           ) : (
             <AuthPrompt
-              icon={ChefHat}
+              icon={Edit}
               title="Create & Share Your Recipes"
               description="Sign up for a free account to create your own cocktail recipes and share them with the community."
             />

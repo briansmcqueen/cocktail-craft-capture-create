@@ -1,6 +1,6 @@
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { Heart } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import UniversalRecipeCard from "./UniversalRecipeCard";
 import { useAuth } from "@/hooks/useAuth";
 import AuthPrompt from "@/components/auth/AuthPrompt";
@@ -19,7 +19,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   if (!user) {
     return (
       <AuthPrompt
-        icon={Heart}
+        icon={Star}
         title="Save Your Favorite Cocktails"
         description="Create a free account to save your favorite recipes and access them from any device."
       />
