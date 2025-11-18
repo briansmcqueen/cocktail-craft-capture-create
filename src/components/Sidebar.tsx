@@ -118,7 +118,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
               <Button 
                 onClick={onSignUpClick}
                 variant="secondary"
-                className="w-full gap-2 rounded-organic-sm"
+                className="w-full gap-2 rounded-organic-sm text-pure-white"
               >
                 <User className="h-4 w-4" />
                 Create Account
