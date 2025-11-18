@@ -154,28 +154,49 @@ export default function ProfileForm({
       );
     }
 
+    const charCount = usernameInput.length;
+    const charCountColor = charCount < 3 ? 'text-error-red' : charCount === 30 ? 'text-amber-500' : 'text-muted-foreground';
+
     if (usernameStatus.checking) {
-      return <p className="text-xs text-muted-foreground mt-1">Checking availability...</p>;
+      return (
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-xs text-muted-foreground">Checking availability...</p>
+          <p className={`text-xs ${charCountColor}`}>{charCount}/30</p>
+        </div>
+      );
     }
 
     if (usernameStatus.available === true) {
-      return <p className="text-xs text-emerald-green mt-1 flex items-center gap-1">
-        <Check className="w-3 h-3" />
-        {usernameStatus.message}
-      </p>;
+      return (
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-xs text-emerald-green flex items-center gap-1">
+            <Check className="w-3 h-3" />
+            {usernameStatus.message}
+          </p>
+          <p className={`text-xs ${charCountColor}`}>{charCount}/30</p>
+        </div>
+      );
     }
 
     if (usernameStatus.available === false) {
-      return <p className="text-xs text-error-red mt-1 flex items-center gap-1">
-        <X className="w-3 h-3" />
-        {usernameStatus.message}
-      </p>;
+      return (
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-xs text-error-red flex items-center gap-1">
+            <X className="w-3 h-3" />
+            {usernameStatus.message}
+          </p>
+          <p className={`text-xs ${charCountColor}`}>{charCount}/30</p>
+        </div>
+      );
     }
 
     return (
-      <p className="text-xs text-muted-foreground mt-1">
-        3-30 characters: letters, numbers, hyphens, and underscores only
-      </p>
+      <div className="flex items-center justify-between mt-1">
+        <p className="text-xs text-muted-foreground">
+          3-30 characters: letters, numbers, hyphens, and underscores only
+        </p>
+        <p className={`text-xs ${charCountColor}`}>{charCount}/30</p>
+      </div>
     );
   };
 
