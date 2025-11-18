@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import UserMenu from "@/components/auth/UserMenu";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { memo, useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { memo } from "react";
+import UserProfileDisplay from "@/components/auth/UserProfileDisplay";
 
 type SidebarProps = {
   active: string;
@@ -31,29 +31,6 @@ const nav = [
 
 const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, user, onSignInClick, onSignUpClick, onProfileClick, onMyRecipesClick, onFavoritesClick }: SidebarProps) {
   const location = useLocation();
-  const [username, setUsername] = useState<string | null>(null);
-
-  // Fetch username from profiles table
-  useEffect(() => {
-    if (!user) {
-      setUsername(null);
-      return;
-    }
-
-    const fetchUsername = async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('id', user.id)
-        .single();
-      
-      if (data?.username) {
-        setUsername(data.username);
-      }
-    };
-
-    fetchUsername();
-  }, [user]);
 
   return (
     <aside className="bg-rich-charcoal border-r border-light-charcoal w-60 h-screen flex flex-col py-6 gap-2 sticky top-0 rounded-organic-lg overflow-hidden">
@@ -95,23 +72,22 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
         {/* Authentication section */}
         <div className="border-t border-light-charcoal pt-3">
           {user ? (
-            <div className="flex items-center gap-2">
-              <UserMenu
-                onProfileClick={onProfileClick}
-                onMyRecipesClick={onMyRecipesClick}
-                onFavoritesClick={onFavoritesClick}
+            <div className="space-y-3">
+              {/* User info display */}
+              <UserProfileDisplay 
+                user={user} 
+                avatarSize="md"
               />
-              <div className="flex-1 min-w-0 flex flex-col justify-center -space-y-0.5">
-                <p className="font-medium text-foreground truncate text-sm leading-tight">
-                  {username || user.email?.split('@')[0] || 'User'}
-                </p>
-                <button 
-                  onClick={onProfileClick}
-                  className="text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors text-left leading-tight"
-                >
-                  View Account
-                </button>
-              </div>
+
+              {/* View Profile Button */}
+              <Button
+                onClick={onProfileClick}
+                variant="outline"
+                className="w-full rounded-organic-sm border-border hover:bg-medium-charcoal"
+              >
+                <User className="h-4 w-4 mr-2" />
+                View Profile
+              </Button>
             </div>
           ) : (
             <div className="space-y-2">
