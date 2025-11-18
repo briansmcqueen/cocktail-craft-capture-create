@@ -22,6 +22,7 @@ interface SearchResultsProps {
   emptyStateDescription?: string;
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;
+  user?: any;
 }
 
 type ViewMode = 'grid' | 'list';
@@ -36,7 +37,8 @@ export default function SearchResults({
   emptyStateTitle = "No cocktails found",
   emptyStateDescription = "Try adjusting your filters or search terms",
   hasActiveFilters = false,
-  onClearFilters
+  onClearFilters,
+  user
 }: SearchResultsProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,6 +64,10 @@ export default function SearchResults({
   }
 
   if (totalResults === 0) {
+    if (!user) {
+      return null;
+    }
+    
     return (
       <div className="text-center py-12 px-4">
         <ChefHat className="mx-auto mb-4 text-muted-foreground" size={48} />

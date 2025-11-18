@@ -97,6 +97,7 @@ export default function MainContent({
               onRecipeClick={handleRecipeClick}
               onTagClick={handleTagClick}
               placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "your recipes" : "all recipes"}...`}
+              user={user}
             />
           </div>
         )}

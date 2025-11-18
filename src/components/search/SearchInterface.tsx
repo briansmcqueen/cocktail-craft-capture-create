@@ -20,6 +20,7 @@ interface SearchInterfaceProps {
   emptyStateDescription?: string;
   showCanMakeFirst?: boolean;
   className?: string;
+  user?: any;
 }
 
 export default function SearchInterface({
@@ -32,7 +33,8 @@ export default function SearchInterface({
   emptyStateTitle,
   emptyStateDescription,
   showCanMakeFirst = false,
-  className
+  className,
+  user
 }: SearchInterfaceProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   
@@ -180,6 +182,7 @@ export default function SearchInterface({
         emptyStateDescription={emptyStateDescription}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearFilters}
+        user={user}
       />
     </div>
   );
