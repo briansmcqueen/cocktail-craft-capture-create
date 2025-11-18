@@ -90,7 +90,7 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && library !== "all" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
@@ -156,20 +156,7 @@ export default function MainContent({
               description="Sign up for a free account to create your own cocktail recipes and share them with the community."
             />
           )
-        ) : (
-          <LazyRecipeGrid
-            recipes={getFilteredRecipes()}
-            onRecipeClick={handleRecipeClick}
-            onToggleFavorite={() => {}}
-            onLike={handleLikeWithAuth}
-            onShareRecipe={handleShareRecipe}
-            onTagClick={handleTagClick}
-            onShowForm={handleAddRecipe}
-            forceUpdate={forceUpdate}
-            library={library}
-            onShowAuthModal={() => setShowAuthModal(true)}
-          />
-        )}
+        ) : null}
       </div>
     </div>
   );
