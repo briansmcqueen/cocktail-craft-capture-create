@@ -1,6 +1,6 @@
 import React from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { Heart, LogIn } from "lucide-react";
+import { Heart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UniversalRecipeCard from "./UniversalRecipeCard";
 import { useAuth } from "@/hooks/useAuth";
@@ -32,7 +32,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
             size="lg"
             className="rounded-organic-md"
           >
-            <LogIn className="mr-2 h-5 w-5" />
+            <User className="mr-2 h-5 w-5" />
             Create Free Account
           </Button>
           <Button

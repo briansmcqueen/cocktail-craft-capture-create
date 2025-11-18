@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, LogIn, Martini } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini } from "lucide-react";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
@@ -454,7 +454,7 @@ export default function IngredientSelector({
                 size="lg"
                 className="rounded-organic-md"
               >
-                <LogIn className="mr-2 h-5 w-5" />
+                <User className="mr-2 h-5 w-5" />
                 Create Free Account
               </Button>
               <Button
