@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { User, Calendar, BookOpen, Heart, ArrowLeft } from 'lucide-react';
+import { User, Calendar, BookOpen, Heart, ArrowLeft, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import RecipeCard from '@/components/RecipeCard';
+import FollowButton from '@/components/FollowButton';
 import { publicProfileService, PublicProfile, PublicRecipe } from '@/services/publicProfileService';
+import { followsService, FollowStats } from '@/services/followsService';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 import { classicCocktails } from '@/data/classicCocktails';
@@ -19,6 +21,7 @@ export default function PublicProfilePage() {
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [recipes, setRecipes] = useState<PublicRecipe[]>([]);
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
+  const [followStats, setFollowStats] = useState<FollowStats>({ followerCount: 0, followingCount: 0 });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('recipes');
 
@@ -51,6 +54,10 @@ export default function PublicProfilePage() {
       // Load public favorites
       const favoritesData = await publicProfileService.getUserPublicFavorites(profileData.id);
       setFavoriteRecipeIds(favoritesData);
+
+      // Load follow stats
+      const stats = await followsService.getFollowStats(profileData.id);
+      setFollowStats(stats);
     } catch (error) {
       console.error('Error loading profile:', error);
     } finally {
@@ -107,9 +114,16 @@ export default function PublicProfilePage() {
 
             {/* Profile Info */}
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-semibold text-pure-white mb-1">
-                {profile.full_name || profile.username}
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-semibold text-pure-white">
+                  {profile.full_name || profile.username}
+                </h1>
+                <FollowButton 
+                  userId={profile.id} 
+                  username={profile.username}
+                  onFollowChange={loadProfileData}
+                />
+              </div>
               <p className="text-lg text-soft-gray mb-3">@{profile.username}</p>
               
               {profile.bio && (
@@ -127,6 +141,14 @@ export default function PublicProfilePage() {
                     <span>{favoriteRecipes.length} Public Favorite{favoriteRecipes.length !== 1 ? 's' : ''}</span>
                   </div>
                 )}
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  <span>{followStats.followerCount} Follower{followStats.followerCount !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  <span>{followStats.followingCount} Following</span>
+                </div>
               </div>
             </div>
           </div>

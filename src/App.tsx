@@ -17,6 +17,7 @@ const Index = lazy(() => import("./pages/Index"));
 const Admin = lazy(() => import("./pages/Admin"));
 const UserProfile = lazy(() => import("./components/UserProfile"));
 const PublicProfilePage = lazy(() => import("./pages/PublicProfilePage"));
+const FeedPage = lazy(() => import("./pages/FeedPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const RecipePage = lazy(() => import("./pages/RecipePage"));
 const ArticlePage = lazy(() => import("./pages/ArticlePage"));
@@ -73,6 +74,7 @@ const App = () => (
                   <Route path="/favorites" element={<Index />} />
                   <Route path="/recipes/my-drinks" element={<Index />} />
                   <Route path="/learn" element={<Index />} />
+                  <Route path="/feed" element={<FeedPage />} />
                   <Route path="/admin" element={<Admin />} />
                   <Route path="/user/:userId" element={<UserProfile />} />
                   <Route path="/profile/:username" element={<PublicProfilePage />} />
