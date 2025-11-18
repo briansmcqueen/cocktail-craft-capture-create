@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, LogIn } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, LogIn, Martini } from "lucide-react";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
@@ -431,36 +431,43 @@ export default function IngredientSelector({
 
       {/* Empty State - No Ingredients */}
       {myBarIngredients.length === 0 && (
-        <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
-          {user ? (
-            <>
-              <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
-              <h3 className="text-lg font-medium text-light-text mb-2">
-                Start Building Your Bar
-              </h3>
-              <p className="text-soft-gray">
-                Search and add ingredients you have on hand to discover what cocktails you can make.
-              </p>
-            </>
-          ) : (
-            <>
-              <LogIn className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
-              <h3 className="text-lg font-medium text-light-text mb-2">
-                Sign in to start building your bar
-              </h3>
-              <p className="text-soft-gray mb-4">
-                Create an account to save your ingredients and discover personalized cocktail recommendations.
-              </p>
+        user ? (
+          <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
+            <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
+            <h3 className="text-lg font-medium text-light-text mb-2">
+              Start Building Your Bar
+            </h3>
+            <p className="text-soft-gray">
+              Search and add ingredients you have on hand to discover what cocktails you can make.
+            </p>
+          </Card>
+        ) : (
+          <div className="container mx-auto px-md py-xl text-center">
+            <Martini className="mx-auto mb-lg text-available" size={64} />
+            <h2 className="text-3xl font-medium mb-md text-pure-white">Build Your Personal Bar</h2>
+            <p className="text-light-text text-base max-w-md mx-auto mb-lg">
+              Create a free account to save your ingredients and discover personalized cocktail recommendations.
+            </p>
+            <div className="flex gap-4 justify-center">
               <Button
                 onClick={() => openAuthModal('signup')}
+                size="lg"
                 className="rounded-organic-md"
               >
-                <LogIn className="h-4 w-4 mr-2" />
-                Sign In or Create Account
+                <LogIn className="mr-2 h-5 w-5" />
+                Create Free Account
               </Button>
-            </>
-          )}
-        </Card>
+              <Button
+                onClick={() => openAuthModal('signin')}
+                variant="outline"
+                size="lg"
+                className="rounded-organic-md"
+              >
+                Sign In
+              </Button>
+            </div>
+          </div>
+        )
       )}
     </div>
   );
