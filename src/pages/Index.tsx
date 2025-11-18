@@ -155,7 +155,7 @@ export default function Index() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <button
             onClick={() => setShowProfileSettings(false)}
-            className="mb-4 text-primary hover:text-primary/80 font-medium"
+            className="mb-4 text-available hover:text-available/80 font-medium"
           >
             ← Back to recipes
           </button>
