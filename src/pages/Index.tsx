@@ -10,6 +10,7 @@ import ProfileSettings from "@/components/profile/ProfileSettings";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { BackButton } from "@/components/ui/back-button";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -153,12 +154,11 @@ export default function Index() {
     return (
       <div className="min-h-screen bg-rich-charcoal">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <button
-            onClick={() => setShowProfileSettings(false)}
-            className="mb-4 text-available hover:text-available/80 font-medium"
-          >
-            ← Back to recipes
-          </button>
+          <div className="mb-4">
+            <BackButton onClick={() => setShowProfileSettings(false)}>
+              Back to recipes
+            </BackButton>
+          </div>
           <ProfileSettings />
         </div>
       </div>
