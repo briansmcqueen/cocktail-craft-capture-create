@@ -13,6 +13,11 @@ export interface UserStats {
   recipes_count: number;
 }
 
+export interface FollowStats {
+  followerCount: number;
+  followingCount: number;
+}
+
 export async function followUser(userId: string): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -143,3 +148,90 @@ export async function getFollowing(userId: string): Promise<Follow[]> {
 
   return data || [];
 }
+
+export async function getFollowStats(userId: string): Promise<FollowStats> {
+  try {
+    const [followerResult, followingResult] = await Promise.all([
+      supabase.rpc('get_follower_count', { p_user_id: userId }),
+      supabase.rpc('get_following_count', { p_user_id: userId })
+    ]);
+
+    return {
+      followerCount: followerResult.data || 0,
+      followingCount: followingResult.data || 0
+    };
+  } catch (error) {
+    console.error('Error fetching follow stats:', error);
+    return { followerCount: 0, followingCount: 0 };
+  }
+}
+
+export async function getFollowingUserIds(): Promise<string[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from('follows')
+    .select('following_id')
+    .eq('follower_id', user.id);
+
+  if (error) {
+    console.error('Error fetching following users:', error);
+    return [];
+  }
+
+  return data?.map(f => f.following_id) || [];
+}
+
+export async function getFollowedUsersRecipes(limit: number = 20) {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return [];
+
+  // Get list of users the current user follows
+  const followingIds = await getFollowingUserIds();
+  
+  if (followingIds.length === 0) return [];
+
+  // Fetch recent public recipes from followed users
+  const { data, error } = await supabase
+    .from('recipes')
+    .select(`
+      id,
+      name,
+      description,
+      image_url,
+      tags,
+      created_at,
+      rating,
+      difficulty,
+      user_id,
+      ingredients,
+      instructions
+    `)
+    .in('user_id', followingIds)
+    .eq('is_public', true)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching followed users recipes:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+// Export as a service object for consistency with new components
+export const followsService = {
+  isFollowing,
+  followUser,
+  unfollowUser,
+  getFollowStats,
+  getFollowingUserIds,
+  getFollowedUsersRecipes,
+  getUserStats,
+  getFollowers,
+  getFollowing
+};

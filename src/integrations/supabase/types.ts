@@ -391,6 +391,39 @@ export type Database = {
         }
         Relationships: []
       }
+      recipe_notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          recipe_author_id: string
+          recipe_id: string
+          recipe_name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          recipe_author_id: string
+          recipe_id: string
+          recipe_name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          recipe_author_id?: string
+          recipe_id?: string
+          recipe_name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       recipe_ratings: {
         Row: {
           created_at: string
@@ -788,6 +821,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_follower_count: { Args: { p_user_id: string }; Returns: number }
+      get_following_count: { Args: { p_user_id: string }; Returns: number }
       get_public_profile_by_username: {
         Args: { p_username: string }
         Returns: {

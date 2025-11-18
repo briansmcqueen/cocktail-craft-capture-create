@@ -5,7 +5,7 @@ import { Menu, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn } from "lucide-react";
+import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
 
@@ -24,6 +24,7 @@ interface MobileNavigationProps {
 const nav = [
   { id: "featured", label: "Featured", icon: Home, path: "/" },
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
+  { id: "feed", label: "Feed", icon: Users, path: "/feed" },
   { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
