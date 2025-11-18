@@ -160,7 +160,7 @@ export default function ArticlePage() {
                     </span>
                   )}
                 </div>
-                <Button variant="secondary" size="sm" className="ml-auto rounded-organic-sm inline-flex items-center gap-2" onClick={() => setShareOpen(true)}>
+                <Button variant="secondary" size="sm" className="ml-auto rounded-organic-sm inline-flex items-center gap-2 text-pure-white" onClick={() => setShareOpen(true)}>
                   <Share size={16} /> Share
                 </Button>
               </div>
