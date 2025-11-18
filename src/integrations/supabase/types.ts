@@ -204,18 +204,21 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          is_public: boolean | null
           recipe_id: string
           user_id: string
         }
         Insert: {
           created_at?: string | null
           id?: string
+          is_public?: boolean | null
           recipe_id: string
           user_id: string
         }
         Update: {
           created_at?: string | null
           id?: string
+          is_public?: boolean | null
           recipe_id?: string
           user_id?: string
         }
