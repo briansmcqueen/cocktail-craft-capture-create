@@ -8,6 +8,7 @@ import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn, Users } from 
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
 import UserProfileDisplay from "@/components/auth/UserProfileDisplay";
+import NotificationsDropdown from "@/components/NotificationsDropdown";
 
 interface TopNavigationProps {
   user: SupabaseUser | null;
@@ -175,6 +176,16 @@ const TopNavigation = memo(function TopNavigation({
           <h1 className="text-2xl font-medium text-pure-white tracking-tight">
             BARBOOK
           </h1>
+        </div>
+        
+        {/* Right side actions */}
+        <div className="flex items-center gap-2">
+          {user && <NotificationsDropdown />}
+          <UserMenu
+            onProfileClick={onProfileClick}
+            onMyRecipesClick={onMyRecipesClick}
+            onFavoritesClick={onFavoritesClick}
+          />
         </div>
       </div>
     </>
