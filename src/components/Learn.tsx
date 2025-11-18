@@ -99,35 +99,35 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-sm text-muted-foreground">Loading articles...</p>
+      <div className="text-center py-16">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-sm text-light-text">Loading articles...</p>
       </div>
     );
   }
 
   return (
     <>
-      <div className="space-y-12">
-        {/* Page Header */}
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <BookOpen className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl lg:text-5xl font-bold text-pure-white">Learn</h1>
+      <div className="space-y-8 lg:space-y-12">
+        {/* Page Header with organic styling */}
+        <div className="text-center pb-6 border-b border-border/30">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <BookOpen className="h-7 w-7 text-primary" />
+            <h1 className="text-3xl lg:text-4xl font-display font-bold text-pure-white tracking-tight">Learn</h1>
           </div>
-          <p className="text-lg text-light-text max-w-2xl mx-auto">
+          <p className="text-base lg:text-lg text-light-text max-w-2xl mx-auto">
             Master the art of cocktail making with expert techniques, tips, and insights from professional bartenders.
           </p>
         </div>
 
         {/* Featured Articles */}
         {featuredArticles.length > 0 && (
-          <section>
-            <div className="flex items-center gap-3 mb-8">
+          <section className="space-y-6">
+            <div className="flex items-center gap-3">
               <TrendingUp className="h-5 w-5 text-primary" />
-              <h2 className="text-2xl font-bold text-pure-white">Featured Articles</h2>
+              <h2 className="text-xl lg:text-2xl font-display font-semibold text-pure-white">Featured Articles</h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               {featuredArticles.map((article) => (
                 <ArticleCard
                   key={article.id}
@@ -143,18 +143,18 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
         )}
 
         {/* All Articles */}
-        <section>
-          <h2 className="text-2xl font-bold text-pure-white mb-8">All Articles</h2>
+        <section className="space-y-6">
+          <h2 className="text-xl lg:text-2xl font-display font-semibold text-pure-white">All Articles</h2>
           {recentArticles.length === 0 ? (
-            <div className="text-center py-12">
-              <BookOpen className="mx-auto mb-4 text-muted-foreground" size={48} />
-              <h3 className="text-xl font-medium text-pure-white mb-2">No articles yet</h3>
+            <div className="text-center py-16 bg-card/30 rounded-organic-lg border border-border/50">
+              <BookOpen className="mx-auto mb-4 text-soft-gray" size={48} />
+              <h3 className="text-lg font-semibold text-pure-white mb-2">No articles yet</h3>
               <p className="text-light-text">
                 Check back soon for cocktail techniques, tips, and expert insights.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
               {recentArticles.map((article) => (
                 <ArticleCard
                   key={article.id}

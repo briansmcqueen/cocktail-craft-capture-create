@@ -39,8 +39,9 @@ export default function ArticleCard({
 
   return (
     <Card 
-      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border-border rounded-organic-md group overflow-hidden"
+      className="cursor-pointer transition-all duration-400 bg-card border-border rounded-organic-md shadow-glass hover:shadow-xl group overflow-hidden active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100"
       onClick={() => onArticleClick(article)}
+      style={{ transitionTimingFunction: 'var(--timing-pour)' }}
     >
       <CardContent className="p-0">
         {/* Hero image */}
@@ -56,30 +57,30 @@ export default function ArticleCard({
 
         {/* Content */}
         <div className="p-4">
-          <h3 className="font-bold text-lg text-pure-white line-clamp-1 mb-2">
+          <h3 className="font-display font-bold text-lg text-pure-white line-clamp-1 mb-2">
             {article.title}
           </h3>
           
           {/* Article excerpt */}
-          <p className="text-sm text-light-text line-clamp-3 mb-3">
+          <p className="text-sm text-light-text line-clamp-2 mb-3">
             {article.excerpt || "Discover tips, techniques, and insights from the world of cocktail making."}
           </p>
 
           {/* Published date */}
-          <div className="flex items-center gap-1 mb-3">
-            <Calendar size={14} className="text-soft-gray" />
+          <div className="flex items-center gap-1.5 mb-3">
+            <Calendar size={13} className="text-soft-gray" />
             <span className="text-xs text-soft-gray">
               {formatDate(article.created_at)}
             </span>
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <Button
               variant="default"
               size="sm"
               onClick={() => onArticleClick(article)}
-              className="flex-1 mr-2 rounded-organic-sm"
+              className="flex-1 rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
             >
               Read Article
             </Button>
@@ -89,8 +90,8 @@ export default function ArticleCard({
               size="sm"
               onClick={handleToggleFavorite}
               className={cn(
-                "h-8 w-8 p-0 rounded-organic-sm",
-                isFavorite && "text-red-500 hover:text-red-600"
+                "h-8 w-8 p-0 rounded-organic-sm hover:scale-110 transition-all duration-300",
+                isFavorite && "text-heart-red hover:text-heart-red"
               )}
             >
               <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
