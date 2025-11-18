@@ -7,6 +7,7 @@ import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
+import UserProfileDisplay from "@/components/auth/UserProfileDisplay";
 
 interface TopNavigationProps {
   user: SupabaseUser | null;
@@ -113,35 +114,11 @@ const TopNavigation = memo(function TopNavigation({
                     {user ? (
                       <div className="space-y-3">
                         {/* User info display */}
-                        <div className="flex items-center gap-3 px-3 py-2">
-                          <div className="relative h-12 w-12 rounded-full overflow-hidden bg-primary flex items-center justify-center">
-                            {user.user_metadata?.avatar_url ? (
-                              <img 
-                                src={user.user_metadata.avatar_url} 
-                                alt={user.user_metadata?.full_name || 'User'}
-                                className="h-full w-full object-cover"
-                              />
-                            ) : (
-                              <span className="text-primary-foreground font-bold text-lg">
-                                {user.user_metadata?.full_name
-                                  ?.split(' ')
-                                  .map((n: string) => n[0])
-                                  .join('')
-                                  .toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-foreground truncate">
-                              {user.user_metadata?.full_name || 'User'}
-                            </p>
-                            {user.user_metadata?.username && (
-                              <p className="text-sm text-muted-foreground truncate">
-                                @{user.user_metadata.username}
-                              </p>
-                            )}
-                          </div>
-                        </div>
+                        <UserProfileDisplay 
+                          user={user} 
+                          avatarSize="lg"
+                          className="px-3 py-2"
+                        />
 
                         {/* View Profile Button */}
                         <Button

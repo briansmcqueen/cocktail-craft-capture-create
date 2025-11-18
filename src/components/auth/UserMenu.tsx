@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import { userRolesService } from '@/services/userRolesService';
 import { toast } from '@/hooks/use-toast';
+import UserProfileDisplay from '@/components/auth/UserProfileDisplay';
 
 interface UserMenuProps {
   onProfileClick: () => void;
@@ -81,15 +82,11 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
-        <div className="flex items-center justify-start gap-2 p-2">
-          <div className="flex flex-col space-y-1 leading-none">
-            <p className="font-medium">{user.user_metadata?.full_name || 'User'}</p>
-            {user.user_metadata?.username && (
-              <p className="w-[200px] truncate text-sm text-muted-foreground">
-                @{user.user_metadata.username}
-              </p>
-            )}
-          </div>
+        <div className="p-2">
+          <UserProfileDisplay 
+            user={user} 
+            showAvatar={false}
+          />
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onProfileClick}>
