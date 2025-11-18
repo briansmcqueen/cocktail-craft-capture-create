@@ -220,6 +220,14 @@ export default function IngredientSelector({
               onChange={handleSearchChange}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && filteredIngredients.length > 0) {
+                  e.preventDefault();
+                  addIngredient(filteredIngredients[0].id);
+                  setSearchValue("");
+                  setOpen(false);
+                }
+              }}
               className="pl-10 pr-16 h-12 text-base bg-medium-charcoal border-light-charcoal text-light-text"
             />
             {!searchValue && (
