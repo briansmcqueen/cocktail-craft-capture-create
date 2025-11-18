@@ -96,10 +96,13 @@ export const notificationsService = {
     return true;
   },
 
-  // Subscribe to real-time notifications
+  // Subscribe to real-time notifications with unique channel per subscriber
   subscribeToNotifications(callback: (notification: RecipeNotification) => void) {
+    // Create a unique channel name to avoid multiple subscription errors
+    const channelName = `recipe-notifications-${Math.random().toString(36).substring(7)}`;
+    
     const channel = supabase
-      .channel('recipe-notifications')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
