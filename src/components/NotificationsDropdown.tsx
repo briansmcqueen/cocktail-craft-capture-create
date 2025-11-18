@@ -25,28 +25,40 @@ export default function NotificationsDropdown() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      loadNotifications();
-      loadUnreadCount();
+    if (!user) return;
 
-      // Subscribe to real-time notifications
-      const channel = notificationsService.subscribeToNotifications((newNotification) => {
-        setNotifications(prev => [newNotification, ...prev]);
-        setUnreadCount(prev => prev + 1);
-        
-        // Show toast for new notification
-        toast({
-          title: "New Recipe Posted",
-          description: `${newNotification.recipe_name} was just published!`,
+    loadNotifications();
+    loadUnreadCount();
+
+    // Subscribe to real-time notifications
+    let channel: any = null;
+    
+    const setupSubscription = async () => {
+      try {
+        channel = notificationsService.subscribeToNotifications((newNotification) => {
+          setNotifications(prev => [newNotification, ...prev]);
+          setUnreadCount(prev => prev + 1);
+          
+          // Show toast for new notification
+          toast({
+            title: "New Recipe Posted",
+            description: `${newNotification.recipe_name} was just published!`,
+          });
         });
-      });
+      } catch (error) {
+        console.error('Error setting up notification subscription:', error);
+      }
+    };
 
-      return () => {
-        if (channel) {
-          supabase.removeChannel(channel);
-        }
-      };
-    }
+    setupSubscription();
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel).catch(err => {
+          console.error('Error removing channel:', err);
+        });
+      }
+    };
   }, [user]);
 
   const loadNotifications = async () => {
