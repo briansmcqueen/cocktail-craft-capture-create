@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
 import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini } from "lucide-react";
-import { useAuthModal } from "@/contexts/AuthModalContext";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,7 @@ import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
 import { barPresetsService, type BarPreset } from "@/services/barPresetsService";
+import AuthPrompt from "@/components/auth/AuthPrompt";
 
 interface IngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -54,7 +54,6 @@ export default function IngredientSelector({
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
   const [editingPresetName, setEditingPresetName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { openAuthModal } = useAuthModal();
 
   const filteredIngredients = useMemo(() => {
     if (!searchValue) return allIngredients;
@@ -432,7 +431,7 @@ export default function IngredientSelector({
       {/* Empty State - No Ingredients */}
       {myBarIngredients.length === 0 && (
         user ? (
-          <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
+          <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal animate-fade-in">
             <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
             <h3 className="text-lg font-medium text-light-text mb-2">
               Start Building Your Bar
@@ -442,31 +441,11 @@ export default function IngredientSelector({
             </p>
           </Card>
         ) : (
-          <div className="container mx-auto px-md py-xl text-center">
-            <Martini className="mx-auto mb-lg text-available" size={64} />
-            <h2 className="text-3xl font-medium mb-md text-pure-white">Build Your Personal Bar</h2>
-            <p className="text-light-text text-base max-w-md mx-auto mb-lg">
-              Create a free account to save your ingredients and discover personalized cocktail recommendations.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Button
-                onClick={() => openAuthModal('signup')}
-                size="lg"
-                className="rounded-organic-md"
-              >
-                <User className="mr-2 h-5 w-5" />
-                Create Free Account
-              </Button>
-              <Button
-                onClick={() => openAuthModal('signin')}
-                variant="outline"
-                size="lg"
-                className="rounded-organic-md"
-              >
-                Sign In
-              </Button>
-            </div>
-          </div>
+          <AuthPrompt
+            icon={Martini}
+            title="Build Your Personal Bar"
+            description="Create a free account to save your ingredients and discover personalized cocktail recommendations."
+          />
         )
       )}
     </div>

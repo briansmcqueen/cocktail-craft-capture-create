@@ -9,9 +9,8 @@ import Favorites from "@/components/Favorites";
 import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
 import Learn from "@/components/Learn";
-import { Button } from "@/components/ui/button";
-import { User as UserIcon, ChefHat } from "lucide-react";
-import { useAuthModal } from "@/contexts/AuthModalContext";
+import { ChefHat } from "lucide-react";
+import AuthPrompt from "@/components/auth/AuthPrompt";
 
 interface MainContentProps {
   user: User | null;
@@ -66,8 +65,6 @@ export default function MainContent({
   onNavigateToMyBar,
   forceUpdate
 }: MainContentProps) {
-  const { openAuthModal } = useAuthModal();
-  
   if (showForm) {
     return (
       <div className="flex justify-center min-h-screen p-4 lg:p-6">
@@ -151,31 +148,11 @@ export default function MainContent({
               onShowAuthModal={() => setShowAuthModal(true)}
             />
           ) : (
-            <div className="container mx-auto px-md py-xl text-center">
-              <ChefHat className="mx-auto mb-lg text-available" size={64} />
-              <h2 className="text-3xl font-medium mb-md text-pure-white">Create & Share Your Recipes</h2>
-              <p className="text-light-text text-base max-w-md mx-auto mb-lg">
-                Sign up for a free account to create your own cocktail recipes and share them with the community.
-              </p>
-              <div className="flex gap-4 justify-center">
-                <Button 
-                  onClick={() => openAuthModal('signup')}
-                  size="lg"
-                  className="rounded-organic-md"
-                >
-                  <UserIcon className="mr-2 h-5 w-5" />
-                  Create Free Account
-                </Button>
-                <Button
-                  onClick={() => openAuthModal('signin')}
-                  variant="outline"
-                  size="lg"
-                  className="rounded-organic-md"
-                >
-                  Sign In
-                </Button>
-              </div>
-            </div>
+            <AuthPrompt
+              icon={ChefHat}
+              title="Create & Share Your Recipes"
+              description="Sign up for a free account to create your own cocktail recipes and share them with the community."
+            />
           )
         ) : (
           <LazyRecipeGrid
