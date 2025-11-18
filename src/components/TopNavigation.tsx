@@ -118,6 +118,10 @@ const TopNavigation = memo(function TopNavigation({
                           user={user} 
                           avatarSize="lg"
                           className="px-3 py-2"
+                          onAvatarClick={() => {
+                            onProfileClick();
+                            setOpen(false);
+                          }}
                         />
 
                         {/* View Profile Button */}
