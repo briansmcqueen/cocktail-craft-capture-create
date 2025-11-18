@@ -156,7 +156,7 @@ export default function PublicProfilePage() {
       </div>
 
       {/* Content Tabs */}
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="mb-8 bg-medium-charcoal border border-light-charcoal rounded-organic-md">
             <TabsTrigger 
