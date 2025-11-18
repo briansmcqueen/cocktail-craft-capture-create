@@ -86,6 +86,7 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
           <UserProfileDisplay 
             user={user} 
             showAvatar={false}
+            onAvatarClick={onProfileClick}
           />
         </div>
         <DropdownMenuSeparator />

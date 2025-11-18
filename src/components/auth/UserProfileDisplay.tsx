@@ -6,13 +6,15 @@ interface UserProfileDisplayProps {
   showAvatar?: boolean;
   avatarSize?: 'sm' | 'md' | 'lg';
   className?: string;
+  onAvatarClick?: () => void;
 }
 
 export default function UserProfileDisplay({ 
   user, 
   showAvatar = true,
   avatarSize = 'md',
-  className = ''
+  className = '',
+  onAvatarClick
 }: UserProfileDisplayProps) {
   const initials = user.user_metadata?.full_name
     ?.split(' ')
@@ -35,7 +37,11 @@ export default function UserProfileDisplay({
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       {showAvatar && (
-        <div className={`relative ${sizeClasses[avatarSize]} rounded-full overflow-hidden bg-primary flex items-center justify-center flex-shrink-0`}>
+        <button
+          onClick={onAvatarClick}
+          className={`relative ${sizeClasses[avatarSize]} rounded-full overflow-hidden bg-primary flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-105 hover:ring-2 hover:ring-primary hover:ring-offset-2 hover:ring-offset-background cursor-pointer`}
+          aria-label="Open profile settings"
+        >
           {user.user_metadata?.avatar_url ? (
             <img 
               src={user.user_metadata.avatar_url} 
@@ -47,7 +53,7 @@ export default function UserProfileDisplay({
               {initials}
             </span>
           )}
-        </div>
+        </button>
       )}
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-foreground truncate">

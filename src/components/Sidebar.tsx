@@ -77,6 +77,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
               <UserProfileDisplay 
                 user={user} 
                 avatarSize="md"
+                onAvatarClick={onProfileClick}
               />
 
               {/* View Profile Button */}
