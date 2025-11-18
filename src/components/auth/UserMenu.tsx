@@ -54,13 +54,14 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
         description: error.message,
         variant: "destructive",
       });
+      setLoading(false);
     } else {
       toast({
         title: "Signed out successfully",
         description: "See you next time!",
       });
+      window.location.href = '/';
     }
-    setLoading(false);
   };
 
   if (!user) return null;

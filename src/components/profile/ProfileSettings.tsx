@@ -104,6 +104,7 @@ export default function ProfileSettings() {
         title: "Signed out successfully",
         description: "See you next time!",
       });
+      window.location.href = '/';
     }
   };
 
