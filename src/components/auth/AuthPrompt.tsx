@@ -27,7 +27,7 @@ export default function AuthPrompt({
       <p className="text-light-text text-base max-w-md mx-auto mb-lg">
         {description}
       </p>
-      <div className="flex gap-4 justify-center">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button
           onClick={() => openAuthModal('signup')}
           size="lg"
