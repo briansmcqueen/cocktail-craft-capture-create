@@ -125,7 +125,7 @@ export default function ArticlePage() {
         </div>
 
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="max-w-4xl mx-auto px-4 py-6 pb-24 md:pb-6">
             {shouldShowBackButton && (
               <button onClick={handleGoBack} className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors">
                 <ArrowLeft size={20} />
