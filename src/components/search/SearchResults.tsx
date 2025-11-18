@@ -90,7 +90,7 @@ export default function SearchResults({
                   Clear Filters
                 </Button>
               )}
-              <Button variant="secondary">
+              <Button variant="secondary" className="hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300">
                 Browse All Cocktails
               </Button>
             </div>

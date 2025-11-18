@@ -162,7 +162,7 @@ const TopNavigation = memo(function TopNavigation({
                             setOpen(false);
                           }}
                           variant="secondary"
-                          className="w-full gap-2 rounded-organic-sm"
+                          className="w-full gap-2 rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
                         >
                           <User className="h-4 w-4" />
                           Create Account
