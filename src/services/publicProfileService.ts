@@ -23,10 +23,14 @@ export const publicProfileService = {
   async getProfileByUsername(username: string): Promise<PublicProfile | null> {
     const { data, error } = await supabase
       .rpc('get_public_profile_by_username', { p_username: username })
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('Error fetching public profile:', error);
+      return null;
+    }
+
+    if (!data) {
       return null;
     }
 
@@ -35,7 +39,7 @@ export const publicProfileService = {
       .from('profiles')
       .select('full_name, bio')
       .eq('id', data.id)
-      .single();
+      .maybeSingle();
 
     if (profileError) {
       console.error('Error fetching profile details:', profileError);
