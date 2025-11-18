@@ -206,7 +206,7 @@ export default function IngredientSelector({
     <div className="space-y-6">
       {/* Search Interface */}
       <div className="space-y-4">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
             <Input
