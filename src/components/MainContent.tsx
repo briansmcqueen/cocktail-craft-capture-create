@@ -90,7 +90,7 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && library !== "all" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
