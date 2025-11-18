@@ -6,6 +6,7 @@ import LibraryHeader from "@/components/LibraryHeader";
 import SearchInterface from "@/components/search/SearchInterface";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
+import Feed from "@/components/Feed";
 import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
 import Learn from "@/components/Learn";
@@ -89,7 +90,7 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
@@ -132,6 +133,8 @@ export default function MainContent({
           <Learn
             onShowAuthModal={() => setShowAuthModal(true)}
           />
+        ) : library === "feed" ? (
+          <Feed />
         ) : library === "mine" ? (
           user ? (
             <LazyRecipeGrid

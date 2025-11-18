@@ -61,6 +61,8 @@ export default function Index() {
       setLibrary('all');
     } else if (path === '/mybar') {
       setLibrary('ingredients');
+    } else if (path === '/feed') {
+      setLibrary('feed');
     } else if (path === '/favorites') {
       setLibrary('favorites');
     } else if (path === '/recipes/my-drinks') {
@@ -90,7 +92,7 @@ export default function Index() {
   };
 
   const handleLibraryChange = (newLibrary: string) => {
-    if ((newLibrary === "favorites" || newLibrary === "mine") && !user) {
+    if ((newLibrary === "favorites" || newLibrary === "mine" || newLibrary === "feed") && !user) {
       setShowAuthModal(true);
       return;
     }
