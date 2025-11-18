@@ -51,15 +51,6 @@ export default function MyBarResults({
   const [showAllRecipes, setShowAllRecipes] = useState(false);
   
   if (myBarIngredients.length === 0) {
-    if (!user) {
-      return (
-        <div className="text-center py-12 text-muted-foreground">
-          <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-medium mb-2">Sign in to build your bar</h3>
-          <p>Create an account to save your ingredient inventory and discover cocktails you can make.</p>
-        </div>
-      );
-    }
     return null;
   }
 
