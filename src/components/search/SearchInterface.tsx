@@ -80,6 +80,14 @@ export default function SearchInterface({
     }
   }, []);
 
+  // Notify parent of filtered recipes changes
+  useEffect(() => {
+    if (onFilteredRecipesChange) {
+      const allFilteredRecipes = [...groupedResults.canMake, ...groupedResults.needIngredients];
+      onFilteredRecipesChange(allFilteredRecipes);
+    }
+  }, [searchResults, onFilteredRecipesChange, groupedResults]);
+
   const handleSuggestionClick = (suggestion: string) => {
     handleSearchChange(suggestion);
     setShowSuggestions(false);
