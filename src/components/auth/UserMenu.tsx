@@ -84,9 +84,11 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             <p className="font-medium">{user.user_metadata?.full_name || 'User'}</p>
-            <p className="w-[200px] truncate text-sm text-muted-foreground">
-              {user.email}
-            </p>
+            {user.user_metadata?.username && (
+              <p className="w-[200px] truncate text-sm text-muted-foreground">
+                @{user.user_metadata.username}
+              </p>
+            )}
           </div>
         </div>
         <DropdownMenuSeparator />

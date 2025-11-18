@@ -135,9 +135,11 @@ const TopNavigation = memo(function TopNavigation({
                             <p className="font-semibold text-foreground truncate">
                               {user.user_metadata?.full_name || 'User'}
                             </p>
-                            <p className="text-sm text-muted-foreground truncate">
-                              {user.email}
-                            </p>
+                            {user.user_metadata?.username && (
+                              <p className="text-sm text-muted-foreground truncate">
+                                @{user.user_metadata.username}
+                              </p>
+                            )}
                           </div>
                         </div>
 
