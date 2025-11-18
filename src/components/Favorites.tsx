@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { Heart, Star } from "lucide-react";
+import { Heart, Star, Eye, EyeOff } from "lucide-react";
 import UniversalRecipeCard from "./UniversalRecipeCard";
 import { useAuth } from "@/hooks/useAuth";
 import AuthPrompt from "@/components/auth/AuthPrompt";
+import { getUserFavoritesWithVisibility, toggleFavoriteVisibility, FavoriteWithVisibility } from "@/services/favoritesService";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -15,6 +19,65 @@ type FavoritesProps = {
 
 export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe, onShareRecipe, userRecipes }: FavoritesProps) {
   const { user } = useAuth();
+  const [favoritesWithVisibility, setFavoritesWithVisibility] = useState<FavoriteWithVisibility[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      loadFavoritesWithVisibility();
+    }
+  }, [user, favoriteRecipes]);
+
+  const loadFavoritesWithVisibility = async () => {
+    setLoading(true);
+    try {
+      const data = await getUserFavoritesWithVisibility();
+      setFavoritesWithVisibility(data);
+    } catch (error) {
+      console.error('Error loading favorites visibility:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVisibilityToggle = async (favoriteId: string, currentlyPublic: boolean) => {
+    const newValue = !currentlyPublic;
+    
+    // Optimistic update
+    setFavoritesWithVisibility(prev => 
+      prev.map(fav => 
+        fav.id === favoriteId ? { ...fav, is_public: newValue } : fav
+      )
+    );
+
+    const success = await toggleFavoriteVisibility(favoriteId, newValue);
+    
+    if (success) {
+      toast({
+        title: newValue ? "Made public" : "Made private",
+        description: newValue 
+          ? "This favorite will now appear on your public profile." 
+          : "This favorite has been hidden from your public profile.",
+      });
+    } else {
+      // Revert on failure
+      setFavoritesWithVisibility(prev => 
+        prev.map(fav => 
+          fav.id === favoriteId ? { ...fav, is_public: currentlyPublic } : fav
+        )
+      );
+      toast({
+        title: "Error",
+        description: "Failed to update visibility. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getFavoriteVisibility = (recipeId: string): { id: string; isPublic: boolean } | null => {
+    const fav = favoritesWithVisibility.find(f => f.recipe_id === recipeId);
+    return fav ? { id: fav.id, isPublic: fav.is_public } : null;
+  };
 
   if (!user) {
     return (
@@ -39,13 +102,53 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
-      {favoriteRecipes.map((recipe) => (
-        <UniversalRecipeCard
-          key={recipe.id}
-          recipe={recipe}
-        />
-      ))}
+    <div className="space-y-6">
+      {/* Info banner */}
+      <div className="bg-medium-charcoal border border-light-charcoal rounded-organic-md p-4">
+        <div className="flex items-start gap-3">
+          <Eye className="h-5 w-5 text-emerald flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="font-semibold text-pure-white mb-1">Public Profile Visibility</h3>
+            <p className="text-sm text-light-text">
+              Toggle the visibility switch to control which favorites appear on your public profile at /profile/{user.user_metadata?.username || 'your-username'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
+        {favoriteRecipes.map((recipe) => {
+          const visibility = getFavoriteVisibility(recipe.id);
+          
+          return (
+            <div key={recipe.id} className="relative">
+              <UniversalRecipeCard recipe={recipe} />
+              
+              {/* Visibility toggle overlay */}
+              {visibility && (
+                <div className="absolute top-2 right-2 z-10 bg-rich-charcoal/95 backdrop-blur-sm border border-light-charcoal rounded-organic-sm p-2 flex items-center gap-2 shadow-lg">
+                  <Label htmlFor={`visibility-${visibility.id}`} className="text-xs text-light-text cursor-pointer flex items-center gap-1.5">
+                    {visibility.isPublic ? (
+                      <Eye className="h-3.5 w-3.5 text-emerald" />
+                    ) : (
+                      <EyeOff className="h-3.5 w-3.5 text-soft-gray" />
+                    )}
+                    <span className="whitespace-nowrap">
+                      {visibility.isPublic ? 'Public' : 'Private'}
+                    </span>
+                  </Label>
+                  <Switch
+                    id={`visibility-${visibility.id}`}
+                    checked={visibility.isPublic}
+                    onCheckedChange={() => handleVisibilityToggle(visibility.id, visibility.isPublic)}
+                    className="data-[state=checked]:bg-primary"
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
