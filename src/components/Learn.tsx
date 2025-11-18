@@ -192,6 +192,12 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
               placeholder="Search articles by title, content, or author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  searchInputRef.current?.blur();
+                }
+              }}
               className="pl-10 pr-16 bg-card border-border rounded-organic-sm text-pure-white placeholder:text-soft-gray"
             />
             {!searchQuery && (

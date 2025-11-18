@@ -9,12 +9,24 @@ interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
   showClearButton?: boolean;
   containerClassName?: string;
   showShortcutHint?: boolean;
+  onEnter?: () => void;
 }
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ onClear, showClearButton = true, containerClassName, className, value, showShortcutHint = true, ...props }, ref) => {
+  ({ onClear, showClearButton = true, containerClassName, className, value, showShortcutHint = true, onEnter, ...props }, ref) => {
     const hasValue = value !== undefined && value !== '';
     const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && onEnter) {
+        e.preventDefault();
+        onEnter();
+      }
+      // Call the original onKeyDown if provided
+      if (props.onKeyDown) {
+        props.onKeyDown(e);
+      }
+    };
 
     return (
       <div className={cn("relative", containerClassName)}>
@@ -26,6 +38,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           ref={ref}
           type="search"
           value={value}
+          onKeyDown={handleKeyDown}
           className={cn(
             "pl-10 bg-card border-border text-card-foreground placeholder:text-muted-foreground",
             showClearButton && hasValue ? "pr-10" : showShortcutHint ? "pr-16" : "pr-4",
