@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Article, articlesService } from "@/services/articlesService";
 import { articleFavoritesService } from "@/services/articleFavoritesService";
@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSearchShortcut } from "@/hooks/useSearchShortcut";
 
 interface LearnProps {
   onShowAuthModal: () => void;
@@ -28,6 +29,10 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [filterByTag, setFilterByTag] = useState<string>("all");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Add keyboard shortcut for search
+  useSearchShortcut(searchInputRef);
 
   useEffect(() => {
     loadArticles();
@@ -182,12 +187,23 @@ export default function Learn({ onShowAuthModal }: LearnProps) {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-soft-gray" />
             <Input
+              ref={searchInputRef}
               type="text"
               placeholder="Search articles by title, content, or author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-card border-border rounded-organic-sm text-pure-white placeholder:text-soft-gray"
+              className="pl-10 pr-16 bg-card border-border rounded-organic-sm text-pure-white placeholder:text-soft-gray"
             />
+            {!searchQuery && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-soft-gray pointer-events-none">
+                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
+                  {typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl'}
+                </kbd>
+                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
+                  K
+                </kbd>
+              </div>
+            )}
           </div>
           <div className="flex gap-3">
             <Select value={filterByTag} onValueChange={setFilterByTag}>

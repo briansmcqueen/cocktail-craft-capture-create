@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { Filter, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useSearchShortcut } from "@/hooks/useSearchShortcut";
 
 export interface FilterState {
   searchTerm: string;
@@ -42,6 +43,10 @@ export default function AdvancedMyBarFilters({
   activeFilterCount
 }: AdvancedMyBarFiltersProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Add keyboard shortcut for search
+  useSearchShortcut(searchInputRef);
 
   const updateFilters = (updates: Partial<FilterState>) => {
     onFiltersChange({ ...filters, ...updates });
@@ -88,6 +93,7 @@ export default function AdvancedMyBarFilters({
     <div className="space-y-4">
       {/* Search Bar */}
       <SearchInput
+        ref={searchInputRef}
         placeholder="Search ingredients..."
         value={filters.searchTerm}
         onChange={(e) => updateFilters({ searchTerm: e.target.value })}

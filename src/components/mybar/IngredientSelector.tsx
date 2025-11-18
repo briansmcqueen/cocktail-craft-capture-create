@@ -17,6 +17,7 @@ import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
 import { barPresetsService, type BarPreset } from "@/services/barPresetsService";
 import AuthPrompt from "@/components/auth/AuthPrompt";
+import { useSearchShortcut } from "@/hooks/useSearchShortcut";
 
 interface IngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -48,12 +49,15 @@ export default function IngredientSelector({
   onUpdatePreset
 }: IngredientSelectorProps) {
   const [searchValue, setSearchValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Add keyboard shortcut for search
+  useSearchShortcut(inputRef);
   const [open, setOpen] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [presetName, setPresetName] = useState("");
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
   const [editingPresetName, setEditingPresetName] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const filteredIngredients = useMemo(() => {
     if (!searchValue) return allIngredients;
@@ -216,8 +220,18 @@ export default function IngredientSelector({
               onChange={handleSearchChange}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
-              className="pl-10 h-12 text-base bg-medium-charcoal border-light-charcoal text-light-text"
+              className="pl-10 pr-16 h-12 text-base bg-medium-charcoal border-light-charcoal text-light-text"
             />
+            {!searchValue && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-soft-gray pointer-events-none z-10">
+                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
+                  {typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl'}
+                </kbd>
+                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
+                  K
+                </kbd>
+              </div>
+            )}
             
             {/* Custom Dropdown */}
             {open && filteredIngredients.length > 0 && (

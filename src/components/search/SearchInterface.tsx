@@ -8,6 +8,7 @@ import SearchResults from './SearchResults';
 import { useAdvancedSearch } from '@/hooks/useAdvancedSearch';
 import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
+import { useSearchShortcut } from '@/hooks/useSearchShortcut';
 
 interface SearchInterfaceProps {
   recipes: Cocktail[];
@@ -37,6 +38,9 @@ export default function SearchInterface({
   user
 }: SearchInterfaceProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  // Add keyboard shortcut for search
+  useSearchShortcut(searchInputRef);
   
   const {
     filters,
