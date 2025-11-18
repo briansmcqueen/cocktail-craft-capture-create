@@ -71,6 +71,9 @@ export default function ProfileForm({
   onProfileChange, 
   onSave 
 }: ProfileFormProps) {
+  // Track the original username from database (not the draft being edited)
+  const originalUsername = profile.username;
+  
   const [usernameInput, setUsernameInput] = useState(profile.username || '');
   const [usernameStatus, setUsernameStatus] = useState<{
     checking: boolean;
@@ -83,7 +86,7 @@ export default function ProfileForm({
   // Check username availability when debounced value changes
   useEffect(() => {
     // Only check if username field is editable (not already set)
-    if (profile.username) return;
+    if (originalUsername) return;
     
     if (!debouncedUsername) {
       setUsernameStatus({ checking: false, available: null, message: '' });
@@ -103,7 +106,7 @@ export default function ProfileForm({
     };
 
     checkAvailability();
-  }, [debouncedUsername, profile.username]);
+  }, [debouncedUsername, originalUsername]);
 
   const handleUsernameChange = (value: string) => {
     const sanitized = sanitizeInput(value, 30);
@@ -126,7 +129,7 @@ export default function ProfileForm({
   };
 
   const getUsernameIcon = () => {
-    if (profile.username) return null;
+    if (originalUsername) return null;
     if (usernameStatus.checking) {
       return <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />;
     }
@@ -140,7 +143,7 @@ export default function ProfileForm({
   };
 
   const getUsernameHelperText = () => {
-    if (profile.username) {
+    if (originalUsername) {
       return (
         <p className="text-xs text-amber-500 mt-1 flex items-center gap-1">
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -198,8 +201,8 @@ export default function ProfileForm({
             onChange={(e) => handleUsernameChange(e.target.value)}
             placeholder="Choose a username (3-30 characters)"
             maxLength={30}
-            disabled={!!profile.username}
-            className={profile.username ? 'bg-muted cursor-not-allowed pr-10' : 'pr-10'}
+            disabled={!!originalUsername}
+            className={originalUsername ? 'bg-muted cursor-not-allowed pr-10' : 'pr-10'}
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             {getUsernameIcon()}
