@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2 } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, LogIn } from "lucide-react";
+import { useAuthModal } from "@/contexts/AuthModalContext";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ export default function IngredientSelector({
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
   const [editingPresetName, setEditingPresetName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { openAuthModal } = useAuthModal();
 
   const filteredIngredients = useMemo(() => {
     if (!searchValue) return allIngredients;
@@ -430,13 +432,34 @@ export default function IngredientSelector({
       {/* Empty State - No Ingredients */}
       {myBarIngredients.length === 0 && (
         <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal">
-          <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
-          <h3 className="text-lg font-medium text-light-text mb-2">
-            Start Building Your Bar
-          </h3>
-          <p className="text-soft-gray">
-            Search and add ingredients you have on hand to discover what cocktails you can make.
-          </p>
+          {user ? (
+            <>
+              <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
+              <h3 className="text-lg font-medium text-light-text mb-2">
+                Start Building Your Bar
+              </h3>
+              <p className="text-soft-gray">
+                Search and add ingredients you have on hand to discover what cocktails you can make.
+              </p>
+            </>
+          ) : (
+            <>
+              <LogIn className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
+              <h3 className="text-lg font-medium text-light-text mb-2">
+                Sign in to start building your bar
+              </h3>
+              <p className="text-soft-gray mb-4">
+                Create an account to save your ingredients and discover personalized cocktail recommendations.
+              </p>
+              <Button
+                onClick={() => openAuthModal('signup')}
+                className="rounded-organic-md"
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                Sign In or Create Account
+              </Button>
+            </>
+          )}
         </Card>
       )}
     </div>
