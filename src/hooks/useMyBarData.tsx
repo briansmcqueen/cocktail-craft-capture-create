@@ -65,9 +65,10 @@ export function useMyBarData(forceUpdate: number) {
 
     loadData();
 
-    // Set up real-time subscription - optimize by updating local state instead of refetching
+    // Set up real-time subscription with unique channel name to avoid duplicate subscription errors
+    const channelName = `user-ingredients-changes_${Math.random().toString(36).substring(7)}`;
     const channel = supabase
-      .channel('user-ingredients-changes')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
