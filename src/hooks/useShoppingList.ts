@@ -22,8 +22,10 @@ export function useShoppingList() {
     };
     init();
 
+    // Create unique channel name to avoid duplicate subscription errors
+    const channelName = `shopping_list_items_changes_${Math.random().toString(36).substring(7)}`;
     const channel = supabase
-      .channel('shopping_list_items_changes')
+      .channel(channelName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping_list_items' }, async (payload) => {
         const { data: { user } } = await supabase.auth.getUser();
         const changed = (payload.new || payload.old) as any;
