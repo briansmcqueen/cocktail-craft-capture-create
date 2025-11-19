@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronDown, X, RotateCcw } from 'lucide-react';
 import { SearchFilters, SPIRIT_ICONS, BaseSpirit } from '@/types/search';
 import { cn } from '@/lib/utils';
@@ -89,44 +90,52 @@ export default function FilterPills({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-4">
-      {/* Can Make Now Pill */}
-      <Button
-        variant={filters.canMakeOnly ? "default" : "outline"}
-        size="sm"
-        onClick={handleCanMakeClick}
-        className={cn(
-          "rounded-organic-sm transition-all duration-200",
-          filters.canMakeOnly 
-            ? "bg-primary text-primary-foreground shadow-md" 
-            : "border-border text-light-text hover:bg-card/50"
-        )}
-      >
-        <span className="flex items-center gap-2">
-          ✓ Can Make Now
-           {canMakeCount > 0 && (
-             <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs text-pure-white">
-               {canMakeCount}
-             </Badge>
-           )}
-          {filters.canMakeOnly && (
-            <button
-              type="button"
-              aria-label="Clear Can Make Now filter"
-              className="inline-flex items-center justify-center ml-1 -mr-1 p-0 hover:text-destructive transition-colors"
-              onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-              onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                clearFilter('canMakeOnly');
-              }}
+    <TooltipProvider>
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        {/* Can Make Now Pill */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={filters.canMakeOnly ? "default" : "outline"}
+              size="sm"
+              onClick={handleCanMakeClick}
+              className={cn(
+                "rounded-organic-sm transition-all duration-200",
+                filters.canMakeOnly 
+                  ? "bg-primary text-primary-foreground shadow-md" 
+                  : "border-border text-light-text hover:bg-card/50"
+              )}
             >
-              <X size={14} />
-            </button>
-          )}
-        </span>
-      </Button>
+              <span className="flex items-center gap-2">
+                ✓ Can Make Now
+                 {canMakeCount > 0 && (
+                   <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs text-pure-white">
+                     {canMakeCount}
+                   </Badge>
+                 )}
+                {filters.canMakeOnly && (
+                  <button
+                    type="button"
+                    aria-label="Clear Can Make Now filter"
+                    className="inline-flex items-center justify-center ml-1 -mr-1 p-0 hover:text-destructive transition-colors"
+                    onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      clearFilter('canMakeOnly');
+                    }}
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="bg-card border-border">
+            <p className="text-sm text-light-text">Filter by cocktails you can make with your bar ingredients</p>
+          </TooltipContent>
+        </Tooltip>
 
       {/* Base Spirits Dropdown */}
       <Popover open={openDropdown === 'spirits'} onOpenChange={(open) => setOpenDropdown(open ? 'spirits' : null)}>
@@ -354,6 +363,7 @@ export default function FilterPills({
           Clear All
         </Button>
       )}
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }
