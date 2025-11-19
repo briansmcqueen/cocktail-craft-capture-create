@@ -5,6 +5,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ChevronDown, X, RotateCcw } from 'lucide-react';
 import { SearchFilters, SPIRIT_ICONS, BaseSpirit } from '@/types/search';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface FilterPillsProps {
   filters: SearchFilters;
@@ -28,6 +30,8 @@ export default function FilterPills({
   onClearAllFilters
 }: FilterPillsProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleBaseSpiritsToggle = (spirit: BaseSpirit) => {
     const newSpirits = filters.baseSpirits.includes(spirit)
@@ -42,6 +46,28 @@ export default function FilterPills({
 
   const handleGlassTypeChange = (glassType: SearchFilters['glassType']) => {
     onFiltersChange({ glassType });
+  };
+
+  const handleCanMakeClick = () => {
+    // If trying to enable "Can Make Now" but no ingredients in bar
+    if (!filters.canMakeOnly && availableIngredients.length === 0) {
+      toast({
+        title: "Add ingredients to your bar",
+        description: "Build your bar to see what cocktails you can make!",
+        action: (
+          <Button 
+            size="sm" 
+            variant="default"
+            className="rounded-organic-sm"
+            onClick={() => navigate('/mybar')}
+          >
+            Go to My Bar
+          </Button>
+        ),
+      });
+      return;
+    }
+    onFiltersChange({ canMakeOnly: !filters.canMakeOnly });
   };
 
   const clearFilter = (filterType: keyof SearchFilters) => {
@@ -68,14 +94,13 @@ export default function FilterPills({
       <Button
         variant={filters.canMakeOnly ? "default" : "outline"}
         size="sm"
-        onClick={() => onFiltersChange({ canMakeOnly: !filters.canMakeOnly })}
+        onClick={handleCanMakeClick}
         className={cn(
           "rounded-organic-sm transition-all duration-200",
           filters.canMakeOnly 
             ? "bg-primary text-primary-foreground shadow-md" 
             : "border-border text-light-text hover:bg-card/50"
         )}
-        disabled={availableIngredients.length === 0 && !filters.canMakeOnly}
       >
         <span className="flex items-center gap-2">
           ✓ Can Make Now
