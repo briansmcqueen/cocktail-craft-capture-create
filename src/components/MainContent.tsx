@@ -38,6 +38,7 @@ interface MainContentProps {
   setShowAuthModal: (show: boolean) => void;
   onNavigateToMyBar: () => void;
   forceUpdate: number;
+  myBarIngredients: string[];
 }
 
 export default function MainContent({
@@ -64,7 +65,8 @@ export default function MainContent({
   setEditingRecipe,
   setShowAuthModal,
   onNavigateToMyBar,
-  forceUpdate
+  forceUpdate,
+  myBarIngredients
 }: MainContentProps) {
   if (showForm) {
     return (
@@ -94,6 +96,7 @@ export default function MainContent({
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
+              availableIngredients={myBarIngredients}
               onRecipeClick={handleRecipeClick}
               onTagClick={handleTagClick}
               placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "your recipes" : "all recipes"}...`}

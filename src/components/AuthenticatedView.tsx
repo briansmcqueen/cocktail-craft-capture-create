@@ -34,6 +34,7 @@ interface AuthenticatedViewProps {
   onMyRecipesClick: () => void;
   onFavoritesClick: () => void;
   forceUpdate: number;
+  myBarIngredients: string[];
 }
 
 export default function AuthenticatedView({
@@ -65,7 +66,8 @@ export default function AuthenticatedView({
   onProfileClick,
   onMyRecipesClick,
   onFavoritesClick,
-  forceUpdate
+  forceUpdate,
+  myBarIngredients
 }: AuthenticatedViewProps) {
   const handleCloseForm = () => {
     setShowForm(false);
@@ -136,6 +138,7 @@ export default function AuthenticatedView({
                 setShowAuthModal={setShowAuthModal}
                 onNavigateToMyBar={handleNavigateToMyBar}
                 forceUpdate={forceUpdate}
+                myBarIngredients={myBarIngredients}
               />
             </div>
           </main>

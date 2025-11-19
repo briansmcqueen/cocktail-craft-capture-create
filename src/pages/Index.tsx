@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
+import { useMyBarData } from "@/hooks/useMyBarData";
 import { useLocation } from "react-router-dom";
 import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
@@ -52,6 +53,9 @@ export default function Index() {
     favoriteRecipes,
     filteredRecipes
   } = useIndexPage();
+
+  // Get user's bar ingredients for search filtering
+  const { myBarIngredients } = useMyBarData(forceUpdate);
 
   // Set library based on URL path
   useEffect(() => {
@@ -197,6 +201,7 @@ export default function Index() {
         onMyRecipesClick={handleMyRecipesClick}
         onFavoritesClick={handleFavoritesClick}
         forceUpdate={forceUpdate}
+        myBarIngredients={myBarIngredients}
       />
 
       <AuthModal 
