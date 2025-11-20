@@ -12,6 +12,7 @@ import { followsService, FollowStats } from '@/services/followsService';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 import { classicCocktails } from '@/data/classicCocktails';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 
 export default function PublicProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -81,6 +82,8 @@ export default function PublicProfilePage() {
     favoriteRecipeIds.includes(cocktail.id)
   );
 
+  const fullAvatarUrl = getAvatarUrl(profile?.avatar_url);
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -106,7 +109,7 @@ export default function PublicProfilePage() {
           <div className="flex items-start gap-6">
             {/* Avatar */}
             <Avatar className="h-24 w-24 md:h-32 md:w-32 border-2 border-primary/20">
-              <AvatarImage src={profile.avatar_url || undefined} alt={profile.username} />
+              <AvatarImage src={fullAvatarUrl || undefined} alt={profile.username} />
               <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
                 {getInitials()}
               </AvatarFallback>
