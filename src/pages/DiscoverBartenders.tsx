@@ -24,6 +24,8 @@ interface Recipe {
   user_id: string;
   created_at: string;
   tags: string[] | null;
+  creator_username?: string;
+  creator_avatar?: string;
 }
 
 export default function DiscoverBartenders() {
@@ -77,10 +79,16 @@ export default function DiscoverBartenders() {
 
       const followingIds = followingData?.map(f => f.following_id) || [];
 
-      // Get public recipes from users not being followed
+      // Get public recipes from users not being followed with creator info
       let query = supabase
         .from('recipes')
-        .select('*')
+        .select(`
+          *,
+          profiles:user_id (
+            username,
+            avatar_url
+          )
+        `)
         .eq('is_public', true)
         .neq('user_id', user.id)
         .order('created_at', { ascending: false })
@@ -94,7 +102,13 @@ export default function DiscoverBartenders() {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data || [];
+      
+      // Map the data to include creator info
+      return (data || []).map((recipe: any) => ({
+        ...recipe,
+        creator_username: recipe.profiles?.username || 'Anonymous',
+        creator_avatar: recipe.profiles?.avatar_url || null,
+      }));
     } catch (error) {
       console.error('Error loading discover recipes:', error);
       return [];
@@ -310,6 +324,9 @@ export default function DiscoverBartenders() {
                     tags: recipe.tags || [],
                     isUserRecipe: true,
                     createdBy: recipe.user_id,
+                    creatorUsername: recipe.creator_username,
+                    creatorAvatar: recipe.creator_avatar || undefined,
+                    creatorUserId: recipe.user_id,
                   }}
                 />
               ))}
