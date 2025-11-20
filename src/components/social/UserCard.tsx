@@ -29,7 +29,7 @@ export default function UserCard({
   const fullAvatarUrl = getAvatarUrl(avatarUrl);
 
   return (
-    <div className="bg-medium-charcoal border border-light-charcoal rounded-organic-md p-4 hover:border-primary/30 transition-all">
+    <div className="bg-card border border-border rounded-organic-md p-4 hover:border-primary/40 transition-all">
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <button
@@ -57,20 +57,20 @@ export default function UserCard({
             onClick={() => navigate(`/profile/${username}`)}
             className="text-left group"
           >
-            <h3 className="text-lg font-semibold text-pure-white group-hover:text-emerald transition-colors truncate">
+            <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate">
               {fullName || username}
             </h3>
-            <p className="text-soft-gray text-sm">@{username}</p>
+            <p className="text-muted-foreground text-sm">@{username}</p>
           </button>
 
           {bio && (
-            <p className="text-light-text text-sm mt-2 line-clamp-2">
+            <p className="text-foreground text-sm mt-2 line-clamp-2">
               {bio}
             </p>
           )}
 
           {/* Stats */}
-          <div className="flex items-center gap-4 mt-3 text-xs text-soft-gray">
+          <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <BookOpen size={14} />
               <span>{recipeCount} {recipeCount === 1 ? 'recipe' : 'recipes'}</span>
