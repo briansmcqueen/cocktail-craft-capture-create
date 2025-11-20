@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { TrendingUp, Users, Sparkles } from 'lucide-react';
+import { TrendingUp, Users, Sparkles, Flame } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -11,12 +11,27 @@ import Sidebar from '@/components/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '@/components/ui/search-input';
 import { useSearchShortcut } from '@/hooks/useSearchShortcut';
+import UniversalRecipeCard from '@/components/UniversalRecipeCard';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Recipe {
+  id: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  ingredients: string[];
+  instructions: string;
+  user_id: string;
+  created_at: string;
+  tags: string[] | null;
+}
 
 export default function DiscoverBartenders() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [trendingUsers, setTrendingUsers] = useState<TrendingUser[]>([]);
+  const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('suggested');
   const [searchQuery, setSearchQuery] = useState('');
@@ -35,16 +50,54 @@ export default function DiscoverBartenders() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const [suggested, trending] = await Promise.all([
+      const [suggested, trending, recipes] = await Promise.all([
         socialService.getSuggestedUsers(20),
         socialService.getTrendingUsers(20),
+        loadDiscoverRecipes(),
       ]);
       setSuggestedUsers(suggested);
       setTrendingUsers(trending);
+      setDiscoverRecipes(recipes);
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadDiscoverRecipes = async (): Promise<Recipe[]> => {
+    if (!user) return [];
+
+    try {
+      // Get users the current user is following
+      const { data: followingData } = await supabase
+        .from('follows')
+        .select('following_id')
+        .eq('follower_id', user.id);
+
+      const followingIds = followingData?.map(f => f.following_id) || [];
+
+      // Get public recipes from users not being followed
+      let query = supabase
+        .from('recipes')
+        .select('*')
+        .eq('is_public', true)
+        .neq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      // If user follows someone, exclude their recipes
+      if (followingIds.length > 0) {
+        query = query.not('user_id', 'in', `(${followingIds.join(',')})`);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error loading discover recipes:', error);
+      return [];
     }
   };
 
@@ -58,8 +111,20 @@ export default function DiscoverBartenders() {
     );
   };
 
+  const filterRecipes = (recipes: Recipe[]): Recipe[] => {
+    if (!searchQuery.trim()) return recipes;
+    
+    const query = searchQuery.toLowerCase();
+    return recipes.filter(recipe => 
+      recipe.name.toLowerCase().includes(query) ||
+      (recipe.description && recipe.description.toLowerCase().includes(query)) ||
+      (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query)))
+    );
+  };
+
   const filteredSuggestedUsers = filterUsers(suggestedUsers);
   const filteredTrendingUsers = filterUsers(trendingUsers);
+  const filteredRecipes = filterRecipes(discoverRecipes);
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
@@ -130,7 +195,11 @@ export default function DiscoverBartenders() {
                   <div className="mb-6">
                     <SearchInput
                       ref={searchInputRef}
-                      placeholder="Search bartenders..."
+                      placeholder={
+                        activeTab === 'recipes' 
+                          ? 'Search recipes...' 
+                          : 'Search bartenders...'
+                      }
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
@@ -140,7 +209,7 @@ export default function DiscoverBartenders() {
                   </div>
 
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsList className="grid w-full grid-cols-3 mb-6">
                       <TabsTrigger value="suggested">
                         <Sparkles size={16} className="mr-2" />
                         For You
@@ -148,6 +217,10 @@ export default function DiscoverBartenders() {
                       <TabsTrigger value="trending">
                         <TrendingUp size={16} className="mr-2" />
                         Trending
+                      </TabsTrigger>
+                      <TabsTrigger value="recipes">
+                        <Flame size={16} className="mr-2" />
+                        Recipes
                       </TabsTrigger>
                     </TabsList>
 
@@ -206,6 +279,41 @@ export default function DiscoverBartenders() {
                 followerCount={user.total_follower_count}
               />
             ))
+          )}
+        </TabsContent>
+
+        <TabsContent value="recipes" className="space-y-4">
+          {filteredRecipes.length === 0 ? (
+            <div className="text-center py-12">
+              <Flame className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                {searchQuery ? 'No recipes found' : 'No new recipes to discover'}
+              </h3>
+              <p className="text-muted-foreground">
+                {searchQuery
+                  ? 'Try searching with a different name or tag'
+                  : 'Follow more bartenders to see recipes from the community'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredRecipes.map((recipe) => (
+                <UniversalRecipeCard
+                  key={recipe.id}
+                  recipe={{
+                    id: recipe.id,
+                    name: recipe.name,
+                    image: recipe.image_url || '/placeholder.svg',
+                    ingredients: recipe.ingredients,
+                    steps: recipe.instructions,
+                    notes: recipe.description || undefined,
+                    tags: recipe.tags || [],
+                    isUserRecipe: true,
+                    createdBy: recipe.user_id,
+                  }}
+                />
+              ))}
+            </div>
           )}
         </TabsContent>
       </Tabs>
