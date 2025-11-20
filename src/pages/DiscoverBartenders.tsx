@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { TrendingUp, Users, Sparkles } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
@@ -9,6 +9,8 @@ import AuthPrompt from '@/components/auth/AuthPrompt';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
 import { useNavigate } from 'react-router-dom';
+import { SearchInput } from '@/components/ui/search-input';
+import { useSearchShortcut } from '@/hooks/useSearchShortcut';
 
 export default function DiscoverBartenders() {
   const { user } = useAuth();
@@ -17,6 +19,10 @@ export default function DiscoverBartenders() {
   const [trendingUsers, setTrendingUsers] = useState<TrendingUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('suggested');
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  useSearchShortcut(searchInputRef);
 
   useEffect(() => {
     if (user) {
@@ -41,6 +47,19 @@ export default function DiscoverBartenders() {
       setLoading(false);
     }
   };
+
+  const filterUsers = <T extends SuggestedUser | TrendingUser>(users: T[]): T[] => {
+    if (!searchQuery.trim()) return users;
+    
+    const query = searchQuery.toLowerCase();
+    return users.filter(user => 
+      user.username.toLowerCase().includes(query) ||
+      (user.full_name && user.full_name.toLowerCase().includes(query))
+    );
+  };
+
+  const filteredSuggestedUsers = filterUsers(suggestedUsers);
+  const filteredTrendingUsers = filterUsers(trendingUsers);
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
@@ -108,6 +127,18 @@ export default function DiscoverBartenders() {
                     </p>
                   </div>
 
+                  <div className="mb-6">
+                    <SearchInput
+                      ref={searchInputRef}
+                      placeholder="Search bartenders..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      showClearButton={searchQuery.length > 0}
+                      showShortcutHint
+                    />
+                  </div>
+
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-6">
                       <TabsTrigger value="suggested">
@@ -121,18 +152,20 @@ export default function DiscoverBartenders() {
                     </TabsList>
 
         <TabsContent value="suggested" className="space-y-4">
-          {suggestedUsers.length === 0 ? (
+          {filteredSuggestedUsers.length === 0 ? (
             <div className="text-center py-12">
               <Sparkles className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="text-xl font-semibold text-foreground mb-2">
-                No suggestions yet
+                {searchQuery ? 'No bartenders found' : 'No suggestions yet'}
               </h3>
               <p className="text-muted-foreground">
-                Follow some bartenders to get personalized recommendations
+                {searchQuery 
+                  ? 'Try searching with a different name or username'
+                  : 'Follow some bartenders to get personalized recommendations'}
               </p>
             </div>
           ) : (
-            suggestedUsers.map((user) => (
+            filteredSuggestedUsers.map((user) => (
               <UserCard
                 key={user.user_id}
                 userId={user.user_id}
@@ -148,18 +181,20 @@ export default function DiscoverBartenders() {
         </TabsContent>
 
         <TabsContent value="trending" className="space-y-4">
-          {trendingUsers.length === 0 ? (
+          {filteredTrendingUsers.length === 0 ? (
             <div className="text-center py-12">
               <TrendingUp className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="text-xl font-semibold text-foreground mb-2">
-                No trending bartenders yet
+                {searchQuery ? 'No bartenders found' : 'No trending bartenders yet'}
               </h3>
               <p className="text-muted-foreground">
-                Check back soon to see who's gaining popularity
+                {searchQuery
+                  ? 'Try searching with a different name or username'
+                  : 'Check back soon to see who\'s gaining popularity'}
               </p>
             </div>
           ) : (
-            trendingUsers.map((user) => (
+            filteredTrendingUsers.map((user) => (
               <UserCard
                 key={user.user_id}
                 userId={user.user_id}
