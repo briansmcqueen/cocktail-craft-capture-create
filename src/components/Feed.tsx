@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Calendar } from 'lucide-react';
+import { Users, Calendar, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { followsService } from '@/services/followsService';
@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import AuthPrompt from '@/components/auth/AuthPrompt';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
+import LikeButton from '@/components/social/LikeButton';
 
 export default function Feed() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Feed() {
   const [recipes, setRecipes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [userProfiles, setUserProfiles] = useState<Map<string, any>>(new Map());
+  const [commentCounts, setCommentCounts] = useState<Map<string, number>>(new Map());
 
   useEffect(() => {
     if (user) {
@@ -39,6 +41,21 @@ export default function Feed() {
         if (data) {
           const profileMap = new Map(data.map((p: any) => [p.id, p]));
           setUserProfiles(profileMap);
+        }
+
+        // Fetch comment counts for recipes
+        const recipeIds = feedRecipes.map(r => r.id);
+        const { data: comments } = await supabase
+          .from('recipe_comments')
+          .select('recipe_id')
+          .in('recipe_id', recipeIds);
+
+        if (comments) {
+          const counts = new Map<string, number>();
+          comments.forEach((comment: any) => {
+            counts.set(comment.recipe_id, (counts.get(comment.recipe_id) || 0) + 1);
+          });
+          setCommentCounts(counts);
         }
       }
     } catch (error) {
@@ -80,12 +97,21 @@ export default function Feed() {
             Start following bartenders to see their latest cocktail creations here. 
             Browse public profiles and discover new mixologists!
           </p>
-          <Button
-            onClick={() => navigate('/recipes')}
-            className="rounded-organic-sm"
-          >
-            Discover Recipes
-          </Button>
+          <div className="flex gap-3 justify-center">
+            <Button
+              onClick={() => navigate('/discover')}
+              className="rounded-organic-sm"
+            >
+              Discover Bartenders
+            </Button>
+            <Button
+              onClick={() => navigate('/recipes')}
+              variant="outline"
+              className="rounded-organic-sm"
+            >
+              Browse Recipes
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="space-y-6 max-w-4xl mx-auto">
@@ -161,11 +187,34 @@ export default function Feed() {
                           {tag}
                         </span>
                       ))}
-                      {recipe.difficulty && (
+                    {recipe.difficulty && (
                         <span className={`difficulty-${recipe.difficulty} px-3 py-1 text-xs rounded-organic-sm`}>
                           {recipe.difficulty}
                         </span>
                       )}
+                    </div>
+
+                    {/* Engagement Actions */}
+                    <div className="flex items-center gap-2 mt-4 pt-4 border-t border-light-charcoal/30">
+                      <LikeButton
+                        recipeId={recipe.id}
+                        showCount={true}
+                        size="sm"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/cocktail/${author?.username}/${recipe.name.toLowerCase().replace(/\s+/g, '-')}`);
+                        }}
+                        className="gap-2 rounded-organic-sm text-soft-gray hover:bg-card/50"
+                      >
+                        <MessageCircle size={16} />
+                        <span className="text-sm font-medium">
+                          {commentCounts.get(recipe.id) || 0}
+                        </span>
+                      </Button>
                     </div>
                   </div>
                 </div>

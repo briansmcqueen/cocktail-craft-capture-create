@@ -25,10 +25,11 @@ const nav = [
   { id: "featured", label: "Featured", icon: Home, path: "/" },
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
   { id: "feed", label: "Feed", icon: Users, path: "/feed" },
+  { id: "discover", label: "Discover", icon: TrendingUp, path: "/discover" },
   { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
-  { id: "learn", label: "Learn", icon: TrendingUp, path: "/learn" },
+  { id: "learn", label: "Learn", icon: Book, path: "/learn" },
 ];
 
 export default function MobileNavigation({
