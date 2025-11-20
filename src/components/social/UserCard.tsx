@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Users, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import FollowButton from '@/components/FollowButton';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 
 interface UserCardProps {
   userId: string;
@@ -25,6 +26,7 @@ export default function UserCard({
   isCurrentUser = false,
 }: UserCardProps) {
   const navigate = useNavigate();
+  const fullAvatarUrl = getAvatarUrl(avatarUrl);
 
   return (
     <div className="bg-medium-charcoal border border-light-charcoal rounded-organic-md p-4 hover:border-primary/30 transition-all">
@@ -35,9 +37,9 @@ export default function UserCard({
           className="flex-shrink-0 group"
         >
           <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center overflow-hidden group-hover:ring-2 group-hover:ring-primary transition-all">
-            {avatarUrl ? (
+            {fullAvatarUrl ? (
               <img
-                src={avatarUrl}
+                src={fullAvatarUrl}
                 alt={username}
                 className="h-full w-full object-cover"
               />

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavoritesRefactored';
 import { getRecipeUrl } from '@/pages/RecipePage';
 import { ShareCount } from './ShareCount';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 
 interface UniversalRecipeCardProps {
   recipe: Cocktail;
@@ -25,6 +26,7 @@ export default function UniversalRecipeCard({
 }: UniversalRecipeCardProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const fullAvatarUrl = getAvatarUrl(recipe.creatorAvatar);
   
   // Skip ratings for now - major performance bottleneck
   const ratingData = {
@@ -89,7 +91,7 @@ export default function UniversalRecipeCard({
             >
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8 border-2 border-white/20">
-                  <AvatarImage src={recipe.creatorAvatar || undefined} />
+                  <AvatarImage src={fullAvatarUrl || undefined} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                     {recipe.creatorUsername.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
