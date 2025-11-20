@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Heart, Star, Edit } from 'lucide-react';
 import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
@@ -56,6 +57,13 @@ export default function UniversalRecipeCard({
     navigate(url);
   };
 
+  const handleCreatorClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (recipe.creatorUsername) {
+      navigate(`/profile/${recipe.creatorUsername}`);
+    }
+  };
+
   return (
     <Card 
       className={cn(
@@ -72,6 +80,26 @@ export default function UniversalRecipeCard({
             alt={recipe.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
+          
+          {/* Creator info overlay - only show if we have creator data */}
+          {recipe.creatorUsername && (
+            <div 
+              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 cursor-pointer hover:from-black/90 transition-colors"
+              onClick={handleCreatorClick}
+            >
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8 border-2 border-white/20">
+                  <AvatarImage src={recipe.creatorAvatar || undefined} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                    {recipe.creatorUsername.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-white text-sm font-medium">
+                  @{recipe.creatorUsername}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Content */}

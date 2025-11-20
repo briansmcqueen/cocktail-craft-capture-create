@@ -28,6 +28,10 @@ export type Cocktail = {
   min_servings?: number;
   max_servings?: number;
   scaling_notes?: string;
+  // Creator profile info
+  creatorUsername?: string;
+  creatorAvatar?: string;
+  creatorUserId?: string;
 };
 
 const rawCocktails: Cocktail[] = [
