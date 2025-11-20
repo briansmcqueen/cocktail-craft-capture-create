@@ -141,14 +141,20 @@ export default function PublicProfilePage() {
                     <span>{favoriteRecipes.length} Public Favorite{favoriteRecipes.length !== 1 ? 's' : ''}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => navigate(`/profile/${username}/followers`)}
+                  className="flex items-center gap-2 hover:text-pure-white transition-colors"
+                >
                   <Users className="h-4 w-4" />
                   <span>{followStats.followerCount} Follower{followStats.followerCount !== 1 ? 's' : ''}</span>
-                </div>
-                <div className="flex items-center gap-2">
+                </button>
+                <button 
+                  onClick={() => navigate(`/profile/${username}/followers`)}
+                  className="flex items-center gap-2 hover:text-pure-white transition-colors"
+                >
                   <Users className="h-4 w-4" />
                   <span>{followStats.followingCount} Following</span>
-                </div>
+                </button>
               </div>
             </div>
           </div>

@@ -702,6 +702,39 @@ export type Database = {
           },
         ]
       }
+      social_notifications: {
+        Row: {
+          actor_id: string
+          comment_id: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          notification_type: string
+          recipe_id: string | null
+          user_id: string
+        }
+        Insert: {
+          actor_id: string
+          comment_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          notification_type: string
+          recipe_id?: string | null
+          user_id: string
+        }
+        Update: {
+          actor_id?: string
+          comment_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          notification_type?: string
+          recipe_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_bar_presets: {
         Row: {
           created_at: string
@@ -827,6 +860,8 @@ export type Database = {
         Args: { p_username: string }
         Returns: {
           avatar_url: string
+          bio: string
+          full_name: string
           id: string
           username: string
         }[]
@@ -839,6 +874,7 @@ export type Database = {
           username: string
         }[]
       }
+      get_recipe_like_count: { Args: { p_recipe_id: string }; Returns: number }
       get_recipe_rating_stats: { Args: { p_recipe_id: string }; Returns: Json }
       get_recipe_rating_stats_batch: {
         Args: { p_recipe_ids: string[] }
@@ -860,11 +896,40 @@ export type Database = {
         }[]
       }
       get_safe_rating_stats: { Args: { p_recipe_id: string }; Returns: Json }
+      get_suggested_users: {
+        Args: { p_current_user_id: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          bio: string
+          follower_count: number
+          full_name: string
+          recipe_count: number
+          user_id: string
+          username: string
+        }[]
+      }
+      get_trending_users: {
+        Args: { p_limit?: number }
+        Returns: {
+          avatar_url: string
+          bio: string
+          full_name: string
+          recent_follower_count: number
+          recipe_count: number
+          total_follower_count: number
+          user_id: string
+          username: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      has_user_liked_recipe: {
+        Args: { p_recipe_id: string; p_user_id: string }
         Returns: boolean
       }
       validate_affiliate_url: { Args: { url: string }; Returns: boolean }
