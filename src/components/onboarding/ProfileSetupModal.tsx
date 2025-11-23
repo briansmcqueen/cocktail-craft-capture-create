@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Loader2, User, CheckCircle2, XCircle, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { compressImage } from '@/services/imageUploadService';
 import ImageCropModal from '@/components/profile/ImageCropModal';
 import { z } from 'zod';
@@ -25,6 +26,7 @@ const usernameSchema = z.string()
   .refine(val => val === val.toLowerCase(), 'Username must be lowercase');
 
 export default function ProfileSetupModal({ open, userId, onComplete }: ProfileSetupModalProps) {
+  const { refreshUser } = useAuth();
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
@@ -275,6 +277,9 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         await supabase.auth.updateUser({
           data: { avatar_url: uploadedAvatarUrl }
         });
+        
+        // Refresh user session to get updated metadata
+        await refreshUser();
       }
 
       toast({
