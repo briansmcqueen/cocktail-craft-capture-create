@@ -35,10 +35,11 @@ export default function LazyRecipeGrid({
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const renderCountRef = useRef(0);
+  const componentId = useRef(`grid-${Math.random().toString(36).substr(2, 9)}`);
 
   // Track renders
   renderCountRef.current += 1;
-  console.log(`🔄 LazyRecipeGrid RENDER #${renderCountRef.current}`);
+  console.log(`🔄 LazyRecipeGrid RENDER #${renderCountRef.current} [${componentId.current}]`);
 
   // Debug: Log recipes to check for duplicates
   useEffect(() => {
@@ -115,11 +116,6 @@ export default function LazyRecipeGrid({
 
   console.log(`📋 Rendering ${visibleRecipes.length} cards out of ${recipes.length} total recipes`);
   console.log('Card IDs being rendered:', visibleRecipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
-
-  // Add unique ID for debugging
-  const componentId = useRef(`grid-${Math.random().toString(36).substr(2, 9)}`);
-  
-  console.log(`🎯 LazyRecipeGrid ${componentId.current} is rendering in the DOM`);
 
   return (
     <div className="space-y-6" data-component-id={componentId.current}>
