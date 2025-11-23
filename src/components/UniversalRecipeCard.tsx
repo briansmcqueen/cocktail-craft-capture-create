@@ -83,11 +83,13 @@ export default function UniversalRecipeCard({
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           
-          {/* Creator info overlay - only show if we have creator data */}
-          {recipe.creatorUsername && (
-            <div 
-              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 cursor-pointer hover:from-black/90 transition-colors"
+          {/* Creator info overlay - only show if we have creator data with username */}
+          {recipe.creatorUsername && recipe.creatorUserId && (
+            <button 
+              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 hover:from-black/90 transition-colors w-full text-left"
               onClick={handleCreatorClick}
+              type="button"
+              aria-label={`View ${recipe.creatorUsername}'s profile`}
             >
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8 border-2 border-white/20">
@@ -100,7 +102,7 @@ export default function UniversalRecipeCard({
                   @{recipe.creatorUsername}
                 </span>
               </div>
-            </div>
+            </button>
           )}
         </div>
 
