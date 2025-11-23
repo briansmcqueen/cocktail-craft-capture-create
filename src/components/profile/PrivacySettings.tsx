@@ -215,10 +215,10 @@ export default function PrivacySettings() {
                 value={settings.profile_visibility}
                 onValueChange={(value) => setSettings(prev => ({ ...prev, profile_visibility: value as ProfileVisibility }))}
               >
-                <SelectTrigger 
-                  id="profile-visibility"
-                  className="w-full rounded-organic-sm bg-medium-charcoal border-border text-pure-white"
-                >
+              <SelectTrigger 
+                id="profile-visibility"
+                className="w-full rounded-organic-sm bg-medium-charcoal border-border text-pure-white text-left"
+              >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-medium-charcoal border-border">
@@ -272,10 +272,10 @@ export default function PrivacySettings() {
                 value={settings.recipe_visibility}
                 onValueChange={(value) => setSettings(prev => ({ ...prev, recipe_visibility: value as RecipeVisibility }))}
               >
-                <SelectTrigger 
-                  id="recipe-visibility"
-                  className="w-full rounded-organic-sm bg-medium-charcoal border-border text-pure-white"
-                >
+              <SelectTrigger 
+                id="recipe-visibility"
+                className="w-full rounded-organic-sm bg-medium-charcoal border-border text-pure-white text-left"
+              >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-medium-charcoal border-border">
@@ -329,10 +329,10 @@ export default function PrivacySettings() {
                 value={settings.allow_follows}
                 onValueChange={(value) => setSettings(prev => ({ ...prev, allow_follows: value as AllowFollows }))}
               >
-                <SelectTrigger 
-                  id="allow-follows"
-                  className="w-full rounded-organic-sm bg-medium-charcoal border-border text-pure-white"
-                >
+              <SelectTrigger 
+                id="allow-follows"
+                className="w-full rounded-organic-sm bg-medium-charcoal border-border text-pure-white text-left"
+              >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-medium-charcoal border-border">
