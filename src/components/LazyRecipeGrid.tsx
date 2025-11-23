@@ -35,6 +35,18 @@ export default function LazyRecipeGrid({
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // Debug: Log recipes to check for duplicates
+  useEffect(() => {
+    const ids = recipes.map(r => r.id);
+    const uniqueIds = new Set(ids);
+    if (ids.length !== uniqueIds.size) {
+      console.error(`LazyRecipeGrid: Found ${ids.length - uniqueIds.size} duplicate recipe IDs`);
+      console.error('Recipe IDs:', ids);
+    } else {
+      console.log(`LazyRecipeGrid: All ${recipes.length} recipes are unique`);
+    }
+  }, [recipes]);
+
   const loadMore = useCallback(() => {
     if (loading || visibleCount >= recipes.length) return;
     

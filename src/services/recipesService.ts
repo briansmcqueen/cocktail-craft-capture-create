@@ -41,6 +41,13 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     isUserRecipe: true
   })) || [];
 
+  // Debug: Check for duplicates from database
+  const ids = recipes.map(r => r.id);
+  const uniqueIds = new Set(ids);
+  if (ids.length !== uniqueIds.size) {
+    console.error(`getUserRecipesFromDB: Database returned ${ids.length - uniqueIds.size} duplicate recipe IDs`);
+  }
+
   // Deduplicate by ID to ensure unique recipes
   const uniqueRecipes = recipes.reduce((acc, recipe) => {
     if (!acc.find(r => r.id === recipe.id)) {
@@ -49,6 +56,7 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     return acc;
   }, [] as Cocktail[]);
 
+  console.log(`getUserRecipesFromDB: Returning ${uniqueRecipes.length} unique recipes from ${recipes.length} total`);
   return uniqueRecipes;
 }
 
