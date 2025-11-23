@@ -3,23 +3,21 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
 import { useMyBarData } from "@/hooks/useMyBarData";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
-import ProfileSettings from "@/components/profile/ProfileSettings";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { BackButton } from "@/components/ui/back-button";
 
 export default function Index() {
   const { user, loading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
-  const [showProfileSettings, setShowProfileSettings] = useState(false);
   
   // Onboarding for new users
   const {
@@ -127,7 +125,9 @@ export default function Index() {
   };
 
   const handleProfileClick = () => {
-    setShowProfileSettings(true);
+    if (user) {
+      navigate(`/user/${user.id}`);
+    }
   };
 
   const handleMyRecipesClick = () => {
@@ -155,21 +155,6 @@ export default function Index() {
 
   if (loading || onboardingLoading) {
     return <LoadingSpinner />;
-  }
-
-  if (showProfileSettings) {
-    return (
-      <div className="min-h-screen bg-rich-charcoal">
-        <div className="max-w-7xl mx-auto px-4 py-8 pb-24 md:pb-8">
-          <div className="mb-4">
-            <BackButton onClick={() => setShowProfileSettings(false)}>
-              Back to recipes
-            </BackButton>
-          </div>
-          <ProfileSettings />
-        </div>
-      </div>
-    );
   }
 
   return (
