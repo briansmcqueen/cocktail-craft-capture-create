@@ -9,6 +9,7 @@ import RecipeCard from '@/components/RecipeCard';
 import FollowButton from '@/components/FollowButton';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
+import { BackButton } from '@/components/ui/back-button';
 import { publicProfileService, PublicProfile, PublicRecipe } from '@/services/publicProfileService';
 import { followsService, FollowStats } from '@/services/followsService';
 import { useAuth } from '@/hooks/useAuth';
@@ -137,18 +138,14 @@ export default function PublicProfilePage() {
         <div className="flex-1 overflow-auto">
           <main className="w-full h-full">
             <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
-              {/* Header */}
-              <div className="bg-rich-charcoal border border-light-charcoal rounded-organic-md mb-6">
-                <div className="p-6">
-                  <Button
-                    variant="ghost"
-                    onClick={() => navigate(-1)}
-                    className="mb-4 hover:bg-medium-charcoal rounded-organic-sm"
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back
-                  </Button>
+              {/* Back Button */}
+              <BackButton onClick={() => navigate(-1)}>
+                Back
+              </BackButton>
 
+              {/* Header */}
+              <div className="bg-rich-charcoal border border-light-charcoal rounded-organic-md mb-6 mt-4">
+                <div className="p-6">
                   <div className="flex items-start gap-6">
                     {/* Avatar */}
                     <Avatar className="h-24 w-24 md:h-32 md:w-32 border-2 border-primary/20">
