@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { TrendingUp, Users, Sparkles, Flame } from 'lucide-react';
+import { TrendingUp, Users, Sparkles, Flame, Compass } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -29,14 +29,19 @@ interface Recipe {
   creator_avatar?: string;
 }
 
+type FeedItem = 
+  | { type: 'user'; data: SuggestedUser }
+  | { type: 'recipe'; data: Recipe };
+
 export default function DiscoverBartenders() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [trendingUsers, setTrendingUsers] = useState<TrendingUser[]>([]);
   const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
+  const [unifiedFeed, setUnifiedFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('suggested');
+  const [activeTab, setActiveTab] = useState('feed');
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   
@@ -61,6 +66,23 @@ export default function DiscoverBartenders() {
       setSuggestedUsers(suggested);
       setTrendingUsers(trending);
       setDiscoverRecipes(recipes);
+      
+      // Create unified feed by interleaving users and recipes
+      const feed: FeedItem[] = [];
+      const maxLength = Math.max(suggested.length, recipes.length);
+      
+      for (let i = 0; i < maxLength; i++) {
+        // Add a recipe
+        if (i < recipes.length) {
+          feed.push({ type: 'recipe', data: recipes[i] });
+        }
+        // Add a user every 2 items
+        if (i % 2 === 0 && i / 2 < suggested.length) {
+          feed.push({ type: 'user', data: suggested[Math.floor(i / 2)] });
+        }
+      }
+      
+      setUnifiedFeed(feed);
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {
@@ -154,6 +176,25 @@ export default function DiscoverBartenders() {
     );
   };
 
+  const filterFeed = (feed: FeedItem[]): FeedItem[] => {
+    if (!searchQuery.trim()) return feed;
+    
+    const query = searchQuery.toLowerCase();
+    return feed.filter(item => {
+      if (item.type === 'user') {
+        const user = item.data;
+        return user.username.toLowerCase().includes(query) ||
+          (user.full_name && user.full_name.toLowerCase().includes(query));
+      } else {
+        const recipe = item.data;
+        return recipe.name.toLowerCase().includes(query) ||
+          (recipe.description && recipe.description.toLowerCase().includes(query)) ||
+          (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query)));
+      }
+    });
+  };
+
+  const filteredFeed = filterFeed(unifiedFeed);
   const filteredSuggestedUsers = filterUsers(suggestedUsers);
   const filteredTrendingUsers = filterUsers(trendingUsers);
   const filteredRecipes = filterRecipes(discoverRecipes);
@@ -214,49 +255,107 @@ export default function DiscoverBartenders() {
                   <LoadingSpinner />
                 </div>
               ) : (
-                <>
-                  <div className="mb-8">
-                    <h1 className="text-3xl font-semibold text-foreground mb-2">
-                      Discover Bartenders
-                    </h1>
-                    <p className="text-muted-foreground">
-                      Find talented bartenders to follow and get inspired by their creations
-                    </p>
-                  </div>
+                  <>
+                    <div className="mb-8">
+                      <h1 className="text-3xl font-semibold text-foreground mb-2">
+                        Discover
+                      </h1>
+                      <p className="text-muted-foreground">
+                        Explore talented bartenders and delicious cocktails from the community
+                      </p>
+                    </div>
 
-                  <div className="mb-6">
-                    <SearchInput
-                      ref={searchInputRef}
-                      placeholder={
-                        activeTab === 'recipes' 
-                          ? 'Search recipes...' 
-                          : 'Search bartenders...'
-                      }
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      showClearButton={searchQuery.length > 0}
-                      showShortcutHint
-                    />
-                  </div>
+                    <div className="mb-6">
+                      <SearchInput
+                        ref={searchInputRef}
+                        placeholder={
+                          activeTab === 'recipes' 
+                            ? 'Search recipes...' 
+                            : activeTab === 'feed'
+                            ? 'Search bartenders and recipes...'
+                            : 'Search bartenders...'
+                        }
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        showClearButton={searchQuery.length > 0}
+                        showShortcutHint
+                      />
+                    </div>
 
-                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 mb-6">
-                      <TabsTrigger value="suggested">
-                        <Sparkles size={16} className="mr-2" />
-                        For You
-                      </TabsTrigger>
-                      <TabsTrigger value="trending">
-                        <TrendingUp size={16} className="mr-2" />
-                        Trending
-                      </TabsTrigger>
-                      <TabsTrigger value="recipes">
-                        <Flame size={16} className="mr-2" />
-                        Recipes
-                      </TabsTrigger>
-                    </TabsList>
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                      <TabsList className="grid w-full grid-cols-4 mb-6">
+                        <TabsTrigger value="feed">
+                          <Compass size={16} className="mr-2" />
+                          Feed
+                        </TabsTrigger>
+                        <TabsTrigger value="suggested">
+                          <Sparkles size={16} className="mr-2" />
+                          For You
+                        </TabsTrigger>
+                        <TabsTrigger value="trending">
+                          <TrendingUp size={16} className="mr-2" />
+                          Trending
+                        </TabsTrigger>
+                        <TabsTrigger value="recipes">
+                          <Flame size={16} className="mr-2" />
+                          Recipes
+                        </TabsTrigger>
+                      </TabsList>
 
-        <TabsContent value="suggested" className="space-y-4">
+                      <TabsContent value="feed" className="space-y-4">
+                        {filteredFeed.length === 0 ? (
+                          <div className="text-center py-12">
+                            <Compass className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+                            <h3 className="text-xl font-semibold text-foreground mb-2">
+                              {searchQuery ? 'No results found' : 'Nothing to discover yet'}
+                            </h3>
+                            <p className="text-muted-foreground">
+                              {searchQuery 
+                                ? 'Try searching with different keywords'
+                                : 'Check back soon for new content'}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            {filteredFeed.map((item, index) => (
+                              item.type === 'user' ? (
+                                <UserCard
+                                  key={`user-${item.data.user_id}`}
+                                  userId={item.data.user_id}
+                                  username={item.data.username}
+                                  fullName={item.data.full_name}
+                                  avatarUrl={item.data.avatar_url}
+                                  bio={item.data.bio}
+                                  recipeCount={item.data.recipe_count}
+                                  followerCount={item.data.follower_count}
+                                />
+                              ) : (
+                                <div key={`recipe-${item.data.id}`} className="bg-card border border-border rounded-organic-md p-4">
+                                  <UniversalRecipeCard
+                                    recipe={{
+                                      id: item.data.id,
+                                      name: item.data.name,
+                                      image: item.data.image_url || '/placeholder.svg',
+                                      ingredients: item.data.ingredients,
+                                      steps: item.data.instructions,
+                                      notes: item.data.description || undefined,
+                                      tags: item.data.tags || [],
+                                      isUserRecipe: true,
+                                      createdBy: item.data.user_id,
+                                      creatorUsername: item.data.creator_username,
+                                      creatorAvatar: item.data.creator_avatar || undefined,
+                                      creatorUserId: item.data.user_id,
+                                    }}
+                                  />
+                                </div>
+                              )
+                            ))}
+                          </div>
+                        )}
+                      </TabsContent>
+
+                      <TabsContent value="suggested" className="space-y-4">
           {filteredSuggestedUsers.length === 0 ? (
             <div className="text-center py-12">
               <Sparkles className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
