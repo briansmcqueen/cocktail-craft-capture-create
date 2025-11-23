@@ -164,6 +164,27 @@ export type Database = {
         }
         Relationships: []
       }
+      blocked_users: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       custom_ingredients: {
         Row: {
           aliases: string[] | null
@@ -939,6 +960,10 @@ export type Database = {
       }
       has_user_liked_recipe: {
         Args: { p_recipe_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      is_user_blocked: {
+        Args: { p_blocked_id: string; p_blocker_id: string }
         Returns: boolean
       }
       validate_affiliate_url: { Args: { url: string }; Returns: boolean }
