@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { socialService, SuggestedUser, TrendingUser } from '@/services/socialService';
+import { privacyService } from '@/services/privacyService';
 import { useAuth } from '@/hooks/useAuth';
 import AuthPrompt from '@/components/auth/AuthPrompt';
 import TopNavigation from '@/components/TopNavigation';
@@ -92,7 +93,7 @@ export default function DiscoverBartenders() {
         .eq('is_public', true)
         .neq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(50); // Fetch more initially since we'll filter
 
       // If user follows someone, exclude their recipes
       if (followingIds.length > 0) {
@@ -103,12 +104,30 @@ export default function DiscoverBartenders() {
 
       if (error) throw error;
       
-      // Map the data to include creator info
-      return (data || []).map((recipe: any) => ({
-        ...recipe,
-        creator_username: recipe.profiles?.username || 'Anonymous',
-        creator_avatar: recipe.profiles?.avatar_url || null,
-      }));
+      // Apply privacy filtering
+      const filteredRecipes: Recipe[] = [];
+      for (const recipe of data || []) {
+        // Check if user is blocked
+        const blocked = await privacyService.isBlockedBy(user.id, recipe.user_id);
+        if (blocked) continue;
+
+        // Check recipe visibility
+        const canView = await privacyService.canViewRecipes(recipe.user_id, user.id);
+        if (!canView.canView) continue;
+
+        // Access the profiles data correctly
+        const profiles = (recipe as any).profiles;
+        filteredRecipes.push({
+          ...recipe,
+          creator_username: profiles?.username || 'Anonymous',
+          creator_avatar: profiles?.avatar_url || null,
+        });
+
+        // Stop at 20 recipes after filtering
+        if (filteredRecipes.length >= 20) break;
+      }
+
+      return filteredRecipes;
     } catch (error) {
       console.error('Error loading discover recipes:', error);
       return [];
