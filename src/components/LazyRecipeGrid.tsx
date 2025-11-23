@@ -116,8 +116,13 @@ export default function LazyRecipeGrid({
   console.log(`📋 Rendering ${visibleRecipes.length} cards out of ${recipes.length} total recipes`);
   console.log('Card IDs being rendered:', visibleRecipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
 
+  // Add unique ID for debugging
+  const componentId = useRef(`grid-${Math.random().toString(36).substr(2, 9)}`);
+  
+  console.log(`🎯 LazyRecipeGrid ${componentId.current} is rendering in the DOM`);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-component-id={componentId.current}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {visibleRecipes.map((recipe) => (
           <UniversalRecipeCard
