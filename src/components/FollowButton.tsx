@@ -114,11 +114,12 @@ export default function FollowButton({ userId, username, onFollowChange }: Follo
     return (
       <Button
         disabled
+        size="sm"
         variant="outline"
-        className="rounded-organic-sm gap-2 opacity-60"
+        className="rounded-organic-sm h-8 w-8 p-0"
+        title="Private account"
       >
         <Lock className="h-4 w-4" />
-        Private
       </Button>
     );
   }
@@ -127,18 +128,20 @@ export default function FollowButton({ userId, username, onFollowChange }: Follo
     <Button
       onClick={handleToggleFollow}
       disabled={loading}
+      size="sm"
       variant={isFollowing ? "outline" : "default"}
-      className="rounded-organic-sm gap-2"
+      className="rounded-organic-sm h-8 px-3 gap-1.5"
+      title={isFollowing ? `Unfollow @${username}` : `Follow @${username}`}
     >
       {isFollowing ? (
         <>
-          <UserMinus className="h-4 w-4" />
-          Unfollow
+          <UserMinus className="h-3.5 w-3.5" />
+          <span className="text-xs font-medium">Unfollow</span>
         </>
       ) : (
         <>
-          <UserPlus className="h-4 w-4" />
-          Follow
+          <UserPlus className="h-3.5 w-3.5" />
+          <span className="text-xs font-medium">Follow</span>
         </>
       )}
     </Button>
