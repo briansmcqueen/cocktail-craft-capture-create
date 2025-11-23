@@ -108,6 +108,29 @@ export default function LazyRecipeGrid({
   const visibleRecipes = recipes.slice(0, visibleCount);
   const hasMore = visibleCount < recipes.length;
 
+  // Debug logging with more detail
+  console.log('=== LazyRecipeGrid Render ===');
+  console.log('Library:', library);
+  console.log('Total recipes:', recipes.length);
+  console.log('Visible recipes:', visibleCount);
+  console.log('Recipe IDs:', recipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
+  
+  // Check for duplicates
+  const idCounts = recipes.reduce((acc, r) => {
+    acc[r.id] = (acc[r.id] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  const duplicateIds = Object.entries(idCounts).filter(([_, count]) => count > 1);
+  if (duplicateIds.length > 0) {
+    console.error('DUPLICATE RECIPES FOUND:', duplicateIds.map(([id, count]) => {
+      const recipe = recipes.find(r => r.id === id);
+      return `${id.slice(0, 8)}... "${recipe?.name}" appears ${count} times`;
+    }));
+  } else {
+    console.log('✓ No duplicates detected');
+  }
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">

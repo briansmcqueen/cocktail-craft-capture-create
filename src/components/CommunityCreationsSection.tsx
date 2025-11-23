@@ -22,6 +22,27 @@ export default function CommunityCreationsSection({
   recipes,
   onShowAuthModal,
 }: CommunityCreationsSectionProps) {
+  // Debug logging
+  console.log(`=== CommunityCreationsSection: ${title} ===`);
+  console.log('Recipe count:', recipes.length);
+  console.log('Recipe IDs:', recipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
+  
+  // Check for duplicates
+  const idCounts = recipes.reduce((acc, r) => {
+    acc[r.id] = (acc[r.id] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  const duplicateIds = Object.entries(idCounts).filter(([_, count]) => count > 1);
+  if (duplicateIds.length > 0) {
+    console.error(`DUPLICATE RECIPES in "${title}":`, duplicateIds.map(([id, count]) => {
+      const recipe = recipes.find(r => r.id === id);
+      return `${id.slice(0, 8)}... "${recipe?.name}" appears ${count} times`;
+    }));
+  } else {
+    console.log(`✓ No duplicates in "${title}"`);
+  }
+
   if (recipes.length === 0) {
     return null;
   }
