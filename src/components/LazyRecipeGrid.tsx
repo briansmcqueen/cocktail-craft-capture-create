@@ -34,6 +34,11 @@ export default function LazyRecipeGrid({
   const [loading, setLoading] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const renderCountRef = useRef(0);
+
+  // Track renders
+  renderCountRef.current += 1;
+  console.log(`🔄 LazyRecipeGrid RENDER #${renderCountRef.current}`);
 
   // Debug: Log recipes to check for duplicates
   useEffect(() => {
@@ -108,28 +113,8 @@ export default function LazyRecipeGrid({
   const visibleRecipes = recipes.slice(0, visibleCount);
   const hasMore = visibleCount < recipes.length;
 
-  // Debug logging with more detail
-  console.log('=== LazyRecipeGrid Render ===');
-  console.log('Library:', library);
-  console.log('Total recipes:', recipes.length);
-  console.log('Visible recipes:', visibleCount);
-  console.log('Recipe IDs:', recipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
-  
-  // Check for duplicates
-  const idCounts = recipes.reduce((acc, r) => {
-    acc[r.id] = (acc[r.id] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-  
-  const duplicateIds = Object.entries(idCounts).filter(([_, count]) => count > 1);
-  if (duplicateIds.length > 0) {
-    console.error('DUPLICATE RECIPES FOUND:', duplicateIds.map(([id, count]) => {
-      const recipe = recipes.find(r => r.id === id);
-      return `${id.slice(0, 8)}... "${recipe?.name}" appears ${count} times`;
-    }));
-  } else {
-    console.log('✓ No duplicates detected');
-  }
+  console.log(`📋 Rendering ${visibleRecipes.length} cards out of ${recipes.length} total recipes`);
+  console.log('Card IDs being rendered:', visibleRecipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
 
   return (
     <div className="space-y-6">
