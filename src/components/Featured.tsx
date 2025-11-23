@@ -80,8 +80,6 @@ export default function Featured({
         <div className="space-y-8 md:space-y-12">
           {/* Hero Section - Mission Statement */}
           <HeroSection
-            onNavigateToDiscover={handleNavigateToDiscover}
-            onNavigateToMyBar={handleNavigateToMyBar}
             isAuthenticated={!!user}
           />
 
@@ -117,10 +115,9 @@ export default function Featured({
 
           {/* Call to Action */}
           <CommunityCallToAction
-            onCreateRecipe={handleCreateRecipe}
-            onNavigateToDiscover={handleNavigateToDiscover}
             isAuthenticated={!!user}
             onShowAuthModal={onShowAuthModal}
+            onShowForm={onShowForm}
           />
 
           {/* Techniques Section */}

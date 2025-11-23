@@ -3,14 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 type HeroSectionProps = {
-  onNavigateToDiscover?: () => void;
-  onNavigateToMyBar?: () => void;
   isAuthenticated: boolean;
 };
 
 export default function HeroSection({ 
-  onNavigateToDiscover, 
-  onNavigateToMyBar,
   isAuthenticated 
 }: HeroSectionProps) {
   const navigate = useNavigate();
@@ -20,7 +16,7 @@ export default function HeroSection({
   };
 
   const handleStartCreating = () => {
-    onNavigateToMyBar?.();
+    navigate('/mybar');
   };
 
   return (

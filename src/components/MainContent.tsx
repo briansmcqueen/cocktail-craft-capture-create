@@ -115,6 +115,7 @@ export default function MainContent({
             onToggleFavorite={() => {}}
             onShowAuthModal={() => setShowAuthModal(true)}
             onNavigateToMyBar={onNavigateToMyBar}
+            onShowForm={handleAddRecipe}
           />
         ) : library === "ingredients" ? (
           <MyBarEngine
