@@ -20,6 +20,7 @@ export default function Settings() {
   const [changingPassword, setChangingPassword] = useState(false);
   const [changingEmail, setChangingEmail] = useState(false);
   const [showEmailChange, setShowEmailChange] = useState(false);
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -248,8 +249,6 @@ export default function Settings() {
               <div className="space-y-6">
                 {/* Profile Settings */}
                 <ProfileSettings />
-
-                {/* Password & Security */}
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-xl font-serif text-pure-white flex items-center gap-2">
@@ -370,58 +369,90 @@ export default function Settings() {
                     <Separator className="bg-border" />
 
                     {/* Change Password Form */}
-                    <form onSubmit={handlePasswordChange} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="newPassword" className="flex items-center gap-2">
-                          <Lock className="h-4 w-4" />
-                          New Password
-                        </Label>
-                        <Input
-                          id="newPassword"
-                          type="password"
-                          value={passwordData.newPassword}
-                          onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                          placeholder="Enter new password"
-                          className="bg-medium-charcoal border-border text-pure-white rounded-organic-sm"
-                          required
-                          minLength={6}
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">
-                          Confirm New Password
-                        </Label>
-                        <Input
-                          id="confirmPassword"
-                          type="password"
-                          value={passwordData.confirmPassword}
-                          onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                          placeholder="Confirm new password"
-                          className="bg-medium-charcoal border-border text-pure-white rounded-organic-sm"
-                          required
-                          minLength={6}
-                        />
-                      </div>
-
-                      <div className="flex gap-3">
-                        <Button
-                          type="submit"
-                          disabled={changingPassword || !passwordData.newPassword || !passwordData.confirmPassword}
-                          className="rounded-organic-sm"
-                        >
-                          {changingPassword ? 'Changing Password...' : 'Change Password'}
-                        </Button>
+                    {!showPasswordChange ? (
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-foreground">Password</h3>
+                          <p className="text-sm text-muted-foreground">Update your password or send a reset email</p>
+                        </div>
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={handleSendPasswordReset}
+                          onClick={() => setShowPasswordChange(true)}
                           className="rounded-organic-sm border-border"
                         >
-                          Send Reset Email
+                          Change Password
                         </Button>
                       </div>
-                    </form>
+                    ) : (
+                      <form onSubmit={handlePasswordChange} className="space-y-4 p-4 border border-border rounded-organic-md bg-medium-charcoal/50">
+                        <div className="space-y-2">
+                          <Label htmlFor="newPassword" className="flex items-center gap-2">
+                            <Lock className="h-4 w-4" />
+                            New Password
+                          </Label>
+                          <Input
+                            id="newPassword"
+                            type="password"
+                            value={passwordData.newPassword}
+                            onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+                            placeholder="Enter new password"
+                            className="bg-medium-charcoal border-border text-pure-white rounded-organic-sm"
+                            required
+                            minLength={6}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="confirmPassword">
+                            Confirm New Password
+                          </Label>
+                          <Input
+                            id="confirmPassword"
+                            type="password"
+                            value={passwordData.confirmPassword}
+                            onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                            placeholder="Confirm new password"
+                            className="bg-medium-charcoal border-border text-pure-white rounded-organic-sm"
+                            required
+                            minLength={6}
+                          />
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Button
+                            type="submit"
+                            disabled={changingPassword || !passwordData.newPassword || !passwordData.confirmPassword}
+                            className="rounded-organic-sm"
+                          >
+                            {changingPassword ? 'Changing Password...' : 'Change Password'}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleSendPasswordReset}
+                            className="rounded-organic-sm border-border"
+                          >
+                            Send Reset Email
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => {
+                              setShowPasswordChange(false);
+                              setPasswordData({
+                                currentPassword: '',
+                                newPassword: '',
+                                confirmPassword: '',
+                              });
+                            }}
+                            className="rounded-organic-sm"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </form>
+                    )}
                   </CardContent>
                 </Card>
               </div>
