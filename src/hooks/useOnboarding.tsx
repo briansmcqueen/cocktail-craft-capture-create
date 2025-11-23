@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 
 export function useOnboarding(user: User | null) {
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +17,7 @@ export function useOnboarding(user: User | null) {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('onboarding_completed')
+          .select('username, onboarding_completed')
           .eq('id', user.id)
           .single();
 
@@ -26,8 +27,12 @@ export function useOnboarding(user: User | null) {
           return;
         }
 
-        // Show onboarding if user hasn't completed it
-        if (data && !data.onboarding_completed) {
+        // Show profile setup if user doesn't have a username
+        if (data && !data.username) {
+          setShowProfileSetup(true);
+        } 
+        // Show feature tour if username exists but onboarding not completed
+        else if (data && !data.onboarding_completed) {
           setShowOnboarding(true);
         }
       } catch (error) {
@@ -39,6 +44,12 @@ export function useOnboarding(user: User | null) {
 
     checkOnboardingStatus();
   }, [user]);
+
+  const completeProfileSetup = () => {
+    setShowProfileSetup(false);
+    // After profile setup, show the feature tour
+    setShowOnboarding(true);
+  };
 
   const completeOnboarding = async () => {
     if (!user) return;
@@ -66,8 +77,10 @@ export function useOnboarding(user: User | null) {
   };
 
   return {
+    showProfileSetup,
     showOnboarding,
     loading,
+    completeProfileSetup,
     completeOnboarding,
     skipOnboarding,
   };
