@@ -34,24 +34,6 @@ export default function LazyRecipeGrid({
   const [loading, setLoading] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const renderCountRef = useRef(0);
-  const componentId = useRef(`grid-${Math.random().toString(36).substr(2, 9)}`);
-
-  // Track renders
-  renderCountRef.current += 1;
-  console.log(`🔄 LazyRecipeGrid RENDER #${renderCountRef.current} [${componentId.current}]`);
-
-  // Debug: Log recipes to check for duplicates
-  useEffect(() => {
-    const ids = recipes.map(r => r.id);
-    const uniqueIds = new Set(ids);
-    if (ids.length !== uniqueIds.size) {
-      console.error(`LazyRecipeGrid: Found ${ids.length - uniqueIds.size} duplicate recipe IDs`);
-      console.error('Recipe IDs:', ids);
-    } else {
-      console.log(`LazyRecipeGrid: All ${recipes.length} recipes are unique`);
-    }
-  }, [recipes]);
 
   const loadMore = useCallback(() => {
     if (loading || visibleCount >= recipes.length) return;
@@ -114,11 +96,8 @@ export default function LazyRecipeGrid({
   const visibleRecipes = recipes.slice(0, visibleCount);
   const hasMore = visibleCount < recipes.length;
 
-  console.log(`📋 Rendering ${visibleRecipes.length} cards out of ${recipes.length} total recipes`);
-  console.log('Card IDs being rendered:', visibleRecipes.map(r => `${r.id.slice(0, 8)}... (${r.name})`));
-
   return (
-    <div className="space-y-6" data-component-id={componentId.current}>
+    <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {visibleRecipes.map((recipe) => (
           <UniversalRecipeCard
