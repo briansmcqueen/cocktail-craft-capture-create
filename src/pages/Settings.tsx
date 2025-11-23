@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
 import ProfileSettings from '@/components/profile/ProfileSettings';
+import PrivacySettings from '@/components/profile/PrivacySettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -249,6 +250,11 @@ export default function Settings() {
               <div className="space-y-6">
                 {/* Profile Settings */}
                 <ProfileSettings />
+
+                {/* Privacy Settings */}
+                <PrivacySettings />
+
+                {/* Password & Security */}
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-xl font-serif text-pure-white flex items-center gap-2">
