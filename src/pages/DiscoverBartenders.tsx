@@ -280,24 +280,24 @@ export default function DiscoverBartenders() {
                     </div>
 
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                      <TabsList className="grid w-full grid-cols-3 mb-8 h-auto p-1 bg-card/50 border border-border rounded-lg">
+                      <TabsList className="grid w-full grid-cols-3 mb-8 h-auto p-1.5 gap-1 bg-card/50 border border-border rounded-lg">
                         <TabsTrigger 
                           value="feed" 
-                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md transition-all duration-300 py-3"
+                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm rounded-md transition-all duration-300 py-3.5 px-4"
                         >
                           <Compass size={18} className="mr-2" />
                           <span className="font-medium">Feed</span>
                         </TabsTrigger>
                         <TabsTrigger 
                           value="suggested" 
-                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md transition-all duration-300 py-3"
+                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm rounded-md transition-all duration-300 py-3.5 px-4"
                         >
                           <Users size={18} className="mr-2" />
                           <span className="font-medium">Accounts</span>
                         </TabsTrigger>
                         <TabsTrigger 
                           value="recipes" 
-                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md transition-all duration-300 py-3"
+                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm rounded-md transition-all duration-300 py-3.5 px-4"
                         >
                           <Flame size={18} className="mr-2" />
                           <span className="font-medium">Recipes</span>
