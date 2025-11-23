@@ -80,16 +80,10 @@ export default function DiscoverBartenders() {
 
       const followingIds = followingData?.map(f => f.following_id) || [];
 
-      // Get public recipes from users not being followed with creator info
+      // Get public recipes from users not being followed
       let query = supabase
         .from('recipes')
-        .select(`
-          *,
-          profiles:user_id (
-            username,
-            avatar_url
-          )
-        `)
+        .select('*')
         .eq('is_public', true)
         .neq('user_id', user.id)
         .order('created_at', { ascending: false })
@@ -104,7 +98,7 @@ export default function DiscoverBartenders() {
 
       if (error) throw error;
       
-      // Apply privacy filtering
+      // Apply privacy filtering and fetch creator info
       const filteredRecipes: Recipe[] = [];
       for (const recipe of data || []) {
         // Check if user is blocked
@@ -115,12 +109,17 @@ export default function DiscoverBartenders() {
         const canView = await privacyService.canViewRecipes(recipe.user_id, user.id);
         if (!canView.canView) continue;
 
-        // Access the profiles data correctly
-        const profiles = (recipe as any).profiles;
+        // Fetch creator profile info separately
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username, avatar_url')
+          .eq('id', recipe.user_id)
+          .single();
+
         filteredRecipes.push({
           ...recipe,
-          creator_username: profiles?.username || 'Anonymous',
-          creator_avatar: profiles?.avatar_url || null,
+          creator_username: profile?.username || 'Anonymous',
+          creator_avatar: profile?.avatar_url || null,
         });
 
         // Stop at 20 recipes after filtering
