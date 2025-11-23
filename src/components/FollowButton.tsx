@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { UserPlus, UserMinus } from 'lucide-react';
+import { UserPlus, UserMinus, Lock } from 'lucide-react';
 import { followsService } from '@/services/followsService';
+import { privacyService } from '@/services/privacyService';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthModal } from '@/contexts/AuthModalContext';
@@ -17,10 +18,12 @@ export default function FollowButton({ userId, username, onFollowChange }: Follo
   const { openAuthModal } = useAuthModal();
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [canFollowUser, setCanFollowUser] = useState(true);
 
   useEffect(() => {
     if (user && userId) {
       checkFollowStatus();
+      checkCanFollow();
     }
   }, [user, userId]);
 
@@ -29,9 +32,24 @@ export default function FollowButton({ userId, username, onFollowChange }: Follo
     setIsFollowing(following);
   };
 
+  const checkCanFollow = async () => {
+    if (!user) return;
+    const check = await privacyService.canFollow(userId, user.id);
+    setCanFollowUser(check.canView);
+  };
+
   const handleToggleFollow = async () => {
     if (!user) {
       openAuthModal('signin', 'Please sign in to follow bartenders');
+      return;
+    }
+
+    if (!canFollowUser && !isFollowing) {
+      toast({
+        title: "Cannot follow",
+        description: "This user's privacy settings don't allow new followers.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -58,10 +76,16 @@ export default function FollowButton({ userId, username, onFollowChange }: Follo
             description: `You're now following @${username}`,
           });
           onFollowChange?.(true);
+        } else {
+          toast({
+            title: "Cannot follow",
+            description: "This user cannot be followed due to privacy settings or you are blocked.",
+            variant: "destructive",
+          });
         }
       }
 
-      if (!success) {
+      if (!success && isFollowing) {
         toast({
           title: "Error",
           description: "Failed to update follow status. Please try again.",
@@ -83,6 +107,20 @@ export default function FollowButton({ userId, username, onFollowChange }: Follo
   // Don't show follow button if viewing own profile
   if (user?.id === userId) {
     return null;
+  }
+
+  // Show lock icon if user cannot be followed
+  if (!canFollowUser && !isFollowing) {
+    return (
+      <Button
+        disabled
+        variant="outline"
+        className="rounded-organic-sm gap-2 opacity-60"
+      >
+        <Lock className="h-4 w-4" />
+        Private
+      </Button>
+    );
   }
 
   return (
