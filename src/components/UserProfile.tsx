@@ -269,13 +269,11 @@ export default function UserProfile() {
 
       {/* Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="creations" className="flex items-center gap-2">
-            <ChefHat className="w-4 h-4" />
+        <TabsList className="w-full">
+          <TabsTrigger value="creations">
             Creations
           </TabsTrigger>
-          <TabsTrigger value="favorites" className="flex items-center gap-2">
-            <Heart className="w-4 h-4" />
+          <TabsTrigger value="favorites">
             Favorites
           </TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
