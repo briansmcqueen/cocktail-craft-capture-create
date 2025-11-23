@@ -7,7 +7,6 @@ import { getCommunityRecipesFromDB } from "@/services/recipesService";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useAuth } from "@/hooks/useAuth";
 import DrinkOfTheDay from "./DrinkOfTheDay";
-import HeroSection from "./HeroSection";
 import FeaturedBartendersSection from "./FeaturedBartendersSection";
 import CommunityCreationsSection from "./CommunityCreationsSection";
 import CommunityCallToAction from "./CommunityCallToAction";
@@ -84,11 +83,6 @@ export default function Featured({
     <div className="w-full max-w-7xl mx-auto">
       <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="space-y-8 md:space-y-12">
-          {/* Hero Section - Mission Statement */}
-          <HeroSection
-            isAuthenticated={!!user}
-          />
-
           {/* Drink of the Day */}
           <DrinkOfTheDay
             recipe={drinkOfTheDay}
