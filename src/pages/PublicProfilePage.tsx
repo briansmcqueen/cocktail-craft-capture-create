@@ -105,7 +105,7 @@ export default function PublicProfilePage() {
         onAddRecipe={() => navigate('/')}
         onSignInClick={() => {}}
         onSignUpClick={() => {}}
-        onProfileClick={() => {}}
+        onProfileClick={() => user && navigate(`/user/${user.id}`)}
         onMyRecipesClick={() => navigate('/recipes/my-drinks')}
         onFavoritesClick={() => navigate('/favorites')}
       />
@@ -129,7 +129,7 @@ export default function PublicProfilePage() {
             user={user}
             onSignInClick={() => {}}
             onSignUpClick={() => {}}
-            onProfileClick={() => {}}
+            onProfileClick={() => user && navigate(`/user/${user.id}`)}
             onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />

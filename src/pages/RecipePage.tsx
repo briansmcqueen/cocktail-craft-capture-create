@@ -237,7 +237,7 @@ export default function RecipePage() {
         onAddRecipe={() => navigate('/recipes/my-drinks')}
         onSignInClick={() => setShowAuthModal(true)}
         onSignUpClick={() => setShowAuthModal(true)}
-        onProfileClick={() => navigate('/profile')}
+        onProfileClick={() => user && navigate(`/user/${user.id}`)}
         onMyRecipesClick={() => navigate('/recipes/my-drinks')}
         onFavoritesClick={() => navigate('/favorites')}
       />
@@ -252,7 +252,7 @@ export default function RecipePage() {
             user={user}
             onSignInClick={() => setShowAuthModal(true)}
             onSignUpClick={() => setShowAuthModal(true)}
-            onProfileClick={() => navigate('/profile')}
+            onProfileClick={() => user && navigate(`/user/${user.id}`)}
             onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />
