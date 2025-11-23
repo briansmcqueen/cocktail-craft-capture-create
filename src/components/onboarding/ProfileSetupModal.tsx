@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, User, CheckCircle2, XCircle } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Loader2, User, CheckCircle2, XCircle, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { compressImage } from '@/services/imageUploadService';
 import { z } from 'zod';
 
 interface ProfileSetupModalProps {
@@ -25,10 +27,14 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [checking, setChecking] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const [usernameError, setUsernameError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const checkUsernameAvailability = async (value: string) => {
@@ -89,6 +95,83 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
     return () => clearTimeout(timeoutId);
   };
 
+  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (10MB limit)
+    const maxFileSize = 10 * 1024 * 1024;
+    if (file.size > maxFileSize) {
+      toast({
+        title: "File too large",
+        description: "Image size must be less than 10MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Store the file for upload
+    setAvatarFile(file);
+    
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarUrl(previewUrl);
+  };
+
+  const uploadAvatar = async (): Promise<string | null> => {
+    if (!avatarFile) return null;
+
+    try {
+      setUploading(true);
+      
+      // Compress the image
+      const compressedBlob = await compressImage(avatarFile, 400, 400, 0.8);
+      
+      // Generate filename
+      const fileExt = avatarFile.name.split('.').pop() || 'jpg';
+      const fileName = `${userId}.${fileExt}`;
+      
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, compressedBlob, { 
+          upsert: true,
+          contentType: 'image/jpeg',
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Avatar upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to upload avatar. You can add one later from settings.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -113,16 +196,25 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
             description: error.errors[0].message,
             variant: "destructive",
           });
+          setLoading(false);
           return;
         }
       }
 
+      // Upload avatar if one was selected
+      let uploadedAvatarUrl: string | null = null;
+      if (avatarFile) {
+        uploadedAvatarUrl = await uploadAvatar();
+      }
+
+      // Update profile with all info
       const { error } = await supabase
         .from('profiles')
         .update({
           username: username,
           full_name: fullName.trim() || null,
           bio: bio.trim() || null,
+          avatar_url: uploadedAvatarUrl || null,
         })
         .eq('id', userId);
 
@@ -134,6 +226,13 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
           variant: "destructive",
         });
         return;
+      }
+
+      // Also update auth user metadata for consistency
+      if (uploadedAvatarUrl) {
+        await supabase.auth.updateUser({
+          data: { avatar_url: uploadedAvatarUrl }
+        });
       }
 
       toast({
@@ -162,20 +261,53 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-              <User className="text-primary" size={32} />
-            </div>
-          </div>
           <DialogTitle className="text-2xl text-center text-pure-white">
             Welcome to Barbook!
           </DialogTitle>
           <DialogDescription className="text-center text-light-text">
-            Let's set up your profile. Choose a unique username to get started.
+            Let's set up your profile to get started.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-5 mt-6">
+          {/* Avatar Upload */}
+          <div className="flex flex-col items-center gap-3">
+            <div className="relative group">
+              <Avatar className="h-24 w-24 border-2 border-border">
+                <AvatarImage src={avatarUrl || undefined} />
+                <AvatarFallback className="bg-primary/10 text-primary text-2xl">
+                  <User size={32} />
+                </AvatarFallback>
+              </Avatar>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loading || uploading}
+                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Camera className="text-white" size={24} />
+              </button>
+            </div>
+            <Input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={loading || uploading}
+              className="text-xs"
+            >
+              <Camera className="h-3 w-3 mr-2" />
+              {avatarUrl ? 'Change Photo' : 'Add Photo (Optional)'}
+            </Button>
+          </div>
+
           {/* Username field */}
           <div className="space-y-2">
             <Label htmlFor="username" className="text-foreground">
@@ -251,13 +383,13 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
 
           <Button
             type="submit"
-            disabled={loading || !username || usernameAvailable !== true}
+            disabled={loading || uploading || !username || usernameAvailable !== true}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
           >
-            {loading ? (
+            {loading || uploading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Setting up...
+                {uploading ? 'Uploading avatar...' : 'Setting up...'}
               </>
             ) : (
               'Continue'
