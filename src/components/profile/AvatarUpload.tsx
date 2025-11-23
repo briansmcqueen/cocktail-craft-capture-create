@@ -115,6 +115,11 @@ export default function AvatarUpload({
 
         if (profileError) {
           console.error('Profile update error:', profileError);
+          toast({
+            title: "Warning",
+            description: "Avatar uploaded but profile update failed. Please refresh the page.",
+            variant: "destructive",
+          });
         }
 
         // Update auth user metadata to ensure avatar shows everywhere
@@ -124,6 +129,11 @@ export default function AvatarUpload({
 
         if (authError) {
           console.error('Auth update error:', authError);
+          toast({
+            title: "Warning",
+            description: "Avatar uploaded but user metadata update failed.",
+            variant: "destructive",
+          });
         }
 
         // Refresh user session to get updated metadata
@@ -168,7 +178,10 @@ export default function AvatarUpload({
       <div className="flex items-center gap-6">
         <div className="relative group">
           <Avatar className="h-24 w-24 border-2 border-border">
-            <AvatarImage src={avatarUrl || undefined} />
+            <AvatarImage 
+              src={avatarUrl || undefined} 
+              alt="Profile picture"
+            />
             <AvatarFallback className="text-2xl bg-primary/10 text-primary">
               {initials}
             </AvatarFallback>
