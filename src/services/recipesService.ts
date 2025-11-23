@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Cocktail } from "@/data/classicCocktails";
+import { privacyService } from "./privacyService";
 
 export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
   const { data: { user } } = await supabase.auth.getUser();
@@ -122,6 +123,15 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
 
     if (profileError || !publicProfile) {
       console.error('User not found:', username, profileError);
+      return null;
+    }
+
+    // Check privacy settings
+    const { data: { user } } = await supabase.auth.getUser();
+    const privacyCheck = await privacyService.canViewRecipes(publicProfile.id, user?.id);
+    
+    if (!privacyCheck.canView) {
+      console.log('Recipe not accessible due to privacy settings');
       return null;
     }
 

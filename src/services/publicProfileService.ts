@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { privacyService } from "./privacyService";
 
 export interface PublicProfile {
   id: string;
@@ -34,6 +35,15 @@ export const publicProfileService = {
       return null;
     }
 
+    // Check privacy settings
+    const { data: { user } } = await supabase.auth.getUser();
+    const privacyCheck = await privacyService.canViewProfile(data.id, user?.id);
+    
+    if (!privacyCheck.canView) {
+      console.log('Profile not accessible due to privacy settings');
+      return null;
+    }
+
     // Fetch additional profile info not returned by the function
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
@@ -55,6 +65,15 @@ export const publicProfileService = {
   },
 
   async getUserPublicRecipes(userId: string): Promise<PublicRecipe[]> {
+    // Check privacy settings
+    const { data: { user } } = await supabase.auth.getUser();
+    const privacyCheck = await privacyService.canViewRecipes(userId, user?.id);
+    
+    if (!privacyCheck.canView) {
+      console.log('Recipes not accessible due to privacy settings');
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('recipes')
       .select('id, name, description, image_url, tags, created_at, rating, difficulty')

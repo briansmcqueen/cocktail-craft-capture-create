@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { privacyService } from "./privacyService";
 
 export interface Follow {
   id: string;
@@ -23,6 +24,13 @@ export async function followUser(userId: string): Promise<boolean> {
   
   if (!user) {
     console.error('User not authenticated');
+    return false;
+  }
+
+  // Check if follow is allowed
+  const privacyCheck = await privacyService.canFollow(userId, user.id);
+  if (!privacyCheck.canView) {
+    console.log('Cannot follow user due to privacy settings or block');
     return false;
   }
 
@@ -220,7 +228,21 @@ export async function getFollowedUsersRecipes(limit: number = 20) {
     return [];
   }
 
-  return data || [];
+  // Filter recipes based on privacy settings and blocks
+  const filteredRecipes: any[] = [];
+  for (const recipe of data || []) {
+    // Check if user is blocked
+    const blocked = await privacyService.isBlockedBy(user.id, recipe.user_id);
+    if (blocked) continue;
+
+    // Check recipe visibility
+    const canView = await privacyService.canViewRecipes(recipe.user_id, user.id);
+    if (canView.canView) {
+      filteredRecipes.push(recipe);
+    }
+  }
+
+  return filteredRecipes;
 }
 
 // Export as a service object for consistency with new components

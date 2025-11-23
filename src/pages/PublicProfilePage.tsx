@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { User, Calendar, BookOpen, Heart, ArrowLeft, Users } from 'lucide-react';
+import { User, Calendar, BookOpen, Heart, ArrowLeft, Users, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +12,7 @@ import Sidebar from '@/components/Sidebar';
 import { BackButton } from '@/components/ui/back-button';
 import { publicProfileService, PublicProfile, PublicRecipe } from '@/services/publicProfileService';
 import { followsService, FollowStats } from '@/services/followsService';
+import { privacyService } from '@/services/privacyService';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 import { classicCocktails } from '@/data/classicCocktails';
@@ -227,14 +228,14 @@ export default function PublicProfilePage() {
                 <TabsContent value="recipes" className="mt-0">
                   {recipes.length === 0 ? (
                     <div className="text-center py-16">
-                      <BookOpen className="h-16 w-16 mx-auto mb-4 text-soft-gray opacity-50" />
-                      <h3 className="text-xl font-semibold text-light-text mb-2">
-                        No public recipes yet
+                      <Lock className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+                      <h3 className="text-xl font-semibold text-foreground mb-2">
+                        {isOwnProfile ? 'No recipes yet' : 'No accessible recipes'}
                       </h3>
-                      <p className="text-soft-gray">
+                      <p className="text-muted-foreground">
                         {isOwnProfile 
                           ? "Start sharing your cocktail creations with the community!"
-                          : `${profile.username} hasn't shared any recipes yet.`
+                          : `This user's recipes may be private or followers-only`
                         }
                       </p>
                     </div>
