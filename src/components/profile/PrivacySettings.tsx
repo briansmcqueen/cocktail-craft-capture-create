@@ -5,10 +5,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Eye, Users, Lock, Info } from 'lucide-react';
+import { Shield, Eye, Users, Lock, Info, Ban, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { blockedUsersService, type BlockedUser } from '@/services/blockedUsersService';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 type ProfileVisibility = 'public' | 'followers' | 'private';
 type RecipeVisibility = 'public' | 'followers' | 'private';
@@ -29,10 +32,15 @@ export default function PrivacySettings() {
     recipe_visibility: 'public',
     allow_follows: 'everyone',
   });
+  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
+  const [searchUsername, setSearchUsername] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     if (user) {
       fetchPrivacySettings();
+      fetchBlockedUsers();
     }
   }, [user]);
 
@@ -60,6 +68,78 @@ export default function PrivacySettings() {
       });
     }
     setLoading(false);
+  };
+
+  const fetchBlockedUsers = async () => {
+    const users = await blockedUsersService.getBlockedUsers();
+    setBlockedUsers(users);
+  };
+
+  const handleSearchUsers = async (search: string) => {
+    if (!search.trim() || search.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    setSearching(true);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, username, full_name, avatar_url')
+        .ilike('username', `%${search}%`)
+        .limit(5);
+
+      if (error) throw error;
+
+      // Filter out already blocked users and current user
+      const filtered = data?.filter(p => 
+        p.id !== user?.id && 
+        !blockedUsers.some(b => b.blocked_id === p.id)
+      ) || [];
+
+      setSearchResults(filtered);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleBlockUser = async (userId: string) => {
+    const success = await blockedUsersService.blockUser(userId);
+    if (success) {
+      toast({
+        title: "User blocked",
+        description: "This user can no longer see your content or follow you.",
+      });
+      fetchBlockedUsers();
+      setSearchUsername('');
+      setSearchResults([]);
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to block user. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUnblockUser = async (userId: string) => {
+    const success = await blockedUsersService.unblockUser(userId);
+    if (success) {
+      toast({
+        title: "User unblocked",
+        description: "This user can now see your public content.",
+      });
+      fetchBlockedUsers();
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to unblock user. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -285,6 +365,111 @@ export default function PrivacySettings() {
                   </SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+        </div>
+
+        <Separator className="bg-border" />
+
+        {/* Blocked Users */}
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <Ban className="h-5 w-5 text-muted-foreground mt-0.5" />
+            <div className="flex-1 space-y-3">
+              <div>
+                <Label className="text-base font-semibold text-foreground">Blocked Users</Label>
+                <p className="text-sm text-muted-foreground">
+                  Blocked users cannot view your content or follow you
+                </p>
+              </div>
+
+              {/* Search to block users */}
+              <div className="space-y-3">
+                <Input
+                  placeholder="Search username to block..."
+                  value={searchUsername}
+                  onChange={(e) => {
+                    setSearchUsername(e.target.value);
+                    handleSearchUsers(e.target.value);
+                  }}
+                  className="bg-medium-charcoal border-border rounded-organic-sm text-pure-white"
+                />
+
+                {/* Search results */}
+                {searchResults.length > 0 && (
+                  <div className="space-y-2 p-3 bg-medium-charcoal/50 rounded-organic-md border border-border">
+                    {searchResults.map((result) => (
+                      <div key={result.id} className="flex items-center justify-between py-2">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={result.avatar_url || undefined} />
+                            <AvatarFallback>{result.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium text-sm text-foreground">@{result.username}</p>
+                            {result.full_name && (
+                              <p className="text-xs text-muted-foreground">{result.full_name}</p>
+                            )}
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleBlockUser(result.id)}
+                          className="rounded-organic-sm"
+                        >
+                          <Ban className="h-4 w-4 mr-1" />
+                          Block
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* List of blocked users */}
+              {blockedUsers.length > 0 ? (
+                <div className="space-y-2">
+                  {blockedUsers.map((block) => (
+                    <div
+                      key={block.id}
+                      className="flex items-center justify-between p-3 bg-medium-charcoal/50 rounded-organic-md border border-border"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={block.blocked_profile?.avatar_url || undefined} />
+                          <AvatarFallback>
+                            {block.blocked_profile?.username?.[0]?.toUpperCase() || '?'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-sm text-foreground">
+                            @{block.blocked_profile?.username || 'Unknown'}
+                          </p>
+                          {block.blocked_profile?.full_name && (
+                            <p className="text-xs text-muted-foreground">
+                              {block.blocked_profile.full_name}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleUnblockUser(block.blocked_id)}
+                        className="rounded-organic-sm border-border"
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Unblock
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No blocked users
+                </p>
+              )}
             </div>
           </div>
         </div>
