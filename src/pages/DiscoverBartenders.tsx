@@ -150,7 +150,7 @@ export default function DiscoverBartenders() {
         onAddRecipe={() => navigate('/')}
         onSignInClick={() => {}}
         onSignUpClick={() => {}}
-        onProfileClick={() => {}}
+        onProfileClick={() => user && navigate(`/user/${user.id}`)}
         onMyRecipesClick={() => navigate('/recipes/my-drinks')}
         onFavoritesClick={() => navigate('/favorites')}
       />
@@ -174,7 +174,7 @@ export default function DiscoverBartenders() {
             user={user}
             onSignInClick={() => {}}
             onSignUpClick={() => {}}
-            onProfileClick={() => navigate('/profile')}
+            onProfileClick={() => user && navigate(`/user/${user.id}`)}
             onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />

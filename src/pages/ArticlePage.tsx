@@ -104,7 +104,7 @@ export default function ArticlePage() {
         onAddRecipe={() => navigate('/recipes/my-drinks')}
         onSignInClick={() => navigate('/?auth=signin')}
         onSignUpClick={() => navigate('/?auth=signup')}
-        onProfileClick={() => navigate('/profile')}
+        onProfileClick={() => user && navigate(`/user/${user.id}`)}
         onMyRecipesClick={() => navigate('/recipes/my-drinks')}
         onFavoritesClick={() => navigate('/favorites')}
       />
@@ -118,7 +118,7 @@ export default function ArticlePage() {
             user={user}
             onSignInClick={() => navigate('/?auth=signin')}
             onSignUpClick={() => navigate('/?auth=signup')}
-            onProfileClick={() => navigate('/profile')}
+            onProfileClick={() => user && navigate(`/user/${user.id}`)}
             onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />
