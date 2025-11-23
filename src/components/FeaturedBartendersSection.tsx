@@ -43,9 +43,14 @@ export default function FeaturedBartendersSection({ onShowAuthModal }: FeaturedB
   if (loading) {
     return (
       <section className="mb-8 md:mb-12">
-        <h2 className="text-pure-white mb-4 md:mb-6 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
-          Featured Bartenders
-        </h2>
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-pure-white mb-2 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
+            Featured Bartenders
+          </h2>
+          <p className="text-soft-gray text-sm md:text-base leading-relaxed max-w-2xl">
+            Meet talented creators from our community. Follow them to see their latest recipes and techniques.
+          </p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-64 bg-card rounded-lg animate-pulse" />
@@ -61,9 +66,14 @@ export default function FeaturedBartendersSection({ onShowAuthModal }: FeaturedB
 
   return (
     <section className="mb-8 md:mb-12">
-      <h2 className="text-pure-white mb-4 md:mb-6 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
-        Featured Bartenders
-      </h2>
+      <div className="mb-4 md:mb-6">
+        <h2 className="text-pure-white mb-2 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
+          Featured Bartenders
+        </h2>
+        <p className="text-soft-gray text-sm md:text-base leading-relaxed max-w-2xl">
+          Meet talented creators from our community. Follow them to see their latest recipes and techniques.
+        </p>
+      </div>
       
       <div className="relative">
         <Carousel
