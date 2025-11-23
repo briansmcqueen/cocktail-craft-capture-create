@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import { userRolesService } from '@/services/userRolesService';
 import { toast } from '@/hooks/use-toast';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 import UserProfileDisplay from '@/components/auth/UserProfileDisplay';
 
 interface UserMenuProps {
@@ -77,7 +78,7 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-gray-100">
           <Avatar className="h-10 w-10">
-            <AvatarImage src={user.user_metadata?.avatar_url} />
+            <AvatarImage src={getAvatarUrl(user.user_metadata?.avatar_url) || undefined} />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">{initials}</AvatarFallback>
           </Avatar>
         </Button>

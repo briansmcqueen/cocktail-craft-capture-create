@@ -7,6 +7,7 @@ import { LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 import AvatarUpload from './AvatarUpload';
 import ProfileForm from './ProfileForm';
 import UserPreferencesForm from '../UserPreferencesForm';
@@ -124,7 +125,7 @@ export default function ProfileSettings() {
         </CardHeader>
         <CardContent className="space-y-6">
           <AvatarUpload
-            avatarUrl={profile.avatar_url}
+            avatarUrl={getAvatarUrl(profile.avatar_url)}
             fullName={profile.full_name}
             email={user?.email || null}
             userId={user?.id || ''}
