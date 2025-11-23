@@ -1,26 +1,31 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type CommunityCallToActionProps = {
-  onCreateRecipe: () => void;
-  onNavigateToDiscover: () => void;
   isAuthenticated: boolean;
   onShowAuthModal?: () => void;
+  onShowForm?: () => void;
 };
 
 export default function CommunityCallToAction({
-  onCreateRecipe,
-  onNavigateToDiscover,
   isAuthenticated,
   onShowAuthModal,
+  onShowForm,
 }: CommunityCallToActionProps) {
+  const navigate = useNavigate();
+
   const handleCreateClick = () => {
     if (!isAuthenticated) {
       onShowAuthModal?.();
       return;
     }
-    onCreateRecipe();
+    onShowForm?.();
+  };
+
+  const handleDiscoverClick = () => {
+    navigate('/discover');
   };
 
   return (
@@ -55,7 +60,7 @@ export default function CommunityCallToAction({
             <Button
               size="lg"
               variant="outline"
-              onClick={onNavigateToDiscover}
+              onClick={handleDiscoverClick}
               className="w-full sm:w-auto min-w-[200px] text-base font-medium border-2 hover:bg-accent/10 transition-all duration-300"
             >
               <Users className="mr-2" size={20} />
