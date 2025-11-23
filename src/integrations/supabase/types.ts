@@ -327,32 +327,41 @@ export type Database = {
       }
       profiles: {
         Row: {
+          allow_follows: string | null
           avatar_url: string | null
           bio: string | null
           created_at: string | null
           full_name: string | null
           id: string
           onboarding_completed: boolean | null
+          profile_visibility: string | null
+          recipe_visibility: string | null
           updated_at: string | null
           username: string | null
         }
         Insert: {
+          allow_follows?: string | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string | null
           full_name?: string | null
           id: string
           onboarding_completed?: boolean | null
+          profile_visibility?: string | null
+          recipe_visibility?: string | null
           updated_at?: string | null
           username?: string | null
         }
         Update: {
+          allow_follows?: string | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string | null
           full_name?: string | null
           id?: string
           onboarding_completed?: boolean | null
+          profile_visibility?: string | null
+          recipe_visibility?: string | null
           updated_at?: string | null
           username?: string | null
         }
