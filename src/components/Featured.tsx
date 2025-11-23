@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { getDrinkOfTheDay } from "@/utils/drinkOfTheDay";
 import { getTrendingRecipesHybrid } from "@/utils/trendingRecipes";
+import { getCommunityRecipesFromDB } from "@/services/recipesService";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useAuth } from "@/hooks/useAuth";
 import DrinkOfTheDay from "./DrinkOfTheDay";
@@ -39,18 +40,23 @@ export default function Featured({
   const { user } = useAuth();
   const navigate = useNavigate();
   const [trendingRecipes, setTrendingRecipes] = useState<Cocktail[]>([]);
+  const [communityRecipes, setCommunityRecipes] = useState<Cocktail[]>([]);
   
   // Combine all recipes including user recipes
-  const allRecipes = useMemo(() => [...recipes, ...userRecipes], [recipes, userRecipes]);
+  const allRecipes = useMemo(() => [...recipes, ...userRecipes, ...communityRecipes], [recipes, userRecipes, communityRecipes]);
   
   // Get drink of the day
   const drinkOfTheDay = getDrinkOfTheDay(allRecipes);
   
-  // Filter for community creations (user-created recipes only)
-  const communityRecipes = useMemo(() => 
-    userRecipes.slice(0, 12), 
-    [userRecipes]
-  );
+  // Fetch community recipes with creator info
+  useEffect(() => {
+    const fetchCommunityRecipes = async () => {
+      const recipes = await getCommunityRecipesFromDB(12);
+      setCommunityRecipes(recipes);
+    };
+    
+    fetchCommunityRecipes();
+  }, []);
   
   // Fetch trending recipes based on ratings
   useEffect(() => {
