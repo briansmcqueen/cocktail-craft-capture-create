@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Upload, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { compressImage } from '@/services/imageUploadService';
 import ImageCropModal from '@/components/profile/ImageCropModal';
 
@@ -25,6 +26,7 @@ export default function AvatarUpload({
   userId, 
   onAvatarChange 
 }: AvatarUploadProps) {
+  const { refreshUser } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);
@@ -103,12 +105,31 @@ export default function AvatarUpload({
           .from('avatars')
           .getPublicUrl(fileName);
 
-        onAvatarChange(data.publicUrl);
-        
-        // Update the user's metadata to refresh the profile icon
-        await supabase.auth.updateUser({
-          data: { avatar_url: data.publicUrl }
+        const publicUrl = data.publicUrl;
+
+        // Update profile table with new avatar URL
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ avatar_url: publicUrl })
+          .eq('id', userId);
+
+        if (profileError) {
+          console.error('Profile update error:', profileError);
+        }
+
+        // Update auth user metadata to ensure avatar shows everywhere
+        const { error: authError } = await supabase.auth.updateUser({
+          data: { avatar_url: publicUrl }
         });
+
+        if (authError) {
+          console.error('Auth update error:', authError);
+        }
+
+        // Refresh user session to get updated metadata
+        await refreshUser();
+
+        onAvatarChange(publicUrl);
         
         toast({
           title: "Avatar uploaded",

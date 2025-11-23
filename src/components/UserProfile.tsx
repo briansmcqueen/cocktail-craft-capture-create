@@ -205,9 +205,9 @@ export default function UserProfile() {
           Back
         </Button>
         {isOwnProfile && (
-          <Button variant="outline" onClick={() => navigate('/profile/settings')}>
+          <Button variant="outline" onClick={() => navigate('/settings')}>
             <Settings className="w-4 h-4 mr-2" />
-            Edit Profile
+            Settings
           </Button>
         )}
       </div>
