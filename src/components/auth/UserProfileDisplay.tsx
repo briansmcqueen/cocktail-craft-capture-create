@@ -1,6 +1,8 @@
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAvatarUrl } from '@/utils/avatarUrl';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UserProfileDisplayProps {
   user: SupabaseUser;
@@ -17,6 +19,24 @@ export default function UserProfileDisplay({
   className = '',
   onAvatarClick
 }: UserProfileDisplayProps) {
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .single();
+      
+      if (data?.username) {
+        setUsername(data.username);
+      }
+    };
+
+    fetchUsername();
+  }, [user.id]);
+
   const initials = user.user_metadata?.full_name
     ?.split(' ')
     .map((n: string) => n[0])
@@ -63,10 +83,7 @@ export default function UserProfileDisplay({
           {user.user_metadata?.full_name || 'User'}
         </p>
         <p className="text-sm text-muted-foreground truncate">
-          {user.user_metadata?.username 
-            ? `@${user.user_metadata.username}`
-            : user.email
-          }
+          {username ? `@${username}` : user.email}
         </p>
       </div>
     </div>
