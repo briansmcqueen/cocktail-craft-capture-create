@@ -306,7 +306,7 @@ export default function DiscoverBartenders() {
                           value="feed" 
                           className="relative z-10 data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground rounded-md transition-colors duration-200 py-3.5 px-4"
                         >
-                          <Compass size={20} className="mr-2" />
+                          <Compass size={22} className="mr-2" />
                           <span className="font-medium">Feed</span>
                         </TabsTrigger>
                         <TabsTrigger 
@@ -314,7 +314,7 @@ export default function DiscoverBartenders() {
                           value="suggested" 
                           className="relative z-10 data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground rounded-md transition-colors duration-200 py-3.5 px-4"
                         >
-                          <Users size={20} className="mr-2" />
+                          <Users size={22} className="mr-2" />
                           <span className="font-medium">Accounts</span>
                         </TabsTrigger>
                         <TabsTrigger 
@@ -322,7 +322,7 @@ export default function DiscoverBartenders() {
                           value="recipes" 
                           className="relative z-10 data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground rounded-md transition-colors duration-200 py-3.5 px-4"
                         >
-                          <Flame size={20} className="mr-2" />
+                          <Flame size={22} className="mr-2" />
                           <span className="font-medium">Recipes</span>
                         </TabsTrigger>
                       </TabsList>
