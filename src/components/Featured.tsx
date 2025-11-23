@@ -1,14 +1,17 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { getDrinkOfTheDay, getPersonalizedRecommendations } from "@/utils/drinkOfTheDay";
+import { getDrinkOfTheDay } from "@/utils/drinkOfTheDay";
 import { getTrendingRecipesHybrid } from "@/utils/trendingRecipes";
 import { useMyBarData } from "@/hooks/useMyBarData";
-import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
-import { useFavorites } from "@/hooks/useFavoritesRefactored";
+import { useAuth } from "@/hooks/useAuth";
 import DrinkOfTheDay from "./DrinkOfTheDay";
-import FeaturedSection from "./FeaturedSection";
+import HeroSection from "./HeroSection";
+import FeaturedBartendersSection from "./FeaturedBartendersSection";
+import CommunityCreationsSection from "./CommunityCreationsSection";
+import CommunityCallToAction from "./CommunityCallToAction";
 import TechniquesSection from "./TechniquesSection";
+import { useNavigate } from "react-router-dom";
 
 type FeaturedProps = {
   recipes: Cocktail[];
@@ -19,6 +22,7 @@ type FeaturedProps = {
   onToggleFavorite: (recipe: Cocktail) => void;
   onShowAuthModal?: () => void;
   onNavigateToMyBar?: () => void;
+  onShowForm?: () => void;
 };
 
 export default function Featured({ 
@@ -29,29 +33,29 @@ export default function Featured({
   userRecipes,
   onToggleFavorite,
   onShowAuthModal,
-  onNavigateToMyBar
+  onNavigateToMyBar,
+  onShowForm
 }: FeaturedProps) {
-  // Get data for personalization
-  const { myBarIngredients } = useMyBarData(0);
-  const { favoriteIds } = useFavorites();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [trendingRecipes, setTrendingRecipes] = useState<Cocktail[]>([]);
   
   // Combine all recipes including user recipes
-  const allRecipes = [...recipes, ...userRecipes];
+  const allRecipes = useMemo(() => [...recipes, ...userRecipes], [recipes, userRecipes]);
   
-  // Calculate what user can make with their bar
-  const { recipesICanMake } = useRecipeAnalysis(allRecipes, myBarIngredients, {});
-
   // Get drink of the day
   const drinkOfTheDay = getDrinkOfTheDay(allRecipes);
   
-  // Get personalized recommendations
-  const personalizedRecipes = getPersonalizedRecommendations(allRecipes, favoriteIds, 8);
+  // Filter for community creations (user-created recipes only)
+  const communityRecipes = useMemo(() => 
+    userRecipes.slice(0, 12), 
+    [userRecipes]
+  );
   
   // Fetch trending recipes based on ratings
   useEffect(() => {
     const fetchTrendingRecipes = async () => {
-      const trending = await getTrendingRecipesHybrid(allRecipes, 10);
+      const trending = await getTrendingRecipesHybrid(allRecipes, 12);
       setTrendingRecipes(trending);
     };
     
@@ -62,10 +66,25 @@ export default function Featured({
     onNavigateToMyBar?.();
   };
 
+  const handleNavigateToDiscover = () => {
+    navigate('/discover');
+  };
+
+  const handleCreateRecipe = () => {
+    onShowForm?.();
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto">
       <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="space-y-8 md:space-y-12">
+          {/* Hero Section - Mission Statement */}
+          <HeroSection
+            onNavigateToDiscover={handleNavigateToDiscover}
+            onNavigateToMyBar={handleNavigateToMyBar}
+            isAuthenticated={!!user}
+          />
+
           {/* Drink of the Day */}
           <DrinkOfTheDay
             recipe={drinkOfTheDay}
@@ -73,33 +92,36 @@ export default function Featured({
             onShowAuthModal={onShowAuthModal}
           />
 
-          {/* Personalized Recommendations */}
-          {favoriteIds.length > 0 && (
-            <FeaturedSection
-              title="Recommended For You"
-              recipes={personalizedRecipes}
-              onRecipeClick={onRecipeClick}
-              onShowAuthModal={onShowAuthModal}
-            />
-          )}
-
-          {/* Featured Cocktails */}
-          <FeaturedSection
-            title="Featured Cocktails"
-            recipes={allRecipes.slice(0, 8)}
-            onRecipeClick={onRecipeClick}
+          {/* Featured Bartenders */}
+          <FeaturedBartendersSection
             onShowAuthModal={onShowAuthModal}
           />
 
-          {/* Trending Now - Top 10 Most Popular */}
-          {trendingRecipes.length > 0 && (
-            <FeaturedSection
-              title="Trending Now"
-              recipes={trendingRecipes}
-              onRecipeClick={onRecipeClick}
+          {/* Community Creations - User Recipes */}
+          {communityRecipes.length > 0 && (
+            <CommunityCreationsSection
+              title="From Our Community"
+              recipes={communityRecipes}
               onShowAuthModal={onShowAuthModal}
             />
           )}
+
+          {/* Trending Now - Community Engagement */}
+          {trendingRecipes.length > 0 && (
+            <CommunityCreationsSection
+              title="Trending in the Community"
+              recipes={trendingRecipes}
+              onShowAuthModal={onShowAuthModal}
+            />
+          )}
+
+          {/* Call to Action */}
+          <CommunityCallToAction
+            onCreateRecipe={handleCreateRecipe}
+            onNavigateToDiscover={handleNavigateToDiscover}
+            isAuthenticated={!!user}
+            onShowAuthModal={onShowAuthModal}
+          />
 
           {/* Techniques Section */}
           <TechniquesSection onShowAuthModal={onShowAuthModal} />
