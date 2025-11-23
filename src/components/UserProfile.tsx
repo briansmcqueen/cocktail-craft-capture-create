@@ -200,7 +200,7 @@ export default function UserProfile() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate(-1)}>
+        <Button variant="ghost" onClick={() => navigate('/')}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
