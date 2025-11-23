@@ -114,6 +114,76 @@ export async function syncUserRecipesFromLocalStorage(): Promise<void> {
   }
 }
 
+export async function getCommunityRecipesFromDB(limit: number = 50): Promise<Cocktail[]> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Get public recipes ordered by creation date
+    const { data: recipes, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('is_public', true)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching community recipes:', error);
+      return [];
+    }
+
+    if (!recipes || recipes.length === 0) return [];
+
+    // Get unique user IDs
+    const userIds = [...new Set(recipes.map(r => r.user_id))];
+
+    // Fetch all profiles in one query
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, username, avatar_url')
+      .in('id', userIds);
+
+    // Create a map for quick profile lookup
+    const profileMap = new Map(
+      profiles?.map(p => [p.id, p]) || []
+    );
+
+    // Transform recipes with creator info
+    const recipesWithCreators: Cocktail[] = [];
+
+    for (const recipe of recipes) {
+      // Check privacy if user is logged in
+      if (user) {
+        const blocked = await privacyService.isBlockedBy(user.id, recipe.user_id);
+        if (blocked) continue;
+
+        const canView = await privacyService.canViewRecipes(recipe.user_id, user.id);
+        if (!canView.canView) continue;
+      }
+
+      const profile = profileMap.get(recipe.user_id);
+      recipesWithCreators.push({
+        id: recipe.id,
+        name: recipe.name,
+        image: recipe.image_url || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80',
+        ingredients: recipe.ingredients,
+        steps: recipe.instructions,
+        notes: recipe.description || undefined,
+        tags: recipe.tags || [],
+        createdBy: profile?.username || 'Anonymous',
+        isUserRecipe: true,
+        creatorUsername: profile?.username || undefined,
+        creatorAvatar: profile?.avatar_url || undefined,
+        creatorUserId: recipe.user_id,
+      });
+    }
+
+    return recipesWithCreators;
+  } catch (error) {
+    console.error('Error fetching community recipes:', error);
+    return [];
+  }
+}
+
 export async function getRecipeByUsernameAndName(username: string, recipeName: string): Promise<Cocktail | null> {
   try {
     // First, find the user by username via safe public RPC
