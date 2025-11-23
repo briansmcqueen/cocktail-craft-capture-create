@@ -92,14 +92,14 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && (
+        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && library !== "mine" && (
           <div className="mb-6">
             <SearchInterface
-              recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
+              recipes={library === "favorites" ? favoriteRecipes : allRecipes}
               availableIngredients={myBarIngredients}
               onRecipeClick={handleRecipeClick}
               onTagClick={handleTagClick}
-              placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "your recipes" : "all recipes"}...`}
+              placeholder={`Search ${library === "favorites" ? "favorites" : "all recipes"}...`}
               user={user}
             />
           </div>
@@ -141,9 +141,7 @@ export default function MainContent({
           <Feed />
         ) : library === "mine" ? (
           user ? (
-            <>
-              {console.log('🔵 MainContent rendering LazyRecipeGrid for library="mine"')}
-              <LazyRecipeGrid
+            <LazyRecipeGrid
                 recipes={userRecipes}
                 onRecipeClick={handleRecipeClick}
                 onToggleFavorite={() => {}}
@@ -155,7 +153,6 @@ export default function MainContent({
                 library={library}
                 onShowAuthModal={() => setShowAuthModal(true)}
               />
-            </>
           ) : (
             <AuthPrompt
               icon={Edit}
