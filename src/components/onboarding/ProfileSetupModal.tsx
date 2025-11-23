@@ -9,6 +9,7 @@ import { Loader2, User, CheckCircle2, XCircle, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { compressImage } from '@/services/imageUploadService';
+import ImageCropModal from '@/components/profile/ImageCropModal';
 import { z } from 'zod';
 
 interface ProfileSetupModalProps {
@@ -28,7 +29,9 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarBlob, setAvatarBlob] = useState<Blob | null>(null);
+  const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [checking, setChecking] = useState(false);
@@ -120,26 +123,65 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
       return;
     }
 
-    // Store the file for upload
-    setAvatarFile(file);
+    // Create temporary URL for cropping
+    const tempUrl = URL.createObjectURL(file);
+    setTempImageUrl(tempUrl);
+    setShowCropModal(true);
     
-    // Create preview URL
-    const previewUrl = URL.createObjectURL(file);
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleCropComplete = (croppedBlob: Blob) => {
+    // Store the cropped blob
+    setAvatarBlob(croppedBlob);
+    
+    // Create preview URL from cropped blob
+    const previewUrl = URL.createObjectURL(croppedBlob);
+    
+    // Clean up old preview URL
+    if (avatarUrl) {
+      URL.revokeObjectURL(avatarUrl);
+    }
+    
     setAvatarUrl(previewUrl);
+    setShowCropModal(false);
+    
+    // Clean up temp URL
+    if (tempImageUrl) {
+      URL.revokeObjectURL(tempImageUrl);
+      setTempImageUrl(null);
+    }
+  };
+
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    
+    // Clean up temp URL
+    if (tempImageUrl) {
+      URL.revokeObjectURL(tempImageUrl);
+      setTempImageUrl(null);
+    }
   };
 
   const uploadAvatar = async (): Promise<string | null> => {
-    if (!avatarFile) return null;
+    if (!avatarBlob) return null;
 
     try {
       setUploading(true);
       
-      // Compress the image
-      const compressedBlob = await compressImage(avatarFile, 400, 400, 0.8);
+      // The avatar is already cropped and processed, just need to compress slightly more
+      const compressedBlob = await compressImage(
+        new File([avatarBlob], 'avatar.jpg', { type: 'image/jpeg' }),
+        400,
+        400,
+        0.85
+      );
       
       // Generate filename
-      const fileExt = avatarFile.name.split('.').pop() || 'jpg';
-      const fileName = `${userId}.${fileExt}`;
+      const fileName = `${userId}.jpg`;
       
       // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
@@ -201,9 +243,9 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         }
       }
 
-      // Upload avatar if one was selected
+      // Upload avatar if one was cropped and selected
       let uploadedAvatarUrl: string | null = null;
-      if (avatarFile) {
+      if (avatarBlob) {
         uploadedAvatarUrl = await uploadAvatar();
       }
 
@@ -397,6 +439,16 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
           </Button>
         </form>
       </DialogContent>
+
+      {/* Image Crop Modal */}
+      {tempImageUrl && (
+        <ImageCropModal
+          open={showCropModal}
+          imageUrl={tempImageUrl}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </Dialog>
   );
 }
