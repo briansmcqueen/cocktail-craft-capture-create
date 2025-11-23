@@ -9,13 +9,29 @@ import { toast } from '@/hooks/use-toast';
 export function useUserRecipes() {
   const { user } = useAuth();
   
-  return useQuery({
+  const query = useQuery({
     queryKey: ['userRecipes', user?.id],
     queryFn: getUserRecipesFromDB,
     enabled: !!user,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes (replaces cacheTime)
   });
+
+  // Ensure no duplicates in the returned data
+  const deduplicatedData = useMemo(() => {
+    if (!query.data) return [];
+    const seen = new Set<string>();
+    return query.data.filter(recipe => {
+      if (seen.has(recipe.id)) return false;
+      seen.add(recipe.id);
+      return true;
+    });
+  }, [query.data]);
+
+  return {
+    ...query,
+    data: deduplicatedData
+  };
 }
 
 // Use the new optimized hook instead
