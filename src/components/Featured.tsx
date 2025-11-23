@@ -41,8 +41,17 @@ export default function Featured({
   const [trendingRecipes, setTrendingRecipes] = useState<Cocktail[]>([]);
   const [communityRecipes, setCommunityRecipes] = useState<Cocktail[]>([]);
   
-  // Combine all recipes including user recipes
-  const allRecipes = useMemo(() => [...recipes, ...userRecipes, ...communityRecipes], [recipes, userRecipes, communityRecipes]);
+  // Combine recipes (communityRecipes already includes user's public recipes, so don't duplicate)
+  const allRecipes = useMemo(() => {
+    const combined = [...recipes, ...communityRecipes];
+    // Deduplicate by ID
+    const seen = new Set<string>();
+    return combined.filter(recipe => {
+      if (seen.has(recipe.id)) return false;
+      seen.add(recipe.id);
+      return true;
+    });
+  }, [recipes, communityRecipes]);
   
   // Get drink of the day
   const drinkOfTheDay = getDrinkOfTheDay(allRecipes);
@@ -61,11 +70,14 @@ export default function Featured({
   useEffect(() => {
     const fetchTrendingRecipes = async () => {
       const trending = await getTrendingRecipesHybrid(allRecipes, 12);
-      setTrendingRecipes(trending);
+      // Deduplicate: exclude recipes already shown in community section
+      const communityIds = new Set(communityRecipes.map(r => r.id));
+      const uniqueTrending = trending.filter(recipe => !communityIds.has(recipe.id));
+      setTrendingRecipes(uniqueTrending);
     };
     
     fetchTrendingRecipes();
-  }, [allRecipes]);
+  }, [allRecipes, communityRecipes]);
 
   const handleNavigateToMyBar = () => {
     onNavigateToMyBar?.();
