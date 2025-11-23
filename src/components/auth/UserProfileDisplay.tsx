@@ -1,5 +1,6 @@
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 
 interface UserProfileDisplayProps {
   user: SupabaseUser;
@@ -34,6 +35,8 @@ export default function UserProfileDisplay({
     lg: 'text-lg'
   };
 
+  const avatarUrl = getAvatarUrl(user.user_metadata?.avatar_url);
+
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       {showAvatar && (
@@ -42,9 +45,9 @@ export default function UserProfileDisplay({
           className={`relative ${sizeClasses[avatarSize]} rounded-full overflow-hidden bg-primary flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-105 hover:ring-2 hover:ring-primary hover:ring-offset-2 hover:ring-offset-background cursor-pointer`}
           aria-label="Open profile settings"
         >
-          {user.user_metadata?.avatar_url ? (
+          {avatarUrl ? (
             <img 
-              src={user.user_metadata.avatar_url} 
+              src={avatarUrl} 
               alt={user.user_metadata?.full_name || 'User'}
               className="h-full w-full object-cover"
             />
