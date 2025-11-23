@@ -30,7 +30,7 @@ export default function UserCard({
 
   return (
     <div className="bg-card border border-border rounded-organic-md p-4 hover:border-primary/40 transition-all">
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-3">
         {/* Avatar */}
         <button
           onClick={() => navigate(`/profile/${username}`)}
@@ -51,26 +51,38 @@ export default function UserCard({
           </div>
         </button>
 
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <button
-            onClick={() => navigate(`/profile/${username}`)}
-            className="text-left group"
-          >
-            <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-              {fullName || username}
-            </h3>
-            <p className="text-muted-foreground text-sm">@{username}</p>
-          </button>
+        {/* Info and Follow Button Container */}
+        <div className="flex-1 min-w-0 flex flex-col gap-2">
+          <div className="flex items-start justify-between gap-2">
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <button
+                onClick={() => navigate(`/profile/${username}`)}
+                className="text-left group block w-full"
+              >
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                  {fullName || username}
+                </h3>
+                <p className="text-muted-foreground text-sm truncate">@{username}</p>
+              </button>
+            </div>
+
+            {/* Follow Button */}
+            {!isCurrentUser && (
+              <div className="flex-shrink-0">
+                <FollowButton userId={userId} username={username} />
+              </div>
+            )}
+          </div>
 
           {bio && (
-            <p className="text-foreground text-sm mt-2 line-clamp-2">
+            <p className="text-foreground text-sm line-clamp-2">
               {bio}
             </p>
           )}
 
           {/* Stats */}
-          <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <BookOpen size={14} />
               <span>{recipeCount}</span>
@@ -81,13 +93,6 @@ export default function UserCard({
             </div>
           </div>
         </div>
-
-        {/* Follow Button */}
-        {!isCurrentUser && (
-          <div className="flex-shrink-0">
-            <FollowButton userId={userId} username={username} />
-          </div>
-        )}
       </div>
     </div>
   );
