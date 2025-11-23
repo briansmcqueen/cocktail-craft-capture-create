@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { TrendingUp, Users, Sparkles, Flame, Compass } from 'lucide-react';
+import { Users, Sparkles, Flame, Compass } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -37,7 +37,6 @@ export default function DiscoverBartenders() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
-  const [trendingUsers, setTrendingUsers] = useState<TrendingUser[]>([]);
   const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
   const [unifiedFeed, setUnifiedFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,13 +57,11 @@ export default function DiscoverBartenders() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const [suggested, trending, recipes] = await Promise.all([
+      const [suggested, recipes] = await Promise.all([
         socialService.getSuggestedUsers(20),
-        socialService.getTrendingUsers(20),
         loadDiscoverRecipes(),
       ]);
       setSuggestedUsers(suggested);
-      setTrendingUsers(trending);
       setDiscoverRecipes(recipes);
       
       // Create unified feed by interleaving users and recipes
@@ -196,7 +193,6 @@ export default function DiscoverBartenders() {
 
   const filteredFeed = filterFeed(unifiedFeed);
   const filteredSuggestedUsers = filterUsers(suggestedUsers);
-  const filteredTrendingUsers = filterUsers(trendingUsers);
   const filteredRecipes = filterRecipes(discoverRecipes);
 
   return (
@@ -272,8 +268,8 @@ export default function DiscoverBartenders() {
                           activeTab === 'recipes' 
                             ? 'Search recipes...' 
                             : activeTab === 'feed'
-                            ? 'Search bartenders and recipes...'
-                            : 'Search bartenders...'
+                            ? 'Search accounts and recipes...'
+                            : 'Search accounts...'
                         }
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -284,22 +280,27 @@ export default function DiscoverBartenders() {
                     </div>
 
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                      <TabsList className="grid w-full grid-cols-4 mb-6">
-                        <TabsTrigger value="feed">
-                          <Compass size={16} className="mr-2" />
-                          Feed
+                      <TabsList className="grid w-full grid-cols-3 mb-8 h-auto p-1 bg-card/50 border border-border rounded-organic-md">
+                        <TabsTrigger 
+                          value="feed" 
+                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-organic-sm transition-all duration-300 py-3"
+                        >
+                          <Compass size={18} className="mr-2" />
+                          <span className="font-medium">Feed</span>
                         </TabsTrigger>
-                        <TabsTrigger value="suggested">
-                          <Sparkles size={16} className="mr-2" />
-                          For You
+                        <TabsTrigger 
+                          value="suggested" 
+                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-organic-sm transition-all duration-300 py-3"
+                        >
+                          <Users size={18} className="mr-2" />
+                          <span className="font-medium">Accounts</span>
                         </TabsTrigger>
-                        <TabsTrigger value="trending">
-                          <TrendingUp size={16} className="mr-2" />
-                          Trending
-                        </TabsTrigger>
-                        <TabsTrigger value="recipes">
-                          <Flame size={16} className="mr-2" />
-                          Recipes
+                        <TabsTrigger 
+                          value="recipes" 
+                          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-organic-sm transition-all duration-300 py-3"
+                        >
+                          <Flame size={18} className="mr-2" />
+                          <span className="font-medium">Recipes</span>
                         </TabsTrigger>
                       </TabsList>
 
@@ -355,12 +356,12 @@ export default function DiscoverBartenders() {
                         )}
                       </TabsContent>
 
-                      <TabsContent value="suggested" className="space-y-4">
+                       <TabsContent value="suggested" className="space-y-4">
           {filteredSuggestedUsers.length === 0 ? (
             <div className="text-center py-12">
-              <Sparkles className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <Users className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="text-xl font-semibold text-foreground mb-2">
-                {searchQuery ? 'No bartenders found' : 'No suggestions yet'}
+                {searchQuery ? 'No accounts found' : 'No suggestions yet'}
               </h3>
               <p className="text-muted-foreground">
                 {searchQuery 
@@ -379,35 +380,6 @@ export default function DiscoverBartenders() {
                 bio={user.bio}
                 recipeCount={user.recipe_count}
                 followerCount={user.follower_count}
-              />
-            ))
-          )}
-        </TabsContent>
-
-        <TabsContent value="trending" className="space-y-4">
-          {filteredTrendingUsers.length === 0 ? (
-            <div className="text-center py-12">
-              <TrendingUp className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-xl font-semibold text-foreground mb-2">
-                {searchQuery ? 'No bartenders found' : 'No trending bartenders yet'}
-              </h3>
-              <p className="text-muted-foreground">
-                {searchQuery
-                  ? 'Try searching with a different name or username'
-                  : 'Check back soon to see who\'s gaining popularity'}
-              </p>
-            </div>
-          ) : (
-            filteredTrendingUsers.map((user) => (
-              <UserCard
-                key={user.user_id}
-                userId={user.user_id}
-                username={user.username}
-                fullName={user.full_name}
-                avatarUrl={user.avatar_url}
-                bio={user.bio}
-                recipeCount={user.recipe_count}
-                followerCount={user.total_follower_count}
               />
             ))
           )}
