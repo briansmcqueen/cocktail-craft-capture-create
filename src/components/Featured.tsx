@@ -105,6 +105,7 @@ export default function Featured({
           {communityRecipes.length > 0 && (
             <CommunityCreationsSection
               title="From Our Community"
+              description="Discover handcrafted recipes from bartenders and enthusiasts around the world, each with their unique twist and story."
               recipes={communityRecipes}
               onShowAuthModal={onShowAuthModal}
             />
@@ -114,6 +115,7 @@ export default function Featured({
           {trendingRecipes.length > 0 && (
             <CommunityCreationsSection
               title="Trending in the Community"
+              description="See what's capturing everyone's attention right now. These recipes are earning the most love and engagement from our members."
               recipes={trendingRecipes}
               onShowAuthModal={onShowAuthModal}
             />

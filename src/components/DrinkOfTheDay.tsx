@@ -20,9 +20,14 @@ export default function DrinkOfTheDay({
 }: DrinkOfTheDayProps) {
   return (
     <section>
-      <h2 className="text-pure-white mb-4 md:mb-6 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
-        Drink of the Day
-      </h2>
+      <div className="mb-4 md:mb-6">
+        <h2 className="text-pure-white mb-2 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
+          Drink of the Day
+        </h2>
+        <p className="text-soft-gray text-sm md:text-base leading-relaxed max-w-2xl">
+          Start your journey with today's featured cocktail, carefully selected to inspire your next creation.
+        </p>
+      </div>
       
       <div className="w-full">
         <UniversalRecipeCard
