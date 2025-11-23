@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import TopNavigation from '@/components/TopNavigation';
@@ -9,19 +9,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { useState } from 'react';
-import { Lock, Mail, Shield } from 'lucide-react';
+import { Lock, Mail, Shield, AlertTriangle } from 'lucide-react';
 
 export default function Settings() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [changingPassword, setChangingPassword] = useState(false);
+  const [changingEmail, setChangingEmail] = useState(false);
+  const [showEmailChange, setShowEmailChange] = useState(false);
+  const [emailVerificationSent, setEmailVerificationSent] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
+  });
+  const [emailData, setEmailData] = useState({
+    newEmail: '',
+    password: '',
   });
 
   useEffect(() => {
@@ -99,6 +106,90 @@ export default function Settings() {
     }
   };
 
+  const handleEmailChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!emailData.newEmail || !emailData.password) {
+      toast({
+        title: "Missing information",
+        description: "Please provide both new email and password.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailData.newEmail)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (emailData.newEmail === user?.email) {
+      toast({
+        title: "Same email",
+        description: "The new email is the same as your current email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setChangingEmail(true);
+
+    try {
+      // First, re-authenticate the user to verify their password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user?.email || '',
+        password: emailData.password,
+      });
+
+      if (signInError) {
+        toast({
+          title: "Authentication failed",
+          description: "Incorrect password. Please try again.",
+          variant: "destructive",
+        });
+        setChangingEmail(false);
+        return;
+      }
+
+      // If authentication successful, update the email
+      const { error: updateError } = await supabase.auth.updateUser({
+        email: emailData.newEmail,
+      }, {
+        emailRedirectTo: `${window.location.origin}/settings`,
+      });
+
+      if (updateError) {
+        toast({
+          title: "Failed to change email",
+          description: updateError.message,
+          variant: "destructive",
+        });
+      } else {
+        setEmailVerificationSent(true);
+        toast({
+          title: "Verification email sent",
+          description: `We've sent a verification email to ${emailData.newEmail}. Please check your inbox and click the link to confirm your new email address.`,
+        });
+        setEmailData({ newEmail: '', password: '' });
+        setShowEmailChange(false);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setChangingEmail(false);
+    }
+  };
+
   if (loading || !user) {
     return null;
   }
@@ -166,26 +257,114 @@ export default function Settings() {
                       Password & Security
                     </CardTitle>
                     <CardDescription>
-                      Update your password to keep your account secure
+                      Update your email and password to keep your account secure
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {/* Current Email Display */}
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        Email Address
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={user.email || ''}
-                        disabled
-                        className="bg-medium-charcoal border-border text-light-text"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Your email address cannot be changed from here
-                      </p>
+                    {/* Email Change Section */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="flex items-center gap-2">
+                          <Mail className="h-4 w-4" />
+                          Email Address
+                        </Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="email"
+                            type="email"
+                            value={user.email || ''}
+                            disabled
+                            className="bg-medium-charcoal border-border text-light-text"
+                          />
+                          {!showEmailChange && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setShowEmailChange(true)}
+                              className="rounded-organic-sm border-border whitespace-nowrap"
+                            >
+                              Change Email
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Email Verification Alert */}
+                      {emailVerificationSent && (
+                        <Alert className="bg-primary/10 border-primary/30">
+                          <AlertTriangle className="h-4 w-4 text-primary" />
+                          <AlertDescription className="text-foreground">
+                            <strong>Verification pending:</strong> Check your inbox at your new email address and click the verification link to complete the change.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      {/* Email Change Form */}
+                      {showEmailChange && (
+                        <form onSubmit={handleEmailChange} className="space-y-4 p-4 border border-border rounded-organic-md bg-medium-charcoal/50">
+                          <div className="space-y-2">
+                            <Label htmlFor="newEmail">
+                              New Email Address
+                            </Label>
+                            <Input
+                              id="newEmail"
+                              type="email"
+                              value={emailData.newEmail}
+                              onChange={(e) => setEmailData(prev => ({ ...prev, newEmail: e.target.value }))}
+                              placeholder="Enter new email address"
+                              className="bg-medium-charcoal border-border text-pure-white rounded-organic-sm"
+                              required
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="emailChangePassword" className="flex items-center gap-2">
+                              <Lock className="h-4 w-4" />
+                              Current Password
+                            </Label>
+                            <Input
+                              id="emailChangePassword"
+                              type="password"
+                              value={emailData.password}
+                              onChange={(e) => setEmailData(prev => ({ ...prev, password: e.target.value }))}
+                              placeholder="Confirm with your current password"
+                              className="bg-medium-charcoal border-border text-pure-white rounded-organic-sm"
+                              required
+                            />
+                            <p className="text-xs text-muted-foreground">
+                              For security, please enter your current password to confirm this change
+                            </p>
+                          </div>
+
+                          <Alert className="bg-amber-500/10 border-amber-500/30">
+                            <AlertTriangle className="h-4 w-4 text-amber-500" />
+                            <AlertDescription className="text-foreground text-sm">
+                              You will receive a verification email at your new address. You must click the verification link to complete the email change.
+                            </AlertDescription>
+                          </Alert>
+
+                          <div className="flex gap-3">
+                            <Button
+                              type="submit"
+                              disabled={changingEmail || !emailData.newEmail || !emailData.password}
+                              className="rounded-organic-sm"
+                            >
+                              {changingEmail ? 'Verifying...' : 'Change Email'}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => {
+                                setShowEmailChange(false);
+                                setEmailData({ newEmail: '', password: '' });
+                              }}
+                              className="rounded-organic-sm border-border"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </form>
+                      )}
                     </div>
 
                     <Separator className="bg-border" />
