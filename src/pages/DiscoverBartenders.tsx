@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Users, Sparkles, Flame, Compass } from 'lucide-react';
+import { Users, Flame, Compass } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -43,8 +43,6 @@ export default function DiscoverBartenders() {
   const [activeTab, setActiveTab] = useState('feed');
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   
   useSearchShortcut(searchInputRef);
 
@@ -55,15 +53,6 @@ export default function DiscoverBartenders() {
       setLoading(false);
     }
   }, [user]);
-
-  useEffect(() => {
-    // Update indicator position when active tab changes
-    const activeTabElement = tabsRef.current[activeTab];
-    if (activeTabElement) {
-      const { offsetLeft, offsetWidth } = activeTabElement;
-      setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
-    }
-  }, [activeTab]);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -291,39 +280,15 @@ export default function DiscoverBartenders() {
                     </div>
 
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                      <TabsList className="relative grid w-full grid-cols-3 mb-8 h-auto p-1.5 gap-1 bg-card/50 border border-border rounded-lg">
-                        {/* Sliding indicator */}
-                        <div
-                          className="absolute bottom-1.5 h-[calc(100%-0.75rem)] bg-primary rounded-md transition-all duration-300 ease-out"
-                          style={{
-                            left: `${indicatorStyle.left}px`,
-                            width: `${indicatorStyle.width}px`,
-                          }}
-                        />
-                        
-                        <TabsTrigger 
-                          ref={(el) => (tabsRef.current['feed'] = el)}
-                          value="feed" 
-                          className="relative z-10 data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground rounded-md transition-colors duration-200 py-3.5 px-4"
-                        >
-                          <Compass size={22} className="mr-2" />
-                          <span className="font-medium">Feed</span>
+                      <TabsList className="w-full mb-8">
+                        <TabsTrigger value="feed">
+                          Feed
                         </TabsTrigger>
-                        <TabsTrigger 
-                          ref={(el) => (tabsRef.current['suggested'] = el)}
-                          value="suggested" 
-                          className="relative z-10 data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground rounded-md transition-colors duration-200 py-3.5 px-4"
-                        >
-                          <Users size={22} className="mr-2" />
-                          <span className="font-medium">Accounts</span>
+                        <TabsTrigger value="suggested">
+                          Accounts
                         </TabsTrigger>
-                        <TabsTrigger 
-                          ref={(el) => (tabsRef.current['recipes'] = el)}
-                          value="recipes" 
-                          className="relative z-10 data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-foreground rounded-md transition-colors duration-200 py-3.5 px-4"
-                        >
-                          <Flame size={22} className="mr-2" />
-                          <span className="font-medium">Recipes</span>
+                        <TabsTrigger value="recipes">
+                          Recipes
                         </TabsTrigger>
                       </TabsList>
 
