@@ -174,7 +174,7 @@ export default function DiscoverBartenders() {
             user={user}
             onSignInClick={() => {}}
             onSignUpClick={() => {}}
-            onProfileClick={() => {}}
+            onProfileClick={() => navigate('/profile')}
             onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
           />
