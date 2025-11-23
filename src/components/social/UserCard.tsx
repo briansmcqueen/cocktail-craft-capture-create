@@ -73,11 +73,11 @@ export default function UserCard({
           <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <BookOpen size={14} />
-              <span>{recipeCount} {recipeCount === 1 ? 'recipe' : 'recipes'}</span>
+              <span>{recipeCount}</span>
             </div>
             <div className="flex items-center gap-1">
               <Users size={14} />
-              <span>{followerCount} {followerCount === 1 ? 'follower' : 'followers'}</span>
+              <span>{followerCount}</span>
             </div>
           </div>
         </div>
