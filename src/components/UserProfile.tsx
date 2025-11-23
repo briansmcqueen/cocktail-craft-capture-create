@@ -11,6 +11,7 @@ import { followUser, unfollowUser, isFollowing, getUserStats, type UserStats } f
 import { useFavorites } from '@/hooks/useFavorites';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getAvatarUrl } from '@/utils/avatarUrl';
 import RecipeGrid from './RecipeGrid';
 
 interface Profile {
@@ -217,7 +218,7 @@ export default function UserProfile() {
         <CardContent className="p-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <Avatar className="w-24 h-24">
-              <AvatarImage src={profile.avatar_url || undefined} />
+              <AvatarImage src={getAvatarUrl(profile.avatar_url) || undefined} />
               <AvatarFallback className="text-xl">
                 {profile.full_name?.[0] || profile.username?.[0] || 'U'}
               </AvatarFallback>
