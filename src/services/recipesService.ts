@@ -29,7 +29,7 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
   }
 
   const profile = profileResult.data;
-  return recipesResult.data?.map(recipe => ({
+  const recipes = recipesResult.data?.map(recipe => ({
     id: recipe.id,
     name: recipe.name,
     image: recipe.image_url || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80',
@@ -40,6 +40,16 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     createdBy: profile?.username || profile?.full_name,
     isUserRecipe: true
   })) || [];
+
+  // Deduplicate by ID to ensure unique recipes
+  const uniqueRecipes = recipes.reduce((acc, recipe) => {
+    if (!acc.find(r => r.id === recipe.id)) {
+      acc.push(recipe);
+    }
+    return acc;
+  }, [] as Cocktail[]);
+
+  return uniqueRecipes;
 }
 
 export async function saveRecipeToDB(recipe: Cocktail): Promise<boolean> {
