@@ -9,6 +9,7 @@ import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import ProfileSettings from "@/components/profile/ProfileSettings";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { BackButton } from "@/components/ui/back-button";
@@ -22,8 +23,10 @@ export default function Index() {
   
   // Onboarding for new users
   const {
+    showProfileSetup,
     showOnboarding,
     loading: onboardingLoading,
+    completeProfileSetup,
     completeOnboarding,
     skipOnboarding,
   } = useOnboarding(user);
@@ -215,7 +218,16 @@ export default function Index() {
         onOpenChange={(open) => !open && setShareRecipe(null)} 
       />
       
-      {/* Onboarding Modal for new users */}
+      {/* Profile Setup Modal for new users */}
+      {user && (
+        <ProfileSetupModal
+          open={showProfileSetup}
+          userId={user.id}
+          onComplete={completeProfileSetup}
+        />
+      )}
+
+      {/* Onboarding Modal for feature tour */}
       <OnboardingModal
         open={showOnboarding}
         onComplete={completeOnboarding}
