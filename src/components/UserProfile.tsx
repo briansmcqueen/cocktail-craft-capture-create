@@ -620,7 +620,7 @@ export default function UserProfile() {
                             Created recipe{' '}
                             <button
                               onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                              className="font-semibold text-primary hover:underline"
+                              className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
                             >
                               {activity.recipe_name}
                             </button>
@@ -633,7 +633,7 @@ export default function UserProfile() {
                               Commented on{' '}
                               <button
                                 onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                                className="font-semibold text-primary hover:underline"
+                                className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
                               >
                                 {activity.recipe_name}
                               </button>
@@ -649,7 +649,7 @@ export default function UserProfile() {
                             Liked{' '}
                             <button
                               onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                              className="font-semibold text-primary hover:underline"
+                              className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
                             >
                               {activity.recipe_name}
                             </button>
@@ -661,7 +661,7 @@ export default function UserProfile() {
                             Started following{' '}
                             <button
                               onClick={() => navigate(`/user/${activity.followed_user_id}`)}
-                              className="font-semibold text-primary hover:underline"
+                              className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
                             >
                               @{activity.followed_username}
                             </button>
