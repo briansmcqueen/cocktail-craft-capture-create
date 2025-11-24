@@ -151,7 +151,7 @@ export default function ProfileSettings() {
         </CardHeader>
         <CardContent>
           <Separator className="mb-4 bg-border" />
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-organic-sm bg-destructive/5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-semibold text-foreground">Sign Out</h3>
               <p className="text-sm text-muted-foreground">Sign out of your account</p>
