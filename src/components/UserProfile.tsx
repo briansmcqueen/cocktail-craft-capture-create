@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Users, Heart, ChefHat, ArrowLeft, Settings } from 'lucide-react';
+import { Users, Heart, ChefHat, ArrowLeft, Settings, MessageSquare, ThumbsUp, UserPlus } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, getFollowers, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -19,8 +19,10 @@ import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 import { getRecipesLikeCounts } from '@/services/likesService';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
+import { getUserActivity, type ActivityItem } from '@/services/activityService';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
+import { formatDistanceToNow } from 'date-fns';
 
 interface Profile {
   id: string;
@@ -60,6 +62,7 @@ export default function UserProfile() {
   const [followerUsers, setFollowerUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('recipes');
   const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
 
   const isOwnProfile = user?.id === userId;
 
@@ -75,7 +78,14 @@ export default function UserProfile() {
     fetchUserFavorites();
     fetchFollowingUsers();
     fetchFollowerUsers();
+    fetchUserActivity();
   }, [userId]);
+
+  const fetchUserActivity = async () => {
+    if (!userId) return;
+    const activityData = await getUserActivity(userId);
+    setActivities(activityData);
+  };
 
   const fetchProfile = async () => {
     if (!userId) return;
@@ -570,12 +580,89 @@ export default function UserProfile() {
         </TabsContent>
 
         <TabsContent value="activity" className="mt-6">
-          <div className="text-center py-12">
-            <h3 className="text-lg font-medium text-muted-foreground">Activity feed coming soon</h3>
-            <p className="text-gray-500">
-              This section will show recent user activity.
-            </p>
-          </div>
+          {activities.length > 0 ? (
+            <div className="space-y-4">
+              {activities.map((activity) => (
+                <Card key={activity.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      {activity.type === 'recipe' && <ChefHat className="w-5 h-5 text-primary mt-1" />}
+                      {activity.type === 'comment' && <MessageSquare className="w-5 h-5 text-blue-500 mt-1" />}
+                      {activity.type === 'like' && <ThumbsUp className="w-5 h-5 text-red-500 mt-1" />}
+                      {activity.type === 'follow' && <UserPlus className="w-5 h-5 text-green-500 mt-1" />}
+                      
+                      <div className="flex-1 min-w-0">
+                        {activity.type === 'recipe' && (
+                          <p className="text-sm text-card-foreground">
+                            Created recipe{' '}
+                            <button
+                              onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
+                              className="font-medium text-primary hover:underline"
+                            >
+                              {activity.recipe_name}
+                            </button>
+                          </p>
+                        )}
+                        
+                        {activity.type === 'comment' && (
+                          <div>
+                            <p className="text-sm text-card-foreground">
+                              Commented on{' '}
+                              <button
+                                onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
+                                className="font-medium text-primary hover:underline"
+                              >
+                                {activity.recipe_name}
+                              </button>
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                              {activity.comment_content}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {activity.type === 'like' && (
+                          <p className="text-sm text-card-foreground">
+                            Liked{' '}
+                            <button
+                              onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
+                              className="font-medium text-primary hover:underline"
+                            >
+                              {activity.recipe_name}
+                            </button>
+                          </p>
+                        )}
+                        
+                        {activity.type === 'follow' && (
+                          <p className="text-sm text-card-foreground">
+                            Started following{' '}
+                            <button
+                              onClick={() => navigate(`/user/${activity.followed_user_id}`)}
+                              className="font-medium text-primary hover:underline"
+                            >
+                              @{activity.followed_username}
+                            </button>
+                          </p>
+                        )}
+                        
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <ChefHat className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-muted-foreground">No activity yet</h3>
+              <p className="text-gray-500">
+                {isOwnProfile ? "Start creating recipes and engaging with the community!" : "This user hasn't been active yet."}
+              </p>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
           </div>
