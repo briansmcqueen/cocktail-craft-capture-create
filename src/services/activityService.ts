@@ -6,9 +6,11 @@ export interface ActivityItem {
   timestamp: string;
   recipe_id?: string;
   recipe_name?: string;
+  recipe_image?: string;
   comment_content?: string;
   followed_user_id?: string;
   followed_username?: string;
+  followed_user_avatar?: string;
 }
 
 export async function getUserActivity(userId: string, limit: number = 20): Promise<ActivityItem[]> {
@@ -18,7 +20,7 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
     // Fetch recent recipes
     const { data: recipes } = await supabase
       .from('recipes')
-      .select('id, name, created_at')
+      .select('id, name, created_at, image_url')
       .eq('user_id', userId)
       .eq('is_public', true)
       .order('created_at', { ascending: false })
@@ -30,14 +32,15 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
         type: 'recipe' as const,
         timestamp: r.created_at,
         recipe_id: r.id,
-        recipe_name: r.name
+        recipe_name: r.name,
+        recipe_image: r.image_url || undefined
       })));
     }
 
     // Fetch recent comments
     const { data: comments } = await supabase
       .from('recipe_comments')
-      .select('id, content, created_at, recipe_id, recipes!inner(name, is_public)')
+      .select('id, content, created_at, recipe_id, recipes!inner(name, is_public, image_url)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(limit);
@@ -51,6 +54,7 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
           timestamp: c.created_at,
           recipe_id: c.recipe_id,
           recipe_name: (c as any).recipes?.name,
+          recipe_image: (c as any).recipes?.image_url || undefined,
           comment_content: c.content
         })));
     }
@@ -58,7 +62,7 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
     // Fetch recent likes
     const { data: likes } = await supabase
       .from('likes')
-      .select('id, created_at, recipe_id, recipes!inner(name, is_public)')
+      .select('id, created_at, recipe_id, recipes!inner(name, is_public, image_url)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(limit);
@@ -71,7 +75,8 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
           type: 'like' as const,
           timestamp: l.created_at || new Date().toISOString(),
           recipe_id: l.recipe_id,
-          recipe_name: (l as any).recipes?.name
+          recipe_name: (l as any).recipes?.name,
+          recipe_image: (l as any).recipes?.image_url || undefined
         })));
     }
 
@@ -95,7 +100,8 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
           type: 'follow' as const,
           timestamp: f.created_at,
           followed_user_id: f.following_id,
-          followed_username: profile?.username || 'User'
+          followed_username: profile?.username || 'User',
+          followed_user_avatar: profile?.avatar_url || undefined
         };
       }));
     }

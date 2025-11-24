@@ -586,10 +586,41 @@ export default function UserProfile() {
                 <Card key={activity.id} className="overflow-hidden">
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
-                      {activity.type === 'recipe' && <ChefHat className="w-5 h-5 text-primary mt-1" />}
-                      {activity.type === 'comment' && <MessageSquare className="w-5 h-5 text-blue-500 mt-1" />}
-                      {activity.type === 'like' && <ThumbsUp className="w-5 h-5 text-red-500 mt-1" />}
-                      {activity.type === 'follow' && <UserPlus className="w-5 h-5 text-green-500 mt-1" />}
+                      {/* Recipe/Profile Image */}
+                      {(activity.type === 'recipe' || activity.type === 'comment' || activity.type === 'like') && activity.recipe_image && (
+                        <button
+                          onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
+                          className="flex-shrink-0"
+                        >
+                          <img 
+                            src={activity.recipe_image} 
+                            alt={activity.recipe_name}
+                            className="w-16 h-16 rounded-lg object-cover hover:opacity-80 transition-opacity"
+                          />
+                        </button>
+                      )}
+                      
+                      {activity.type === 'follow' && (
+                        <button
+                          onClick={() => navigate(`/user/${activity.followed_user_id}`)}
+                          className="flex-shrink-0"
+                        >
+                          <Avatar className="w-16 h-16">
+                            <AvatarImage src={getAvatarUrl(activity.followed_user_avatar) || undefined} />
+                            <AvatarFallback className="text-sm">
+                              {activity.followed_username?.[0]?.toUpperCase() || 'U'}
+                            </AvatarFallback>
+                          </Avatar>
+                        </button>
+                      )}
+                      
+                      {/* Icon for activity type */}
+                      <div className="flex-shrink-0 mt-1">
+                        {activity.type === 'recipe' && <ChefHat className="w-5 h-5 text-primary" />}
+                        {activity.type === 'comment' && <MessageSquare className="w-5 h-5 text-blue-500" />}
+                        {activity.type === 'like' && <ThumbsUp className="w-5 h-5 text-red-500" />}
+                        {activity.type === 'follow' && <UserPlus className="w-5 h-5 text-green-500" />}
+                      </div>
                       
                       <div className="flex-1 min-w-0">
                         {activity.type === 'recipe' && (
