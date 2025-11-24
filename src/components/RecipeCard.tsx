@@ -15,11 +15,14 @@ type RecipeCardProps = {
   onEdit?: () => void;
   editable?: boolean;
   onTagClick?: (tag: string) => void;
+  showOrigin?: boolean;
+  showTags?: boolean;
+  variant?: 'default' | 'profile';
 };
 
 const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=400&q=80";
 
-export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick }: RecipeCardProps) {
+export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick, showOrigin = true, showTags = true, variant = 'default' }: RecipeCardProps) {
   const navigate = useNavigate();
   const likeCount = getLikeCount(recipe.id);
   const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
@@ -48,13 +51,17 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
     navigate(url);
   };
   
+  const isProfileVariant = variant === 'profile';
+  const imageHeight = isProfileVariant ? 'h-48' : 'h-40';
+  const cardHeight = isProfileVariant ? 'h-[340px]' : 'h-80';
+  
   return (
     <div
-      className="bg-card rounded-organic-md shadow-glass hover:shadow-xl cursor-pointer transition-all duration-400 group relative h-80 flex flex-col active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100 w-full min-w-0 border border-border"
+      className={`bg-card rounded-organic-md shadow-glass hover:shadow-xl cursor-pointer transition-all duration-400 group relative ${cardHeight} flex flex-col active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100 w-full min-w-0 border border-border`}
       onClick={handleCardClick}
       style={{ transitionTimingFunction: 'var(--timing-pour)' }}
     >
-      <div className="h-40 w-full overflow-hidden">
+      <div className={`${imageHeight} w-full overflow-hidden`}>
         <img
           src={imageSrc}
           alt={recipe.name}
@@ -66,24 +73,28 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
       <div className="p-4 flex-1 flex flex-col justify-between">
         <div className="flex-1">
           <h2 className="font-bold text-lg mb-1 line-clamp-1 text-foreground" title={recipe.name}>{recipe.name}</h2>
-          <div className="text-sm text-muted-foreground mb-2 line-clamp-1" title={recipe.origin || "No region"}>{recipe.origin || "No region"}</div>
-          <div className="flex flex-wrap gap-1 mb-2 min-h-[20px]">
-            {(recipe.tags ?? []).slice(0, 3).map(tag => (
-              <TagBadge 
-                key={tag} 
-                className={`bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm ${onTagClick ? 'cursor-pointer hover:bg-accent/30' : ''}`}
-                onClick={onTagClick ? handleTagClick(tag) : undefined}
-              >
-                {tag}
-              </TagBadge>
-            ))}
-            {(recipe.tags ?? []).length > 3 && (
-              <TagBadge className="bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm">+{(recipe.tags ?? []).length - 3}</TagBadge>
-            )}
-          </div>
+          {showOrigin && (
+            <div className="text-sm text-muted-foreground mb-2 line-clamp-1" title={recipe.origin || "No region"}>{recipe.origin || "No region"}</div>
+          )}
+          {showTags && (
+            <div className="flex flex-wrap gap-1 mb-2 min-h-[20px]">
+              {(recipe.tags ?? []).slice(0, 3).map(tag => (
+                <TagBadge 
+                  key={tag} 
+                  className={`bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm ${onTagClick ? 'cursor-pointer hover:bg-accent/30' : ''}`}
+                  onClick={onTagClick ? handleTagClick(tag) : undefined}
+                >
+                  {tag}
+                </TagBadge>
+              ))}
+              {(recipe.tags ?? []).length > 3 && (
+                <TagBadge className="bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm">+{(recipe.tags ?? []).length - 3}</TagBadge>
+              )}
+            </div>
+          )}
           <div className="text-xs text-card-foreground/80 mb-3 line-clamp-2" title={recipe.notes}>{recipe.notes}</div>
         </div>
-        <div className="h-5 flex items-center justify-between">
+        <div className="h-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {recipe.technique && (
               <span className={`technique-badge technique-${recipe.technique} px-1.5 py-0.5 text-xs font-medium rounded-organic-sm uppercase tracking-wide`}>
@@ -94,14 +105,14 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
             {(recipe.likeCount !== undefined || recipe.favoriteCount !== undefined) ? (
               <>
                 {recipe.likeCount !== undefined && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Heart size={12} className="fill-current" />
+                  <div className={`flex items-center gap-1 ${isProfileVariant ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
+                    <Heart size={isProfileVariant ? 16 : 12} className="fill-current" />
                     <span>{recipe.likeCount}</span>
                   </div>
                 )}
                 {recipe.favoriteCount !== undefined && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Heart size={12} />
+                  <div className={`flex items-center gap-1 ${isProfileVariant ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
+                    <Heart size={isProfileVariant ? 16 : 12} />
                     <span>{recipe.favoriteCount}</span>
                   </div>
                 )}
