@@ -28,6 +28,9 @@ export type Cocktail = {
   min_servings?: number;
   max_servings?: number;
   scaling_notes?: string;
+  // Stats
+  likeCount?: number;
+  favoriteCount?: number;
   // Creator profile info
   creatorUsername?: string;
   creatorAvatar?: string;

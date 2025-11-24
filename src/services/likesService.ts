@@ -80,3 +80,33 @@ export async function syncLikesFromLocalStorage(): Promise<void> {
   const localLikesKey = "barbook_likes";
   localStorage.removeItem(localLikesKey);
 }
+
+export async function getRecipeLikeCount(recipeId: string): Promise<number> {
+  const { data } = await supabase.rpc('get_recipe_like_count', { 
+    p_recipe_id: recipeId 
+  });
+  
+  return data || 0;
+}
+
+export async function getRecipesLikeCounts(recipeIds: string[]): Promise<Record<string, number>> {
+  if (recipeIds.length === 0) return {};
+  
+  const { data, error } = await supabase
+    .from('likes')
+    .select('recipe_id')
+    .in('recipe_id', recipeIds);
+  
+  if (error) {
+    console.error('Error fetching like counts:', error);
+    return {};
+  }
+  
+  // Count likes per recipe
+  const counts: Record<string, number> = {};
+  data?.forEach(like => {
+    counts[like.recipe_id] = (counts[like.recipe_id] || 0) + 1;
+  });
+  
+  return counts;
+}
