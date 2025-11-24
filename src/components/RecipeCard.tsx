@@ -1,5 +1,5 @@
 
-import { Edit, ThumbsUp, Heart } from "lucide-react";
+import { Edit, ThumbsUp, Heart, MessageSquare, Star } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
@@ -102,18 +102,24 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
               </span>
             )}
             {/* Show stats if available, otherwise show difficulty */}
-            {(recipe.likeCount !== undefined || recipe.favoriteCount !== undefined) ? (
+            {(recipe.likeCount !== undefined || recipe.commentCount !== undefined || recipe.averageRating !== undefined) ? (
               <>
+                {recipe.averageRating !== undefined && recipe.averageRating > 0 && (
+                  <div className={`flex items-center gap-1 ${isProfileVariant ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
+                    <Star size={isProfileVariant ? 16 : 12} className="fill-current text-yellow-500" />
+                    <span>{recipe.averageRating.toFixed(1)}</span>
+                  </div>
+                )}
                 {recipe.likeCount !== undefined && (
                   <div className={`flex items-center gap-1 ${isProfileVariant ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
                     <Heart size={isProfileVariant ? 16 : 12} className="fill-current" />
                     <span>{recipe.likeCount}</span>
                   </div>
                 )}
-                {recipe.favoriteCount !== undefined && (
+                {recipe.commentCount !== undefined && (
                   <div className={`flex items-center gap-1 ${isProfileVariant ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
-                    <Heart size={isProfileVariant ? 16 : 12} />
-                    <span>{recipe.favoriteCount}</span>
+                    <MessageSquare size={isProfileVariant ? 16 : 12} />
+                    <span>{recipe.commentCount}</span>
                   </div>
                 )}
               </>

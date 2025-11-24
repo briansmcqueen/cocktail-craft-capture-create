@@ -182,3 +182,25 @@ export async function deleteComment(commentId: string): Promise<boolean> {
 
   return true;
 }
+
+export async function getRecipesCommentCounts(recipeIds: string[]): Promise<Record<string, number>> {
+  if (recipeIds.length === 0) return {};
+  
+  const { data, error } = await supabase
+    .from('recipe_comments')
+    .select('recipe_id')
+    .in('recipe_id', recipeIds);
+  
+  if (error) {
+    console.error('Error fetching comment counts:', error);
+    return {};
+  }
+  
+  // Count comments per recipe
+  const counts: Record<string, number> = {};
+  data?.forEach(comment => {
+    counts[comment.recipe_id] = (counts[comment.recipe_id] || 0) + 1;
+  });
+  
+  return counts;
+}

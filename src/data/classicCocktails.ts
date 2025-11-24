@@ -31,6 +31,8 @@ export type Cocktail = {
   // Stats
   likeCount?: number;
   favoriteCount?: number;
+  commentCount?: number;
+  averageRating?: number;
   // Creator profile info
   creatorUsername?: string;
   creatorAvatar?: string;
