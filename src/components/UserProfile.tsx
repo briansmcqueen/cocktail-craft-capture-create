@@ -18,6 +18,7 @@ import RecipeCardWithFavorite from '@/components/RecipeCardWithFavorite';
 import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 import { getRecipesLikeCounts } from '@/services/likesService';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
+import { getRecipesCommentCounts } from '@/services/commentsService';
 
 interface Profile {
   id: string;
@@ -56,7 +57,7 @@ export default function UserProfile() {
   const [followingUsers, setFollowingUsers] = useState<any[]>([]);
   const [followerUsers, setFollowerUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('recipes');
-  const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number }>>({});
+  const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
 
   const isOwnProfile = user?.id === userId;
 
@@ -145,16 +146,23 @@ export default function UserProfile() {
       // Fetch stats for all recipes
       if (data && data.length > 0) {
         const recipeIds = data.map(r => r.id);
-        const [likeCounts, favCounts] = await Promise.all([
+        const [likeCounts, favCounts, commentCounts, ratingsResponse] = await Promise.all([
           getRecipesLikeCounts(recipeIds),
-          getRecipesFavoriteCounts(recipeIds)
+          getRecipesFavoriteCounts(recipeIds),
+          getRecipesCommentCounts(recipeIds),
+          supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: recipeIds })
         ]);
         
-        const stats: Record<string, { likes: number; favorites: number }> = {};
+        const ratingsData = ratingsResponse.data as Array<{ recipe_id: string; averageRating: number; totalRatings: number }> | null;
+        
+        const stats: Record<string, { likes: number; favorites: number; comments: number; rating: number }> = {};
         recipeIds.forEach(id => {
+          const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
           stats[id] = {
             likes: likeCounts[id] || 0,
-            favorites: favCounts[id] || 0
+            favorites: favCounts[id] || 0,
+            comments: commentCounts[id] || 0,
+            rating: ratingInfo?.averageRating || 0
           };
         });
         setRecipeStats(stats);
@@ -384,7 +392,7 @@ export default function UserProfile() {
           {recipes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recipes.map((recipe) => {
-                const stats = recipeStats[recipe.id] || { likes: 0, favorites: 0 };
+                const stats = recipeStats[recipe.id] || { likes: 0, favorites: 0, comments: 0, rating: 0 };
                 
                 // Transform database recipe to Cocktail format
                 const cocktail: Cocktail = {
@@ -403,7 +411,8 @@ export default function UserProfile() {
                   isUserRecipe: true,
                   // Add stats to display
                   likeCount: stats.likes,
-                  favoriteCount: stats.favorites
+                  commentCount: stats.comments,
+                  averageRating: stats.rating
                 };
                 
                 return (
