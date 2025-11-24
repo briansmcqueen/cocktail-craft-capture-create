@@ -14,7 +14,7 @@ import { toast } from '@/hooks/use-toast';
 import { getAvatarUrl } from '@/utils/avatarUrl';
 import RecipeGrid from './RecipeGrid';
 import UserCard from '@/components/social/UserCard';
-import RecipeCardWithFavorite from '@/components/RecipeCardWithFavorite';
+import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 import { getRecipesLikeCounts } from '@/services/likesService';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
@@ -416,13 +416,10 @@ export default function UserProfile() {
                 };
                 
                 return (
-                  <RecipeCardWithFavorite
+                  <UniversalRecipeCard
                     key={recipe.id}
                     recipe={cocktail}
-                    onRecipeClick={() => {}}
-                    showOrigin={false}
-                    showTags={false}
-                    variant="profile"
+                    hideCreator={true}
                   />
                 );
               })}

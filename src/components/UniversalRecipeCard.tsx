@@ -16,13 +16,15 @@ interface UniversalRecipeCardProps {
   onTagClick?: (tag: string) => void;
   onShowAuthModal?: () => void;
   className?: string;
+  hideCreator?: boolean;
 }
 
 export default function UniversalRecipeCard({
   recipe,
   onTagClick,
   onShowAuthModal,
-  className
+  className,
+  hideCreator = false
 }: UniversalRecipeCardProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -84,7 +86,7 @@ export default function UniversalRecipeCard({
           />
           
           {/* Creator info overlay - only show if we have creator data with username */}
-          {recipe.creatorUsername && recipe.creatorUserId && (
+          {!hideCreator && recipe.creatorUsername && recipe.creatorUserId && (
             <button 
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 hover:from-black/90 transition-colors w-full text-left"
               onClick={handleCreatorClick}
