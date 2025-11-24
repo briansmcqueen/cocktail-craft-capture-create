@@ -411,6 +411,9 @@ export default function UserProfile() {
                     key={recipe.id}
                     recipe={cocktail}
                     onRecipeClick={() => {}}
+                    showOrigin={false}
+                    showTags={false}
+                    variant="profile"
                   />
                 );
               })}

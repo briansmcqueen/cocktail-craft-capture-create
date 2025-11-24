@@ -11,13 +11,19 @@ type RecipeCardWithFavoriteProps = {
   onRecipeClick: (recipe: Cocktail) => void;
   onTagClick?: (tag: string) => void;
   onShowAuthModal?: () => void;
+  showOrigin?: boolean;
+  showTags?: boolean;
+  variant?: 'default' | 'profile';
 };
 
 export default function RecipeCardWithFavorite({ 
   recipe, 
   onRecipeClick, 
   onTagClick,
-  onShowAuthModal
+  onShowAuthModal,
+  showOrigin,
+  showTags,
+  variant
 }: RecipeCardWithFavoriteProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -46,6 +52,9 @@ export default function RecipeCardWithFavorite({
           onSelect={handleCardClick}
           editable={false}
           onTagClick={onTagClick}
+          showOrigin={showOrigin}
+          showTags={showTags}
+          variant={variant}
         />
       </div>
       
