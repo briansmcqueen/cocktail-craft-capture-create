@@ -1,5 +1,5 @@
 
-import { Edit, ThumbsUp } from "lucide-react";
+import { Edit, ThumbsUp, Heart } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
@@ -90,10 +90,28 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
                 {recipe.technique}
               </span>
             )}
-            {recipe.difficulty && (
-              <span className={`difficulty-${recipe.difficulty} px-1.5 py-0.5 text-xs font-medium rounded-organic-sm`}>
-                {recipe.difficulty}
-              </span>
+            {/* Show stats if available, otherwise show difficulty */}
+            {(recipe.likeCount !== undefined || recipe.favoriteCount !== undefined) ? (
+              <>
+                {recipe.likeCount !== undefined && (
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Heart size={12} className="fill-current" />
+                    <span>{recipe.likeCount}</span>
+                  </div>
+                )}
+                {recipe.favoriteCount !== undefined && (
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Heart size={12} />
+                    <span>{recipe.favoriteCount}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              recipe.difficulty && (
+                <span className={`difficulty-${recipe.difficulty} px-1.5 py-0.5 text-xs font-medium rounded-organic-sm`}>
+                  {recipe.difficulty}
+                </span>
+              )
             )}
           </div>
           <div className="flex items-center gap-2">
@@ -107,12 +125,6 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
             )}
             <ShareCount recipeId={recipe.id} />
           </div>
-          {/* {likeCount > 0 && (
-            <div className="text-xs text-muted-foreground flex items-center gap-1">
-              <ThumbsUp size={12} />
-              <span>{likeCount} like{likeCount === 1 ? '' : 's'}</span>
-            </div>
-          )} */}
         </div>
       </div>
       {editable && (

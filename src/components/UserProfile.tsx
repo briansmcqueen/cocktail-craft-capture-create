@@ -16,6 +16,8 @@ import RecipeGrid from './RecipeGrid';
 import UserCard from '@/components/social/UserCard';
 import RecipeCardWithFavorite from '@/components/RecipeCardWithFavorite';
 import type { Cocktail, Difficulty } from '@/data/classicCocktails';
+import { getRecipesLikeCounts } from '@/services/likesService';
+import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 
 interface Profile {
   id: string;
@@ -54,6 +56,7 @@ export default function UserProfile() {
   const [followingUsers, setFollowingUsers] = useState<any[]>([]);
   const [followerUsers, setFollowerUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('recipes');
+  const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number }>>({});
 
   const isOwnProfile = user?.id === userId;
 
@@ -138,6 +141,24 @@ export default function UserProfile() {
       console.error('Error fetching user recipes:', error);
     } else {
       setRecipes(data || []);
+      
+      // Fetch stats for all recipes
+      if (data && data.length > 0) {
+        const recipeIds = data.map(r => r.id);
+        const [likeCounts, favCounts] = await Promise.all([
+          getRecipesLikeCounts(recipeIds),
+          getRecipesFavoriteCounts(recipeIds)
+        ]);
+        
+        const stats: Record<string, { likes: number; favorites: number }> = {};
+        recipeIds.forEach(id => {
+          stats[id] = {
+            likes: likeCounts[id] || 0,
+            favorites: favCounts[id] || 0
+          };
+        });
+        setRecipeStats(stats);
+      }
     }
   };
 
@@ -363,6 +384,8 @@ export default function UserProfile() {
           {recipes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recipes.map((recipe) => {
+                const stats = recipeStats[recipe.id] || { likes: 0, favorites: 0 };
+                
                 // Transform database recipe to Cocktail format
                 const cocktail: Cocktail = {
                   id: recipe.id,
@@ -370,7 +393,6 @@ export default function UserProfile() {
                   notes: recipe.description || undefined,
                   image: recipe.image_url || '',
                   tags: recipe.tags || [],
-                  difficulty: (recipe.difficulty?.toLowerCase() || 'medium') as Difficulty,
                   prepTime: `${recipe.prep_time || 5} min`,
                   ingredients: recipe.ingredients,
                   steps: recipe.instructions,
@@ -378,7 +400,10 @@ export default function UserProfile() {
                   creatorUsername: profile?.username || undefined,
                   creatorAvatar: profile?.avatar_url || undefined,
                   creatorUserId: userId,
-                  isUserRecipe: true
+                  isUserRecipe: true,
+                  // Add stats to display
+                  likeCount: stats.likes,
+                  favoriteCount: stats.favorites
                 };
                 
                 return (

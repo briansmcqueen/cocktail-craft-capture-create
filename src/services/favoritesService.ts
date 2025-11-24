@@ -139,3 +139,25 @@ export async function syncFavoritesFromLocalStorage(): Promise<void> {
     console.error('Error syncing favorites from localStorage:', error);
   }
 }
+
+export async function getRecipesFavoriteCounts(recipeIds: string[]): Promise<Record<string, number>> {
+  if (recipeIds.length === 0) return {};
+  
+  const { data, error } = await supabase
+    .from('favorites')
+    .select('recipe_id')
+    .in('recipe_id', recipeIds);
+  
+  if (error) {
+    console.error('Error fetching favorite counts:', error);
+    return {};
+  }
+  
+  // Count favorites per recipe
+  const counts: Record<string, number> = {};
+  data?.forEach(fav => {
+    counts[fav.recipe_id] = (counts[fav.recipe_id] || 0) + 1;
+  });
+  
+  return counts;
+}
