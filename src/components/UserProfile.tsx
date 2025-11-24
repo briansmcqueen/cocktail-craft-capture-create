@@ -14,6 +14,8 @@ import { toast } from '@/hooks/use-toast';
 import { getAvatarUrl } from '@/utils/avatarUrl';
 import RecipeGrid from './RecipeGrid';
 import UserCard from '@/components/social/UserCard';
+import RecipeCardWithFavorite from '@/components/RecipeCardWithFavorite';
+import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 
 interface Profile {
   id: string;
@@ -360,29 +362,33 @@ export default function UserProfile() {
         <TabsContent value="recipes" className="mt-6">
           {recipes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recipes.map((recipe) => (
-                <div key={recipe.id} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                     onClick={() => navigate(`/recipe/${recipe.id}`)}>
-                  <div className="aspect-video bg-gray-200 flex items-center justify-center">
-                    {recipe.image_url ? (
-                      <img src={recipe.image_url} alt={recipe.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-gray-400">No image</span>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-2 text-card-foreground">{recipe.name}</h3>
-                    <p className="text-muted-foreground text-sm mb-2 line-clamp-2">{recipe.description}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {recipe.tags?.slice(0, 3).map((tag, index) => (
-                        <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
+              {recipes.map((recipe) => {
+                // Transform database recipe to Cocktail format
+                const cocktail: Cocktail = {
+                  id: recipe.id,
+                  name: recipe.name,
+                  notes: recipe.description || undefined,
+                  image: recipe.image_url || '',
+                  tags: recipe.tags || [],
+                  difficulty: (recipe.difficulty?.toLowerCase() || 'medium') as Difficulty,
+                  prepTime: `${recipe.prep_time || 5} min`,
+                  ingredients: recipe.ingredients,
+                  steps: recipe.instructions,
+                  createdBy: profile?.username || profile?.full_name || undefined,
+                  creatorUsername: profile?.username || undefined,
+                  creatorAvatar: profile?.avatar_url || undefined,
+                  creatorUserId: userId,
+                  isUserRecipe: true
+                };
+                
+                return (
+                  <RecipeCardWithFavorite
+                    key={recipe.id}
+                    recipe={cocktail}
+                    onRecipeClick={() => {}}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12">
