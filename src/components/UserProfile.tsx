@@ -7,12 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Users, Heart, ChefHat, ArrowLeft, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { followUser, unfollowUser, isFollowing, getUserStats, type UserStats } from '@/services/followsService';
+import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { getAvatarUrl } from '@/utils/avatarUrl';
 import RecipeGrid from './RecipeGrid';
+import UserCard from '@/components/social/UserCard';
 
 interface Profile {
   id: string;
@@ -48,6 +49,7 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
+  const [followingUsers, setFollowingUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('creations');
 
   const isOwnProfile = user?.id === userId;
@@ -60,6 +62,7 @@ export default function UserProfile() {
     checkFollowStatus();
     fetchUserRecipes();
     fetchUserFavorites();
+    fetchFollowingUsers();
   }, [userId]);
 
   const fetchProfile = async () => {
@@ -154,6 +157,37 @@ export default function UserProfile() {
     // This is a simplified version - in a real app you'd want to join with recipes table
     const favoriteIds = data?.map(f => f.recipe_id) || [];
     setFavoriteRecipes(favoriteIds); // Simplified for now
+  };
+
+  const fetchFollowingUsers = async () => {
+    if (!userId) return;
+
+    try {
+      // Get the list of users this profile is following
+      const follows = await getFollowing(userId);
+      
+      if (follows.length === 0) {
+        setFollowingUsers([]);
+        return;
+      }
+
+      // Get user IDs of people they're following
+      const followingIds = follows.map(f => f.following_id);
+
+      // Fetch detailed profile info for all following users
+      const { data: profiles, error } = await supabase.rpc('get_public_profiles', {
+        user_ids: followingIds as any
+      });
+
+      if (error) {
+        console.error('Error fetching following user profiles:', error);
+        return;
+      }
+
+      setFollowingUsers(profiles || []);
+    } catch (error) {
+      console.error('Error fetching following users:', error);
+    }
   };
 
   const handleFollowToggle = async () => {
@@ -276,6 +310,7 @@ export default function UserProfile() {
           <TabsTrigger value="favorites">
             Favorites
           </TabsTrigger>
+          <TabsTrigger value="following">Following</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
 
@@ -325,6 +360,30 @@ export default function UserProfile() {
               This section will show favorited recipes.
             </p>
           </div>
+        </TabsContent>
+
+        <TabsContent value="following" className="mt-6">
+          {followingUsers.length > 0 ? (
+            <div className="space-y-4">
+              {followingUsers.map((followingUser) => (
+                <UserCard
+                  key={followingUser.id}
+                  userId={followingUser.id}
+                  username={followingUser.username}
+                  avatarUrl={followingUser.avatar_url}
+                  isCurrentUser={user?.id === followingUser.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-muted-foreground">Not following anyone yet</h3>
+              <p className="text-gray-500">
+                {isOwnProfile ? "Start following other bartenders to see them here!" : "This user isn't following anyone yet."}
+              </p>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="activity" className="mt-6">
