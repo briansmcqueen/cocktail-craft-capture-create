@@ -105,9 +105,16 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
             {(recipe.likeCount !== undefined || recipe.commentCount !== undefined || recipe.averageRating !== undefined) ? (
               <>
                 {recipe.averageRating !== undefined && recipe.averageRating > 0 && (
-                  <div className={`flex items-center gap-1 ${isProfileVariant ? 'text-sm' : 'text-xs'} text-muted-foreground`}>
-                    <Star size={isProfileVariant ? 16 : 12} className="fill-current text-yellow-500" />
-                    <span>{recipe.averageRating.toFixed(1)}</span>
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        size={isProfileVariant ? 14 : 12}
+                        className={`text-golden-amber ${
+                          star <= Math.round(recipe.averageRating!) ? "fill-current" : "fill-none"
+                        }`}
+                      />
+                    ))}
                   </div>
                 )}
                 {recipe.likeCount !== undefined && (
