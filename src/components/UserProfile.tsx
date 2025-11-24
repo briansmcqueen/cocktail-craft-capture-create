@@ -51,7 +51,7 @@ export default function UserProfile() {
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
   const [followingUsers, setFollowingUsers] = useState<any[]>([]);
   const [followerUsers, setFollowerUsers] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState('creations');
+  const [activeTab, setActiveTab] = useState('recipes');
 
   const isOwnProfile = user?.id === userId;
 
@@ -304,10 +304,13 @@ export default function UserProfile() {
 
               {/* Stats */}
               <div className="flex gap-6">
-                <div className="text-center">
-                  <div className="font-bold text-lg">{stats.recipes_count}</div>
-                  <div className="text-sm text-muted-foreground">Recipes</div>
-                </div>
+                <button 
+                  onClick={() => setActiveTab('recipes')}
+                  className="text-center hover:opacity-80 transition-opacity"
+                >
+                  <div className="font-bold text-lg text-foreground">{stats.recipes_count}</div>
+                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Recipes</div>
+                </button>
                 <button 
                   onClick={() => setActiveTab('followers')}
                   className="text-center hover:opacity-80 transition-opacity"
@@ -343,8 +346,8 @@ export default function UserProfile() {
       {/* Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full">
-          <TabsTrigger value="creations">
-            Creations
+          <TabsTrigger value="recipes">
+            Recipes
           </TabsTrigger>
           <TabsTrigger value="favorites">
             Favorites
@@ -354,7 +357,7 @@ export default function UserProfile() {
           <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="creations" className="mt-6">
+        <TabsContent value="recipes" className="mt-6">
           {recipes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recipes.map((recipe) => (
