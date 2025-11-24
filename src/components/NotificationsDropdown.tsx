@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { notificationsService, RecipeNotification } from '@/services/notificationsService';
+import { notificationsService, Notification } from '@/services/notificationsService';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
@@ -19,7 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 export default function NotificationsDropdown() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<RecipeNotification[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -40,10 +40,30 @@ export default function NotificationsDropdown() {
           setUnreadCount(prev => prev + 1);
           
           // Show toast for new notification
-          toast({
-            title: "New Recipe Posted",
-            description: `${newNotification.recipe_name} was just published!`,
-          });
+          if (newNotification.type === 'recipe') {
+            toast({
+              title: "New Recipe Posted",
+              description: `${newNotification.recipe_name} was just published!`,
+            });
+          } else if (newNotification.type === 'social') {
+            const actorName = newNotification.actor?.username || newNotification.actor?.full_name || 'Someone';
+            if (newNotification.notification_type === 'like') {
+              toast({
+                title: "New Like",
+                description: `${actorName} liked your recipe ${newNotification.recipe?.name || ''}`,
+              });
+            } else if (newNotification.notification_type === 'comment') {
+              toast({
+                title: "New Comment",
+                description: `${actorName} commented on your recipe ${newNotification.recipe?.name || ''}`,
+              });
+            } else if (newNotification.notification_type === 'follow') {
+              toast({
+                title: "New Follower",
+                description: `${actorName} started following you`,
+              });
+            }
+          }
         });
       } catch (error) {
         console.error('Error setting up notification subscription:', error);
@@ -78,10 +98,10 @@ export default function NotificationsDropdown() {
     setUnreadCount(count);
   };
 
-  const handleMarkAsRead = async (notificationId: string, e: React.MouseEvent) => {
+  const handleMarkAsRead = async (notificationId: string, type: 'recipe' | 'social', e: React.MouseEvent) => {
     e.stopPropagation();
     
-    const success = await notificationsService.markAsRead(notificationId);
+    const success = await notificationsService.markAsRead(notificationId, type);
     
     if (success) {
       setNotifications(prev =>
@@ -105,10 +125,10 @@ export default function NotificationsDropdown() {
     }
   };
 
-  const handleDeleteNotification = async (notificationId: string, e: React.MouseEvent) => {
+  const handleDeleteNotification = async (notificationId: string, type: 'recipe' | 'social', e: React.MouseEvent) => {
     e.stopPropagation();
     
-    const success = await notificationsService.deleteNotification(notificationId);
+    const success = await notificationsService.deleteNotification(notificationId, type);
     
     if (success) {
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
@@ -118,15 +138,24 @@ export default function NotificationsDropdown() {
     }
   };
 
-  const handleNotificationClick = async (notification: RecipeNotification) => {
+  const handleNotificationClick = async (notification: Notification) => {
     // Mark as read
     if (!notification.is_read) {
-      await handleMarkAsRead(notification.id, { stopPropagation: () => {} } as any);
+      await handleMarkAsRead(notification.id, notification.type, { stopPropagation: () => {} } as any);
     }
     
-    // Navigate to recipe
     setOpen(false);
-    navigate(`/cocktail/${notification.recipe_id}`);
+    
+    // Navigate based on notification type
+    if (notification.type === 'recipe') {
+      navigate(`/cocktail/${notification.recipe_id}`);
+    } else if (notification.type === 'social') {
+      if (notification.notification_type === 'follow') {
+        navigate(`/user/${notification.actor_id}`);
+      } else if (notification.recipe_id) {
+        navigate(`/cocktail/${notification.recipe_id}`);
+      }
+    }
   };
 
   if (!user) {
@@ -206,12 +235,30 @@ export default function NotificationsDropdown() {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-pure-white mb-1">
-                        New Recipe Posted
-                      </p>
-                      <p className="text-sm text-light-text line-clamp-2">
-                        {notification.recipe_name}
-                      </p>
+                      {notification.type === 'recipe' ? (
+                        <>
+                          <p className="text-sm font-medium text-pure-white mb-1">
+                            New Recipe Posted
+                          </p>
+                          <p className="text-sm text-light-text line-clamp-2">
+                            {notification.recipe_name}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-medium text-pure-white mb-1">
+                            {notification.notification_type === 'like' && '❤️ New Like'}
+                            {notification.notification_type === 'comment' && '💬 New Comment'}
+                            {notification.notification_type === 'follow' && '👤 New Follower'}
+                          </p>
+                          <p className="text-sm text-light-text line-clamp-2">
+                            {notification.actor?.username || notification.actor?.full_name || 'Someone'}
+                            {notification.notification_type === 'like' && ` liked ${notification.recipe?.name || 'your recipe'}`}
+                            {notification.notification_type === 'comment' && ` commented on ${notification.recipe?.name || 'your recipe'}`}
+                            {notification.notification_type === 'follow' && ' started following you'}
+                          </p>
+                        </>
+                      )}
                       <div className="flex items-center gap-2 mt-2 text-xs text-soft-gray">
                         <Calendar className="h-3 w-3" />
                         {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
@@ -225,7 +272,7 @@ export default function NotificationsDropdown() {
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 hover:bg-primary/20"
-                          onClick={(e) => handleMarkAsRead(notification.id, e)}
+                          onClick={(e) => handleMarkAsRead(notification.id, notification.type, e)}
                           title="Mark as read"
                         >
                           <Check className="h-3.5 w-3.5 text-emerald" />
@@ -235,7 +282,7 @@ export default function NotificationsDropdown() {
                         variant="ghost"
                         size="icon"
                         className="h-7 w-7 hover:bg-destructive/20"
-                        onClick={(e) => handleDeleteNotification(notification.id, e)}
+                        onClick={(e) => handleDeleteNotification(notification.id, notification.type, e)}
                         title="Delete notification"
                       >
                         <Trash2 className="h-3.5 w-3.5 text-destructive" />
