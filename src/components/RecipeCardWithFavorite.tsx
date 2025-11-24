@@ -46,19 +46,17 @@ export default function RecipeCardWithFavorite({
 
   return (
     <div className="relative group">
-      <div className="relative overflow-hidden rounded-organic-lg border border-light-charcoal hover:border-primary/30 transition-all duration-300 bg-medium-charcoal hover:bg-light-charcoal hover:scale-[1.02] hover:rotate-[0.5deg] shadow-lg hover:shadow-xl">
-        <RecipeCard
-          recipe={recipe}
-          onSelect={handleCardClick}
-          editable={false}
-          onTagClick={onTagClick}
-          showOrigin={showOrigin}
-          showTags={showTags}
-          variant={variant}
-        />
-      </div>
+      <RecipeCard
+        recipe={recipe}
+        onSelect={handleCardClick}
+        editable={false}
+        onTagClick={onTagClick}
+        showOrigin={showOrigin}
+        showTags={showTags}
+        variant={variant}
+      />
       
-      <div className="absolute top-1 right-3">
+      <div className="absolute top-1 right-3 z-10">
         <button
           className="p-1 rounded-organic-sm bg-medium-charcoal/80 backdrop-blur-sm hover:bg-light-charcoal hover:scale-110 active:scale-95 transition-all duration-200 touch-manipulation border border-light-charcoal/30"
           onClick={handleToggleFavorite}
