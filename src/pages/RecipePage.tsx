@@ -35,13 +35,19 @@ const slugToRecipeName = (slug: string): string => {
 // Generate the correct URL for any recipe
 const getRecipeUrl = (recipe: Cocktail): string => {
   const slug = recipeNameToSlug(recipe.name);
-  if (recipe.isUserRecipe) {
-    // Custom recipe stored locally: /cocktail/custom/{recipe-name}
-    return `/cocktail/custom/${slug}`;
-  } else {
-    // Classic recipe: /cocktail/{recipe-name}
-    return `/cocktail/${slug}`;
+  
+  // Database user recipe with username
+  if (recipe.creatorUsername) {
+    return `/cocktail/${recipe.creatorUsername}/${slug}`;
   }
+  
+  // Local custom recipe
+  if (recipe.isUserRecipe) {
+    return `/cocktail/custom/${slug}`;
+  }
+  
+  // Classic recipe
+  return `/cocktail/${slug}`;
 };
 
 export default function RecipePage() {
