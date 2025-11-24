@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Users, Heart, ChefHat, ArrowLeft, Settings, MessageSquare, ThumbsUp, UserPlus } from 'lucide-react';
+import { Users, Heart, ChefHat, ArrowLeft, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, getFollowers, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -614,21 +614,13 @@ export default function UserProfile() {
                         </button>
                       )}
                       
-                      {/* Icon for activity type */}
-                      <div className="flex-shrink-0 mt-1">
-                        {activity.type === 'recipe' && <ChefHat className="w-5 h-5 text-primary" />}
-                        {activity.type === 'comment' && <MessageSquare className="w-5 h-5 text-blue-500" />}
-                        {activity.type === 'like' && <ThumbsUp className="w-5 h-5 text-red-500" />}
-                        {activity.type === 'follow' && <UserPlus className="w-5 h-5 text-green-500" />}
-                      </div>
-                      
                       <div className="flex-1 min-w-0">
                         {activity.type === 'recipe' && (
-                          <p className="text-sm text-card-foreground">
+                          <p className="text-base font-semibold text-card-foreground">
                             Created recipe{' '}
                             <button
                               onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                              className="font-medium text-primary hover:underline"
+                              className="font-semibold text-primary hover:underline"
                             >
                               {activity.recipe_name}
                             </button>
@@ -637,11 +629,11 @@ export default function UserProfile() {
                         
                         {activity.type === 'comment' && (
                           <div>
-                            <p className="text-sm text-card-foreground">
+                            <p className="text-base font-semibold text-card-foreground">
                               Commented on{' '}
                               <button
                                 onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                                className="font-medium text-primary hover:underline"
+                                className="font-semibold text-primary hover:underline"
                               >
                                 {activity.recipe_name}
                               </button>
@@ -653,11 +645,11 @@ export default function UserProfile() {
                         )}
                         
                         {activity.type === 'like' && (
-                          <p className="text-sm text-card-foreground">
+                          <p className="text-base font-semibold text-card-foreground">
                             Liked{' '}
                             <button
                               onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                              className="font-medium text-primary hover:underline"
+                              className="font-semibold text-primary hover:underline"
                             >
                               {activity.recipe_name}
                             </button>
@@ -665,11 +657,11 @@ export default function UserProfile() {
                         )}
                         
                         {activity.type === 'follow' && (
-                          <p className="text-sm text-card-foreground">
+                          <p className="text-base font-semibold text-card-foreground">
                             Started following{' '}
                             <button
                               onClick={() => navigate(`/user/${activity.followed_user_id}`)}
-                              className="font-medium text-primary hover:underline"
+                              className="font-semibold text-primary hover:underline"
                             >
                               @{activity.followed_username}
                             </button>
