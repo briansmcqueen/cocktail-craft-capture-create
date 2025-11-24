@@ -63,7 +63,7 @@ export default function UserProfile() {
   const { favoriteIds } = useFavorites();
   
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [stats, setStats] = useState<UserStats>({ followers_count: 0, following_count: 0, recipes_count: 0 });
+  const [stats, setStats] = useState<UserStats>({ followers_count: 0, following_count: 0, recipes_count: 0, favorites_count: 0 });
   const [isFollowingUser, setIsFollowingUser] = useState(false);
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -540,6 +540,13 @@ export default function UserProfile() {
                 >
                   <div className="font-bold text-lg text-foreground">{stats.recipes_count}</div>
                   <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Recipes</div>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('favorites')}
+                  className="text-center hover:opacity-80 transition-opacity"
+                >
+                  <div className="font-bold text-lg text-foreground">{stats.favorites_count}</div>
+                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Favorites</div>
                 </button>
                 <button 
                   onClick={() => setActiveTab('followers')}

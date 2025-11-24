@@ -12,6 +12,7 @@ export interface UserStats {
   followers_count: number;
   following_count: number;
   recipes_count: number;
+  favorites_count: number;
 }
 
 export interface FollowStats {
@@ -110,14 +111,21 @@ export async function getUserStats(userId: string): Promise<UserStats> {
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId);
 
-  if (followersError || followingError || recipesError) {
-    console.error('Error fetching user stats:', { followersError, followingError, recipesError });
+  // Get favorites count
+  const { count: favoritesCount, error: favoritesError } = await supabase
+    .from('favorites')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId);
+
+  if (followersError || followingError || recipesError || favoritesError) {
+    console.error('Error fetching user stats:', { followersError, followingError, recipesError, favoritesError });
   }
 
   return {
     followers_count: followersCount || 0,
     following_count: followingCount || 0,
-    recipes_count: recipesCount || 0
+    recipes_count: recipesCount || 0,
+    favorites_count: favoritesCount || 0
   };
 }
 
