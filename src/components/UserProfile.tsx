@@ -495,7 +495,6 @@ export default function UserProfile() {
 
         <TabsContent value="activity" className="mt-6">
           <div className="text-center py-12">
-            <div className="w-12 h-12 mx-auto text-gray-400 mb-4">📱</div>
             <h3 className="text-lg font-medium text-muted-foreground">Activity feed coming soon</h3>
             <p className="text-gray-500">
               This section will show recent user activity.
