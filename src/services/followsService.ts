@@ -124,10 +124,7 @@ export async function getUserStats(userId: string): Promise<UserStats> {
 export async function getFollowers(userId: string): Promise<Follow[]> {
   const { data, error } = await supabase
     .from('follows')
-    .select(`
-      *,
-      follower:profiles!follows_follower_id_fkey(*)
-    `)
+    .select('*')
     .eq('following_id', userId)
     .order('created_at', { ascending: false });
 
@@ -142,10 +139,7 @@ export async function getFollowers(userId: string): Promise<Follow[]> {
 export async function getFollowing(userId: string): Promise<Follow[]> {
   const { data, error } = await supabase
     .from('follows')
-    .select(`
-      *,
-      following:profiles!follows_following_id_fkey(*)
-    `)
+    .select('*')
     .eq('follower_id', userId)
     .order('created_at', { ascending: false });
 
