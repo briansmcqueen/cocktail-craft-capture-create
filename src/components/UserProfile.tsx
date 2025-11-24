@@ -22,7 +22,7 @@ import { getRecipesCommentCounts } from '@/services/commentsService';
 import { getUserActivity, type ActivityItem } from '@/services/activityService';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, isToday, isYesterday, isThisWeek, startOfWeek } from 'date-fns';
 
 interface Profile {
   id: string;
@@ -85,6 +85,31 @@ export default function UserProfile() {
     if (!userId) return;
     const activityData = await getUserActivity(userId);
     setActivities(activityData);
+  };
+
+  const groupActivitiesByDate = (activities: ActivityItem[]) => {
+    const groups: { [key: string]: ActivityItem[] } = {
+      'Today': [],
+      'Yesterday': [],
+      'This Week': [],
+      'Earlier': []
+    };
+
+    activities.forEach(activity => {
+      const date = new Date(activity.timestamp);
+      if (isToday(date)) {
+        groups['Today'].push(activity);
+      } else if (isYesterday(date)) {
+        groups['Yesterday'].push(activity);
+      } else if (isThisWeek(date, { weekStartsOn: 0 })) {
+        groups['This Week'].push(activity);
+      } else {
+        groups['Earlier'].push(activity);
+      }
+    });
+
+    // Remove empty groups
+    return Object.entries(groups).filter(([_, items]) => items.length > 0);
   };
 
   const fetchProfile = async () => {
@@ -581,8 +606,13 @@ export default function UserProfile() {
 
         <TabsContent value="activity" className="mt-6">
           {activities.length > 0 ? (
-            <div className="space-y-4">
-              {activities.map((activity) => (
+            <div className="space-y-6">
+              {groupActivitiesByDate(activities).map(([groupName, groupActivities]) => (
+                <div key={groupName} className="space-y-4">
+                  <h3 className="text-lg font-semibold text-foreground sticky top-0 bg-background py-2 z-10">
+                    {groupName}
+                  </h3>
+                  {groupActivities.map((activity) => (
                 <Card key={activity.id} className="overflow-hidden">
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
@@ -675,6 +705,8 @@ export default function UserProfile() {
                     </div>
                   </CardContent>
                 </Card>
+                  ))}
+                </div>
               ))}
             </div>
           ) : (
