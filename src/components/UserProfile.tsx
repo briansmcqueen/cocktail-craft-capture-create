@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Users, Heart, ChefHat, ArrowLeft, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, type UserStats } from '@/services/followsService';
+import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, getFollowers, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -50,6 +50,7 @@ export default function UserProfile() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
   const [followingUsers, setFollowingUsers] = useState<any[]>([]);
+  const [followerUsers, setFollowerUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('creations');
 
   const isOwnProfile = user?.id === userId;
@@ -63,6 +64,7 @@ export default function UserProfile() {
     fetchUserRecipes();
     fetchUserFavorites();
     fetchFollowingUsers();
+    fetchFollowerUsers();
   }, [userId]);
 
   const fetchProfile = async () => {
@@ -190,6 +192,37 @@ export default function UserProfile() {
     }
   };
 
+  const fetchFollowerUsers = async () => {
+    if (!userId) return;
+
+    try {
+      // Get the list of users following this profile
+      const follows = await getFollowers(userId);
+      
+      if (follows.length === 0) {
+        setFollowerUsers([]);
+        return;
+      }
+
+      // Get user IDs of followers
+      const followerIds = follows.map(f => f.follower_id);
+
+      // Fetch detailed profile info for all followers
+      const { data: profiles, error } = await supabase.rpc('get_public_profiles', {
+        user_ids: followerIds as any
+      });
+
+      if (error) {
+        console.error('Error fetching follower user profiles:', error);
+        return;
+      }
+
+      setFollowerUsers(profiles || []);
+    } catch (error) {
+      console.error('Error fetching follower users:', error);
+    }
+  };
+
   const handleFollowToggle = async () => {
     if (!userId || !user) return;
 
@@ -310,6 +343,7 @@ export default function UserProfile() {
           <TabsTrigger value="favorites">
             Favorites
           </TabsTrigger>
+          <TabsTrigger value="followers">Followers</TabsTrigger>
           <TabsTrigger value="following">Following</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
@@ -360,6 +394,30 @@ export default function UserProfile() {
               This section will show favorited recipes.
             </p>
           </div>
+        </TabsContent>
+
+        <TabsContent value="followers" className="mt-6">
+          {followerUsers.length > 0 ? (
+            <div className="space-y-4">
+              {followerUsers.map((follower) => (
+                <UserCard
+                  key={follower.id}
+                  userId={follower.id}
+                  username={follower.username}
+                  avatarUrl={follower.avatar_url}
+                  isCurrentUser={user?.id === follower.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-muted-foreground">No followers yet</h3>
+              <p className="text-gray-500">
+                {isOwnProfile ? "Share your recipes to gain followers!" : "This user doesn't have any followers yet."}
+              </p>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="following" className="mt-6">
