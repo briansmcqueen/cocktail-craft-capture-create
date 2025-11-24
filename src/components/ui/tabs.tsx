@@ -8,18 +8,58 @@ const Tabs = TabsPrimitive.Root
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "relative inline-flex h-auto items-center justify-start gap-6 p-0 text-muted-foreground border-b border-border overflow-x-auto scrollbar-hide md:overflow-x-visible",
-      "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-8 before:bg-gradient-to-r before:from-background before:to-transparent before:pointer-events-none before:z-10 md:before:hidden",
-      "after:content-[''] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-8 after:bg-gradient-to-l after:from-background after:to-transparent after:pointer-events-none after:z-10 md:after:hidden",
-      className
-    )}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const [showLeftGradient, setShowLeftGradient] = React.useState(false)
+  const [showRightGradient, setShowRightGradient] = React.useState(false)
+  const listRef = React.useRef<HTMLDivElement>(null)
+
+  const checkScroll = React.useCallback(() => {
+    const element = listRef.current
+    if (!element) return
+
+    const { scrollLeft, scrollWidth, clientWidth } = element
+    setShowLeftGradient(scrollLeft > 0)
+    setShowRightGradient(scrollLeft < scrollWidth - clientWidth - 1)
+  }, [])
+
+  React.useEffect(() => {
+    const element = listRef.current
+    if (!element) return
+
+    checkScroll()
+
+    element.addEventListener('scroll', checkScroll)
+    window.addEventListener('resize', checkScroll)
+
+    return () => {
+      element.removeEventListener('scroll', checkScroll)
+      window.removeEventListener('resize', checkScroll)
+    }
+  }, [checkScroll])
+
+  return (
+    <div className="relative">
+      {showLeftGradient && (
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10 md:hidden" />
+      )}
+      {showRightGradient && (
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10 md:hidden" />
+      )}
+      <TabsPrimitive.List
+        ref={(node) => {
+          listRef.current = node
+          if (typeof ref === 'function') ref(node)
+          else if (ref) ref.current = node
+        }}
+        className={cn(
+          "inline-flex h-auto items-center justify-start gap-6 p-0 text-muted-foreground border-b border-border overflow-x-auto scrollbar-hide md:overflow-x-visible",
+          className
+        )}
+        {...props}
+      />
+    </div>
+  )
+})
 TabsList.displayName = TabsPrimitive.List.displayName
 
 const TabsTrigger = React.forwardRef<
