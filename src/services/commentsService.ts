@@ -80,7 +80,19 @@ export async function addComment(
     return false;
   }
 
-  const { error } = await supabase
+  // Get the recipe to find the author
+  const { data: recipe, error: recipeError } = await supabase
+    .from('recipes')
+    .select('user_id, name')
+    .eq('id', recipeId)
+    .single();
+
+  if (recipeError) {
+    console.error('Error fetching recipe:', recipeError);
+    return false;
+  }
+
+  const { data: comment, error } = await supabase
     .from('recipe_comments')
     .insert({
       recipe_id: recipeId,
@@ -88,11 +100,30 @@ export async function addComment(
       content,
       category,
       photo_url: photoUrl
-    });
+    })
+    .select()
+    .single();
 
   if (error) {
     console.error('Error adding comment:', error);
     return false;
+  }
+
+  // Create notification for the recipe author (if not commenting on own recipe)
+  if (recipe && recipe.user_id !== user.id) {
+    const { error: notificationError } = await supabase
+      .from('social_notifications')
+      .insert({
+        user_id: recipe.user_id,
+        actor_id: user.id,
+        notification_type: 'comment',
+        recipe_id: recipeId,
+        comment_id: comment.id
+      });
+
+    if (notificationError) {
+      console.error('Error creating comment notification:', notificationError);
+    }
   }
 
   return true;
