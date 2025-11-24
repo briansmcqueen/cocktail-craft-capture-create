@@ -308,14 +308,20 @@ export default function UserProfile() {
                   <div className="font-bold text-lg">{stats.recipes_count}</div>
                   <div className="text-sm text-muted-foreground">Recipes</div>
                 </div>
-                <div className="text-center">
-                  <div className="font-bold text-lg">{stats.followers_count}</div>
-                  <div className="text-sm text-muted-foreground">Followers</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-bold text-lg">{stats.following_count}</div>
-                  <div className="text-sm text-muted-foreground">Following</div>
-                </div>
+                <button 
+                  onClick={() => setActiveTab('followers')}
+                  className="text-center hover:opacity-80 transition-opacity"
+                >
+                  <div className="font-bold text-lg text-foreground">{stats.followers_count}</div>
+                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Followers</div>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('following')}
+                  className="text-center hover:opacity-80 transition-opacity"
+                >
+                  <div className="font-bold text-lg text-foreground">{stats.following_count}</div>
+                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Following</div>
+                </button>
               </div>
 
               {/* Follow Button */}
