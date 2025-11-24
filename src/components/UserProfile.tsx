@@ -25,6 +25,7 @@ import RecipeGrid from './RecipeGrid';
 import UserCard from '@/components/social/UserCard';
 import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import type { Cocktail, Difficulty } from '@/data/classicCocktails';
+import { classicCocktails } from '@/data/classicCocktails';
 import { getRecipesLikeCounts } from '@/services/likesService';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
@@ -66,11 +67,12 @@ export default function UserProfile() {
   const [isFollowingUser, setIsFollowingUser] = useState(false);
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<Cocktail[]>([]);
   const [followingUsers, setFollowingUsers] = useState<any[]>([]);
   const [followerUsers, setFollowerUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('recipes');
   const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
+  const [favoriteStats, setFavoriteStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [activityFilter, setActivityFilter] = useState<'all' | 'recipe' | 'comment' | 'like' | 'follow'>('all');
 
@@ -229,23 +231,92 @@ export default function UserProfile() {
   const fetchUserFavorites = async () => {
     if (!userId) return;
 
-    const { data, error } = await supabase
+    // Fetch favorites, filtering by visibility if not own profile
+    const query = supabase
       .from('favorites')
-      .select(`
-        recipe_id,
-        created_at
-      `)
+      .select('recipe_id, created_at')
       .eq('user_id', userId);
+
+    // Only show public favorites if viewing someone else's profile
+    if (!isOwnProfile) {
+      query.eq('is_public', true);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching user favorites:', error);
       return;
     }
 
-    // For now, we'll need to fetch recipes based on IDs
-    // This is a simplified version - in a real app you'd want to join with recipes table
     const favoriteIds = data?.map(f => f.recipe_id) || [];
-    setFavoriteRecipes(favoriteIds); // Simplified for now
+    
+    if (favoriteIds.length === 0) {
+      setFavoriteRecipes([]);
+      return;
+    }
+
+    // Separate classic cocktails and user recipes
+    const classicFavorites = favoriteIds.filter(id => !id.includes('-'));
+    const userRecipeIds = favoriteIds.filter(id => id.includes('-'));
+
+    const favoriteCocktails: Cocktail[] = [];
+
+    // Get classic cocktails
+    if (classicFavorites.length > 0) {
+      const classics = classicCocktails.filter(c => classicFavorites.includes(c.id));
+      favoriteCocktails.push(...classics);
+    }
+
+    // Get user recipes from database
+    if (userRecipeIds.length > 0) {
+      const { data: userRecipes, error: recipesError } = await supabase
+        .from('recipes')
+        .select('*')
+        .in('id', userRecipeIds)
+        .eq('is_public', true);
+
+      if (!recipesError && userRecipes) {
+        const transformedRecipes: Cocktail[] = userRecipes.map(recipe => ({
+          id: recipe.id,
+          name: recipe.name,
+          notes: recipe.description || undefined,
+          image: recipe.image_url || '',
+          tags: recipe.tags || [],
+          prepTime: `${recipe.prep_time || 5} min`,
+          ingredients: recipe.ingredients,
+          steps: recipe.instructions,
+          isUserRecipe: true,
+        }));
+        favoriteCocktails.push(...transformedRecipes);
+      }
+    }
+
+    setFavoriteRecipes(favoriteCocktails);
+
+    // Fetch stats for favorites
+    if (favoriteIds.length > 0) {
+      const [likeCounts, favCounts, commentCounts, ratingsResponse] = await Promise.all([
+        getRecipesLikeCounts(favoriteIds),
+        getRecipesFavoriteCounts(favoriteIds),
+        getRecipesCommentCounts(favoriteIds),
+        supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: favoriteIds })
+      ]);
+
+      const ratingsData = ratingsResponse.data as Array<{ recipe_id: string; averageRating: number; totalRatings: number }> | null;
+
+      const stats: Record<string, { likes: number; favorites: number; comments: number; rating: number }> = {};
+      favoriteIds.forEach(id => {
+        const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
+        stats[id] = {
+          likes: likeCounts[id] || 0,
+          favorites: favCounts[id] || 0,
+          comments: commentCounts[id] || 0,
+          rating: ratingInfo?.averageRating || 0
+        };
+      });
+      setFavoriteStats(stats);
+    }
   };
 
   const fetchFollowingUsers = async () => {
@@ -564,13 +635,35 @@ export default function UserProfile() {
         </TabsContent>
 
         <TabsContent value="favorites" className="mt-6">
-          <div className="text-center py-12">
-            <Heart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground">Favorites coming soon</h3>
-            <p className="text-gray-500">
-              This section will show favorited recipes.
-            </p>
-          </div>
+          {favoriteRecipes.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {favoriteRecipes.map((recipe) => {
+                const stats = favoriteStats[recipe.id] || { likes: 0, favorites: 0, comments: 0, rating: 0 };
+                
+                const cocktail: Cocktail = {
+                  ...recipe,
+                  likeCount: stats.likes,
+                  commentCount: stats.comments,
+                  averageRating: stats.rating
+                };
+                
+                return (
+                  <UniversalRecipeCard
+                    key={recipe.id}
+                    recipe={cocktail}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Heart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-muted-foreground">No favorites yet</h3>
+              <p className="text-gray-500">
+                {isOwnProfile ? "Start favoriting recipes to see them here!" : "This user hasn't favorited any recipes yet."}
+              </p>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="followers" className="mt-6">
