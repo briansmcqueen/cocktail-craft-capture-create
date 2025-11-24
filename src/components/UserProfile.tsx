@@ -7,9 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
   DropdownMenu, 
-  DropdownMenuCheckboxItem, 
   DropdownMenuContent, 
   DropdownMenuLabel, 
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
@@ -71,12 +72,7 @@ export default function UserProfile() {
   const [activeTab, setActiveTab] = useState('recipes');
   const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
   const [activities, setActivities] = useState<ActivityItem[]>([]);
-  const [activityFilters, setActivityFilters] = useState({
-    recipe: true,
-    comment: true,
-    like: true,
-    follow: true
-  });
+  const [activityFilter, setActivityFilter] = useState<'all' | 'recipe' | 'comment' | 'like' | 'follow'>('all');
 
   const isOwnProfile = user?.id === userId;
 
@@ -101,12 +97,11 @@ export default function UserProfile() {
     setActivities(activityData);
   };
 
-  const toggleActivityFilter = (type: 'recipe' | 'comment' | 'like' | 'follow') => {
-    setActivityFilters(prev => ({ ...prev, [type]: !prev[type] }));
-  };
-
   const getFilteredActivities = () => {
-    return activities.filter(activity => activityFilters[activity.type]);
+    if (activityFilter === 'all') {
+      return activities;
+    }
+    return activities.filter(activity => activity.type === activityFilter);
   };
 
   const groupActivitiesByDate = (activities: ActivityItem[]) => {
@@ -628,46 +623,41 @@ export default function UserProfile() {
 
         <TabsContent value="activity" className="mt-6">
           {/* Activity Filters */}
-          <div className="mb-6 flex items-center justify-between">
-            <h3 className="text-sm font-medium text-muted-foreground">Recent Activity</h3>
+          <div className="mb-6 flex items-center justify-start">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Filter className="w-4 h-4" />
-                  Filter
+                  {activityFilter === 'all' ? 'All Activity' : 
+                   activityFilter === 'recipe' ? 'Recipes' :
+                   activityFilter === 'comment' ? 'Comments' :
+                   activityFilter === 'like' ? 'Likes' : 'Follows'}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuLabel>Activity Types</DropdownMenuLabel>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuLabel>Filter Activity</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={activityFilters.recipe}
-                  onCheckedChange={() => toggleActivityFilter('recipe')}
-                >
-                  <ChefHat className="w-4 h-4 mr-2" />
-                  Recipes
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={activityFilters.comment}
-                  onCheckedChange={() => toggleActivityFilter('comment')}
-                >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Comments
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={activityFilters.like}
-                  onCheckedChange={() => toggleActivityFilter('like')}
-                >
-                  <ThumbsUp className="w-4 h-4 mr-2" />
-                  Likes
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={activityFilters.follow}
-                  onCheckedChange={() => toggleActivityFilter('follow')}
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Follows
-                </DropdownMenuCheckboxItem>
+                <DropdownMenuRadioGroup value={activityFilter} onValueChange={(value) => setActivityFilter(value as any)}>
+                  <DropdownMenuRadioItem value="all">
+                    All Activity
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="recipe">
+                    <ChefHat className="w-4 h-4 mr-2" />
+                    Recipes
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="comment">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Comments
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="like">
+                    <ThumbsUp className="w-4 h-4 mr-2" />
+                    Likes
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="follow">
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Follows
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
