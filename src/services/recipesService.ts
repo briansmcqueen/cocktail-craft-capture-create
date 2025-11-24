@@ -38,6 +38,8 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     notes: recipe.description || undefined,
     tags: recipe.tags || [],
     createdBy: profile?.username || profile?.full_name,
+    creatorUsername: profile?.username || undefined,
+    creatorUserId: user.id,
     isUserRecipe: true
   })) || [];
 
