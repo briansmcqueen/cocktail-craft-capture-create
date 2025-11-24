@@ -273,7 +273,7 @@ export default function Settings() {
                           <Mail className="h-4 w-4" />
                           Email Address
                         </Label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                           <Input
                             id="email"
                             type="email"
