@@ -19,6 +19,8 @@ import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 import { getRecipesLikeCounts } from '@/services/likesService';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
+import TopNavigation from '@/components/TopNavigation';
+import Sidebar from '@/components/Sidebar';
 
 interface Profile {
   id: string;
@@ -60,6 +62,8 @@ export default function UserProfile() {
   const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
 
   const isOwnProfile = user?.id === userId;
+
+  const handleNoOp = () => {};
 
   useEffect(() => {
     if (!userId) return;
@@ -273,11 +277,36 @@ export default function UserProfile() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-48 bg-gray-200 rounded-lg"></div>
-          <div className="h-6 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div className="min-h-screen bg-background">
+        <TopNavigation 
+          user={user}
+          activeLibrary=""
+          onLibrarySelect={handleNoOp}
+          onAddRecipe={handleNoOp}
+          onSignInClick={handleNoOp}
+          onSignUpClick={handleNoOp}
+          onProfileClick={handleNoOp}
+          onMyRecipesClick={handleNoOp}
+          onFavoritesClick={handleNoOp}
+        />
+        <div className="flex h-full">
+          <div className="hidden md:block">
+            <Sidebar 
+              active=""
+              onSelect={handleNoOp}
+              onAdd={handleNoOp}
+              user={user}
+            />
+          </div>
+          <main className="flex-1 overflow-auto lg:ml-0">
+            <div className="max-w-4xl mx-auto p-6">
+              <div className="animate-pulse space-y-6">
+                <div className="h-48 bg-gray-200 rounded-lg"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     );
@@ -285,18 +314,65 @@ export default function UserProfile() {
 
   if (!profile) {
     return (
-      <div className="max-w-4xl mx-auto p-6 text-center">
-        <h1 className="text-2xl font-bold text-foreground">User not found</h1>
-        <Button onClick={() => navigate('/')} className="mt-4">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Go Back
-        </Button>
+      <div className="min-h-screen bg-background">
+        <TopNavigation 
+          user={user}
+          activeLibrary=""
+          onLibrarySelect={handleNoOp}
+          onAddRecipe={handleNoOp}
+          onSignInClick={handleNoOp}
+          onSignUpClick={handleNoOp}
+          onProfileClick={handleNoOp}
+          onMyRecipesClick={handleNoOp}
+          onFavoritesClick={handleNoOp}
+        />
+        <div className="flex h-full">
+          <div className="hidden md:block">
+            <Sidebar 
+              active=""
+              onSelect={handleNoOp}
+              onAdd={handleNoOp}
+              user={user}
+            />
+          </div>
+          <main className="flex-1 overflow-auto lg:ml-0">
+            <div className="max-w-4xl mx-auto p-6 text-center">
+              <h1 className="text-2xl font-bold text-foreground">User not found</h1>
+              <Button onClick={() => navigate('/')} className="mt-4">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Go Back
+              </Button>
+            </div>
+          </main>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-background">
+      <TopNavigation 
+        user={user}
+        activeLibrary=""
+        onLibrarySelect={handleNoOp}
+        onAddRecipe={handleNoOp}
+        onSignInClick={handleNoOp}
+        onSignUpClick={handleNoOp}
+        onProfileClick={handleNoOp}
+        onMyRecipesClick={handleNoOp}
+        onFavoritesClick={handleNoOp}
+      />
+      <div className="flex h-full">
+        <div className="hidden md:block">
+          <Sidebar 
+            active=""
+            onSelect={handleNoOp}
+            onAdd={handleNoOp}
+            user={user}
+          />
+        </div>
+        <main className="flex-1 overflow-auto lg:ml-0">
+          <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={() => navigate('/')}>
@@ -502,6 +578,9 @@ export default function UserProfile() {
           </div>
         </TabsContent>
       </Tabs>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
