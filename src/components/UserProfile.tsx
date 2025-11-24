@@ -642,19 +642,15 @@ export default function UserProfile() {
                     All Activity
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="recipe">
-                    <ChefHat className="w-4 h-4 mr-2" />
                     Recipes
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="comment">
-                    <MessageSquare className="w-4 h-4 mr-2" />
                     Comments
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="like">
-                    <ThumbsUp className="w-4 h-4 mr-2" />
                     Likes
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="follow">
-                    <UserPlus className="w-4 h-4 mr-2" />
                     Follows
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
