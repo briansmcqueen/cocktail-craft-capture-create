@@ -224,9 +224,6 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
       console.log('Recipe not accessible due to privacy settings');
       return null;
     }
-
-    // Convert URL slug back to recipe name for searching
-    const searchName = recipeName.replace(/-/g, ' ');
     
     // Then find the recipe by that user with matching name
     const { data: recipes, error: recipeError } = await supabase
@@ -240,10 +237,16 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
       return null;
     }
 
-    // Find recipe with matching name (case-insensitive)
-    const recipe = recipes.find(r => r.name.toLowerCase() === searchName.toLowerCase());
+    // Helper function to convert recipe name to slug (same as in RecipePage)
+    const nameToSlug = (name: string): string => {
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    };
+
+    // Find recipe with matching slug
+    const recipe = recipes.find(r => nameToSlug(r.name) === recipeName);
     
     if (!recipe) {
+      console.error('Recipe not found with slug:', recipeName, 'Available:', recipes.map(r => ({ name: r.name, slug: nameToSlug(r.name) })));
       return null;
     }
 
@@ -256,6 +259,9 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
       notes: recipe.description || undefined,
       tags: recipe.tags || [],
       createdBy: publicProfile.username || undefined,
+      creatorUsername: publicProfile.username || undefined,
+      creatorAvatar: publicProfile.avatar_url || undefined,
+      creatorUserId: publicProfile.id,
       isUserRecipe: true
     };
   } catch (error) {
