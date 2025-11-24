@@ -376,7 +376,7 @@ export default function Settings() {
 
                     {/* Change Password Form */}
                     {!showPasswordChange ? (
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                           <h3 className="font-semibold text-foreground">Password</h3>
                           <p className="text-sm text-muted-foreground">Update your password or send a reset email</p>
@@ -385,7 +385,7 @@ export default function Settings() {
                           type="button"
                           variant="outline"
                           onClick={() => setShowPasswordChange(true)}
-                          className="rounded-organic-sm border-border"
+                          className="rounded-organic-sm border-border w-full sm:w-auto"
                         >
                           Change Password
                         </Button>
