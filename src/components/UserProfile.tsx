@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Users, Heart, ChefHat, ArrowLeft, Settings } from 'lucide-react';
+import { Users, Heart, ChefHat, ArrowLeft, Settings, Filter } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, getFollowers, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -63,6 +63,12 @@ export default function UserProfile() {
   const [activeTab, setActiveTab] = useState('recipes');
   const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
   const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [activityFilters, setActivityFilters] = useState({
+    recipe: true,
+    comment: true,
+    like: true,
+    follow: true
+  });
 
   const isOwnProfile = user?.id === userId;
 
@@ -85,6 +91,14 @@ export default function UserProfile() {
     if (!userId) return;
     const activityData = await getUserActivity(userId);
     setActivities(activityData);
+  };
+
+  const toggleActivityFilter = (type: 'recipe' | 'comment' | 'like' | 'follow') => {
+    setActivityFilters(prev => ({ ...prev, [type]: !prev[type] }));
+  };
+
+  const getFilteredActivities = () => {
+    return activities.filter(activity => activityFilters[activity.type]);
   };
 
   const groupActivitiesByDate = (activities: ActivityItem[]) => {
@@ -605,9 +619,55 @@ export default function UserProfile() {
         </TabsContent>
 
         <TabsContent value="activity" className="mt-6">
-          {activities.length > 0 ? (
+          {/* Activity Filters */}
+          <div className="mb-6 p-4 bg-card border border-border rounded-lg">
+            <div className="flex items-center gap-2 mb-3">
+              <Filter className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">Filter by type</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={activityFilters.recipe ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleActivityFilter('recipe')}
+                className="gap-2"
+              >
+                <ChefHat className="w-4 h-4" />
+                Recipes
+              </Button>
+              <Button
+                variant={activityFilters.comment ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleActivityFilter('comment')}
+                className="gap-2"
+              >
+                <span className="text-sm">💬</span>
+                Comments
+              </Button>
+              <Button
+                variant={activityFilters.like ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleActivityFilter('like')}
+                className="gap-2"
+              >
+                <Heart className="w-4 h-4" />
+                Likes
+              </Button>
+              <Button
+                variant={activityFilters.follow ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleActivityFilter('follow')}
+                className="gap-2"
+              >
+                <Users className="w-4 h-4" />
+                Follows
+              </Button>
+            </div>
+          </div>
+
+          {getFilteredActivities().length > 0 ? (
             <div className="space-y-6">
-              {groupActivitiesByDate(activities).map(([groupName, groupActivities]) => (
+              {groupActivitiesByDate(getFilteredActivities()).map(([groupName, groupActivities]) => (
                 <div key={groupName} className="space-y-4">
                   <h3 className="text-lg font-semibold text-foreground sticky top-0 bg-background py-2 z-10">
                     {groupName}
@@ -712,9 +772,15 @@ export default function UserProfile() {
           ) : (
             <div className="text-center py-12">
               <ChefHat className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">No activity yet</h3>
+              <h3 className="text-lg font-medium text-muted-foreground">
+                {activities.length === 0 ? "No activity yet" : "No activities match your filters"}
+              </h3>
               <p className="text-gray-500">
-                {isOwnProfile ? "Start creating recipes and engaging with the community!" : "This user hasn't been active yet."}
+                {activities.length === 0
+                  ? isOwnProfile 
+                    ? "Start creating recipes and engaging with the community!" 
+                    : "This user hasn't been active yet."
+                  : "Try adjusting your filters to see more activities."}
               </p>
             </div>
           )}
