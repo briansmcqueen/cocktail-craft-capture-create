@@ -5,7 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Users, Heart, ChefHat, ArrowLeft, Settings, Filter } from 'lucide-react';
+import { 
+  DropdownMenu, 
+  DropdownMenuCheckboxItem, 
+  DropdownMenuContent, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { Users, Heart, ChefHat, ArrowLeft, Settings, Filter, MessageSquare, ThumbsUp, UserPlus } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, getFollowers, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -620,49 +628,48 @@ export default function UserProfile() {
 
         <TabsContent value="activity" className="mt-6">
           {/* Activity Filters */}
-          <div className="mb-6 p-4 bg-card border border-border rounded-lg">
-            <div className="flex items-center gap-2 mb-3">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">Filter by type</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant={activityFilters.recipe ? "default" : "outline"}
-                size="sm"
-                onClick={() => toggleActivityFilter('recipe')}
-                className="gap-2"
-              >
-                <ChefHat className="w-4 h-4" />
-                Recipes
-              </Button>
-              <Button
-                variant={activityFilters.comment ? "default" : "outline"}
-                size="sm"
-                onClick={() => toggleActivityFilter('comment')}
-                className="gap-2"
-              >
-                <span className="text-sm">💬</span>
-                Comments
-              </Button>
-              <Button
-                variant={activityFilters.like ? "default" : "outline"}
-                size="sm"
-                onClick={() => toggleActivityFilter('like')}
-                className="gap-2"
-              >
-                <Heart className="w-4 h-4" />
-                Likes
-              </Button>
-              <Button
-                variant={activityFilters.follow ? "default" : "outline"}
-                size="sm"
-                onClick={() => toggleActivityFilter('follow')}
-                className="gap-2"
-              >
-                <Users className="w-4 h-4" />
-                Follows
-              </Button>
-            </div>
+          <div className="mb-6 flex items-center justify-between">
+            <h3 className="text-sm font-medium text-muted-foreground">Recent Activity</h3>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Filter className="w-4 h-4" />
+                  Filter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Activity Types</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={activityFilters.recipe}
+                  onCheckedChange={() => toggleActivityFilter('recipe')}
+                >
+                  <ChefHat className="w-4 h-4 mr-2" />
+                  Recipes
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={activityFilters.comment}
+                  onCheckedChange={() => toggleActivityFilter('comment')}
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Comments
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={activityFilters.like}
+                  onCheckedChange={() => toggleActivityFilter('like')}
+                >
+                  <ThumbsUp className="w-4 h-4 mr-2" />
+                  Likes
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={activityFilters.follow}
+                  onCheckedChange={() => toggleActivityFilter('follow')}
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Follows
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {getFilteredActivities().length > 0 ? (
