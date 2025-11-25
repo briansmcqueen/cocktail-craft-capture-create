@@ -18,6 +18,11 @@ import { getUserCustomIngredients, CustomIngredient } from "@/services/customIng
 import { barPresetsService, type BarPreset } from "@/services/barPresetsService";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 import { useSearchShortcut } from "@/hooks/useSearchShortcut";
+import whiskeImage from "@/assets/ingredients/whiskey.jpg";
+import ginImage from "@/assets/ingredients/gin.jpg";
+import vodkaImage from "@/assets/ingredients/vodka.jpg";
+import liqueursImage from "@/assets/ingredients/liqueurs.jpg";
+import winesImage from "@/assets/ingredients/wines.jpg";
 
 interface IngredientSelectorProps {
   allIngredients: Ingredient[];
@@ -58,6 +63,27 @@ export default function IngredientSelector({
   const [presetName, setPresetName] = useState("");
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
   const [editingPresetName, setEditingPresetName] = useState("");
+
+  // Helper to get ingredient image based on category/subcategory
+  const getIngredientImage = (ingredient: Ingredient): string => {
+    const category = ingredient.category.toLowerCase();
+    const subCategory = ingredient.subCategory.toLowerCase();
+    
+    if (category.includes("spirit")) {
+      if (subCategory.includes("gin")) return ginImage;
+      if (subCategory.includes("vodka")) return vodkaImage;
+      if (subCategory.includes("whiskey") || subCategory.includes("bourbon") || subCategory.includes("scotch") || subCategory.includes("rye")) return whiskeImage;
+      if (subCategory.includes("rum") || subCategory.includes("tequila")) return whiskeImage;
+      return whiskeImage;
+    }
+    if (category.includes("liqueur")) return liqueursImage;
+    if (category.includes("wine") || category.includes("vermouth")) return winesImage;
+    if (subCategory.includes("gin")) return ginImage;
+    if (subCategory.includes("vodka")) return vodkaImage;
+    
+    // Default fallback
+    return whiskeImage;
+  };
 
   const filteredIngredients = useMemo(() => {
     if (!searchValue) return allIngredients.filter(i => !myBarIngredients.includes(i.id));
@@ -388,8 +414,51 @@ export default function IngredientSelector({
           />
         </div>
 
+        {/* Popular Ingredients - Visual Quick Add */}
+        {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
+          <Card className="p-4 bg-medium-charcoal border-light-charcoal">
+            <h4 className="text-sm font-medium text-pure-white mb-3">Popular Ingredients</h4>
+            <p className="text-xs text-soft-gray mb-3">Quick-add these common bar staples</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {["vodka", "gin", "whiskey", "rum", "tequila", "triple-sec", "lime-juice", "simple-syrup"].map((ingredientId) => {
+                const ingredient = allIngredients.find(i => i.id === ingredientId);
+                if (!ingredient) return null;
+                
+                return (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => addIngredient(ingredient.id)}
+                    className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-accent/40 transition-all duration-300 hover:scale-105"
+                  >
+                    {/* Ingredient Image */}
+                    <div 
+                      className="h-28 w-full bg-cover bg-center"
+                      style={{ backgroundImage: `url(${getIngredientImage(ingredient)})` }}
+                    />
+                    
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                    
+                    {/* Content */}
+                    <div className="absolute inset-0 p-2.5 flex flex-col justify-end">
+                      <h5 className="text-xs sm:text-sm font-semibold text-pure-white line-clamp-2 group-hover:text-accent transition-colors">
+                        {ingredient.name}
+                      </h5>
+                    </div>
+                    
+                    {/* Hover effect - Add icon */}
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-accent/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-pure-white text-base font-bold leading-none">+</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+        )}
+
         {/* Category Browsing Section - Outside of search input */}
-        {!searchValue && myBarIngredients.length === 0 && (
+        {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
           <Card className="p-4 bg-medium-charcoal border-light-charcoal">
             <h4 className="text-sm font-medium text-pure-white mb-3">Browse by Category</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
@@ -414,39 +483,58 @@ export default function IngredientSelector({
         {/* Category Ingredients Display */}
         {selectedCategory && categoryIngredients.length > 0 && (
           <Card className="p-4 bg-medium-charcoal border-light-charcoal">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-medium text-pure-white flex items-center gap-2">
-                {React.createElement(categoryIcons[selectedCategory] || Milk, { className: "h-4 w-4" })}
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-base font-semibold text-pure-white flex items-center gap-2">
+                {React.createElement(categoryIcons[selectedCategory] || Milk, { className: "h-5 w-5" })}
                 {selectedCategory}
+                <Badge variant="secondary" className="ml-2 bg-accent/20 border-accent/40 text-pure-white">
+                  {categoryIngredients.length}
+                </Badge>
               </h4>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setSelectedCategory(null)}
-                className="h-7 text-xs"
+                className="h-8 text-xs hover:bg-light-charcoal"
               >
                 <X className="h-3 w-3 mr-1" />
-                Back
+                Back to Categories
               </Button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-2">
               {categoryIngredients.map((ingredient) => (
-                <Button
+                <button
                   key={ingredient.id}
-                  variant="outline"
                   onClick={() => {
                     addIngredient(ingredient.id);
                     setSelectedCategory(null);
                   }}
-                  className="h-auto py-3 flex flex-col items-center justify-center gap-1 bg-light-charcoal/50 border-light-charcoal hover:bg-primary/10 hover:border-primary/40 text-left"
+                  className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-primary/40 transition-all duration-300 hover:scale-105"
                 >
-                  <span className="text-sm font-medium text-pure-white line-clamp-2 text-center">
-                    {ingredient.name}
-                  </span>
-                  <span className="text-xs text-soft-gray">
-                    {ingredient.subCategory}
-                  </span>
-                </Button>
+                  {/* Ingredient Image */}
+                  <div 
+                    className="h-32 w-full bg-cover bg-center"
+                    style={{ backgroundImage: `url(${getIngredientImage(ingredient)})` }}
+                  />
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  
+                  {/* Content */}
+                  <div className="absolute inset-0 p-3 flex flex-col justify-end">
+                    <h5 className="text-sm font-semibold text-pure-white line-clamp-2 mb-1 group-hover:text-accent transition-colors">
+                      {ingredient.name}
+                    </h5>
+                    <Badge variant="outline" className="text-[10px] border-primary/30 text-soft-gray w-fit">
+                      {ingredient.subCategory}
+                    </Badge>
+                  </div>
+                  
+                  {/* Hover effect - Add icon */}
+                  <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-pure-white text-lg font-bold leading-none">+</span>
+                  </div>
+                </button>
               ))}
             </div>
           </Card>
