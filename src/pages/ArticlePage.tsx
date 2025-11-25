@@ -175,7 +175,7 @@ export default function ArticlePage() {
             {article.tags && article.tags.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
-                  <TagBadge key={tag} className="bg-accent/20 text-secondary border border-accent/30 rounded-organic-sm">{tag}</TagBadge>
+                  <TagBadge key={tag}>{tag}</TagBadge>
                 ))}
               </div>
             )}

@@ -81,14 +81,14 @@ export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagCl
               {(recipe.tags ?? []).slice(0, 3).map(tag => (
                 <TagBadge 
                   key={tag} 
-                  className={`bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm ${onTagClick ? 'cursor-pointer hover:bg-accent/30' : ''}`}
+                  className={onTagClick ? 'cursor-pointer hover:bg-light-charcoal' : ''}
                   onClick={onTagClick ? handleTagClick(tag) : undefined}
                 >
                   {tag}
                 </TagBadge>
               ))}
               {(recipe.tags ?? []).length > 3 && (
-                <TagBadge className="bg-accent/20 text-secondary border border-accent/30 text-xs rounded-organic-sm">+{(recipe.tags ?? []).length - 3}</TagBadge>
+                <TagBadge>+{(recipe.tags ?? []).length - 3}</TagBadge>
               )}
             </div>
           )}
