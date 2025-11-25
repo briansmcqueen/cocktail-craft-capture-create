@@ -734,10 +734,7 @@ export default function IngredientSelector({
                 return (
                   <button
                     key={ingredient.id}
-                    onClick={() => {
-                      addIngredient(ingredient.id);
-                      setSelectedCategory(null);
-                    }}
+                    onClick={() => addIngredient(ingredient.id)}
                     className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-primary/40 transition-all duration-200 animate-fade-in"
                     style={{ animationDelay: `${index * 30}ms` }}
                   >
