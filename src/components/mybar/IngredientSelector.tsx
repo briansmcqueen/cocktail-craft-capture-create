@@ -430,12 +430,6 @@ export default function IngredientSelector({
 
   return (
     <div className="space-y-6">
-      {/* Main Page Heading */}
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold text-pure-white">My Bar</h1>
-        <p className="text-sm text-soft-gray">Build your home bar inventory and discover what cocktails you can make</p>
-      </div>
-
       {/* Popular Bar Setups - Always show */}
       <div className="space-y-2">
         <h2 className="text-lg font-semibold text-pure-white">Popular Bar Setups</h2>
@@ -595,12 +589,9 @@ export default function IngredientSelector({
 
       {/* Your Bar Overview Section */}
       {myBarIngredients.length > 0 && (
-        <Card className="bg-medium-charcoal border-light-charcoal">
-          <div
-            onClick={toggleYourBar}
-            className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-organic-md cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold text-pure-white">
                 Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
               </h2>
@@ -612,15 +603,12 @@ export default function IngredientSelector({
               )}
             </div>
             <div className="flex items-center gap-2">
-              {user && myBarIngredients.length > 0 && !yourBarCollapsed && (
+              {user && myBarIngredients.length > 0 && (
                 <>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowClearAllDialog(true);
-                    }}
+                    onClick={() => setShowClearAllDialog(true)}
                     className="text-xs h-7 text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-3 w-3 mr-1" />
@@ -629,10 +617,7 @@ export default function IngredientSelector({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowSaveDialog(true);
-                    }}
+                    onClick={() => setShowSaveDialog(true)}
                     className="text-xs h-7"
                   >
                     <Save className="h-3 w-3 mr-1" />
@@ -640,53 +625,62 @@ export default function IngredientSelector({
                   </Button>
                 </>
               )}
-              {yourBarCollapsed ? (
-                <ChevronDown className="h-5 w-5 text-muted-foreground" />
-              ) : (
-                <ChevronUp className="h-5 w-5 text-muted-foreground" />
-              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleYourBar}
+                className="h-8 w-8"
+              >
+                {yourBarCollapsed ? (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                )}
+              </Button>
             </div>
           </div>
           
           {!yourBarCollapsed && (
-            <div className="px-4 pb-4 space-y-4">
-              {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => {
-                const isCollapsed = collapsedCategories.has(category);
-                return (
-                  <div key={category}>
-                    <button
-                      onClick={() => toggleCategoryCollapse(category)}
-                      className="flex items-center gap-2 mb-2 w-full hover:bg-light-charcoal/30 px-2 py-1 rounded-organic-sm transition-colors"
-                    >
-                      <h3 className="text-sm font-medium text-light-text flex-1 text-left">{category}</h3>
-                      <span className="text-xs text-muted-foreground">({ingredients.length})</span>
-                      {isCollapsed ? (
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+            <Card className="bg-medium-charcoal border-light-charcoal p-4">
+              <div className="space-y-4">
+                {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => {
+                  const isCollapsed = collapsedCategories.has(category);
+                  return (
+                    <div key={category}>
+                      <button
+                        onClick={() => toggleCategoryCollapse(category)}
+                        className="flex items-center gap-2 mb-2 w-full hover:bg-light-charcoal/30 px-2 py-1 rounded-organic-sm transition-colors"
+                      >
+                        <h3 className="text-sm font-medium text-light-text flex-1 text-left">{category}</h3>
+                        <span className="text-xs text-muted-foreground">({ingredients.length})</span>
+                        {isCollapsed ? (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </button>
+                      {!isCollapsed && (
+                        <div className="flex flex-wrap gap-2">
+                          {ingredients.map((ingredient) => (
+                            <Badge
+                              key={ingredient.id}
+                              variant="secondary"
+                              className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
+                              onClick={() => removeIngredient(ingredient.id)}
+                            >
+                              {ingredient.name}
+                              <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
+                            </Badge>
+                          ))}
+                        </div>
                       )}
-                    </button>
-                    {!isCollapsed && (
-                      <div className="flex flex-wrap gap-2">
-                        {ingredients.map((ingredient) => (
-                          <Badge
-                            key={ingredient.id}
-                            variant="secondary"
-                            className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
-                            onClick={() => removeIngredient(ingredient.id)}
-                          >
-                            {ingredient.name}
-                            <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
           )}
-        </Card>
+        </div>
       )}
 
       {/* Popular Ingredients - Visual Quick Add */}
@@ -734,20 +728,25 @@ export default function IngredientSelector({
 
       {/* Category Browsing Section */}
         {!searchValue && !selectedCategory && (
-          <Card className="bg-medium-charcoal border-light-charcoal">
-            <div
-              onClick={toggleCategoriesSection}
-              className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-organic-md cursor-pointer"
-            >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-pure-white">Browse by Category</h2>
-              {categoriesSectionCollapsed ? (
-                <ChevronDown className="h-5 w-5 text-muted-foreground" />
-              ) : (
-                <ChevronUp className="h-5 w-5 text-muted-foreground" />
-              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleCategoriesSection}
+                className="h-8 w-8"
+              >
+                {categoriesSectionCollapsed ? (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                )}
+              </Button>
             </div>
+            
             {!categoriesSectionCollapsed && (
-              <div className="px-6 pb-6">
+              <Card className="bg-medium-charcoal border-light-charcoal p-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {categories.map((category) => {
                     const categoryImage = categoryImages[category] || vodkaImage;
@@ -778,9 +777,9 @@ export default function IngredientSelector({
                     );
                   })}
                 </div>
-              </div>
-          )}
-        </Card>
+              </Card>
+            )}
+          </div>
       )}
 
       {/* Category Ingredients Display */}
