@@ -590,11 +590,27 @@ export default function IngredientSelector({
       {/* Your Bar Overview Section */}
       {myBarIngredients.length > 0 && (
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div 
+            onClick={toggleYourBar}
+            className="flex items-center justify-between cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
               <h2 className="text-lg font-semibold text-pure-white">
                 Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
               </h2>
+              <button
+                className="flex items-center justify-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleYourBar();
+                }}
+              >
+                {yourBarCollapsed ? (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                )}
+              </button>
               {showSavedIndicator && (
                 <span className="text-xs text-emerald-400 flex items-center gap-1 animate-fade-in">
                   <Check className="h-3 w-3" />
@@ -608,7 +624,10 @@ export default function IngredientSelector({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowClearAllDialog(true)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowClearAllDialog(true);
+                    }}
                     className="text-xs h-7 text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-3 w-3 mr-1" />
@@ -617,7 +636,10 @@ export default function IngredientSelector({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowSaveDialog(true)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowSaveDialog(true);
+                    }}
                     className="text-xs h-7"
                   >
                     <Save className="h-3 w-3 mr-1" />
@@ -625,18 +647,6 @@ export default function IngredientSelector({
                   </Button>
                 </>
               )}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleYourBar}
-                className="h-8 w-8"
-              >
-                {yourBarCollapsed ? (
-                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                ) : (
-                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
-                )}
-              </Button>
             </div>
           </div>
           
@@ -729,20 +739,24 @@ export default function IngredientSelector({
       {/* Category Browsing Section */}
         {!searchValue && !selectedCategory && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div 
+              onClick={toggleCategoriesSection}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <h2 className="text-lg font-semibold text-pure-white">Browse by Category</h2>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleCategoriesSection}
-                className="h-8 w-8"
+              <button
+                className="flex items-center justify-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleCategoriesSection();
+                }}
               >
                 {categoriesSectionCollapsed ? (
                   <ChevronDown className="h-5 w-5 text-muted-foreground" />
                 ) : (
                   <ChevronUp className="h-5 w-5 text-muted-foreground" />
                 )}
-              </Button>
+              </button>
             </div>
             
             {!categoriesSectionCollapsed && (
