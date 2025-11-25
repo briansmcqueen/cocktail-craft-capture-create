@@ -670,40 +670,81 @@ export default function IngredientSelector({
               </Button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-2">
-              {categoryIngredients.map((ingredient) => (
-                <button
-                  key={ingredient.id}
-                  onClick={() => {
-                    addIngredient(ingredient.id);
-                    setSelectedCategory(null);
-                  }}
-                  className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-primary/40 transition-all duration-300 hover:scale-105"
-                >
-                  {/* Ingredient Image */}
-                  <div 
-                    className="h-32 w-full bg-cover bg-center"
-                    style={{ backgroundImage: `url(${getIngredientImage(ingredient)})` }}
-                  />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                  
-                  {/* Content */}
-                  <div className="absolute inset-0 p-3 flex flex-col justify-end">
-                    <h5 className="text-sm font-semibold text-pure-white line-clamp-2 mb-1 group-hover:text-accent transition-colors">
-                      {ingredient.name}
-                    </h5>
-                    <Badge variant="outline" className="text-[10px] border-primary/30 text-soft-gray w-fit">
-                      {ingredient.subCategory}
-                    </Badge>
-                  </div>
-                  
-                  {/* Hover effect - Add icon */}
-                  <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-pure-white text-lg font-bold leading-none">+</span>
-                  </div>
-                </button>
-              ))}
+              {categoryIngredients.map((ingredient) => {
+                // Generate flavor notes based on ingredient properties
+                const flavorNotes = [];
+                const name = ingredient.name.toLowerCase();
+                const subCat = ingredient.subCategory.toLowerCase();
+                
+                // Assign flavor profiles
+                if (name.includes('gin') || subCat.includes('gin')) flavorNotes.push('Botanical');
+                if (name.includes('whiskey') || name.includes('bourbon') || name.includes('scotch')) flavorNotes.push('Oaky', 'Smoky');
+                if (name.includes('vodka')) flavorNotes.push('Neutral', 'Clean');
+                if (name.includes('rum')) flavorNotes.push('Sweet', 'Tropical');
+                if (name.includes('tequila') || name.includes('mezcal')) flavorNotes.push('Agave', 'Earthy');
+                if (name.includes('vermouth') || subCat.includes('vermouth')) flavorNotes.push('Herbal', 'Aromatic');
+                if (name.includes('amaro') || name.includes('bitter')) flavorNotes.push('Bitter', 'Herbal');
+                if (name.includes('orange') || name.includes('citrus')) flavorNotes.push('Citrus', 'Bright');
+                if (name.includes('mint') || name.includes('menthe')) flavorNotes.push('Minty', 'Fresh');
+                if (name.includes('coffee') || name.includes('espresso')) flavorNotes.push('Coffee', 'Rich');
+                if (name.includes('chocolate') || name.includes('cacao')) flavorNotes.push('Chocolate', 'Rich');
+                if (name.includes('cream')) flavorNotes.push('Creamy', 'Sweet');
+                if (name.includes('cherry') || name.includes('berry')) flavorNotes.push('Fruity', 'Sweet');
+                if (name.includes('herb') || name.includes('basil') || name.includes('thyme')) flavorNotes.push('Herbaceous', 'Fresh');
+                if (name.includes('spice') || name.includes('cinnamon') || name.includes('clove')) flavorNotes.push('Spiced', 'Warm');
+                if (name.includes('honey') || name.includes('agave syrup')) flavorNotes.push('Sweet', 'Natural');
+                if (name.includes('lime') || name.includes('lemon')) flavorNotes.push('Citrus', 'Tart');
+                if (subCat.includes('liqueur')) flavorNotes.push('Sweet');
+                
+                // Default if no matches
+                if (flavorNotes.length === 0) flavorNotes.push('Complex');
+                
+                return (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => {
+                      addIngredient(ingredient.id);
+                      setSelectedCategory(null);
+                    }}
+                    className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-primary/40 transition-all duration-200"
+                  >
+                    {/* Ingredient Image */}
+                    <div 
+                      className="h-32 w-full bg-cover bg-center"
+                      style={{ backgroundImage: `url(${getIngredientImage(ingredient)})` }}
+                    />
+                    
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                    
+                    {/* Content */}
+                    <div className="absolute inset-0 p-3 flex flex-col justify-between">
+                      <div className="flex justify-end">
+                        {/* Add button */}
+                        <div className="w-6 h-6 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-pure-white text-base font-bold leading-none flex items-center justify-center">+</span>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-sm font-semibold text-pure-white line-clamp-2 mb-2 group-hover:text-accent transition-colors">
+                          {ingredient.name}
+                        </h5>
+                        <div className="flex flex-wrap gap-1">
+                          {flavorNotes.slice(0, 2).map((note, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-organic-sm bg-medium-charcoal border border-light-charcoal text-pure-white"
+                            >
+                              {note}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </Card>
         )}
