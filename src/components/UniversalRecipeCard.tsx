@@ -109,13 +109,13 @@ export default function UniversalRecipeCard({
         </div>
 
         {/* Content */}
-        <div className="p-4">
+        <div className="p-4 flex flex-col">
           <h3 className="font-bold text-lg text-pure-white line-clamp-1 mb-2">
             {recipe.name}
           </h3>
           
-          {/* Simple description or ingredients preview */}
-          <p className="text-sm text-light-text line-clamp-3 mb-3">
+          {/* Simple description or ingredients preview - fixed height for alignment */}
+          <p className="text-sm text-light-text line-clamp-3 mb-3 min-h-[3.75rem]">
             {recipe.notes || `A delicious cocktail featuring ${recipe.ingredients.slice(0, 2).map(ing => ing.replace(/^\d+[\s\w]*\s/, '').split(' ')[0]).join(' and ')}`}
           </p>
 
