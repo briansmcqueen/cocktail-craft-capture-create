@@ -22,15 +22,27 @@ export default function MyBarSearch({
     if (!searchTerm.trim()) return [];
     
     const term = searchTerm.toLowerCase();
-    return allIngredients.filter(ingredient => 
+    
+    // Only match ingredients where the name contains the search term
+    const nameMatches = allIngredients.filter(ingredient => 
       ingredient.name.toLowerCase().includes(term)
-    ).sort((a, b) => {
-      // Prioritize exact matches
-      const aNameMatch = a.name.toLowerCase().startsWith(term);
-      const bNameMatch = b.name.toLowerCase().startsWith(term);
+    );
+    
+    return nameMatches.sort((a, b) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
       
-      if (aNameMatch && !bNameMatch) return -1;
-      if (!aNameMatch && bNameMatch) return 1;
+      // Prioritize exact matches first
+      const aExact = aName === term;
+      const bExact = bName === term;
+      if (aExact && !bExact) return -1;
+      if (!aExact && bExact) return 1;
+      
+      // Then prioritize starts with
+      const aStarts = aName.startsWith(term);
+      const bStarts = bName.startsWith(term);
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
       
       // Then alphabetical
       return a.name.localeCompare(b.name);

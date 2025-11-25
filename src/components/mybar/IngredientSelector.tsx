@@ -60,15 +60,63 @@ export default function IngredientSelector({
   const [editingPresetName, setEditingPresetName] = useState("");
 
   const filteredIngredients = useMemo(() => {
-    if (!searchValue) return allIngredients;
+    if (!searchValue) return allIngredients.filter(i => !myBarIngredients.includes(i.id));
     
-    const searchLower = searchValue.toLowerCase();
-    return allIngredients.filter(ing => 
-      (ing.name.toLowerCase().includes(searchLower) ||
-       ing.aliases?.some(alias => alias.toLowerCase().includes(searchLower)) ||
-       ing.description?.toLowerCase().includes(searchLower)) &&
-      !myBarIngredients.includes(ing.id)
-    ).sort((a, b) => a.name.localeCompare(b.name));
+    const term = searchValue.toLowerCase();
+    
+    // Separate matches by priority
+    const nameMatches: Ingredient[] = [];
+    const aliasMatches: Ingredient[] = [];
+    const categoryMatches: Ingredient[] = [];
+    
+    allIngredients
+      .filter(i => !myBarIngredients.includes(i.id))
+      .forEach(ingredient => {
+        const name = ingredient.name.toLowerCase();
+        const category = ingredient.category.toLowerCase();
+        const subCategory = ingredient.subCategory.toLowerCase();
+        
+        // Prioritize name matches
+        if (name.includes(term)) {
+          nameMatches.push(ingredient);
+        }
+        // Then alias matches
+        else if (ingredient.aliases && ingredient.aliases.some(alias => alias.toLowerCase().includes(term))) {
+          aliasMatches.push(ingredient);
+        }
+        // Finally category/subcategory matches
+        else if (category.includes(term) || subCategory.includes(term)) {
+          categoryMatches.push(ingredient);
+        }
+      });
+    
+    // Sort each group
+    const sortByRelevance = (a: Ingredient, b: Ingredient) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+      
+      // Exact match first
+      const aExact = aName === term;
+      const bExact = bName === term;
+      if (aExact && !bExact) return -1;
+      if (!aExact && bExact) return 1;
+      
+      // Starts with second
+      const aStarts = aName.startsWith(term);
+      const bStarts = bName.startsWith(term);
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
+      
+      // Alphabetical
+      return a.name.localeCompare(b.name);
+    };
+    
+    nameMatches.sort(sortByRelevance);
+    aliasMatches.sort(sortByRelevance);
+    categoryMatches.sort(sortByRelevance);
+    
+    // Combine in priority order
+    return [...nameMatches, ...aliasMatches, ...categoryMatches];
   }, [searchValue, allIngredients, myBarIngredients]);
 
   const addIngredient = (ingredientId: string) => {
