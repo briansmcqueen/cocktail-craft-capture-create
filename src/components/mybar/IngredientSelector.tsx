@@ -216,10 +216,8 @@ export default function IngredientSelector({
   };
 
   const clearAllIngredients = async () => {
-    // Remove all ingredients
-    for (const ingredientId of myBarIngredients) {
-      await toggleIngredient(ingredientId);
-    }
+    // Remove all ingredients at once
+    await Promise.all(myBarIngredients.map(ingredientId => toggleIngredient(ingredientId)));
     setShowClearAllDialog(false);
     toast({
       description: "All ingredients cleared",
