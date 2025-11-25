@@ -670,7 +670,7 @@ export default function IngredientSelector({
               </Button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[500px] overflow-y-auto pr-2">
-              {categoryIngredients.map((ingredient) => {
+              {categoryIngredients.map((ingredient, index) => {
                 // Generate flavor notes based on ingredient properties
                 const flavorNotes = [];
                 const name = ingredient.name.toLowerCase();
@@ -706,7 +706,8 @@ export default function IngredientSelector({
                       addIngredient(ingredient.id);
                       setSelectedCategory(null);
                     }}
-                    className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-primary/40 transition-all duration-200"
+                    className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-primary/40 transition-all duration-200 animate-fade-in"
+                    style={{ animationDelay: `${index * 30}ms` }}
                   >
                     {/* Ingredient Image */}
                     <div 
