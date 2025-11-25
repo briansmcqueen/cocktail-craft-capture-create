@@ -430,10 +430,16 @@ export default function IngredientSelector({
 
   return (
     <div className="space-y-6">
+      {/* Main Page Heading */}
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold text-pure-white">My Bar</h1>
+        <p className="text-sm text-soft-gray">Build your home bar inventory and discover what cocktails you can make</p>
+      </div>
+
       {/* Popular Bar Setups - Always show */}
       <div className="space-y-2">
-        <h4 className="text-sm font-medium text-pure-white">Popular Bar Setups</h4>
-        <p className="text-xs text-soft-gray">Quick start - load a preset to fill your bar instantly</p>
+        <h2 className="text-lg font-semibold text-pure-white">Popular Bar Setups</h2>
+        <p className="text-sm text-soft-gray">Quick start - load a preset to fill your bar instantly</p>
         <div className="flex flex-wrap gap-2">
           {examplePresets.map((preset) => (
             <Button
@@ -453,7 +459,7 @@ export default function IngredientSelector({
       {/* User's Saved Presets with Management */}
       {presets.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-pure-white">Your Saved Presets:</h4>
+          <h2 className="text-lg font-semibold text-pure-white">Your Saved Presets</h2>
           <div className="flex flex-wrap gap-2">
             {presets.map((preset) => (
               <div key={preset.id} className="group relative">
@@ -595,9 +601,9 @@ export default function IngredientSelector({
             className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-organic-md cursor-pointer"
           >
             <div className="flex items-center gap-3">
-              <h3 className="text-base font-semibold text-pure-white">
+              <h2 className="text-lg font-semibold text-pure-white">
                 Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
-              </h3>
+              </h2>
               {showSavedIndicator && (
                 <span className="text-xs text-emerald-400 flex items-center gap-1 animate-fade-in">
                   <Check className="h-3 w-3" />
@@ -652,7 +658,7 @@ export default function IngredientSelector({
                       onClick={() => toggleCategoryCollapse(category)}
                       className="flex items-center gap-2 mb-2 w-full hover:bg-light-charcoal/30 px-2 py-1 rounded-organic-sm transition-colors"
                     >
-                      <h4 className="text-sm font-medium text-white flex-1 text-left">{category}</h4>
+                      <h3 className="text-sm font-medium text-light-text flex-1 text-left">{category}</h3>
                       <span className="text-xs text-muted-foreground">({ingredients.length})</span>
                       {isCollapsed ? (
                         <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -686,8 +692,8 @@ export default function IngredientSelector({
       {/* Popular Ingredients - Visual Quick Add */}
       {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
         <Card className="p-4 bg-medium-charcoal border-light-charcoal">
-          <h4 className="text-sm font-medium text-pure-white mb-3">Popular Ingredients</h4>
-          <p className="text-xs text-soft-gray mb-3">Quick-add these common bar staples</p>
+          <h2 className="text-lg font-semibold text-pure-white mb-2">Popular Ingredients</h2>
+          <p className="text-sm text-soft-gray mb-3">Quick-add these common bar staples</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {["vodka", "gin", "whiskey", "rum", "tequila", "triple-sec", "lime-juice", "simple-syrup"].map((ingredientId) => {
               const ingredient = allIngredients.find(i => i.id === ingredientId);
@@ -733,7 +739,7 @@ export default function IngredientSelector({
               onClick={toggleCategoriesSection}
               className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-organic-md cursor-pointer"
             >
-              <h4 className="text-base font-semibold text-pure-white">Browse by Category</h4>
+              <h2 className="text-lg font-semibold text-pure-white">Browse by Category</h2>
               {categoriesSectionCollapsed ? (
                 <ChevronDown className="h-5 w-5 text-muted-foreground" />
               ) : (
@@ -781,12 +787,12 @@ export default function IngredientSelector({
       {selectedCategory && categoryIngredients.length > 0 && (
           <Card className="p-4 bg-medium-charcoal border-light-charcoal">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-base font-semibold text-pure-white flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-pure-white flex items-center gap-2">
                 {selectedCategory}
                 <Badge variant="secondary" className="ml-2 bg-accent/20 border-accent/40 text-pure-white">
                   {categoryIngredients.length}
                 </Badge>
-              </h4>
+              </h2>
               <Button
                 variant="ghost"
                 size="sm"
