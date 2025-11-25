@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini, Wine, Milk, Coffee, Droplet, Citrus, Leaf, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini, Wine, Milk, Coffee, Droplet, Citrus, Leaf, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -76,6 +76,7 @@ export default function IngredientSelector({
   const [presetName, setPresetName] = useState("");
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
   const [editingPresetName, setEditingPresetName] = useState("");
+  const [showSavedIndicator, setShowSavedIndicator] = useState(false);
 
   // Helper to get ingredient image based on category/subcategory
   const getIngredientImage = (ingredient: Ingredient): string => {
@@ -163,11 +164,9 @@ export default function IngredientSelector({
     setSearchValue("");
     setOpen(false);
     
-    // Show subtle autosave toast
-    toast({
-      description: "Auto-saved",
-      duration: 1500,
-    });
+    // Show subtle saved indicator
+    setShowSavedIndicator(true);
+    setTimeout(() => setShowSavedIndicator(false), 2000);
     
     // Keep focus on input for continued searching
     setTimeout(() => {
@@ -180,11 +179,9 @@ export default function IngredientSelector({
   const removeIngredient = (ingredientId: string) => {
     toggleIngredient(ingredientId);
     
-    // Show subtle autosave toast
-    toast({
-      description: "Auto-saved",
-      duration: 1500,
-    });
+    // Show subtle saved indicator
+    setShowSavedIndicator(true);
+    setTimeout(() => setShowSavedIndicator(false), 2000);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -424,14 +421,20 @@ export default function IngredientSelector({
       {/* Your Bar Overview Section */}
       {myBarIngredients.length > 0 && (
         <Card className="bg-medium-charcoal border-light-charcoal">
-          <button
+          <div
             onClick={toggleYourBar}
-            className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-t-organic-md"
+            className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-t-organic-md cursor-pointer"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <h3 className="text-base font-semibold text-pure-white">
                 Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
               </h3>
+              {showSavedIndicator && (
+                <span className="text-xs text-emerald-400 flex items-center gap-1 animate-fade-in">
+                  <Check className="h-3 w-3" />
+                  Saved
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               {user && myBarIngredients.length > 0 && !yourBarCollapsed && (
@@ -468,7 +471,7 @@ export default function IngredientSelector({
                 <ChevronUp className="h-5 w-5 text-muted-foreground" />
               )}
             </div>
-          </button>
+          </div>
           
           {!yourBarCollapsed && (
             <div className="px-4 pb-4 space-y-4">
