@@ -57,7 +57,7 @@ export default function WhatToBuyNext({
     <TooltipProvider>
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-serif font-semibold text-pure-white">What to Buy Next</h2>
+          <h2 className="text-lg font-semibold text-pure-white">What to Buy Next</h2>
         </div>
         <div className="grid grid-flow-col auto-cols-[240px] sm:auto-cols-[280px] gap-3 overflow-x-auto pb-2">
           {recommendations.slice(0, 6).map((rec) => {
