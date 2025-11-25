@@ -613,7 +613,7 @@ export default function IngredientSelector({
         )}
 
         {/* Category Browsing Section - Outside of search input */}
-        {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
+        {!searchValue && !selectedCategory && (
           <Card className="p-6 bg-medium-charcoal border-light-charcoal">
             <h4 className="text-base font-semibold text-pure-white mb-4">Browse by Category</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
