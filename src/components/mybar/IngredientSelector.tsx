@@ -722,12 +722,12 @@ export default function IngredientSelector({
                       <div className="flex justify-end">
                         {/* Add button */}
                         <div className="w-6 h-6 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="text-pure-white text-base font-bold leading-none flex items-center justify-center">+</span>
+                          <span className="text-pure-white text-sm font-bold leading-none">+</span>
                         </div>
                       </div>
                       
                       <div>
-                        <h5 className="text-sm font-semibold text-pure-white line-clamp-2 mb-2 group-hover:text-accent transition-colors">
+                        <h5 className="text-base font-semibold text-pure-white line-clamp-2 mb-2">
                           {ingredient.name}
                         </h5>
                         <div className="flex flex-wrap gap-1">
