@@ -29,9 +29,11 @@ import { getUserCustomIngredients, CustomIngredient } from "@/services/customIng
 import { barPresetsService, type BarPreset } from "@/services/barPresetsService";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 import { useSearchShortcut } from "@/hooks/useSearchShortcut";
-import whiskeImage from "@/assets/ingredients/whiskey.jpg";
+
+// Import category images
 import ginImage from "@/assets/ingredients/gin.jpg";
 import vodkaImage from "@/assets/ingredients/vodka.jpg";
+import whiskeyImage from "@/assets/ingredients/whiskey.jpg";
 import liqueursImage from "@/assets/ingredients/liqueurs.jpg";
 import winesImage from "@/assets/ingredients/wines.jpg";
 
@@ -86,9 +88,9 @@ export default function IngredientSelector({
     if (category.includes("spirit")) {
       if (subCategory.includes("gin")) return ginImage;
       if (subCategory.includes("vodka")) return vodkaImage;
-      if (subCategory.includes("whiskey") || subCategory.includes("bourbon") || subCategory.includes("scotch") || subCategory.includes("rye")) return whiskeImage;
-      if (subCategory.includes("rum") || subCategory.includes("tequila")) return whiskeImage;
-      return whiskeImage;
+      if (subCategory.includes("whiskey") || subCategory.includes("bourbon") || subCategory.includes("scotch") || subCategory.includes("rye")) return whiskeyImage;
+      if (subCategory.includes("rum") || subCategory.includes("tequila")) return whiskeyImage;
+      return whiskeyImage;
     }
     if (category.includes("liqueur")) return liqueursImage;
     if (category.includes("wine") || category.includes("vermouth")) return winesImage;
@@ -96,7 +98,7 @@ export default function IngredientSelector({
     if (subCategory.includes("vodka")) return vodkaImage;
     
     // Default fallback
-    return whiskeImage;
+    return whiskeyImage;
   };
 
   const filteredIngredients = useMemo(() => {
@@ -225,17 +227,17 @@ export default function IngredientSelector({
     });
   };
 
-  // Category list for browsing with icons
-  const categoryIcons: Record<string, any> = {
-    "Spirits": Wine,
-    "Liqueurs": Coffee,
-    "Wines & Vermouths": Wine,
-    "Bitters": Droplet,
-    "Mixers": Citrus,
-    "Syrups": Droplet,
-    "Juices": Citrus,
-    "Garnishes": Leaf,
-    "Other": Milk
+  // Category images mapping
+  const categoryImages: Record<string, string> = {
+    "Spirits": whiskeyImage,
+    "Liqueurs": liqueursImage,
+    "Wines & Vermouths": winesImage,
+    "Bitters": liqueursImage,
+    "Mixers": ginImage,
+    "Syrups": liqueursImage,
+    "Juices": ginImage,
+    "Garnishes": ginImage,
+    "Other": vodkaImage
   };
 
   const categories = useMemo(() => {
@@ -384,12 +386,6 @@ export default function IngredientSelector({
         console.error('Error renaming preset:', error);
       }
     }
-  };
-
-  // Helper to get category icon
-  const getCategoryIcon = (category: string) => {
-    const IconComponent = categoryIcons[category] || Milk;
-    return <IconComponent className="h-4 w-4" />;
   };
 
   // Group ingredients by category
@@ -618,21 +614,35 @@ export default function IngredientSelector({
 
         {/* Category Browsing Section - Outside of search input */}
         {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
-          <Card className="p-4 bg-medium-charcoal border-light-charcoal">
-            <h4 className="text-sm font-medium text-pure-white mb-3">Browse by Category</h4>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          <Card className="p-6 bg-medium-charcoal border-light-charcoal">
+            <h4 className="text-base font-semibold text-pure-white mb-4">Browse by Category</h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {categories.map((category) => {
-                const IconComponent = categoryIcons[category] || Milk;
+                const categoryImage = categoryImages[category] || vodkaImage;
                 return (
-                  <Button
+                  <button
                     key={category}
-                    variant="outline"
                     onClick={() => setSelectedCategory(category)}
-                    className="h-auto py-3 flex flex-col items-center gap-2 bg-light-charcoal/50 border-light-charcoal hover:bg-light-charcoal hover:border-primary/40 text-pure-white"
+                    className="group relative overflow-hidden rounded-organic-md border border-light-charcoal hover:border-primary/60 transition-all duration-300 aspect-square"
                   >
-                    <IconComponent className="h-5 w-5" />
-                    <span className="text-xs font-medium">{category}</span>
-                  </Button>
+                    {/* Background Image */}
+                    <div className="absolute inset-0">
+                      <img 
+                        src={categoryImage} 
+                        alt={category}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-rich-charcoal/95 via-rich-charcoal/60 to-transparent" />
+                    </div>
+                    
+                    {/* Category Label */}
+                    <div className="absolute inset-0 flex items-end p-3">
+                      <span className="text-sm font-semibold text-pure-white leading-tight">
+                        {category}
+                      </span>
+                    </div>
+                  </button>
                 );
               })}
             </div>
@@ -644,7 +654,6 @@ export default function IngredientSelector({
           <Card className="p-4 bg-medium-charcoal border-light-charcoal">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-base font-semibold text-pure-white flex items-center gap-2">
-                {React.createElement(categoryIcons[selectedCategory] || Milk, { className: "h-5 w-5" })}
                 {selectedCategory}
                 <Badge variant="secondary" className="ml-2 bg-accent/20 border-accent/40 text-pure-white">
                   {categoryIngredients.length}
