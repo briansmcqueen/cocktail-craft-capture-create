@@ -46,7 +46,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
         {tags.map((tag, i) => (
           <TagBadge
             key={`${tag}-${i}`}
-            className="bg-primary/20 text-emerald border border-primary/30 cursor-pointer rounded-organic-sm"
+            className="cursor-pointer hover:bg-light-charcoal"
             onClick={() => removeTag(i)}
             removable
           >

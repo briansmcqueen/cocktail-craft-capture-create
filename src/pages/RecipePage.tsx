@@ -283,7 +283,7 @@ export default function RecipePage() {
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{recipe.name}</h1>
               {recipe.origin && (
-                <TagBadge className="bg-accent/20 text-secondary border border-accent/30 rounded-organic-sm">
+                <TagBadge>
                   {recipe.origin}
                 </TagBadge>
               )}
@@ -426,7 +426,7 @@ export default function RecipePage() {
                     <h2 className="text-xl font-semibold text-foreground mb-4">Tags</h2>
                     <div className="flex flex-wrap gap-2">
                       {recipe.tags.map(tag => (
-                        <TagBadge key={tag} className="bg-accent/20 text-secondary border border-accent/30 rounded-organic-sm">
+                        <TagBadge key={tag}>
                           {tag}
                         </TagBadge>
                       ))}
