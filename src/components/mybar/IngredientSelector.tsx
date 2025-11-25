@@ -423,7 +423,7 @@ export default function IngredientSelector({
         <Card className="bg-medium-charcoal border-light-charcoal">
           <div
             onClick={toggleYourBar}
-            className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-t-organic-md cursor-pointer"
+            className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-organic-md cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <h3 className="text-base font-semibold text-pure-white">
