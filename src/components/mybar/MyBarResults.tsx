@@ -78,9 +78,9 @@ export default function MyBarResults({
       {/* Recipes You Can Make */}
       {recipesICanMake.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-pure-white mb-4">
+          <h2 className="text-lg font-semibold text-pure-white mb-4">
             You Can Make ({recipesICanMake.length})
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {(showAllRecipes ? recipesICanMake : recipesICanMake.slice(0, 6)).map((recipe) => (
               <UniversalRecipeCard
@@ -117,10 +117,10 @@ export default function MyBarResults({
       {/* Almost There - Need 1 Ingredient */}
       {recipesNeedingOneIngredient.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-base font-medium text-pure-white mb-3 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-pure-white mb-3 flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Almost There ({recipesNeedingOneIngredient.length})
-          </h3>
+          </h2>
           <Carousel className="w-full" opts={{ align: "start", loop: false }}>
             <CarouselContent className="-ml-2 md:-ml-4">
               {recipesNeedingOneIngredient.map((recipe) => {
