@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -652,42 +653,33 @@ export default function IngredientSelector({
           
           {!yourBarCollapsed && (
             <Card className="bg-medium-charcoal border-light-charcoal p-4">
-              <div className="space-y-4">
-                {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => {
-                  const isCollapsed = collapsedCategories.has(category);
-                  return (
-                    <div key={category}>
-                      <button
-                        onClick={() => toggleCategoryCollapse(category)}
-                        className="flex items-center gap-2 mb-2 w-full hover:bg-light-charcoal/30 px-2 py-1 rounded-organic-sm transition-colors"
-                      >
-                        <h3 className="text-sm font-medium text-light-text flex-1 text-left">{category}</h3>
-                        <span className="text-xs text-muted-foreground">({ingredients.length})</span>
-                        {isCollapsed ? (
-                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </button>
-                      {!isCollapsed && (
-                        <div className="flex flex-wrap gap-2">
-                          {ingredients.map((ingredient) => (
-                            <Badge
-                              key={ingredient.id}
-                              variant="secondary"
-                              className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
-                              onClick={() => removeIngredient(ingredient.id)}
-                            >
-                              {ingredient.name}
-                              <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+              <Tabs defaultValue={Object.keys(selectedIngredientsByCategory)[0] || "all"} className="w-full">
+                <TabsList className="w-full mb-4">
+                  {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => (
+                    <TabsTrigger key={category} value={category} className="flex-1">
+                      {category}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                
+                {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => (
+                  <TabsContent key={category} value={category} className="mt-0">
+                    <div className="flex flex-wrap gap-2">
+                      {ingredients.map((ingredient) => (
+                        <Badge
+                          key={ingredient.id}
+                          variant="secondary"
+                          className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
+                          onClick={() => removeIngredient(ingredient.id)}
+                        >
+                          {ingredient.name}
+                          <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
+                        </Badge>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </Card>
           )}
         </div>
