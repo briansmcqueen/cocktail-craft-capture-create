@@ -80,6 +80,24 @@ export default function IngredientSelector({
   const [editingPresetName, setEditingPresetName] = useState("");
   const [showSavedIndicator, setShowSavedIndicator] = useState(false);
 
+  // Load Categories Section collapsed state from localStorage
+  const [categoriesSectionCollapsed, setCategoriesSectionCollapsed] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('mybar_categories_section_collapsed');
+      return saved === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleCategoriesSection = () => {
+    setCategoriesSectionCollapsed(prev => {
+      const newState = !prev;
+      localStorage.setItem('mybar_categories_section_collapsed', String(newState));
+      return newState;
+    });
+  };
+
   // Helper to get ingredient image based on category/subcategory
   const getIngredientImage = (ingredient: Ingredient): string => {
     const category = ingredient.category.toLowerCase();
@@ -614,38 +632,52 @@ export default function IngredientSelector({
 
         {/* Category Browsing Section - Outside of search input */}
         {!searchValue && !selectedCategory && (
-          <Card className="p-6 bg-medium-charcoal border-light-charcoal">
-            <h4 className="text-base font-semibold text-pure-white mb-4">Browse by Category</h4>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {categories.map((category) => {
-                const categoryImage = categoryImages[category] || vodkaImage;
-                return (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className="group relative overflow-hidden rounded-organic-md border border-light-charcoal hover:border-primary/60 transition-all duration-300 aspect-square"
-                  >
-                    {/* Background Image */}
-                    <div className="absolute inset-0">
-                      <img 
-                        src={categoryImage} 
-                        alt={category}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-rich-charcoal/95 via-rich-charcoal/60 to-transparent" />
-                    </div>
-                    
-                    {/* Category Label */}
-                    <div className="absolute inset-0 flex items-end p-3">
-                      <span className="text-sm font-semibold text-pure-white leading-tight">
-                        {category}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+          <Card className="bg-medium-charcoal border-light-charcoal">
+            <div
+              onClick={toggleCategoriesSection}
+              className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-organic-md cursor-pointer"
+            >
+              <h4 className="text-base font-semibold text-pure-white">Browse by Category</h4>
+              {categoriesSectionCollapsed ? (
+                <ChevronDown className="h-5 w-5 text-muted-foreground" />
+              ) : (
+                <ChevronUp className="h-5 w-5 text-muted-foreground" />
+              )}
             </div>
+            {!categoriesSectionCollapsed && (
+              <div className="px-6 pb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {categories.map((category) => {
+                    const categoryImage = categoryImages[category] || vodkaImage;
+                    return (
+                      <button
+                        key={category}
+                        onClick={() => setSelectedCategory(category)}
+                        className="group relative overflow-hidden rounded-organic-md border border-light-charcoal hover:border-primary/60 transition-all duration-300 aspect-square"
+                      >
+                        {/* Background Image */}
+                        <div className="absolute inset-0">
+                          <img 
+                            src={categoryImage} 
+                            alt={category}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-rich-charcoal/95 via-rich-charcoal/60 to-transparent" />
+                        </div>
+                        
+                        {/* Category Label */}
+                        <div className="absolute inset-0 flex items-end p-3">
+                          <span className="text-sm font-semibold text-pure-white leading-tight">
+                            {category}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </Card>
         )}
 
