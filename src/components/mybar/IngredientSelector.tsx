@@ -311,12 +311,40 @@ export default function IngredientSelector({
     }
   };
 
+  // Helper to get category icon
+  const getCategoryIcon = (category: string) => {
+    const IconComponent = categoryIcons[category] || Milk;
+    return <IconComponent className="h-4 w-4" />;
+  };
+
+  // Group ingredients by category
+  const selectedIngredientsByCategory = useMemo(() => {
+    const grouped: Record<string, Ingredient[]> = {};
+    
+    myBarIngredients.forEach(ingredientId => {
+      const ingredient = ingredientMap[ingredientId];
+      if (ingredient) {
+        if (!grouped[ingredient.category]) {
+          grouped[ingredient.category] = [];
+        }
+        grouped[ingredient.category].push(ingredient);
+      }
+    });
+    
+    // Sort ingredients within each category
+    Object.keys(grouped).forEach(category => {
+      grouped[category].sort((a, b) => a.name.localeCompare(b.name));
+    });
+    
+    return grouped;
+  }, [myBarIngredients, ingredientMap]);
+
   return (
     <div className="space-y-6">
       {/* Your Bar Overview Section */}
       {myBarIngredients.length > 0 && (
         <Card className="p-4 bg-medium-charcoal border-light-charcoal">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-pure-white flex items-center gap-2">
               <Martini className="h-4 w-4" />
               Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
@@ -333,22 +361,28 @@ export default function IngredientSelector({
               </Button>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
-            {myBarIngredients.map((ingredientId) => {
-              const ingredient = ingredientMap[ingredientId];
-              if (!ingredient) return null;
-              return (
-                <Badge
-                  key={ingredientId}
-                  variant="secondary"
-                  className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
-                  onClick={() => removeIngredient(ingredientId)}
-                >
-                  {ingredient.name}
-                  <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
-                </Badge>
-              );
-            })}
+          <div className="space-y-4">
+            {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => (
+              <div key={category}>
+                <div className="flex items-center gap-2 mb-2">
+                  {getCategoryIcon(category)}
+                  <h4 className="text-sm font-medium text-soft-gray">{category}</h4>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {ingredients.map((ingredient) => (
+                    <Badge
+                      key={ingredient.id}
+                      variant="secondary"
+                      className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
+                      onClick={() => removeIngredient(ingredient.id)}
+                    >
+                      {ingredient.name}
+                      <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
       )}
