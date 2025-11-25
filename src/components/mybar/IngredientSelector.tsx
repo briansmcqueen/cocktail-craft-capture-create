@@ -13,6 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Ingredient } from "@/data/ingredients";
 import AddCustomIngredient from "@/components/AddCustomIngredient";
 import { getUserCustomIngredients, CustomIngredient } from "@/services/customIngredientsService";
@@ -62,6 +72,7 @@ export default function IngredientSelector({
   useSearchShortcut(inputRef);
   const [open, setOpen] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showClearAllDialog, setShowClearAllDialog] = useState(false);
   const [presetName, setPresetName] = useState("");
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null);
   const [editingPresetName, setEditingPresetName] = useState("");
@@ -205,6 +216,18 @@ export default function IngredientSelector({
         console.error('Error saving preset:', error);
       }
     }
+  };
+
+  const clearAllIngredients = async () => {
+    // Remove all ingredients
+    for (const ingredientId of myBarIngredients) {
+      await toggleIngredient(ingredientId);
+    }
+    setShowClearAllDialog(false);
+    toast({
+      description: "All ingredients cleared",
+      duration: 2000,
+    });
   };
 
   // Category list for browsing with icons
@@ -406,25 +429,38 @@ export default function IngredientSelector({
             className="w-full flex items-center justify-between p-4 hover:bg-light-charcoal/30 transition-colors rounded-t-organic-md"
           >
             <div className="flex items-center gap-2">
-              <Martini className="h-4 w-4 text-primary" />
               <h3 className="text-base font-semibold text-pure-white">
                 Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
               </h3>
             </div>
             <div className="flex items-center gap-2">
               {user && myBarIngredients.length > 0 && !yourBarCollapsed && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowSaveDialog(true);
-                  }}
-                  className="text-xs h-7"
-                >
-                  <Save className="h-3 w-3 mr-1" />
-                  Save Preset
-                </Button>
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowClearAllDialog(true);
+                    }}
+                    className="text-xs h-7 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-3 w-3 mr-1" />
+                    Clear All
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowSaveDialog(true);
+                    }}
+                    className="text-xs h-7"
+                  >
+                    <Save className="h-3 w-3 mr-1" />
+                    Save Preset
+                  </Button>
+                </>
               )}
               {yourBarCollapsed ? (
                 <ChevronDown className="h-5 w-5 text-muted-foreground" />
@@ -822,6 +858,29 @@ export default function IngredientSelector({
           />
         )
       )}
+
+      {/* Clear All Confirmation Dialog */}
+      <AlertDialog open={showClearAllDialog} onOpenChange={setShowClearAllDialog}>
+        <AlertDialogContent className="bg-medium-charcoal border-light-charcoal">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-pure-white">Clear all ingredients?</AlertDialogTitle>
+            <AlertDialogDescription className="text-soft-gray">
+              This will remove all {myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''} from your bar. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-light-charcoal border-light-charcoal text-light-text hover:bg-light-charcoal/80">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={clearAllIngredients}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Clear All
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
