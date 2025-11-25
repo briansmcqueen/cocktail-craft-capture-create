@@ -383,13 +383,12 @@ export default function IngredientSelector({
                     onClick={() => toggleCategoryCollapse(category)}
                     className="flex items-center gap-2 mb-2 w-full hover:bg-light-charcoal/30 px-2 py-1 rounded-organic-sm transition-colors"
                   >
-                    {getCategoryIcon(category)}
-                    <h4 className="text-sm font-medium text-soft-gray flex-1 text-left">{category}</h4>
+                    <h4 className="text-sm font-medium text-white flex-1 text-left">{category}</h4>
                     <span className="text-xs text-muted-foreground">({ingredients.length})</span>
                     {isCollapsed ? (
-                      <ChevronDown className="h-4 w-4 text-soft-gray" />
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     ) : (
-                      <ChevronUp className="h-4 w-4 text-soft-gray" />
+                      <ChevronUp className="h-4 w-4 text-muted-foreground" />
                     )}
                   </button>
                   {!isCollapsed && (
