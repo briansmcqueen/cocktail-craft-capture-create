@@ -166,6 +166,21 @@ export default function IngredientSelector({
     }
   };
 
+  // Category list for browsing
+  const categories = useMemo(() => {
+    const cats = new Set(allIngredients.map(ing => ing.category));
+    return Array.from(cats).sort();
+  }, [allIngredients]);
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const categoryIngredients = useMemo(() => {
+    if (!selectedCategory) return [];
+    return allIngredients
+      .filter(i => i.category === selectedCategory && !myBarIngredients.includes(i.id))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [selectedCategory, allIngredients, myBarIngredients]);
+
   // Example bar configurations for new users
   const examplePresets = [
     {
@@ -175,6 +190,10 @@ export default function IngredientSelector({
     {
       name: "Cocktail Essentials", 
       ingredients: ["gin", "vodka", "dry vermouth", "sweet vermouth", "lime juice", "lemon juice", "simple syrup", "angostura bitters"]
+    },
+    {
+      name: "Margarita Night",
+      ingredients: ["tequila", "triple sec", "lime juice", "salt", "simple syrup"]
     },
     {
       name: "Tiki Setup",
@@ -256,6 +275,46 @@ export default function IngredientSelector({
 
   return (
     <div className="space-y-6">
+      {/* Your Bar Overview Section */}
+      {myBarIngredients.length > 0 && (
+        <Card className="p-4 bg-medium-charcoal border-light-charcoal">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-base font-semibold text-pure-white flex items-center gap-2">
+              <Martini className="h-4 w-4" />
+              Your Bar ({myBarIngredients.length} ingredient{myBarIngredients.length !== 1 ? 's' : ''})
+            </h3>
+            {user && myBarIngredients.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSaveDialog(true)}
+                className="text-xs h-7"
+              >
+                <Save className="h-3 w-3 mr-1" />
+                Save Preset
+              </Button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {myBarIngredients.map((ingredientId) => {
+              const ingredient = ingredientMap[ingredientId];
+              if (!ingredient) return null;
+              return (
+                <Badge
+                  key={ingredientId}
+                  variant="secondary"
+                  className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
+                  onClick={() => removeIngredient(ingredientId)}
+                >
+                  {ingredient.name}
+                  <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
+                </Badge>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
       {/* Search Interface */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-2">
@@ -289,7 +348,7 @@ export default function IngredientSelector({
               </div>
             )}
             
-            {/* Custom Dropdown */}
+            {/* Custom Dropdown - Show search results OR category browsing */}
             {open && filteredIngredients.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
                 {filteredIngredients.map((ingredient) => (
@@ -302,6 +361,58 @@ export default function IngredientSelector({
                     <span className="text-light-text">{ingredient.name}</span>
                     <Badge variant="outline" className="text-xs border-primary/30 text-soft-gray">
                       {ingredient.category}
+                    </Badge>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Category Browsing - Show when search is empty */}
+            {!searchValue && !selectedCategory && (
+              <div className="mt-3">
+                <p className="text-xs text-soft-gray mb-2">Browse by category:</p>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <Button
+                      key={category}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                      className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white"
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Category Ingredients Dropdown */}
+            {selectedCategory && categoryIngredients.length > 0 && (
+              <div className="mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg max-h-[300px] overflow-y-auto">
+                <div className="sticky top-0 bg-medium-charcoal border-b border-light-charcoal px-3 py-2 flex items-center justify-between">
+                  <span className="text-sm font-medium text-pure-white">{selectedCategory}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedCategory(null)}
+                    className="h-6 w-6 p-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+                {categoryIngredients.map((ingredient) => (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => {
+                      addIngredient(ingredient.id);
+                      setSelectedCategory(null);
+                    }}
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
+                  >
+                    <span className="text-light-text">{ingredient.name}</span>
+                    <Badge variant="outline" className="text-xs border-primary/30 text-soft-gray">
+                      {ingredient.subCategory}
                     </Badge>
                   </button>
                 ))}
@@ -343,7 +454,8 @@ export default function IngredientSelector({
 
         {/* Example Bar Setups - Always show */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-pure-white">Popular Bar Setups:</h4>
+          <h4 className="text-sm font-medium text-pure-white">Popular Bar Setups</h4>
+          <p className="text-xs text-soft-gray">Quick start - load a preset to fill your bar instantly</p>
           <div className="flex flex-wrap gap-2">
             {examplePresets.map((preset) => (
               <Button
@@ -456,58 +568,16 @@ export default function IngredientSelector({
         )}
       </div>
 
-      {/* Selected Ingredients Pills */}
-      {myBarIngredients.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-pure-white">
-              Your Bar ({myBarIngredients.length} ingredients)
-            </h3>
-            {user && !showSaveDialog && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowSaveDialog(true)}
-                className="text-xs"
-              >
-                <Save className="h-3 w-3 mr-1" />
-                Save as Preset
-              </Button>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {myBarIngredients.map((ingredientId) => {
-              const ingredient = ingredientMap[ingredientId];
-              if (!ingredient) return null;
-              
-              return (
-                <Badge
-                  key={ingredientId}
-                  variant="secondary"
-                  className="px-3 py-1.5 text-sm bg-primary/10 text-pure-white border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer"
-                  onClick={() => removeIngredient(ingredientId)}
-                >
-                  {ingredient.name}
-                  <button className="ml-2 hover:text-destructive transition-colors">
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       {/* Empty State - No Ingredients */}
       {myBarIngredients.length === 0 && (
         user ? (
           <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal animate-fade-in">
             <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
             <h3 className="text-lg font-medium text-light-text mb-2">
-              Start Building Your Bar
+              Your bar is empty
             </h3>
             <p className="text-soft-gray">
-              Search and add ingredients you have on hand to discover what cocktails you can make.
+              Search for ingredients above or browse by category to start building your cocktail collection.
             </p>
           </Card>
         ) : (
