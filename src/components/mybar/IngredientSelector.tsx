@@ -430,6 +430,163 @@ export default function IngredientSelector({
 
   return (
     <div className="space-y-6">
+      {/* Popular Bar Setups - Always show */}
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium text-pure-white">Popular Bar Setups</h4>
+        <p className="text-xs text-soft-gray">Quick start - load a preset to fill your bar instantly</p>
+        <div className="flex flex-wrap gap-2">
+          {examplePresets.map((preset) => (
+            <Button
+              key={preset.name}
+              variant="outline"
+              size="sm"
+              onClick={() => loadExamplePreset(preset)}
+              className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white hover:text-pure-white"
+            >
+              <Bookmark className="h-3 w-3 mr-1" />
+              {preset.name} ({preset.ingredients.length})
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* User's Saved Presets with Management */}
+      {presets.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-pure-white">Your Saved Presets:</h4>
+          <div className="flex flex-wrap gap-2">
+            {presets.map((preset) => (
+              <div key={preset.id} className="group relative">
+                {editingPresetId === preset.id ? (
+                  <div className="flex items-center gap-1 bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-1">
+                    <Input
+                      value={editingPresetName}
+                      onChange={(e) => setEditingPresetName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') savePresetRename();
+                        if (e.key === 'Escape') {
+                          setEditingPresetId(null);
+                          setEditingPresetName("");
+                        }
+                      }}
+                      className="h-6 text-xs bg-light-charcoal border-light-charcoal text-pure-white"
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={savePresetRename} className="h-6 px-2">
+                      Save
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => loadPreset(preset)}
+                      className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white hover:text-pure-white pr-8"
+                    >
+                      <Bookmark className="h-3 w-3 mr-1" />
+                      {preset.name}
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-light-charcoal"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreHorizontal className="h-3 w-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-40">
+                        <DropdownMenuItem onClick={() => startEditingPreset(preset)}>
+                          <Edit className="h-3 w-3 mr-2" />
+                          Rename
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => duplicatePreset(preset)}>
+                          <Copy className="h-3 w-3 mr-2" />
+                          Duplicate
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => onDeletePreset(preset.id)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="h-3 w-3 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Search Interface */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
+            <Input
+              ref={inputRef}
+              placeholder="Search and add ingredients to your bar..."
+              value={searchValue}
+              onChange={handleSearchChange}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && filteredIngredients.length > 0) {
+                  e.preventDefault();
+                  addIngredient(filteredIngredients[0].id);
+                  setSearchValue("");
+                  setOpen(false);
+                }
+              }}
+              className="pl-10 pr-16 h-12 text-base bg-medium-charcoal border-light-charcoal text-light-text"
+            />
+            {!searchValue && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-soft-gray pointer-events-none z-10">
+                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
+                  {typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl'}
+                </kbd>
+                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
+                  K
+                </kbd>
+              </div>
+            )}
+            
+            {/* Custom Dropdown - Show search results */}
+            {open && filteredIngredients.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
+                {filteredIngredients.map((ingredient) => (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => addIngredient(ingredient.id)}
+                    onMouseDown={(e) => e.preventDefault()} // Prevent input blur
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
+                  >
+                    <span className="text-light-text">{ingredient.name}</span>
+                    <Badge variant="outline" className="text-xs border-primary/30 text-soft-gray">
+                      {ingredient.category}
+                    </Badge>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <AddCustomIngredient 
+            onIngredientAdded={async () => {
+              const customIngs = await getUserCustomIngredients();
+              setCustomIngredients(customIngs);
+            }}
+          />
+        </div>
+      </div>
+
       {/* Your Bar Overview Section */}
       {myBarIngredients.length > 0 && (
         <Card className="bg-medium-charcoal border-light-charcoal">
@@ -526,111 +683,50 @@ export default function IngredientSelector({
         </Card>
       )}
 
-      {/* Search Interface */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
-            <Input
-              ref={inputRef}
-              placeholder="Search and add ingredients to your bar..."
-              value={searchValue}
-              onChange={handleSearchChange}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && filteredIngredients.length > 0) {
-                  e.preventDefault();
-                  addIngredient(filteredIngredients[0].id);
-                  setSearchValue("");
-                  setOpen(false);
-                }
-              }}
-              className="pl-10 pr-16 h-12 text-base bg-medium-charcoal border-light-charcoal text-light-text"
-            />
-            {!searchValue && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-soft-gray pointer-events-none z-10">
-                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
-                  {typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl'}
-                </kbd>
-                <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
-                  K
-                </kbd>
-              </div>
-            )}
-            
-            {/* Custom Dropdown - Show search results */}
-            {open && filteredIngredients.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
-                {filteredIngredients.map((ingredient) => (
-                  <button
-                    key={ingredient.id}
-                    onClick={() => addIngredient(ingredient.id)}
-                    onMouseDown={(e) => e.preventDefault()} // Prevent input blur
-                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
-                  >
-                    <span className="text-light-text">{ingredient.name}</span>
-                    <Badge variant="outline" className="text-xs border-primary/30 text-soft-gray">
-                      {ingredient.category}
-                    </Badge>
-                  </button>
-                ))}
-              </div>
-            )}
+      {/* Popular Ingredients - Visual Quick Add */}
+      {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
+        <Card className="p-4 bg-medium-charcoal border-light-charcoal">
+          <h4 className="text-sm font-medium text-pure-white mb-3">Popular Ingredients</h4>
+          <p className="text-xs text-soft-gray mb-3">Quick-add these common bar staples</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {["vodka", "gin", "whiskey", "rum", "tequila", "triple-sec", "lime-juice", "simple-syrup"].map((ingredientId) => {
+              const ingredient = allIngredients.find(i => i.id === ingredientId);
+              if (!ingredient) return null;
+              
+              return (
+                <button
+                  key={ingredient.id}
+                  onClick={() => addIngredient(ingredient.id)}
+                  className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-accent/40 transition-all duration-300 hover:scale-105"
+                >
+                  {/* Ingredient Image */}
+                  <div 
+                    className="h-28 w-full bg-cover bg-center"
+                    style={{ backgroundImage: `url(${getIngredientImage(ingredient)})` }}
+                  />
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  
+                  {/* Content */}
+                  <div className="absolute inset-0 p-2.5 flex flex-col justify-end">
+                    <h5 className="text-xs sm:text-sm font-semibold text-pure-white line-clamp-2 group-hover:text-accent transition-colors">
+                      {ingredient.name}
+                    </h5>
+                  </div>
+                  
+                  {/* Hover effect - Add icon */}
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-accent/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-pure-white text-base font-bold leading-none">+</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
-          
-          <AddCustomIngredient 
-            onIngredientAdded={async () => {
-              const customIngs = await getUserCustomIngredients();
-              setCustomIngredients(customIngs);
-            }}
-          />
-        </div>
+        </Card>
+      )}
 
-        {/* Popular Ingredients - Visual Quick Add */}
-        {!searchValue && myBarIngredients.length === 0 && !selectedCategory && (
-          <Card className="p-4 bg-medium-charcoal border-light-charcoal">
-            <h4 className="text-sm font-medium text-pure-white mb-3">Popular Ingredients</h4>
-            <p className="text-xs text-soft-gray mb-3">Quick-add these common bar staples</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {["vodka", "gin", "whiskey", "rum", "tequila", "triple-sec", "lime-juice", "simple-syrup"].map((ingredientId) => {
-                const ingredient = allIngredients.find(i => i.id === ingredientId);
-                if (!ingredient) return null;
-                
-                return (
-                  <button
-                    key={ingredient.id}
-                    onClick={() => addIngredient(ingredient.id)}
-                    className="group relative rounded-organic-md overflow-hidden border border-light-charcoal bg-card hover:border-accent/40 transition-all duration-300 hover:scale-105"
-                  >
-                    {/* Ingredient Image */}
-                    <div 
-                      className="h-28 w-full bg-cover bg-center"
-                      style={{ backgroundImage: `url(${getIngredientImage(ingredient)})` }}
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                    
-                    {/* Content */}
-                    <div className="absolute inset-0 p-2.5 flex flex-col justify-end">
-                      <h5 className="text-xs sm:text-sm font-semibold text-pure-white line-clamp-2 group-hover:text-accent transition-colors">
-                        {ingredient.name}
-                      </h5>
-                    </div>
-                    
-                    {/* Hover effect - Add icon */}
-                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-accent/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-pure-white text-base font-bold leading-none">+</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-        )}
-
-        {/* Category Browsing Section - Outside of search input */}
+      {/* Category Browsing Section */}
         {!searchValue && !selectedCategory && (
           <Card className="bg-medium-charcoal border-light-charcoal">
             <div
@@ -677,12 +773,12 @@ export default function IngredientSelector({
                   })}
                 </div>
               </div>
-            )}
-          </Card>
-        )}
+          )}
+        </Card>
+      )}
 
-        {/* Category Ingredients Display */}
-        {selectedCategory && categoryIngredients.length > 0 && (
+      {/* Category Ingredients Display */}
+      {selectedCategory && categoryIngredients.length > 0 && (
           <Card className="p-4 bg-medium-charcoal border-light-charcoal">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-base font-semibold text-pure-white flex items-center gap-2">
@@ -775,12 +871,12 @@ export default function IngredientSelector({
                   </button>
                 );
               })}
-            </div>
-          </Card>
-        )}
+          </div>
+        </Card>
+      )}
 
-        {/* Save Preset Dialog */}
-        {showSaveDialog && (
+      {/* Save Preset Dialog */}
+      {showSaveDialog && (
           <Card className="p-4 border-2 border-primary/20 bg-medium-charcoal">
             <div className="space-y-3">
               <h4 className="font-medium text-light-text">Save Current Selection</h4>
@@ -801,123 +897,7 @@ export default function IngredientSelector({
               </div>
             </div>
           </Card>
-        )}
-
-        {/* Example Bar Setups - Always show */}
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium text-pure-white">Popular Bar Setups</h4>
-          <p className="text-xs text-soft-gray">Quick start - load a preset to fill your bar instantly</p>
-          <div className="flex flex-wrap gap-2">
-            {examplePresets.map((preset) => (
-              <Button
-                key={preset.name}
-                variant="outline"
-                size="sm"
-                onClick={() => loadExamplePreset(preset)}
-                className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white hover:text-pure-white"
-              >
-                <Bookmark className="h-3 w-3 mr-1" />
-                {preset.name} ({preset.ingredients.length})
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* User's Saved Presets with Management */}
-        {presets.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-pure-white">Your Saved Presets:</h4>
-            <div className="flex flex-wrap gap-2">
-              {presets.map((preset) => (
-                <div key={preset.id} className="group relative">
-                  {editingPresetId === preset.id ? (
-                    <div className="flex items-center gap-1 bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-1">
-                      <Input
-                        value={editingPresetName}
-                        onChange={(e) => setEditingPresetName(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') savePresetRename();
-                          if (e.key === 'Escape') {
-                            setEditingPresetId(null);
-                            setEditingPresetName("");
-                          }
-                        }}
-                        className="h-6 text-xs bg-light-charcoal border-light-charcoal text-pure-white"
-                        autoFocus
-                      />
-                      <Button
-                        size="sm"
-                        onClick={savePresetRename}
-                        className="h-6 w-6 p-0"
-                      >
-                        <Save className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          setEditingPresetId(null);
-                          setEditingPresetName("");
-                        }}
-                        className="h-6 w-6 p-0"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => loadPreset(preset)}
-                        className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white rounded-r-none border-r-0"
-                      >
-                        <Bookmark className="h-3 w-3 mr-1" />
-                        {preset.name} ({preset.ingredient_ids.length})
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white rounded-l-none px-2"
-                          >
-                            <MoreHorizontal className="h-3 w-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-medium-charcoal border-light-charcoal">
-                          <DropdownMenuItem
-                            onClick={() => startEditingPreset(preset)}
-                            className="text-light-text hover:bg-light-charcoal cursor-pointer"
-                          >
-                            <Edit className="h-3 w-3 mr-2" />
-                            Rename
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => duplicatePreset(preset)}
-                            className="text-light-text hover:bg-light-charcoal cursor-pointer"
-                          >
-                            <Copy className="h-3 w-3 mr-2" />
-                            Duplicate
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator className="bg-light-charcoal" />
-                          <DropdownMenuItem
-                            onClick={() => onDeletePreset(preset.id)}
-                            className="text-destructive hover:bg-destructive/10 cursor-pointer"
-                          >
-                            <Trash2 className="h-3 w-3 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Empty State - No Ingredients - Only show if not browsing categories */}
       {myBarIngredients.length === 0 && !selectedCategory && searchValue.trim() === "" && (
