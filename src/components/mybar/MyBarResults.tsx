@@ -129,14 +129,26 @@ export default function MyBarResults({
                 
                 return (
                   <CarouselItem key={recipe.id} className="pl-2 md:pl-4 basis-[280px] md:basis-[320px]">
-                    <div className="relative group">
+                  <div className="relative group">
                       <UniversalRecipeCard recipe={recipe} />
-                      {/* Missing ingredient overlay */}
-                      <div className="absolute top-2 right-2 bg-golden-amber/90 text-rich-charcoal px-2 py-1 rounded-organic-sm text-xs font-medium">
-                        Need: {missingIngredient.name}
+                      {/* Missing ingredient badge - Always visible */}
+                      <div className="absolute top-2 right-2 bg-golden-amber/90 text-rich-charcoal px-2 py-1 rounded-organic-sm text-xs font-medium flex items-center gap-1">
+                        <span className="hidden sm:inline">Need: </span>
+                        <span className="line-clamp-1">{missingIngredient.name}</span>
+                        {/* Mobile: Always visible add button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAddIngredient(recipe.missingIngredient || '');
+                          }}
+                          className="sm:hidden w-5 h-5 rounded-full bg-rich-charcoal hover:bg-rich-charcoal/80 inline-flex items-center justify-center ml-1"
+                          aria-label="Add to bar"
+                        >
+                          <Plus className="h-3 w-3 text-golden-amber" />
+                        </button>
                       </div>
-                      {/* Add button overlay */}
-                      <div className="absolute inset-0 bg-rich-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-organic-md">
+                      {/* Desktop: Hover overlay with buttons */}
+                      <div className="hidden sm:flex absolute inset-0 bg-rich-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity items-center justify-center rounded-organic-md">
                         <div className="flex items-center gap-2">
                           <Button
                             onClick={() => onAddIngredient(recipe.missingIngredient || '')}
