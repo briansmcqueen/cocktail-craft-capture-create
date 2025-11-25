@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini, Wine, Milk, Coffee, Droplet, Citrus, Leaf } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini, Wine, Milk, Coffee, Droplet, Citrus, Leaf, ChevronDown, ChevronUp } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -211,6 +211,19 @@ export default function IngredientSelector({
   }, [allIngredients]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set());
+
+  const toggleCategoryCollapse = (category: string) => {
+    setCollapsedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
+  };
 
   const categoryIngredients = useMemo(() => {
     if (!selectedCategory) return [];
@@ -362,27 +375,41 @@ export default function IngredientSelector({
             )}
           </div>
           <div className="space-y-4">
-            {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => (
-              <div key={category}>
-                <div className="flex items-center gap-2 mb-2">
-                  {getCategoryIcon(category)}
-                  <h4 className="text-sm font-medium text-soft-gray">{category}</h4>
+            {Object.entries(selectedIngredientsByCategory).map(([category, ingredients]) => {
+              const isCollapsed = collapsedCategories.has(category);
+              return (
+                <div key={category}>
+                  <button
+                    onClick={() => toggleCategoryCollapse(category)}
+                    className="flex items-center gap-2 mb-2 w-full hover:bg-light-charcoal/30 px-2 py-1 rounded-organic-sm transition-colors"
+                  >
+                    {getCategoryIcon(category)}
+                    <h4 className="text-sm font-medium text-soft-gray flex-1 text-left">{category}</h4>
+                    <span className="text-xs text-muted-foreground">({ingredients.length})</span>
+                    {isCollapsed ? (
+                      <ChevronDown className="h-4 w-4 text-soft-gray" />
+                    ) : (
+                      <ChevronUp className="h-4 w-4 text-soft-gray" />
+                    )}
+                  </button>
+                  {!isCollapsed && (
+                    <div className="flex flex-wrap gap-2">
+                      {ingredients.map((ingredient) => (
+                        <Badge
+                          key={ingredient.id}
+                          variant="secondary"
+                          className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
+                          onClick={() => removeIngredient(ingredient.id)}
+                        >
+                          {ingredient.name}
+                          <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {ingredients.map((ingredient) => (
-                    <Badge
-                      key={ingredient.id}
-                      variant="secondary"
-                      className="px-3 py-1.5 bg-accent/20 border-accent/40 text-pure-white hover:bg-accent/30 cursor-pointer group"
-                      onClick={() => removeIngredient(ingredient.id)}
-                    >
-                      {ingredient.name}
-                      <X className="h-3 w-3 ml-1.5 opacity-50 group-hover:opacity-100" />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       )}
