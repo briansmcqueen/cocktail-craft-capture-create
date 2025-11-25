@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,6 +56,7 @@ export default function IngredientSelector({
 }: IngredientSelectorProps) {
   const [searchValue, setSearchValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
   
   // Add keyboard shortcut for search
   useSearchShortcut(inputRef);
@@ -149,6 +151,13 @@ export default function IngredientSelector({
     toggleIngredient(ingredientId);
     setSearchValue("");
     setOpen(false);
+    
+    // Show subtle autosave toast
+    toast({
+      description: "Auto-saved",
+      duration: 1500,
+    });
+    
     // Keep focus on input for continued searching
     setTimeout(() => {
       if (inputRef.current) {
@@ -159,6 +168,12 @@ export default function IngredientSelector({
 
   const removeIngredient = (ingredientId: string) => {
     toggleIngredient(ingredientId);
+    
+    // Show subtle autosave toast
+    toast({
+      description: "Auto-saved",
+      duration: 1500,
+    });
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
