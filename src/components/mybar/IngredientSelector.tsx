@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini } from "lucide-react";
+import { Search, X, Save, Bookmark, User, MoreHorizontal, Edit, Copy, Trash2, Martini, Wine, Milk, Coffee, Droplet, Citrus, Leaf } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -166,7 +166,19 @@ export default function IngredientSelector({
     }
   };
 
-  // Category list for browsing
+  // Category list for browsing with icons
+  const categoryIcons: Record<string, any> = {
+    "Spirits": Wine,
+    "Liqueurs": Coffee,
+    "Wines & Vermouths": Wine,
+    "Bitters": Droplet,
+    "Mixers": Citrus,
+    "Syrups": Droplet,
+    "Juices": Citrus,
+    "Garnishes": Leaf,
+    "Other": Milk
+  };
+
   const categories = useMemo(() => {
     const cats = new Set(allIngredients.map(ing => ing.category));
     return Array.from(cats).sort();
@@ -348,7 +360,7 @@ export default function IngredientSelector({
               </div>
             )}
             
-            {/* Custom Dropdown - Show search results OR category browsing */}
+            {/* Custom Dropdown - Show search results */}
             {open && filteredIngredients.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
                 {filteredIngredients.map((ingredient) => (
@@ -366,58 +378,6 @@ export default function IngredientSelector({
                 ))}
               </div>
             )}
-
-            {/* Category Browsing - Show when search is empty */}
-            {!searchValue && !selectedCategory && (
-              <div className="mt-3">
-                <p className="text-xs text-soft-gray mb-2">Browse by category:</p>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedCategory(category)}
-                      className="text-xs bg-medium-charcoal border-light-charcoal hover:bg-light-charcoal text-pure-white"
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Category Ingredients Dropdown */}
-            {selectedCategory && categoryIngredients.length > 0 && (
-              <div className="mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg max-h-[300px] overflow-y-auto">
-                <div className="sticky top-0 bg-medium-charcoal border-b border-light-charcoal px-3 py-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-pure-white">{selectedCategory}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedCategory(null)}
-                    className="h-6 w-6 p-0"
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                </div>
-                {categoryIngredients.map((ingredient) => (
-                  <button
-                    key={ingredient.id}
-                    onClick={() => {
-                      addIngredient(ingredient.id);
-                      setSelectedCategory(null);
-                    }}
-                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
-                  >
-                    <span className="text-light-text">{ingredient.name}</span>
-                    <Badge variant="outline" className="text-xs border-primary/30 text-soft-gray">
-                      {ingredient.subCategory}
-                    </Badge>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
           
           <AddCustomIngredient 
@@ -427,6 +387,70 @@ export default function IngredientSelector({
             }}
           />
         </div>
+
+        {/* Category Browsing Section - Outside of search input */}
+        {!searchValue && myBarIngredients.length === 0 && (
+          <Card className="p-4 bg-medium-charcoal border-light-charcoal">
+            <h4 className="text-sm font-medium text-pure-white mb-3">Browse by Category</h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              {categories.map((category) => {
+                const IconComponent = categoryIcons[category] || Milk;
+                return (
+                  <Button
+                    key={category}
+                    variant="outline"
+                    onClick={() => setSelectedCategory(category)}
+                    className="h-auto py-3 flex flex-col items-center gap-2 bg-light-charcoal/50 border-light-charcoal hover:bg-light-charcoal hover:border-primary/40 text-pure-white"
+                  >
+                    <IconComponent className="h-5 w-5" />
+                    <span className="text-xs font-medium">{category}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </Card>
+        )}
+
+        {/* Category Ingredients Display */}
+        {selectedCategory && categoryIngredients.length > 0 && (
+          <Card className="p-4 bg-medium-charcoal border-light-charcoal">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-sm font-medium text-pure-white flex items-center gap-2">
+                {React.createElement(categoryIcons[selectedCategory] || Milk, { className: "h-4 w-4" })}
+                {selectedCategory}
+              </h4>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCategory(null)}
+                className="h-7 text-xs"
+              >
+                <X className="h-3 w-3 mr-1" />
+                Back
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto">
+              {categoryIngredients.map((ingredient) => (
+                <Button
+                  key={ingredient.id}
+                  variant="outline"
+                  onClick={() => {
+                    addIngredient(ingredient.id);
+                    setSelectedCategory(null);
+                  }}
+                  className="h-auto py-3 flex flex-col items-center justify-center gap-1 bg-light-charcoal/50 border-light-charcoal hover:bg-primary/10 hover:border-primary/40 text-left"
+                >
+                  <span className="text-sm font-medium text-pure-white line-clamp-2 text-center">
+                    {ingredient.name}
+                  </span>
+                  <span className="text-xs text-soft-gray">
+                    {ingredient.subCategory}
+                  </span>
+                </Button>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {/* Save Preset Dialog */}
         {showSaveDialog && (
@@ -568,8 +592,8 @@ export default function IngredientSelector({
         )}
       </div>
 
-      {/* Empty State - No Ingredients */}
-      {myBarIngredients.length === 0 && (
+      {/* Empty State - No Ingredients - Only show if not browsing categories */}
+      {myBarIngredients.length === 0 && !selectedCategory && searchValue.trim() === "" && (
         user ? (
           <Card className="p-8 text-center bg-medium-charcoal border-light-charcoal animate-fade-in">
             <Search className="h-12 w-12 mx-auto mb-4 text-soft-gray" />
@@ -577,7 +601,7 @@ export default function IngredientSelector({
               Your bar is empty
             </h3>
             <p className="text-soft-gray">
-              Search for ingredients above or browse by category to start building your cocktail collection.
+              Search for ingredients above or browse by category below to start building your cocktail collection.
             </p>
           </Card>
         ) : (
