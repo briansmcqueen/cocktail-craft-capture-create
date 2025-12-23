@@ -1,21 +1,24 @@
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface BackButtonProps {
   onClick: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
 }
 
-export function BackButton({ onClick, children, className = '' }: BackButtonProps) {
+export function BackButton({ onClick, children = 'Back', className }: BackButtonProps) {
   return (
-    <Button
-      variant="ghost"
+    <button
       onClick={onClick}
-      className={`text-available hover:text-available/80 hover:bg-available/10 font-medium gap-2 px-0 ${className}`}
+      type="button"
+      className={cn(
+        "flex items-center gap-2 text-light-text hover:text-foreground transition-colors",
+        className
+      )}
     >
-      <ArrowLeft className="h-4 w-4" />
+      <ArrowLeft size={20} />
       {children}
-    </Button>
+    </button>
   );
 }
