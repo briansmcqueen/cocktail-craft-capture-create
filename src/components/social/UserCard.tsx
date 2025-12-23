@@ -63,17 +63,15 @@ export default function UserCard({
       )}
 
       {/* Footer: Stats + Follow */}
-      <div className="flex items-center justify-between gap-3 mt-auto pt-3 border-t border-border/50">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-md">
-            <BookOpen size={14} className="text-primary" />
-            <span className="text-sm font-medium text-foreground">{recipeCount}</span>
-            <span className="text-xs text-muted-foreground">recipes</span>
+      <div className="flex items-center justify-between gap-2 mt-auto pt-2 border-t border-border/50">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <BookOpen size={14} />
+            <span>{recipeCount}</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1.5 rounded-md">
-            <Users size={14} className="text-primary" />
-            <span className="text-sm font-medium text-foreground">{followerCount}</span>
-            <span className="text-xs text-muted-foreground">followers</span>
+          <div className="flex items-center gap-1">
+            <Users size={14} />
+            <span>{followerCount}</span>
           </div>
         </div>
 
