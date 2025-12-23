@@ -1,6 +1,6 @@
 // Search and filter types for the bartending app
 
-export type BaseSpirit = 'gin' | 'vodka' | 'whiskey' | 'rum' | 'tequila' | 'brandy' | 'mezcal' | 'liqueur';
+export type BaseSpirit = 'gin' | 'vodka' | 'whiskey' | 'rum' | 'tequila' | 'brandy' | 'mezcal';
 
 export type Technique = 'shake' | 'stir' | 'build' | 'muddle' | 'blend';
 
@@ -81,8 +81,7 @@ export const SPIRIT_ICONS: Record<BaseSpirit, string> = {
   rum: '🍺',
   tequila: '🥂',
   brandy: '🍷',
-  mezcal: '🌿',
-  liqueur: '🍯'
+  mezcal: '🌿'
 };
 
 export const TECHNIQUE_ICONS: Record<Technique, string> = {
