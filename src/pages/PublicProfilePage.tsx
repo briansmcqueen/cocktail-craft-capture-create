@@ -207,18 +207,12 @@ export default function PublicProfilePage() {
 
               {/* Content Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="mb-8 bg-medium-charcoal border border-light-charcoal rounded-organic-md">
-                  <TabsTrigger 
-                    value="recipes" 
-                    className="rounded-organic-sm data-[state=active]:bg-primary/20 data-[state=active]:text-emerald"
-                  >
+                <TabsList className="w-full justify-start mb-8">
+                  <TabsTrigger value="recipes">
                     <BookOpen className="h-4 w-4 mr-2" />
                     Recipes ({recipes.length})
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="favorites" 
-                    className="rounded-organic-sm data-[state=active]:bg-primary/20 data-[state=active]:text-emerald"
-                  >
+                  <TabsTrigger value="favorites">
                     <Heart className="h-4 w-4 mr-2" />
                     Favorites ({favoriteRecipes.length})
                   </TabsTrigger>

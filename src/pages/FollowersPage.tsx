@@ -144,18 +144,12 @@ export default function FollowersPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'followers' | 'following')} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6 bg-medium-charcoal rounded-organic-md">
-          <TabsTrigger 
-            value="followers" 
-            className="rounded-organic-sm data-[state=active]:bg-primary"
-          >
+        <TabsList className="w-full justify-start mb-6">
+          <TabsTrigger value="followers">
             <Users size={16} className="mr-2" />
             Followers ({followers.length})
           </TabsTrigger>
-          <TabsTrigger 
-            value="following" 
-            className="rounded-organic-sm data-[state=active]:bg-primary"
-          >
+          <TabsTrigger value="following">
             <Users size={16} className="mr-2" />
             Following ({following.length})
           </TabsTrigger>
