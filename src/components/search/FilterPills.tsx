@@ -134,15 +134,14 @@ export default function FilterPills({
         </PopoverTrigger>
         <PopoverContent className="w-80 p-3 bg-card border-border">
           <div className="grid grid-cols-2 gap-2">
-            {Object.entries(SPIRIT_ICONS).map(([spirit, icon]) => (
+            {Object.entries(SPIRIT_ICONS).map(([spirit]) => (
               <Button
                 key={spirit}
                 variant={filters.baseSpirits.includes(spirit as BaseSpirit) ? "default" : "outline"}
                 size="sm"
                 onClick={() => handleBaseSpiritsToggle(spirit as BaseSpirit)}
-                className="justify-start gap-2 h-9"
+                className="justify-start h-9"
               >
-                <span className="text-base">{icon}</span>
                 <span className="capitalize">{spirit}</span>
               </Button>
             ))}
