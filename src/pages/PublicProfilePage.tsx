@@ -174,7 +174,7 @@ export default function PublicProfilePage() {
                         <p className="text-light-text max-w-2xl">{profile.bio}</p>
                       )}
 
-                      <div className="flex flex-wrap gap-2 text-sm text-soft-gray">
+                      <div className="flex flex-col gap-2 text-sm text-soft-gray">
                         <div className="flex items-center gap-1.5">
                           <BookOpen className="h-4 w-4" />
                           <span>{recipes.length} Recipe{recipes.length !== 1 ? 's' : ''}</span>
