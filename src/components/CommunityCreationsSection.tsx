@@ -7,6 +7,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselDots,
 } from "@/components/ui/carousel";
 
 type CommunityCreationsSectionProps = {
@@ -81,6 +82,7 @@ export default function CommunityCreationsSection({
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex -left-4" />
           <CarouselNext className="hidden md:flex -right-4" />
+          <CarouselDots className="md:hidden" />
         </Carousel>
       </div>
     </section>

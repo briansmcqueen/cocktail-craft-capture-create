@@ -12,6 +12,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselDots,
 } from "@/components/ui/carousel";
 
 type TechniquesSectionProps = {
@@ -128,6 +129,7 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex -left-4" />
           <CarouselNext className="hidden md:flex -right-4" />
+          <CarouselDots className="md:hidden" />
         </Carousel>
       </div>
     </section>
