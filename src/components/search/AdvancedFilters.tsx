@@ -158,20 +158,19 @@ export default function AdvancedFilters({
         <div className="space-y-3">
           <Label className="text-sm font-medium text-light-text">Base Spirits</Label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {Object.entries(SPIRIT_ICONS).map(([spirit, icon]) => (
+            {Object.keys(SPIRIT_ICONS).map((spirit) => (
               <Button
                 key={spirit}
                 variant={filters.baseSpirits.includes(spirit as BaseSpirit) ? "default" : "outline"}
                 size="sm"
                 onClick={() => toggleArrayFilter('baseSpirits', spirit as BaseSpirit, filters.baseSpirits)}
                 className={cn(
-                  "justify-start gap-2 rounded-organic-sm",
+                  "justify-start rounded-organic-sm",
                   filters.baseSpirits.includes(spirit as BaseSpirit)
                     ? "bg-primary text-primary-foreground"
                     : "border-border text-light-text hover:bg-card/50"
                 )}
               >
-                <span className="text-base">{icon}</span>
                 <span className="capitalize">{spirit}</span>
               </Button>
             ))}
@@ -206,13 +205,12 @@ export default function AdvancedFilters({
                   size="sm"
                   onClick={() => onFiltersChange({ technique })}
                   className={cn(
-                    "w-full justify-start gap-2 rounded-organic-sm",
+                    "w-full justify-start rounded-organic-sm",
                     filters.technique === technique
                       ? "bg-primary text-primary-foreground"
                       : "border-border text-light-text hover:bg-card/50"
                   )}
                 >
-                  <span>{TECHNIQUE_ICONS[technique]}</span>
                   <span className="capitalize">{technique}</span>
                 </Button>
               ))}
@@ -283,13 +281,12 @@ export default function AdvancedFilters({
                   size="sm"
                   onClick={() => onFiltersChange({ glassType })}
                   className={cn(
-                    "justify-start gap-2 rounded-organic-sm",
+                    "justify-start rounded-organic-sm",
                     filters.glassType === glassType
                       ? "bg-primary text-primary-foreground"
                       : "border-border text-light-text hover:bg-card/50"
                   )}
                 >
-                  <span>{GLASS_ICONS[glassType]}</span>
                   <span className="capitalize text-xs">{glassType}</span>
                 </Button>
               ))}
