@@ -53,7 +53,6 @@ export function extractBaseSpirit(recipe: Cocktail): BaseSpirit | null {
   if (ingredients.includes('tequila')) return 'tequila';
   if (ingredients.includes('brandy') || ingredients.includes('cognac')) return 'brandy';
   if (ingredients.includes('mezcal')) return 'mezcal';
-  if (ingredients.includes('liqueur') || ingredients.includes('amaretto') || ingredients.includes('cointreau')) return 'liqueur';
   
   return null;
 }
@@ -263,8 +262,7 @@ export function getBaseSpritCounts(
     rum: 0,
     tequila: 0,
     brandy: 0,
-    mezcal: 0,
-    liqueur: 0
+    mezcal: 0
   };
 
   recipes.forEach(recipe => {
