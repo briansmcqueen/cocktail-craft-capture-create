@@ -155,25 +155,6 @@ export default function UniversalRecipeCard({
               View Recipe
             </Button>
             
-            {recipe.isUserRecipe && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate('/recipes/my-drinks', { 
-                    state: { 
-                      editingRecipe: recipe,
-                      showForm: true
-                    } 
-                  });
-                }}
-                className="h-8 w-8 p-0 rounded-organic-sm text-light-text hover:text-foreground"
-              >
-                <Edit size={16} />
-              </Button>
-            )}
-            
             <Button
               variant="ghost"
               size="sm"
