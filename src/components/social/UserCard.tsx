@@ -36,7 +36,7 @@ export default function UserCard({
           onClick={() => navigate(`/profile/${username}`)}
           className="flex-shrink-0 group"
         >
-          <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center overflow-hidden group-hover:ring-2 group-hover:ring-primary transition-all">
+          <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center overflow-hidden group-hover:ring-2 group-hover:ring-primary transition-all">
             {fullAvatarUrl ? (
               <img
                 src={fullAvatarUrl}
@@ -44,7 +44,7 @@ export default function UserCard({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="text-primary-foreground font-bold text-xl">
+              <span className="text-primary-foreground font-bold text-sm">
                 {username[0]?.toUpperCase() || 'U'}
               </span>
             )}
