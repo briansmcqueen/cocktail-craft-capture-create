@@ -13,9 +13,8 @@ interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
 }
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ onClear, showClearButton = true, containerClassName, className, value, showShortcutHint = true, onEnter, ...props }, ref) => {
+  ({ onClear, showClearButton = true, containerClassName, className, value, showShortcutHint = false, onEnter, ...props }, ref) => {
     const hasValue = value !== undefined && value !== '';
-    const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' && onEnter) {
@@ -36,12 +35,12 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         />
         <Input
           ref={ref}
-          type="search"
+          type="text"
           value={value}
           onKeyDown={handleKeyDown}
           className={cn(
             "pl-10 bg-card border-border text-card-foreground placeholder:text-muted-foreground",
-            showClearButton && hasValue ? "pr-10" : showShortcutHint ? "pr-16" : "pr-4",
+            showClearButton && hasValue ? "pr-10" : "pr-4",
             "h-12 rounded-organic-md",
             "focus:border-primary focus:ring-1 focus:ring-primary/20",
             "transition-all duration-300",
@@ -61,16 +60,6 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           >
             <X className="h-4 w-4" />
           </Button>
-        )}
-        {showShortcutHint && !hasValue && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-soft-gray pointer-events-none z-10">
-            <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
-              {isMac ? '⌘' : 'Ctrl'}
-            </kbd>
-            <kbd className="px-1.5 py-0.5 bg-muted/50 border border-border/50 rounded text-[10px] font-mono">
-              K
-            </kbd>
-          </div>
         )}
       </div>
     );
