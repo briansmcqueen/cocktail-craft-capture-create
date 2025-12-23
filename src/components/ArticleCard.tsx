@@ -39,9 +39,8 @@ export default function ArticleCard({
 
   return (
     <Card 
-      className="cursor-pointer transition-all duration-400 bg-card border-border rounded-organic-md shadow-glass hover:shadow-xl group overflow-hidden active:scale-95 sm:hover:scale-[1.02] sm:hover:rotate-[0.5deg] sm:active:scale-100"
+      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border-border rounded-organic-md group overflow-hidden"
       onClick={() => onArticleClick(article)}
-      style={{ transitionTimingFunction: 'var(--timing-pour)' }}
     >
       <CardContent className="p-0">
         {/* Hero image */}
@@ -80,7 +79,7 @@ export default function ArticleCard({
               variant="default"
               size="sm"
               onClick={() => onArticleClick(article)}
-              className="flex-1 rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+              className="flex-1 rounded-organic-sm"
             >
               Read Article
             </Button>
