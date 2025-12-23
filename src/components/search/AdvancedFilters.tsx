@@ -95,6 +95,25 @@ export default function AdvancedFilters({
     }
   };
 
+  // Count special requirements selected
+  const specialRequirementsCount = [
+    filters.noEggWhites,
+    filters.lowAlcohol,
+    filters.noCream,
+    filters.nonAlcoholic
+  ].filter(Boolean).length;
+
+  const FilterLabel = ({ label, count }: { label: string; count: number }) => (
+    <div className="flex items-center gap-2">
+      <Label className="text-sm font-medium text-light-text">{label}</Label>
+      {count > 0 && (
+        <Badge variant="secondary" className="px-1.5 py-0.5 text-xs text-pure-white">
+          {count}
+        </Badge>
+      )}
+    </div>
+  );
+
   return (
     <Card ref={cardRef} className="w-full bg-card border-border rounded-organic-md">
       <CardContent className="p-6 space-y-6">
@@ -156,7 +175,7 @@ export default function AdvancedFilters({
 
         {/* Base Spirits */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-light-text">Base Spirits</Label>
+          <FilterLabel label="Base Spirits" count={filters.baseSpirits.length} />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {Object.keys(SPIRIT_ICONS).map((spirit) => (
               <Button
@@ -183,7 +202,7 @@ export default function AdvancedFilters({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Technique */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-light-text">Technique</Label>
+            <FilterLabel label="Technique" count={filters.technique !== 'any' ? 1 : 0} />
             <div className="space-y-2">
               <Button
                 variant={filters.technique === 'any' ? "default" : "outline"}
@@ -219,7 +238,7 @@ export default function AdvancedFilters({
 
           {/* Difficulty */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-light-text">Difficulty</Label>
+            <FilterLabel label="Difficulty" count={filters.difficulty !== 'any' ? 1 : 0} />
             <div className="space-y-2">
               <Button
                 variant={filters.difficulty === 'any' ? "default" : "outline"}
@@ -258,7 +277,7 @@ export default function AdvancedFilters({
 
         {/* Glass Types */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-light-text">Glass Type</Label>
+          <FilterLabel label="Glass Type" count={filters.glassType !== 'any' ? 1 : 0} />
           <div className="space-y-2">
             <Button
               variant={filters.glassType === 'any' ? "default" : "outline"}
@@ -298,7 +317,7 @@ export default function AdvancedFilters({
 
         {/* Flavor Profiles */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-light-text">Flavor Profile</Label>
+          <FilterLabel label="Flavor Profile" count={filters.flavorProfiles.length} />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {FLAVOR_PROFILES.map((profile) => (
               <Button
@@ -323,7 +342,7 @@ export default function AdvancedFilters({
 
         {/* Occasions */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-light-text">Perfect For</Label>
+          <FilterLabel label="Perfect For" count={filters.occasions.length} />
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {OCCASIONS.map((occasion) => (
               <Button
@@ -348,7 +367,7 @@ export default function AdvancedFilters({
 
         {/* Special Constraints */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-light-text">Special Requirements</Label>
+          <FilterLabel label="Special Requirements" count={specialRequirementsCount} />
           <div className="grid grid-cols-2 gap-2">
             {[
               { key: 'noEggWhites', label: 'No egg whites' },
