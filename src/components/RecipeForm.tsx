@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { ArrowLeft, Save } from "lucide-react";
+import { Save } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -74,14 +75,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   return (
     <div>
       {/* Back button */}
-      <button
-        onClick={onCancel}
-        className="flex items-center gap-2 text-light-text hover:text-pure-white mb-6 transition-colors"
-        type="button"
-      >
-        <ArrowLeft size={20} />
-        Back
-      </button>
+      <BackButton onClick={onCancel} className="mb-6" />
 
       <form
         className={cn(

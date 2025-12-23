@@ -1,7 +1,8 @@
 import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { ArrowLeft, Edit, Heart, Share, Martini, MessageCircle } from "lucide-react";
+import { Edit, Heart, Share, Martini, MessageCircle } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
@@ -270,13 +271,7 @@ export default function RecipePage() {
           <div className="max-w-6xl mx-auto px-4 py-6">
             {/* Back button - only show if we should */}
             {shouldShowBackButton && (
-              <button
-                onClick={handleGoBack}
-                className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors"
-              >
-                <ArrowLeft size={20} />
-                Back
-              </button>
+              <BackButton onClick={handleGoBack} className="mb-6" />
             )}
 
             {/* Recipe header */}

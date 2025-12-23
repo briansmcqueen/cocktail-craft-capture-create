@@ -4,7 +4,8 @@ import TopNavigation from "@/components/TopNavigation";
 import Sidebar from "@/components/Sidebar";
 import TagBadge from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Share } from "lucide-react";
+import { Share } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { useAuth } from "@/hooks/useAuth";
 import { Article, articlesService } from "@/services/articlesService";
 import MarkdownPreview from '@uiw/react-markdown-preview';
@@ -127,10 +128,7 @@ export default function ArticlePage() {
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-4 py-6 pb-24 md:pb-6">
             {shouldShowBackButton && (
-              <button onClick={handleGoBack} className="flex items-center gap-2 text-light-text hover:text-foreground mb-6 transition-colors">
-                <ArrowLeft size={20} />
-                Back
-              </button>
+              <BackButton onClick={handleGoBack} className="mb-6" />
             )}
 
             {/* Header */}
