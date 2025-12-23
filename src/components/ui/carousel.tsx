@@ -281,15 +281,16 @@ const CarouselDots = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex justify-center items-center gap-1 mt-3", className)}
+      className={cn("flex justify-center items-center gap-2 mt-3", className)}
       {...props}
     >
       {scrollSnaps.map((_, index) => (
         <button
           key={index}
           type="button"
+          style={{ width: '6px', height: '6px' }}
           className={cn(
-            "w-2 h-2 rounded-full transition-all duration-200",
+            "rounded-full transition-colors duration-200 flex-shrink-0",
             index === selectedIndex
               ? "bg-primary"
               : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
