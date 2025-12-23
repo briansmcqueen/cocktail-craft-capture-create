@@ -101,11 +101,11 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
     );
   }
   return (
-    <>
-      <section>
-        <h2 className="text-pure-white mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
-          Essential Techniques
-        </h2>
+    <section>
+      <h2 className="text-pure-white mb-8 tracking-[0.08em] leading-[1.45] uppercase font-bold text-[1rem]">
+        Essential Techniques
+      </h2>
+      <div className="relative">
         <Carousel
           opts={{
             align: "start",
@@ -113,9 +113,9 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
           }}
           className="w-full"
         >
-          <CarouselContent className="-ml-2 md:-ml-4">
+          <CarouselContent className="-ml-4">
             {articles.map((article) => (
-              <CarouselItem key={article.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+              <CarouselItem key={article.id} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                 <ArticleCard
                   article={article}
                   onArticleClick={handleArticleClick}
@@ -126,12 +126,10 @@ export default function TechniquesSection({ onShowAuthModal }: TechniquesSection
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="flex items-center gap-4 mt-4 md:mt-6">
-            <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
-            <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
-          </div>
+          <CarouselPrevious className="hidden md:flex -left-4" />
+          <CarouselNext className="hidden md:flex -right-4" />
         </Carousel>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
