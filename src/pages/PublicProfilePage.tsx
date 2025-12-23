@@ -147,34 +147,45 @@ export default function PublicProfilePage() {
               {/* Header */}
               <div className="bg-rich-charcoal border border-light-charcoal rounded-organic-md mb-6 mt-4">
                 <div className="p-6">
-                  <div className="flex items-start gap-6">
-                    {/* Avatar */}
-                    <Avatar className="h-24 w-24 md:h-32 md:w-32 border-2 border-primary/20">
-                      <AvatarImage src={fullAvatarUrl || undefined} alt={profile.username} />
-                      <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
-                        {getInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-
-                    {/* Profile Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-3xl font-semibold text-pure-white">
-                          {profile.full_name || profile.username}
-                        </h1>
+                  <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
+                    {/* Avatar and Follow Button (stacked on mobile) */}
+                    <div className="flex flex-col items-center gap-3">
+                      <Avatar className="h-24 w-24 md:h-32 md:w-32 border-2 border-primary/20">
+                        <AvatarImage src={fullAvatarUrl || undefined} alt={profile.username} />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                          {getInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="md:hidden">
                         <FollowButton 
                           userId={profile.id} 
                           username={profile.username}
                           onFollowChange={loadProfileData}
                         />
                       </div>
-                      <p className="text-lg text-soft-gray mb-3">@{profile.username}</p>
+                    </div>
+
+                    {/* Profile Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h1 className="text-2xl md:text-3xl font-semibold text-pure-white">
+                          {profile.full_name || profile.username}
+                        </h1>
+                        <div className="hidden md:block">
+                          <FollowButton 
+                            userId={profile.id} 
+                            username={profile.username}
+                            onFollowChange={loadProfileData}
+                          />
+                        </div>
+                      </div>
+                      <p className="text-lg text-soft-gray mb-2">@{profile.username}</p>
                       
                       {profile.bio && (
-                        <p className="text-light-text mb-4 max-w-2xl">{profile.bio}</p>
+                        <p className="text-light-text mb-3 max-w-2xl">{profile.bio}</p>
                       )}
 
-                      <div className="flex flex-wrap gap-4 text-sm text-soft-gray">
+                      <div className="flex flex-wrap gap-2 text-sm text-soft-gray">
                         <div className="flex items-center gap-2">
                           <BookOpen className="h-4 w-4" />
                           <span>{recipes.length} Public Recipe{recipes.length !== 1 ? 's' : ''}</span>
