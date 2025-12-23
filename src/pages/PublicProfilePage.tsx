@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { User, Calendar, BookOpen, Heart, ArrowLeft, Users, Lock } from 'lucide-react';
+import { User, BookOpen, Heart, Users, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import RecipeCard from '@/components/RecipeCard';
+import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import FollowButton from '@/components/FollowButton';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
@@ -236,38 +236,24 @@ export default function PublicProfilePage() {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {recipes.map((recipe) => (
-                        <div
+                        <UniversalRecipeCard
                           key={recipe.id}
-                          className="bg-medium-charcoal border border-light-charcoal rounded-organic-md p-4 hover:border-primary/30 transition-all cursor-pointer"
-                          onClick={() => navigate(`/cocktail/${profile.username}/${recipe.name.toLowerCase().replace(/\s+/g, '-')}`)}
-                        >
-                          {recipe.image_url && (
-                            <img
-                              src={recipe.image_url}
-                              alt={recipe.name}
-                              className="w-full h-48 object-cover rounded-organic-sm mb-4"
-                            />
-                          )}
-                          <h3 className="text-xl font-semibold text-pure-white mb-2">
-                            {recipe.name}
-                          </h3>
-                          {recipe.description && (
-                            <p className="text-light-text text-sm mb-3 line-clamp-2">
-                              {recipe.description}
-                            </p>
-                          )}
-                          <div className="flex items-center justify-between text-xs text-soft-gray">
-                            {recipe.difficulty && (
-                              <span className="px-2 py-1 bg-primary/10 text-emerald rounded-organic-sm">
-                                {recipe.difficulty}
-                              </span>
-                            )}
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {format(new Date(recipe.created_at), 'MMM yyyy')}
-                            </span>
-                          </div>
-                        </div>
+                          recipe={{
+                            id: recipe.id,
+                            name: recipe.name,
+                            image: recipe.image_url || '/placeholder.svg',
+                            ingredients: [],
+                            steps: '',
+                            tags: recipe.tags || [],
+                            notes: recipe.description || undefined,
+                            isUserRecipe: true,
+                            createdBy: profile.id,
+                            creatorUsername: profile.username,
+                            creatorUserId: profile.id,
+                            creatorAvatar: profile.avatar_url || undefined,
+                          }}
+                          hideCreator
+                        />
                       ))}
                     </div>
                   )}
@@ -291,10 +277,9 @@ export default function PublicProfilePage() {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {favoriteRecipes.map((recipe) => (
-                        <RecipeCard
+                        <UniversalRecipeCard
                           key={recipe.id}
                           recipe={recipe}
-                          onSelect={() => navigate(`/cocktail/${recipe.name.toLowerCase().replace(/\s+/g, '-')}`)}
                         />
                       ))}
                     </div>
