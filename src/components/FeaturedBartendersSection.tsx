@@ -8,7 +8,6 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  CarouselDots,
 } from "@/components/ui/carousel";
 
 type BartenderUser = SuggestedUser | TrendingUser;
@@ -108,7 +107,6 @@ export default function FeaturedBartendersSection({ onShowAuthModal }: FeaturedB
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex -left-4" />
           <CarouselNext className="hidden md:flex -right-4" />
-          <CarouselDots className="md:hidden" />
         </Carousel>
       </div>
     </section>

@@ -8,7 +8,6 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  CarouselDots,
 } from "@/components/ui/carousel";
 
 type FeaturedSectionProps = {
@@ -46,11 +45,10 @@ export default function FeaturedSection({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="hidden md:flex items-center gap-4 mt-4 md:mt-6">
+        <div className="flex items-center gap-4 mt-4 md:mt-6">
           <CarouselPrevious className="relative left-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
           <CarouselNext className="relative right-0 top-0 translate-y-0 h-8 w-8 md:h-10 md:w-10 border cursor-pointer transition-all hover:shadow-sm bg-medium-charcoal border-light-charcoal hover:border-primary/50 hover:bg-light-charcoal [&>svg]:text-light-text hover:[&>svg]:text-pure-white rounded-organic-sm" />
         </div>
-        <CarouselDots className="md:hidden" />
       </Carousel>
     </section>
   );
