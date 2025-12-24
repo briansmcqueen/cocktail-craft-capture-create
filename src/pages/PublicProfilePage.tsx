@@ -17,39 +17,40 @@ import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 import { classicCocktails } from '@/data/classicCocktails';
 import { getAvatarUrl } from '@/utils/avatarUrl';
-
 export default function PublicProfilePage() {
-  const { username } = useParams<{ username: string }>();
+  const {
+    username
+  } = useParams<{
+    username: string;
+  }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  
+  const {
+    user
+  } = useAuth();
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [recipes, setRecipes] = useState<PublicRecipe[]>([]);
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
-  const [followStats, setFollowStats] = useState<FollowStats>({ followerCount: 0, followingCount: 0 });
+  const [followStats, setFollowStats] = useState<FollowStats>({
+    followerCount: 0,
+    followingCount: 0
+  });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('recipes');
-
   const isOwnProfile = user && profile && user.user_metadata?.username === profile.username;
-
   useEffect(() => {
     if (username) {
       loadProfileData();
     }
   }, [username]);
-
   const loadProfileData = async () => {
     if (!username) return;
-    
     setLoading(true);
     try {
       const profileData = await publicProfileService.getProfileByUsername(username);
-      
       if (!profileData) {
         navigate('/404');
         return;
       }
-
       setProfile(profileData);
 
       // Load recipes
@@ -69,71 +70,32 @@ export default function PublicProfilePage() {
       setLoading(false);
     }
   };
-
   const getInitials = () => {
     if (profile?.full_name) {
-      return profile.full_name
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase();
+      return profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
     }
     return profile?.username?.[0]?.toUpperCase() || 'U';
   };
 
   // Get favorite recipes that are public (classic cocktails)
-  const favoriteRecipes = classicCocktails.filter(cocktail => 
-    favoriteRecipeIds.includes(cocktail.id)
-  );
-
+  const favoriteRecipes = classicCocktails.filter(cocktail => favoriteRecipeIds.includes(cocktail.id));
   const fullAvatarUrl = getAvatarUrl(profile?.avatar_url);
-
   if (loading) {
     return <LoadingSpinner />;
   }
-
   if (!profile) {
     return null;
   }
-
-  return (
-    <div className="h-[100dvh] overflow-hidden bg-background">
+  return <div className="h-[100dvh] overflow-hidden bg-background">
       {/* Top Navigation for Mobile Only */}
-      <TopNavigation
-        user={user}
-        activeLibrary=""
-        onLibrarySelect={() => {}}
-        onAddRecipe={() => navigate('/')}
-        onSignInClick={() => {}}
-        onSignUpClick={() => {}}
-        onProfileClick={() => user && navigate(`/user/${user.id}`)}
-        onMyRecipesClick={() => navigate('/recipes/my-drinks')}
-        onFavoritesClick={() => navigate('/favorites')}
-      />
+      <TopNavigation user={user} activeLibrary="" onLibrarySelect={() => {}} onAddRecipe={() => navigate('/')} onSignInClick={() => {}} onSignUpClick={() => {}} onProfileClick={() => user && navigate(`/user/${user.id}`)} onMyRecipesClick={() => navigate('/recipes/my-drinks')} onFavoritesClick={() => navigate('/favorites')} />
       
       <div className="flex h-full">
         {/* Sidebar - Visible on tablet and desktop */}
         <div className="hidden md:block">
-          <Sidebar
-            active=""
-            onSelect={(library) => {
-              if (library === 'featured') navigate('/');
-              else if (library === 'all') navigate('/recipes');
-              else if (library === 'ingredients') navigate('/mybar');
-              else if (library === 'feed') navigate('/feed');
-              else if (library === 'favorites') navigate('/favorites');
-              else if (library === 'mine') navigate('/recipes/my-drinks');
-              else if (library === 'learn') navigate('/learn');
-            }}
-            onAdd={() => navigate('/')}
-            onCloseForm={() => {}}
-            user={user}
-            onSignInClick={() => {}}
-            onSignUpClick={() => {}}
-            onProfileClick={() => user && navigate(`/user/${user.id}`)}
-            onMyRecipesClick={() => navigate('/recipes/my-drinks')}
-            onFavoritesClick={() => navigate('/favorites')}
-          />
+          <Sidebar active="" onSelect={library => {
+          if (library === 'featured') navigate('/');else if (library === 'all') navigate('/recipes');else if (library === 'ingredients') navigate('/mybar');else if (library === 'feed') navigate('/feed');else if (library === 'favorites') navigate('/favorites');else if (library === 'mine') navigate('/recipes/my-drinks');else if (library === 'learn') navigate('/learn');
+        }} onAdd={() => navigate('/')} onCloseForm={() => {}} user={user} onSignInClick={() => {}} onSignUpClick={() => {}} onProfileClick={() => user && navigate(`/user/${user.id}`)} onMyRecipesClick={() => navigate('/recipes/my-drinks')} onFavoritesClick={() => navigate('/favorites')} />
         </div>
 
         <div className="flex-1 overflow-auto">
@@ -156,11 +118,7 @@ export default function PublicProfilePage() {
                           {getInitials()}
                         </AvatarFallback>
                       </Avatar>
-                      <FollowButton 
-                        userId={profile.id} 
-                        username={profile.username}
-                        onFollowChange={loadProfileData}
-                      />
+                      <FollowButton userId={profile.id} username={profile.username} onFollowChange={loadProfileData} />
                     </div>
 
                     {/* Profile Info Column */}
@@ -170,32 +128,22 @@ export default function PublicProfilePage() {
                       </h1>
                       <p className="text-base md:text-lg text-soft-gray">@{profile.username}</p>
                       
-                      {profile.bio && (
-                        <p className="text-light-text max-w-2xl">{profile.bio}</p>
-                      )}
+                      {profile.bio && <p className="text-light-text max-w-2xl">{profile.bio}</p>}
 
                       <div className="flex flex-col gap-2 text-sm text-soft-gray">
                         <div className="flex items-center gap-1.5">
                           <BookOpen className="h-4 w-4" />
                           <span>{recipes.length} Recipe{recipes.length !== 1 ? 's' : ''}</span>
                         </div>
-                        {favoriteRecipes.length > 0 && (
-                          <div className="flex items-center gap-1.5">
+                        {favoriteRecipes.length > 0 && <div className="flex items-center gap-1.5">
                             <Heart className="h-4 w-4" />
                             <span>{favoriteRecipes.length} Favorite{favoriteRecipes.length !== 1 ? 's' : ''}</span>
-                          </div>
-                        )}
-                        <button 
-                          onClick={() => navigate(`/profile/${username}/followers`)}
-                          className="flex items-center gap-1.5 hover:text-pure-white transition-colors p-0 m-0"
-                        >
+                          </div>}
+                        <button onClick={() => navigate(`/profile/${username}/followers`)} className="flex items-center hover:text-pure-white transition-colors p-0 m-0 gap-0">
                           <Users className="h-4 w-4" />
                           <span>{followStats.followerCount} Follower{followStats.followerCount !== 1 ? 's' : ''}</span>
                         </button>
-                        <button 
-                          onClick={() => navigate(`/profile/${username}/followers`)}
-                          className="flex items-center gap-1.5 hover:text-pure-white transition-colors p-0 m-0"
-                        >
+                        <button onClick={() => navigate(`/profile/${username}/followers`)} className="flex items-center gap-1.5 hover:text-pure-white transition-colors p-0 m-0">
                           <span>{followStats.followingCount} Following</span>
                         </button>
                       </div>
@@ -219,76 +167,50 @@ export default function PublicProfilePage() {
 
                 {/* Recipes Tab */}
                 <TabsContent value="recipes" className="mt-0">
-                  {recipes.length === 0 ? (
-                    <div className="text-center py-16">
+                  {recipes.length === 0 ? <div className="text-center py-16">
                       <Lock className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
                       <h3 className="text-xl font-semibold text-foreground mb-2">
                         {isOwnProfile ? 'No recipes yet' : 'No accessible recipes'}
                       </h3>
                       <p className="text-muted-foreground">
-                        {isOwnProfile 
-                          ? "Start sharing your cocktail creations with the community!"
-                          : `This user's recipes may be private or followers-only`
-                        }
+                        {isOwnProfile ? "Start sharing your cocktail creations with the community!" : `This user's recipes may be private or followers-only`}
                       </p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {recipes.map((recipe) => (
-                        <UniversalRecipeCard
-                          key={recipe.id}
-                          recipe={{
-                            id: recipe.id,
-                            name: recipe.name,
-                            image: recipe.image_url || '/placeholder.svg',
-                            ingredients: [],
-                            steps: '',
-                            tags: recipe.tags || [],
-                            notes: recipe.description || undefined,
-                            isUserRecipe: true,
-                            createdBy: profile.id,
-                            creatorUsername: profile.username,
-                            creatorUserId: profile.id,
-                            creatorAvatar: profile.avatar_url || undefined,
-                          }}
-                          hideCreator
-                        />
-                      ))}
-                    </div>
-                  )}
+                    </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {recipes.map(recipe => <UniversalRecipeCard key={recipe.id} recipe={{
+                    id: recipe.id,
+                    name: recipe.name,
+                    image: recipe.image_url || '/placeholder.svg',
+                    ingredients: [],
+                    steps: '',
+                    tags: recipe.tags || [],
+                    notes: recipe.description || undefined,
+                    isUserRecipe: true,
+                    createdBy: profile.id,
+                    creatorUsername: profile.username,
+                    creatorUserId: profile.id,
+                    creatorAvatar: profile.avatar_url || undefined
+                  }} hideCreator />)}
+                    </div>}
                 </TabsContent>
 
                 {/* Favorites Tab */}
                 <TabsContent value="favorites" className="mt-0">
-                  {favoriteRecipes.length === 0 ? (
-                    <div className="text-center py-16">
+                  {favoriteRecipes.length === 0 ? <div className="text-center py-16">
                       <Heart className="h-16 w-16 mx-auto mb-4 text-soft-gray opacity-50" />
                       <h3 className="text-xl font-semibold text-light-text mb-2">
                         No public favorites yet
                       </h3>
                       <p className="text-soft-gray">
-                        {isOwnProfile 
-                          ? "Mark your favorite cocktails as public to share them here!"
-                          : `${profile.username} hasn't made any favorites public yet.`
-                        }
+                        {isOwnProfile ? "Mark your favorite cocktails as public to share them here!" : `${profile.username} hasn't made any favorites public yet.`}
                       </p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {favoriteRecipes.map((recipe) => (
-                        <UniversalRecipeCard
-                          key={recipe.id}
-                          recipe={recipe}
-                        />
-                      ))}
-                    </div>
-                  )}
+                    </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {favoriteRecipes.map(recipe => <UniversalRecipeCard key={recipe.id} recipe={recipe} />)}
+                    </div>}
                 </TabsContent>
               </Tabs>
             </div>
           </main>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
