@@ -204,6 +204,26 @@ export default function RecipePage() {
     });
   };
 
+  // Safe fraction parser - replaces unsafe eval()
+  const parseFraction = (frac: string): number => {
+    const parts = frac.trim().split(/\s+/);
+    let total = 0;
+    for (const part of parts) {
+      if (part.includes('/')) {
+        const [num, den] = part.split('/').map(Number);
+        if (!isNaN(num) && !isNaN(den) && den !== 0) {
+          total += num / den;
+        }
+      } else {
+        const num = Number(part);
+        if (!isNaN(num)) {
+          total += num;
+        }
+      }
+    }
+    return total;
+  };
+
   // Convert measurements based on toggle
   const convertMeasurement = (ingredient: string) => {
     if (isMetric) {
@@ -211,7 +231,7 @@ export default function RecipePage() {
       return ingredient
         .replace(/(\d+(?:\.\d+)?)\s*oz/gi, (match, num) => `${Math.round(parseFloat(num) * 30)}ml`)
         .replace(/(\d+(?:\s+\d+)?\/\d+)\s*oz/gi, (match, frac) => {
-          const decimal = frac.includes('/') ? eval(frac.replace(/\s+/g, '+')) : parseFloat(frac);
+          const decimal = parseFraction(frac);
           return `${Math.round(decimal * 30)}ml`;
         })
         .replace(/(\d+)\s*tsp/gi, (match, num) => `${Math.round(parseFloat(num) * 5)}ml`)
