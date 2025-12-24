@@ -53,11 +53,17 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const [newCommentCategory, setNewCommentCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
 
   const uploadImage = async (file: File): Promise<string | null> => {
+    if (!user?.id) {
+      console.error('User must be authenticated to upload images');
+      return null;
+    }
+    
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `comment-photos/${fileName}`;
+      // Use user-scoped path to comply with RLS policy
+      const filePath = `${user.id}/comment-photos/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('recipes')
