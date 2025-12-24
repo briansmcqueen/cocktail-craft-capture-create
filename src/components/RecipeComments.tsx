@@ -17,6 +17,7 @@ import { useOptimizedComments } from '@/hooks/useOptimizedComments';
 import { toast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
+import { validateImageFile, compressImage } from '@/services/imageUploadService';
 
 interface RecipeCommentsProps {
   recipeId: string;
@@ -52,7 +53,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
   const [showAddComment, setShowAddComment] = useState(false);
   const [newCommentCategory, setNewCommentCategory] = useState<'general' | 'variation' | 'substitution' | 'technique' | 'presentation'>('general');
 
-  const uploadImage = async (file: File): Promise<string | null> => {
+  const uploadCommentImage = async (file: File): Promise<string | null> => {
     if (!user?.id) {
       console.error('User must be authenticated to upload images');
       return null;
@@ -60,14 +61,26 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      // Validate file type and extension
+      validateImageFile(file);
+      
+      // Compress the image before upload for security (re-encodes as JPEG)
+      const compressedBlob = await compressImage(file);
+      
+      // Generate secure filename with timestamp
+      const timestamp = Date.now();
+      const randomString = Math.random().toString(36).substring(2, 15);
+      const fileName = `${timestamp}-${randomString}.jpg`;
       // Use user-scoped path to comply with RLS policy
       const filePath = `${user.id}/comment-photos/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('recipes')
-        .upload(filePath, file);
+        .upload(filePath, compressedBlob, {
+          contentType: 'image/jpeg',
+          cacheControl: '3600',
+          upsert: false
+        });
 
       if (uploadError) {
         console.error('Error uploading image:', uploadError);
@@ -79,6 +92,14 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         .getPublicUrl(filePath);
 
       return data.publicUrl;
+    } catch (error) {
+      console.error('Error processing image:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to process image",
+        variant: "destructive"
+      });
+      return null;
     } finally {
       setUploading(false);
     }
@@ -96,7 +117,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
 
     let photoUrl = null;
     if (selectedImage) {
-      photoUrl = await uploadImage(selectedImage);
+      photoUrl = await uploadCommentImage(selectedImage);
       if (!photoUrl) {
         toast({
           title: "Error",
@@ -188,7 +209,7 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
     try {
       let photoUrl = null;
       if (imageFile) {
-        photoUrl = await uploadImage(imageFile);
+        photoUrl = await uploadCommentImage(imageFile);
       }
 
       await addComment(recipeId, commentText, 'general', photoUrl);
