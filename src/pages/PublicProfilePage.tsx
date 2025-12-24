@@ -187,14 +187,14 @@ export default function PublicProfilePage() {
                         )}
                         <button 
                           onClick={() => navigate(`/profile/${username}/followers`)}
-                          className="flex items-center gap-1.5 hover:text-pure-white transition-colors"
+                          className="flex items-center gap-1.5 hover:text-pure-white transition-colors p-0 m-0"
                         >
                           <Users className="h-4 w-4" />
                           <span>{followStats.followerCount} Follower{followStats.followerCount !== 1 ? 's' : ''}</span>
                         </button>
                         <button 
                           onClick={() => navigate(`/profile/${username}/followers`)}
-                          className="flex items-center gap-1.5 hover:text-pure-white transition-colors"
+                          className="flex items-center gap-1.5 hover:text-pure-white transition-colors p-0 m-0"
                         >
                           <span>{followStats.followingCount} Following</span>
                         </button>
