@@ -1,5 +1,27 @@
 import { supabase } from '@/integrations/supabase/client';
 
+// Allowed file extensions and MIME types for image uploads
+const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+/**
+ * Validates that a file is an allowed image type
+ * @param file - The file to validate
+ * @throws Error if file type is not allowed
+ */
+export function validateImageFile(file: File): void {
+  // Validate MIME type
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    throw new Error('Invalid file type. Only JPG, PNG, GIF, and WebP images are allowed.');
+  }
+  
+  // Validate file extension
+  const fileExt = file.name.split('.').pop()?.toLowerCase();
+  if (!fileExt || !ALLOWED_EXTENSIONS.includes(fileExt)) {
+    throw new Error('Invalid file extension. Only .jpg, .jpeg, .png, .gif, and .webp files are allowed.');
+  }
+}
+
 /**
  * Compresses an image file to reduce size before upload
  * @param file - The image file to compress
@@ -88,10 +110,8 @@ export async function uploadImage(
   folder: string = 'recipe-images'
 ): Promise<string> {
   try {
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      throw new Error('File must be an image');
-    }
+    // Validate file type and extension
+    validateImageFile(file);
     
     // Validate file size (10MB limit before compression)
     const maxFileSize = 10 * 1024 * 1024; // 10MB
