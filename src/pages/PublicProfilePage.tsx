@@ -139,11 +139,12 @@ export default function PublicProfilePage() {
                             <Heart className="h-4 w-4" />
                             <span>{favoriteRecipes.length} Favorite{favoriteRecipes.length !== 1 ? 's' : ''}</span>
                           </div>}
-                        <button onClick={() => navigate(`/profile/${username}/followers`)} className="flex items-center gap-1.5 hover:text-pure-white transition-colors bg-transparent border-none text-left text-inherit font-inherit text-sm">
+                        <button onClick={() => navigate(`/profile/${username}/followers`)} className="flex items-center gap-1.5 p-0 m-0 hover:text-pure-white transition-colors bg-transparent border-none text-left text-inherit font-inherit text-sm">
                           <Users className="h-4 w-4" />
                           <span>{followStats.followerCount} Follower{followStats.followerCount !== 1 ? 's' : ''}</span>
                         </button>
-                        <button onClick={() => navigate(`/profile/${username}/followers`)} className="flex items-center gap-1.5 hover:text-pure-white transition-colors bg-transparent border-none text-left text-inherit font-inherit text-sm">
+                        <button onClick={() => navigate(`/profile/${username}/followers`)} className="flex items-center gap-1.5 p-0 m-0 hover:text-pure-white transition-colors bg-transparent border-none text-left text-inherit font-inherit text-sm">
+                          <Users className="h-4 w-4" />
                           <span>{followStats.followingCount} Following</span>
                         </button>
                       </div>
