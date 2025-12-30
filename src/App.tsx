@@ -83,6 +83,7 @@ const App = () => (
                   <Route path="/profile/:username/followers" element={<FollowersPage />} />
                   <Route path="/discover" element={<DiscoverBartenders />} />
                   <Route path="/cocktail/:recipeName" element={<RecipePage />} />
+                  <Route path="/cocktail/id/:recipeId" element={<RecipePage />} />
                   <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
                   <Route path="/article/:slug" element={<ArticlePage />} />
                   <Route path="*" element={<NotFound />} />

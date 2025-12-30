@@ -269,3 +269,54 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
     return null;
   }
 }
+
+export async function getRecipeById(recipeId: string): Promise<Cocktail | null> {
+  try {
+    const { data: recipe, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('id', recipeId)
+      .eq('is_public', true)
+      .single();
+
+    if (error || !recipe) {
+      console.error('Recipe not found:', recipeId, error);
+      return null;
+    }
+
+    // Get the creator's profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('username, avatar_url')
+      .eq('id', recipe.user_id)
+      .single();
+
+    // Check privacy settings
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const blocked = await privacyService.isBlockedBy(user.id, recipe.user_id);
+      if (blocked) return null;
+
+      const canView = await privacyService.canViewRecipes(recipe.user_id, user.id);
+      if (!canView.canView) return null;
+    }
+
+    return {
+      id: recipe.id,
+      name: recipe.name,
+      image: recipe.image_url || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80',
+      ingredients: recipe.ingredients,
+      steps: recipe.instructions,
+      notes: recipe.description || undefined,
+      tags: recipe.tags || [],
+      createdBy: profile?.username || 'Anonymous',
+      creatorUsername: profile?.username || undefined,
+      creatorAvatar: profile?.avatar_url || undefined,
+      creatorUserId: recipe.user_id,
+      isUserRecipe: true
+    };
+  } catch (error) {
+    console.error('Error fetching recipe by ID:', error);
+    return null;
+  }
+}
