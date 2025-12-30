@@ -5,7 +5,7 @@ import { Edit, Heart, Share, Martini, MessageCircle } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
-import { getRecipeByUsernameAndName, getUserRecipesFromDB } from "@/services/recipesService";
+import { getRecipeByUsernameAndName, getUserRecipesFromDB, getRecipeById } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavoritesRefactored";
 import { getUserPreferences, updateUserPreferences } from "@/services/userPreferencesService";
@@ -37,15 +37,14 @@ const slugToRecipeName = (slug: string): string => {
 const getRecipeUrl = (recipe: Cocktail): string => {
   const slug = recipeNameToSlug(recipe.name);
   
-  // Database user recipe with a valid username (creatorUsername is the reliable field)
-  // Don't use createdBy as it may be "Anonymous" which isn't a real username
+  // Database user recipe with a valid username
   if (recipe.creatorUsername && recipe.isUserRecipe) {
     return `/cocktail/${recipe.creatorUsername}/${slug}`;
   }
   
-  // Local custom recipe or user recipe without username
-  if (recipe.isUserRecipe) {
-    return `/cocktail/custom/${slug}`;
+  // User recipe without username - use ID-based URL
+  if (recipe.isUserRecipe && recipe.id) {
+    return `/cocktail/id/${recipe.id}`;
   }
   
   // Classic recipe
@@ -53,7 +52,7 @@ const getRecipeUrl = (recipe: Cocktail): string => {
 };
 
 export default function RecipePage() {
-  const { recipeName, username } = useParams<{ recipeName: string; username?: string }>();
+  const { recipeName, username, recipeId } = useParams<{ recipeName?: string; username?: string; recipeId?: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -96,26 +95,29 @@ export default function RecipePage() {
   // Load recipe
   useEffect(() => {
     const loadRecipe = async () => {
-      if (!recipeName) return;
-
       let foundRecipe: Cocktail | null = null;
 
-      if (username === 'custom') {
-        // Custom recipe from database
-        if (user) {
-          const userRecipes = await getUserRecipesFromDB();
-          foundRecipe = userRecipes.find(r => 
+      // ID-based route for community recipes without username
+      if (recipeId) {
+        foundRecipe = await getRecipeById(recipeId);
+      } else if (recipeName) {
+        if (username === 'custom') {
+          // Custom recipe from database (user's own recipes)
+          if (user) {
+            const userRecipes = await getUserRecipesFromDB();
+            foundRecipe = userRecipes.find(r => 
+              recipeNameToSlug(r.name) === recipeName
+            ) || null;
+          }
+        } else if (username) {
+          // Database user recipe with username in URL
+          foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
+        } else {
+          // Classic recipe
+          foundRecipe = classicCocktails.find(r => 
             recipeNameToSlug(r.name) === recipeName
           ) || null;
         }
-      } else if (username) {
-        // Database user recipe with username in URL
-        foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
-      } else {
-        // Classic recipe
-        foundRecipe = classicCocktails.find(r => 
-          recipeNameToSlug(r.name) === recipeName
-        ) || null;
       }
 
       if (foundRecipe) {
@@ -137,7 +139,7 @@ export default function RecipePage() {
       }
     };
     loadUserPreferences();
-  }, [recipeName, username, user, navigate]);
+  }, [recipeName, username, recipeId, user, navigate]);
 
   // Initialize scaling hook - use dummy recipe to maintain hook order
   const dummyRecipe: Cocktail = {
