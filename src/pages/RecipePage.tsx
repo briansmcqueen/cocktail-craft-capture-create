@@ -37,13 +37,13 @@ const slugToRecipeName = (slug: string): string => {
 const getRecipeUrl = (recipe: Cocktail): string => {
   const slug = recipeNameToSlug(recipe.name);
   
-  // Database user recipe with username (check both fields)
-  const username = recipe.creatorUsername || recipe.createdBy;
-  if (username && recipe.isUserRecipe) {
-    return `/cocktail/${username}/${slug}`;
+  // Database user recipe with a valid username (creatorUsername is the reliable field)
+  // Don't use createdBy as it may be "Anonymous" which isn't a real username
+  if (recipe.creatorUsername && recipe.isUserRecipe) {
+    return `/cocktail/${recipe.creatorUsername}/${slug}`;
   }
   
-  // Local custom recipe (old format, no username)
+  // Local custom recipe or user recipe without username
   if (recipe.isUserRecipe) {
     return `/cocktail/custom/${slug}`;
   }
