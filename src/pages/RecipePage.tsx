@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Edit, Heart, Share, Martini, MessageCircle } from "lucide-react";
+import { Edit, Heart, Share, Martini, MessageCircle, User } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
@@ -299,6 +299,39 @@ export default function RecipePage() {
             {/* Recipe header */}
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{recipe.name}</h1>
+              
+              {/* Created By Section for user recipes */}
+              {recipe.isUserRecipe && (recipe.creatorUsername || recipe.createdBy) && (
+                <div className="flex items-center gap-3 mb-3">
+                  {recipe.creatorUsername ? (
+                    <button
+                      onClick={() => navigate(`/profile/${recipe.creatorUsername}`)}
+                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+                    >
+                      {recipe.creatorAvatar ? (
+                        <img 
+                          src={recipe.creatorAvatar} 
+                          alt={recipe.creatorUsername}
+                          className="w-6 h-6 rounded-full object-cover border border-border group-hover:border-primary transition-colors"
+                        />
+                      ) : (
+                        <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                          <User size={14} className="text-muted-foreground group-hover:text-primary" />
+                        </div>
+                      )}
+                      <span>Created by <span className="text-foreground group-hover:text-primary font-medium">@{recipe.creatorUsername}</span></span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center">
+                        <User size={14} className="text-muted-foreground" />
+                      </div>
+                      <span>Created by {recipe.createdBy}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              
               {recipe.origin && (
                 <TagBadge>
                   {recipe.origin}
