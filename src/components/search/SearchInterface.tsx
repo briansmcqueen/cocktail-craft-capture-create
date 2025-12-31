@@ -1,14 +1,13 @@
-import React, { useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Search, Clock, TrendingUp } from 'lucide-react';
+import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
+import { Clock, TrendingUp } from 'lucide-react';
 import { SearchInput } from '@/components/ui/search-input';
-import FilterPills from './FilterPills';
-import AdvancedFilters from './AdvancedFilters';
+import CocktailFilters from './CocktailFilters';
 import SearchResults from './SearchResults';
-import { useAdvancedSearch } from '@/hooks/useAdvancedSearch';
 import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
 import { useSearchShortcut } from '@/hooks/useSearchShortcut';
+import { useCocktailFilters, FilterCategoryKey } from '@/hooks/useCocktailFilters';
+import { SearchResult } from '@/types/search';
 
 interface SearchInterfaceProps {
   recipes: Cocktail[];
@@ -38,36 +37,67 @@ export default function SearchInterface({
   user
 }: SearchInterfaceProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    const saved = localStorage.getItem('recentSearches');
+    return saved ? JSON.parse(saved) : [];
+  });
   
   // Add keyboard shortcut for search
   useSearchShortcut(searchInputRef);
   
+  // Use the new cocktail filters hook
   const {
     filters,
-    isAdvancedOpen,
-    recentSearches,
-    savedFilters,
-    showSuggestions,
-    suggestions,
-    searchResults,
-    groupedResults,
-    hasActiveFilters,
+    toggleFilter,
+    clearAllFilters,
+    clearCategoryFilters,
     activeFilterCount,
-    updateFilters,
-    clearFilters,
-    handleSearchChange,
-    setIsAdvancedOpen,
-    setShowSuggestions,
-    saveFilterCombination,
-    loadSavedFilter,
-    deleteSavedFilter
-  } = useAdvancedSearch({
-    recipes,
-    availableIngredients,
-    initialFilters: showCanMakeFirst ? { canMakeOnly: true } : {}
-  });
+    filteredRecipes: filterMatchedRecipes,
+    hasActiveFilters,
+  } = useCocktailFilters(recipes);
 
-  const canMakeCount = groupedResults.canMake.length;
+  // Apply search query on top of category filters
+  const searchFilteredRecipes = useMemo(() => {
+    if (!searchQuery.trim()) return filterMatchedRecipes;
+    
+    const query = searchQuery.toLowerCase();
+    return filterMatchedRecipes.filter(recipe => 
+      recipe.name.toLowerCase().includes(query) ||
+      recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
+      recipe.tags?.some(tag => tag.toLowerCase().includes(query)) ||
+      recipe.notes?.toLowerCase().includes(query)
+    );
+  }, [filterMatchedRecipes, searchQuery]);
+
+  // Generate simple suggestions based on search query
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    const matchingNames = recipes
+      .filter(r => r.name.toLowerCase().includes(query))
+      .map(r => r.name)
+      .slice(0, 5);
+    return matchingNames;
+  }, [searchQuery, recipes]);
+
+  // Convert to SearchResult format for SearchResults component
+  const groupedResults = useMemo(() => {
+    const allResults: SearchResult[] = searchFilteredRecipes.map(recipe => ({
+      cocktail: recipe,
+      canMake: true,
+      missingIngredients: [],
+      availabilityScore: 100,
+    }));
+    
+    return {
+      canMake: allResults,
+      missing1: [],
+      missing2Plus: [],
+      all: allResults,
+    };
+  }, [searchFilteredRecipes]);
 
   // Focus search input when component mounts
   useEffect(() => {
@@ -76,17 +106,41 @@ export default function SearchInterface({
     }
   }, []);
 
-  const handleSuggestionClick = (suggestion: string) => {
-    handleSearchChange(suggestion);
-    setShowSuggestions(false);
-  };
+  // Save search to recent searches
+  const saveToRecentSearches = useCallback((query: string) => {
+    if (!query.trim()) return;
+    
+    setRecentSearches(prev => {
+      const filtered = prev.filter(s => s.toLowerCase() !== query.toLowerCase());
+      const updated = [query, ...filtered].slice(0, 5);
+      localStorage.setItem('recentSearches', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
-  const handleClearSearch = () => {
-    handleSearchChange('');
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    setShowSuggestions(value.length > 0);
+  }, []);
+
+  const handleSuggestionClick = useCallback((suggestion: string) => {
+    setSearchQuery(suggestion);
+    setShowSuggestions(false);
+    saveToRecentSearches(suggestion);
+  }, [saveToRecentSearches]);
+
+  const handleClearSearch = useCallback(() => {
+    setSearchQuery('');
     setShowSuggestions(false);
     searchInputRef.current?.focus();
-  };
+  }, []);
 
+  const handleClearAllFilters = useCallback(() => {
+    clearAllFilters();
+    setSearchQuery('');
+  }, [clearAllFilters]);
+
+  const isAnythingFiltered = hasActiveFilters || searchQuery.trim().length > 0;
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -95,10 +149,10 @@ export default function SearchInterface({
         <SearchInput
           ref={searchInputRef}
           placeholder={placeholder}
-          value={filters.query}
+          value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
           onClear={handleClearSearch}
-          onFocus={() => setShowSuggestions(filters.query.length > 0)}
+          onFocus={() => setShowSuggestions(searchQuery.length > 0)}
           onBlur={() => {
             // Delay hiding suggestions to allow clicks
             setTimeout(() => setShowSuggestions(false), 200);
@@ -108,9 +162,9 @@ export default function SearchInterface({
 
         {/* Search suggestions dropdown */}
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-organic-md shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
             {/* Recent searches */}
-            {recentSearches.length > 0 && !filters.query && (
+            {recentSearches.length > 0 && !searchQuery && (
               <div className="p-3 border-b border-border">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
                   <Clock size={12} />
@@ -150,31 +204,16 @@ export default function SearchInterface({
         )}
       </div>
 
-      {/* Filter pills */}
-      <FilterPills
+      {/* New cocktail filters */}
+      <CocktailFilters
         filters={filters}
-        onFiltersChange={updateFilters}
-        onAdvancedToggle={() => setIsAdvancedOpen(!isAdvancedOpen)}
-        isAdvancedOpen={isAdvancedOpen}
+        onToggleFilter={toggleFilter}
+        onClearAll={handleClearAllFilters}
+        onClearCategory={clearCategoryFilters}
         activeFilterCount={activeFilterCount}
-        availableIngredients={availableIngredients}
-        canMakeCount={canMakeCount}
-        onClearAllFilters={clearFilters}
+        filteredCount={searchFilteredRecipes.length}
+        totalCount={recipes.length}
       />
-
-      {/* Advanced filters panel */}
-      {isAdvancedOpen && (
-        <AdvancedFilters
-          filters={filters}
-          onFiltersChange={updateFilters}
-          onClose={() => setIsAdvancedOpen(false)}
-          onSaveFilter={saveFilterCombination}
-          savedFilters={savedFilters}
-          onLoadSavedFilter={loadSavedFilter}
-          onDeleteSavedFilter={deleteSavedFilter}
-          onClearFilters={clearFilters}
-        />
-      )}
 
       {/* Search results */}
       <SearchResults
@@ -184,8 +223,8 @@ export default function SearchInterface({
         onTagClick={onTagClick}
         emptyStateTitle={emptyStateTitle}
         emptyStateDescription={emptyStateDescription}
-        hasActiveFilters={hasActiveFilters}
-        onClearFilters={clearFilters}
+        hasActiveFilters={isAnythingFiltered}
+        onClearFilters={handleClearAllFilters}
         user={user}
       />
     </div>
