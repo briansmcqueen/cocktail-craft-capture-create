@@ -1,47 +1,72 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Cocktail } from '@/data/classicCocktails';
 
-// Filter category definitions
+// Filter category definitions with comprehensive options from classic cocktails
 export const FILTER_CATEGORIES = {
   baseSpirits: {
     label: 'Base Spirits',
     options: [
       { id: 'vodka', label: 'Vodka', keywords: ['vodka'] },
-      { id: 'gin', label: 'Gin', keywords: ['gin'] },
-      { id: 'rum', label: 'Rum', keywords: ['rum', 'rhum', 'cachaça', 'cachaca'] },
-      { id: 'tequila', label: 'Tequila', keywords: ['tequila', 'mezcal'] },
-      { id: 'whiskey', label: 'Whiskey', keywords: ['whiskey', 'whisky', 'bourbon', 'rye', 'scotch'] },
-      { id: 'brandy', label: 'Brandy', keywords: ['brandy', 'cognac', 'armagnac', 'pisco'] },
+      { id: 'gin', label: 'Gin', keywords: ['gin', 'old tom gin', 'london dry gin'] },
+      { id: 'rum', label: 'Rum', keywords: ['rum', 'rhum', 'light rum', 'white rum', 'dark rum', 'gold rum', 'aged rum', 'jamaican rum', 'bacardi'] },
+      { id: 'tequila', label: 'Tequila', keywords: ['tequila', 'blanco tequila', 'silver tequila'] },
+      { id: 'mezcal', label: 'Mezcal', keywords: ['mezcal'] },
+      { id: 'whiskey', label: 'Whiskey/Bourbon', keywords: ['whiskey', 'whisky', 'bourbon', 'rye', 'rye whiskey', 'irish whiskey'] },
+      { id: 'scotch', label: 'Scotch', keywords: ['scotch', 'scotch whisky', 'blended scotch'] },
+      { id: 'brandy', label: 'Brandy/Cognac', keywords: ['brandy', 'cognac', 'armagnac', 'calvados', 'apple brandy', 'apricot brandy'] },
+      { id: 'pisco', label: 'Pisco', keywords: ['pisco'] },
+      { id: 'cachaca', label: 'Cachaça', keywords: ['cachaça', 'cachaca'] },
+      { id: 'sherry', label: 'Sherry', keywords: ['sherry', 'fino sherry'] },
     ]
   },
   modifiers: {
     label: 'Modifiers',
     options: [
-      { id: 'dry-vermouth', label: 'Vermouth (Dry)', keywords: ['dry vermouth'] },
-      { id: 'sweet-vermouth', label: 'Vermouth (Sweet)', keywords: ['sweet vermouth', 'rosso vermouth'] },
+      { id: 'dry-vermouth', label: 'Dry Vermouth', keywords: ['dry vermouth'] },
+      { id: 'sweet-vermouth', label: 'Sweet Vermouth', keywords: ['sweet vermouth', 'rosso vermouth'] },
       { id: 'campari', label: 'Campari', keywords: ['campari'] },
       { id: 'aperol', label: 'Aperol', keywords: ['aperol'] },
-      { id: 'triple-sec', label: 'Triple Sec/Cointreau', keywords: ['triple sec', 'cointreau', 'curaçao', 'curacao', 'orange liqueur'] },
-      { id: 'liqueurs', label: 'Other Liqueurs', keywords: ['liqueur', 'amaretto', 'kahlua', 'bailey', 'chartreuse', 'benedictine', 'maraschino', 'creme de', 'crème de', 'st. germain', 'elderflower', 'absinthe', 'galliano', 'frangelico', 'drambuie'] },
+      { id: 'triple-sec', label: 'Triple Sec/Cointreau', keywords: ['triple sec', 'cointreau', 'orange liqueur'] },
+      { id: 'curacao', label: 'Curaçao', keywords: ['curaçao', 'curacao', 'orange curaçao', 'blue curaçao', 'blue curacao'] },
+      { id: 'maraschino', label: 'Maraschino', keywords: ['maraschino liqueur', 'maraschino'] },
+      { id: 'benedictine', label: 'Benedictine', keywords: ['benedictine'] },
+      { id: 'chartreuse', label: 'Chartreuse', keywords: ['chartreuse', 'green chartreuse', 'yellow chartreuse'] },
+      { id: 'amaretto', label: 'Amaretto', keywords: ['amaretto'] },
+      { id: 'coffee-liqueur', label: 'Coffee Liqueur', keywords: ['coffee liqueur', 'kahlúa', 'kahlua'] },
+      { id: 'creme-de-cacao', label: 'Crème de Cacao', keywords: ['crème de cacao', 'creme de cacao', 'white crème de cacao'] },
+      { id: 'creme-de-menthe', label: 'Crème de Menthe', keywords: ['crème de menthe', 'creme de menthe', 'green crème de menthe', 'white crème de menthe'] },
+      { id: 'elderflower', label: 'Elderflower', keywords: ['elderflower', 'st. germain', 'st germain'] },
+      { id: 'cherry-liqueur', label: 'Cherry Liqueur', keywords: ['cherry heering', 'cherry liqueur', 'kirsch'] },
+      { id: 'peach', label: 'Peach Liqueur/Schnapps', keywords: ['peach liqueur', 'peach schnapps'] },
+      { id: 'lillet', label: 'Lillet', keywords: ['lillet', 'lillet blanc'] },
+      { id: 'absinthe', label: 'Absinthe', keywords: ['absinthe'] },
+      { id: 'fernet', label: 'Fernet', keywords: ['fernet', 'fernet-branca'] },
+      { id: 'galliano', label: 'Galliano', keywords: ['galliano'] },
+      { id: 'falernum', label: 'Falernum', keywords: ['falernum'] },
     ]
   },
   citrus: {
     label: 'Citrus',
     options: [
-      { id: 'lemon', label: 'Lemon', keywords: ['lemon juice', 'lemon'] },
-      { id: 'lime', label: 'Lime', keywords: ['lime juice', 'lime'] },
-      { id: 'orange', label: 'Orange', keywords: ['orange juice', 'orange'] },
+      { id: 'lemon', label: 'Lemon', keywords: ['lemon juice', 'lemon', 'fresh lemon'] },
+      { id: 'lime', label: 'Lime', keywords: ['lime juice', 'lime', 'fresh lime'] },
+      { id: 'orange', label: 'Orange', keywords: ['orange juice', 'fresh orange'] },
       { id: 'grapefruit', label: 'Grapefruit', keywords: ['grapefruit juice', 'grapefruit'] },
+      { id: 'pineapple', label: 'Pineapple', keywords: ['pineapple juice', 'pineapple'] },
+      { id: 'cranberry', label: 'Cranberry', keywords: ['cranberry juice', 'cranberry'] },
     ]
   },
   syrups: {
     label: 'Syrups & Sweeteners',
     options: [
       { id: 'simple-syrup', label: 'Simple Syrup', keywords: ['simple syrup'] },
-      { id: 'demerara', label: 'Demerara/Rich Simple', keywords: ['demerara', 'rich simple', 'rich syrup'] },
+      { id: 'demerara', label: 'Demerara/Rich Simple', keywords: ['demerara', 'rich simple', 'rich syrup', 'turbinado'] },
       { id: 'honey', label: 'Honey Syrup', keywords: ['honey syrup', 'honey'] },
       { id: 'grenadine', label: 'Grenadine', keywords: ['grenadine'] },
       { id: 'orgeat', label: 'Orgeat', keywords: ['orgeat'] },
+      { id: 'agave', label: 'Agave', keywords: ['agave syrup', 'agave'] },
+      { id: 'raspberry', label: 'Raspberry Syrup', keywords: ['raspberry syrup', 'raspberry'] },
+      { id: 'creme-de-cassis', label: 'Crème de Cassis', keywords: ['crème de cassis', 'creme de cassis', 'cassis'] },
     ]
   },
   style: {
@@ -50,11 +75,17 @@ export const FILTER_CATEGORIES = {
       { id: 'shaken', label: 'Shaken', keywords: ['shake'], isTechnique: true, technique: 'shake' },
       { id: 'stirred', label: 'Stirred', keywords: ['stir'], isTechnique: true, technique: 'stir' },
       { id: 'built', label: 'Built', keywords: ['build'], isTechnique: true, technique: 'build' },
+      { id: 'muddled', label: 'Muddled', keywords: ['muddle'], isTechnique: true, technique: 'muddle' },
+      { id: 'blended', label: 'Blended', keywords: ['blend'], isTechnique: true, technique: 'blend' },
       { id: 'sweet', label: 'Sweet', keywords: ['sweet'], isTag: true },
-      { id: 'sour', label: 'Sour', keywords: ['sour'], isTag: true },
+      { id: 'sour', label: 'Sour', keywords: ['sour', 'tart'], isTag: true },
       { id: 'bitter', label: 'Bitter', keywords: ['bitter'], isTag: true },
       { id: 'refreshing', label: 'Refreshing', keywords: ['refreshing'], isTag: true },
-      { id: 'spirit-forward', label: 'Spirit-Forward', keywords: ['spirit-forward', 'strong'], isTag: true },
+      { id: 'spirit-forward', label: 'Spirit-Forward', keywords: ['spirit-forward', 'boozy', 'strong'], isTag: true },
+      { id: 'tropical', label: 'Tropical/Tiki', keywords: ['tropical', 'tiki'], isTag: true },
+      { id: 'creamy', label: 'Creamy', keywords: ['creamy', 'cream'], isTag: true },
+      { id: 'fruity', label: 'Fruity', keywords: ['fruity'], isTag: true },
+      { id: 'sparkling', label: 'Sparkling', keywords: ['sparkling', 'bubbly', 'champagne', 'prosecco'], isTag: true },
     ]
   }
 } as const;

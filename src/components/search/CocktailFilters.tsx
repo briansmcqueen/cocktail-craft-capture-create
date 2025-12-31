@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, ChevronDown, ChevronUp, Wine, Droplets, CircleDot, Sparkles, Flame } from 'lucide-react';
+import { X, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FILTER_CATEGORIES, FilterCategoryKey, CocktailFilters as CocktailFiltersType } from '@/hooks/useCocktailFilters';
 
@@ -14,14 +14,6 @@ interface CocktailFiltersProps {
   filteredCount: number;
   totalCount: number;
 }
-
-const CATEGORY_ICONS: Record<FilterCategoryKey, React.ReactNode> = {
-  baseSpirits: <Wine size={14} />,
-  modifiers: <Droplets size={14} />,
-  citrus: <CircleDot size={14} />,
-  syrups: <Sparkles size={14} />,
-  style: <Flame size={14} />,
-};
 
 export default function CocktailFilters({
   filters,
@@ -67,7 +59,6 @@ export default function CocktailFilters({
                 borderRadius: isExpanded ? '8px 12px 2px 2px' : '6px 10px 4px 4px',
               }}
             >
-              {CATEGORY_ICONS[categoryKey]}
               <span className="hidden sm:inline">{category.label}</span>
               <span className="sm:hidden">{category.label.split(' ')[0]}</span>
               {count > 0 && (
