@@ -149,7 +149,7 @@ export default function RecipeFormFields({
               <button
                 type="button"
                 onClick={handleRemoveImage}
-                className="absolute -top-2 -right-2 bg-error-red text-white rounded-full p-1 hover:bg-error-red/80 transition-colors shadow-md"
+                className="absolute -top-2 -right-2 bg-error-red text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-error-red/80 transition-colors shadow-md"
                 disabled={uploading}
                 title="Remove image"
               >
