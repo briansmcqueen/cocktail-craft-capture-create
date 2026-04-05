@@ -253,7 +253,7 @@ export default function DiscoverBartenders() {
               ) : (
                   <>
                     <div className="mb-8 flex items-center gap-2.5">
-                      <Compass className="h-4 w-4 text-primary flex-shrink-0" />
+                      <Compass className="h-4 w-4 text-pure-white flex-shrink-0" />
                       <h1 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
                         Discover
                       </h1>
