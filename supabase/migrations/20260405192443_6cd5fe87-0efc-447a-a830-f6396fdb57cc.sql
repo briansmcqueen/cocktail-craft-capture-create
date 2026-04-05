@@ -1,0 +1,2 @@
+ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS photo_credit JSONB DEFAULT NULL;
+COMMENT ON COLUMN public.recipes.photo_credit IS 'Photography credit: { "name": "Photographer Name", "url": "https://..." }';

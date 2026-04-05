@@ -20,23 +20,25 @@ export type Cocktail = {
   difficulty?: Difficulty;
   abv?: string;
   prepTime?: string;
-  createdBy?: string; // Username of the creator for user recipes
-  isUserRecipe?: boolean; // Flag to distinguish user recipes from classic ones
-  isPrivate?: boolean; // Flag to mark recipe as private (user only)
-  // Scaling metadata
+  createdBy?: string;
+  isUserRecipe?: boolean;
+  isPrivate?: boolean;
   default_servings?: number;
   min_servings?: number;
   max_servings?: number;
   scaling_notes?: string;
-  // Stats
   likeCount?: number;
   favoriteCount?: number;
   commentCount?: number;
   averageRating?: number;
-  // Creator profile info
   creatorUsername?: string;
   creatorAvatar?: string;
   creatorUserId?: string;
+  // Photography credit
+  photo_credit?: {
+    name: string;
+    url?: string;
+  };
 };
 
 const rawCocktails: Cocktail[] = [
@@ -119,7 +121,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "5",
     name: "Americano",
-    image: "https://images.unsplash.com/photo-1599021459439-874a75d74245?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/americano.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "1.5 oz Campari",
       "1.5 oz sweet vermouth",
@@ -271,7 +274,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "15",
     name: "Boulevardier",
-    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/boulvardier.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "1.25 oz bourbon or rye whiskey",
       "1 oz Campari",
@@ -354,7 +358,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "20",
     name: "Clover Club",
-    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/clover-club.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "1.5 oz gin",
       "0.5 oz dry vermouth",
@@ -386,7 +391,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "22",
     name: "Daiquiri",
-    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/daquri.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "2 oz light rum",
       "1 oz fresh lime juice",
@@ -422,7 +428,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "24",
     name: "Dirty Martini",
-    image: "https://i.pinimg.com/564x/49/7e/a5/497ea5909d94943924f721528c61452f.jpg",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/dirty-martini.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "2.5 oz gin or vodka",
       "0.5 oz dry vermouth",
@@ -751,7 +758,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "2",
     name: "Negroni",
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/negroni.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "1 oz gin",
       "1 oz Campari",
@@ -766,7 +774,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "3",
     name: "Martini",
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/martini.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "2.5 oz gin",
       "0.5 oz dry vermouth",
@@ -1226,7 +1235,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "32",
     name: "Vesper",
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/vesper.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "3 oz gin",
       "1 oz vodka",
@@ -1305,7 +1315,8 @@ const rawCocktails: Cocktail[] = [
   {
     id: "37",
     name: "Espresso Martini",
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/espresso-martini.webp",
+    photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
     ingredients: [
       "2 oz vodka",
       "0.5 oz coffee liqueur (Kahlúa)",
