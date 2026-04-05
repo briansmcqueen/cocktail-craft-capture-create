@@ -9,7 +9,6 @@ import Favorites from "@/components/Favorites";
 import Feed from "@/components/Feed";
 import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
-import Learn from "@/components/Learn";
 import { Edit } from "lucide-react";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 
@@ -92,7 +91,7 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "learn" && library !== "feed" && library !== "mine" && (
+        {library !== "featured" && library !== "ingredients" && library !== "feed" && library !== "mine" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : allRecipes}
@@ -132,10 +131,6 @@ export default function MainContent({
             onEditRecipe={handleEditRecipe}
             onShareRecipe={handleShareRecipe}
             userRecipes={userRecipes}
-          />
-        ) : library === "learn" ? (
-          <Learn
-            onShowAuthModal={() => setShowAuthModal(true)}
           />
         ) : library === "feed" ? (
           <Feed />

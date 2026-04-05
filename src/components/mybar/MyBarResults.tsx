@@ -7,7 +7,6 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
-import BuyIngredientButton from "@/components/BuyIngredientButton";
 import WhatToBuyNext from "./WhatToBuyNext";
 import QuickAddCarousel from "./QuickAddCarousel";
 
@@ -159,17 +158,7 @@ export default function MyBarResults({
                             Add to Bar
                           </Button>
                           
-                          {/* Buy ingredient button */}
-                          <BuyIngredientButton
-                            ingredientId={recipe.missingIngredient || ''}
-                            ingredient={missingIngredient}
-                            userIngredients={myBarIngredients}
-                            ingredientMap={new Map(Object.entries(ingredientMap))}
-                            variant="secondary"
-                            size="sm"
-                            showPrice={false}
-                            className="bg-accent hover:bg-accent/80 text-pure-white"
-                          />
+                        
                         </div>
                       </div>
                     </div>

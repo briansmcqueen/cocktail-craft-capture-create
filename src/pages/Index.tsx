@@ -72,8 +72,6 @@ export default function Index() {
       setLibrary('favorites');
     } else if (path === '/recipes/my-drinks') {
       setLibrary('mine');
-    } else if (path === '/learn') {
-      setLibrary('learn');
     }
   }, [location.pathname, setLibrary]);
 

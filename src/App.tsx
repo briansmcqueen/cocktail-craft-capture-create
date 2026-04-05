@@ -22,7 +22,7 @@ const FollowersPage = lazy(() => import("./pages/FollowersPage"));
 const Settings = lazy(() => import("./pages/Settings"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const RecipePage = lazy(() => import("./pages/RecipePage"));
-const ArticlePage = lazy(() => import("./pages/ArticlePage"));
+
 
 // Optimize React Query configuration
 const queryClient = new QueryClient({
@@ -75,7 +75,7 @@ const App = () => (
                   <Route path="/mybar" element={<Index />} />
                   <Route path="/favorites" element={<Index />} />
                   <Route path="/recipes/my-drinks" element={<Index />} />
-                  <Route path="/learn" element={<Index />} />
+                  
                   <Route path="/admin" element={<Admin />} />
                   <Route path="/user/:userId" element={<UserProfile />} />
                   <Route path="/settings" element={<Settings />} />
@@ -85,7 +85,7 @@ const App = () => (
                   <Route path="/cocktail/:recipeName" element={<RecipePage />} />
                   <Route path="/cocktail/id/:recipeId" element={<RecipePage />} />
                   <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
-                  <Route path="/article/:slug" element={<ArticlePage />} />
+                  
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
