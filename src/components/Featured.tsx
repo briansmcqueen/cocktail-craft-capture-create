@@ -11,7 +11,6 @@ import FeaturedBartendersSection from "./FeaturedBartendersSection";
 import CommunityCreationsSection from "./CommunityCreationsSection";
 import CommunityCallToAction from "./CommunityCallToAction";
 import { useNavigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 type FeaturedProps = {
   recipes: Cocktail[];

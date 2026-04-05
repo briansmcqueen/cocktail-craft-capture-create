@@ -10,7 +10,6 @@ import Feed from "@/components/Feed";
 import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
 import { Edit } from "lucide-react";
-import { Edit } from "lucide-react";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 
 interface MainContentProps {
