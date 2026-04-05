@@ -17,7 +17,7 @@ export interface ShareStats {
 }
 
 /**
- * Track a recipe share event
+ * Track a recipe share event (requires authenticated user)
  */
 export async function trackShare(
   recipeId: string,
@@ -25,12 +25,19 @@ export async function trackShare(
   userId?: string
 ): Promise<boolean> {
   try {
+    // Get current authenticated user if userId not provided
+    const effectiveUserId = userId || (await supabase.auth.getUser()).data.user?.id;
+    if (!effectiveUserId) {
+      // Can't track shares for unauthenticated users (RLS requires auth)
+      return false;
+    }
+
     const { error } = await supabase
       .from('recipe_shares')
       .insert({
         recipe_id: recipeId,
         platform,
-        user_id: userId || null,
+        user_id: effectiveUserId,
       });
 
     if (error) {
