@@ -99,11 +99,11 @@ export default function IngredientManager({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-    setOpen(value.length > 0 && filteredIngredients.length > 0);
+    setOpen(value.length > 0);
   };
 
   const handleInputFocus = () => {
-    if (searchValue.length > 0 && filteredIngredients.length > 0) setOpen(true);
+    if (searchValue.length > 0) setOpen(true);
   };
 
   const handleInputBlur = () => {
