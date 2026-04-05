@@ -304,7 +304,7 @@ export default function RecipePage() {
 
                 {/* Notes */}
                 {recipe.notes && (
-                  <div className="mb-6">
+                  <div className="mb-2 md:mb-6">
                     <h2 className="text-xl font-semibold text-foreground mb-4">Notes</h2>
                     <p className="text-pure-white leading-relaxed">{recipe.notes}</p>
                   </div>
