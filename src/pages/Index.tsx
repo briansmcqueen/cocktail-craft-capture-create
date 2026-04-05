@@ -41,7 +41,7 @@ export default function Index() {
     setEditingRecipe,
     shareRecipe,
     setShareRecipe,
-    forceUpdate,
+    
     isMobile,
     userRecipes,
     handleSaveRecipe,
@@ -56,6 +56,7 @@ export default function Index() {
   } = useIndexPage();
 
   // Get user's bar ingredients for search filtering
+  const forceUpdate = 0; // Legacy prop - favorites context handles re-renders now
   const { myBarIngredients } = useMyBarData(forceUpdate);
 
   // Set library based on URL path
