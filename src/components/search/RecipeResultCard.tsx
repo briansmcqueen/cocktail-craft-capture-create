@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Heart, Share2, Plus, Check, Star } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { SearchResult } from '@/types/search';
-import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { getRecipeUrl } from '@/utils/slugUtils';
@@ -36,14 +34,13 @@ export default function RecipeResultCard({
   preloadedRating
 }: RecipeResultCardProps) {
   const navigate = useNavigate();
-  const { cocktail, canMake, missingIngredients, availabilityScore } = result;
+  const { cocktail } = result;
   const { isFavorite, toggleFavorite } = useFavorites();
   
   const [ratings, setRatings] = useState({ averageRating: 0, totalRatings: 0 });
   const [loadingRatings, setLoadingRatings] = useState(false);
 
   useEffect(() => {
-    // Use preloaded rating if available
     if (preloadedRating) {
       setRatings({
         averageRating: preloadedRating.averageRating,
@@ -52,7 +49,6 @@ export default function RecipeResultCard({
       return;
     }
 
-    // Otherwise load individually (fallback)
     const loadRatings = async () => {
       if (!cocktail.id) return;
       
@@ -81,11 +77,6 @@ export default function RecipeResultCard({
     loadRatings();
   }, [cocktail.id, preloadedRating]);
 
-  const handleAddMissingToBar = (ingredient: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    onAddIngredient?.(ingredient);
-  };
-
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await toggleFavorite(cocktail.id, () => {
@@ -95,11 +86,6 @@ export default function RecipeResultCard({
         onShowAuthModal();
       }
     });
-  };
-
-  const handleTagClick = (tag: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    onTagClick?.(tag);
   };
   
   const handleViewRecipe = () => {
@@ -116,35 +102,23 @@ export default function RecipeResultCard({
       onClick={handleViewRecipe}
     >
       <CardContent className="p-0">
-        {/* Hero image */}
         <div className="relative h-48 overflow-hidden">
           <img
             src={cocktail.image}
             alt={cocktail.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          {/* Simple availability indicator for can make only */}
-          {canMake && (
-            <div className="absolute top-3 right-3">
-              <Badge className="bg-primary/90 text-primary-foreground text-xs px-2 py-1 backdrop-blur-sm">
-                ✓ Ready
-              </Badge>
-            </div>
-          )}
         </div>
 
-        {/* Content */}
         <div className="p-4">
           <h3 className="font-bold text-lg text-pure-white line-clamp-1 mb-2">
             {cocktail.name}
           </h3>
           
-          {/* Simple description or ingredients preview */}
           <p className="text-sm text-light-text line-clamp-3 mb-3">
             {cocktail.notes || `A delicious cocktail featuring ${cocktail.ingredients.slice(0, 2).map(ing => ing.replace(/^\d+[\s\w]*\s/, '').split(' ')[0]).join(' and ')}`}
           </p>
 
-          {/* Review stars and count */}
           <div className="flex items-center gap-1 mb-3">
             {loadingRatings ? (
               <div className="flex items-center text-xs text-muted-foreground">
@@ -171,7 +145,6 @@ export default function RecipeResultCard({
             )}
           </div>
 
-          {/* Action buttons */}
           <div className="flex items-center justify-between">
             <Button
               variant="default"
