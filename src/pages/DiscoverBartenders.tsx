@@ -281,9 +281,6 @@ export default function DiscoverBartenders() {
 
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsList className="w-full mb-8">
-                        <TabsTrigger value="feed">
-                          Feed
-                        </TabsTrigger>
                         <TabsTrigger value="suggested">
                           Accounts
                         </TabsTrigger>
@@ -291,58 +288,6 @@ export default function DiscoverBartenders() {
                           Recipes
                         </TabsTrigger>
                       </TabsList>
-
-                      <TabsContent value="feed" className="space-y-4">
-                        {filteredFeed.length === 0 ? (
-                          <div className="text-center py-12">
-                            <Compass className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-                            <h3 className="text-xl font-semibold text-foreground mb-2">
-                              {searchQuery ? 'No results found' : 'Nothing to discover yet'}
-                            </h3>
-                            <p className="text-muted-foreground">
-                              {searchQuery 
-                                ? 'Try searching with different keywords'
-                                : 'Check back soon for new content'}
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="space-y-4">
-                            {filteredFeed.map((item, index) => (
-                              item.type === 'user' ? (
-                                <UserCard
-                                  key={`user-${item.data.user_id}`}
-                                  userId={item.data.user_id}
-                                  username={item.data.username}
-                                  fullName={item.data.full_name}
-                                  avatarUrl={item.data.avatar_url}
-                                  bio={item.data.bio}
-                                  recipeCount={item.data.recipe_count}
-                                  followerCount={item.data.follower_count}
-                                />
-                              ) : (
-                                <div key={`recipe-${item.data.id}`} className="bg-card border border-border rounded-organic-md p-4">
-                                  <UniversalRecipeCard
-                                    recipe={{
-                                      id: item.data.id,
-                                      name: item.data.name,
-                                      image: item.data.image_url || '/placeholder.svg',
-                                      ingredients: item.data.ingredients,
-                                      steps: item.data.instructions,
-                                      notes: item.data.description || undefined,
-                                      tags: item.data.tags || [],
-                                      isUserRecipe: true,
-                                      createdBy: item.data.user_id,
-                                      creatorUsername: item.data.creator_username,
-                                      creatorAvatar: item.data.creator_avatar || undefined,
-                                      creatorUserId: item.data.user_id,
-                                    }}
-                                  />
-                                </div>
-                              )
-                            ))}
-                          </div>
-                        )}
-                      </TabsContent>
 
                        <TabsContent value="suggested" className="space-y-4">
           {filteredSuggestedUsers.length === 0 ? (
