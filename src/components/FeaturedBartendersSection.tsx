@@ -60,7 +60,7 @@ export default function FeaturedBartendersSection({ onShowAuthModal }: FeaturedB
     );
   }
 
-  if (bartenders.length === 0) {
+  if (bartenders.length < 3) {
     return null;
   }
 
@@ -71,7 +71,7 @@ export default function FeaturedBartendersSection({ onShowAuthModal }: FeaturedB
           Featured Bartenders
         </h2>
         <p className="text-soft-gray text-sm md:text-base leading-relaxed max-w-2xl">
-          Meet talented creators from our community. Follow them to see their latest recipes and techniques.
+          Follow creators to see their latest recipes.
         </p>
       </div>
       
