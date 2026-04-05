@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { LogOut } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -121,7 +121,10 @@ export default function ProfileSettings() {
     <div className="space-y-6">
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-pure-white">Profile Settings</CardTitle>
+          <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
+            <User className="h-5 w-5 text-pure-white" />
+            Profile Settings
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <AvatarUpload
@@ -147,7 +150,10 @@ export default function ProfileSettings() {
       {/* Sign Out Section */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-pure-white">Account</CardTitle>
+          <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
+            <LogOut className="h-5 w-5 text-pure-white" />
+            Account
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Separator className="mb-4 bg-border" />

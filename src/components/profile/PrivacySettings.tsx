@@ -185,7 +185,7 @@ export default function PrivacySettings() {
     <Card className="bg-card border-border">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
-          <Shield className="h-5 w-5" />
+          <Shield className="h-5 w-5 text-pure-white" />
           Privacy & Visibility
         </CardTitle>
         <CardDescription>
