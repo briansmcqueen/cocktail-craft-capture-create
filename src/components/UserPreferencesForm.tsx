@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { X, SlidersHorizontal } from "lucide-react";
 import { getUserPreferences, updateUserPreferences } from "@/services/userPreferencesService";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -68,7 +68,10 @@ export default function UserPreferencesForm() {
   return (
     <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-pure-white">Your Preferences</CardTitle>
+        <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
+          <SlidersHorizontal className="h-5 w-5 text-pure-white" />
+          Your Preferences
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
