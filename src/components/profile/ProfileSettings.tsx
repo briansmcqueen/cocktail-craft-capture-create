@@ -121,7 +121,7 @@ export default function ProfileSettings() {
     <div className="space-y-6">
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-2xl font-serif text-pure-white">Profile Settings</CardTitle>
+          <CardTitle className="text-lg font-semibold text-pure-white">Profile Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <AvatarUpload
@@ -147,7 +147,7 @@ export default function ProfileSettings() {
       {/* Sign Out Section */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-xl font-serif text-pure-white">Account</CardTitle>
+          <CardTitle className="text-lg font-semibold text-pure-white">Account</CardTitle>
         </CardHeader>
         <CardContent>
           <Separator className="mb-4 bg-border" />
