@@ -203,8 +203,7 @@ export default function UserProfile() {
       // Fetch stats for all recipes
       if (data && data.length > 0) {
         const recipeIds = data.map(r => r.id);
-        const [likeCounts, favCounts, commentCounts, ratingsResponse] = await Promise.all([
-          getRecipesLikeCounts(recipeIds),
+        const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
           getRecipesFavoriteCounts(recipeIds),
           getRecipesCommentCounts(recipeIds),
           supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: recipeIds })
@@ -216,7 +215,7 @@ export default function UserProfile() {
         recipeIds.forEach(id => {
           const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
           stats[id] = {
-            likes: likeCounts[id] || 0,
+            likes: favCounts[id] || 0,
             favorites: favCounts[id] || 0,
             comments: commentCounts[id] || 0,
             rating: ratingInfo?.averageRating || 0
@@ -295,8 +294,7 @@ export default function UserProfile() {
 
     // Fetch stats for favorites
     if (favoriteIds.length > 0) {
-      const [likeCounts, favCounts, commentCounts, ratingsResponse] = await Promise.all([
-        getRecipesLikeCounts(favoriteIds),
+      const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
         getRecipesFavoriteCounts(favoriteIds),
         getRecipesCommentCounts(favoriteIds),
         supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: favoriteIds })
@@ -308,7 +306,7 @@ export default function UserProfile() {
       favoriteIds.forEach(id => {
         const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
         stats[id] = {
-          likes: likeCounts[id] || 0,
+          likes: favCounts[id] || 0,
           favorites: favCounts[id] || 0,
           comments: commentCounts[id] || 0,
           rating: ratingInfo?.averageRating || 0
