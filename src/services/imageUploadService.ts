@@ -118,16 +118,22 @@ export async function uploadImage(
     if (file.size > maxFileSize) {
       throw new Error('Image size must be less than 10MB');
     }
+
+    // Get current user for user-scoped storage path
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      throw new Error('You must be logged in to upload images');
+    }
     
     // Compress the image
     const compressedBlob = await compressImage(file);
     
-    // Generate unique filename
+    // Generate unique filename with user-scoped path
     const fileExt = file.name.split('.').pop() || 'jpg';
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
     const fileName = `${timestamp}-${randomString}.${fileExt}`;
-    const filePath = folder ? `${folder}/${fileName}` : fileName;
+    const filePath = `${user.id}/${folder}/${fileName}`;
     
     // Upload to Supabase Storage
     const { error: uploadError } = await supabase.storage

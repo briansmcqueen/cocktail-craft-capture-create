@@ -183,7 +183,7 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
       );
       
       // Generate filename
-      const fileName = `${userId}.jpg`;
+      const fileName = `${userId}/avatar.jpg`;
       
       // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage

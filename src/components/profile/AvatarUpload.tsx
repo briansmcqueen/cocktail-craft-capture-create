@@ -88,7 +88,7 @@ export default function AvatarUpload({
       );
       
       const fileExt = 'jpg';
-      const fileName = `${userId}.${fileExt}`;
+      const fileName = `${userId}/avatar.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
