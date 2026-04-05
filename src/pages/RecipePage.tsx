@@ -7,7 +7,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { getRecipeByUsernameAndName, getUserRecipesFromDB, getRecipeById } from "@/services/recipesService";
 import { useAuth } from "@/hooks/useAuth";
-import { useFavorites } from "@/hooks/useFavoritesRefactored";
+import { useFavorites } from "@/hooks/useFavorites";
 import { getUserPreferences, updateUserPreferences } from "@/services/userPreferencesService";
 import { Button } from "@/components/ui/button";
 import TagBadge from "@/components/ui/tag";

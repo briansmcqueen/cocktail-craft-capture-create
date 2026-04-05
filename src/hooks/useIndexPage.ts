@@ -3,10 +3,8 @@ import { useState, useMemo } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
 import { useUserRecipes, useSaveRecipe, useDeleteRecipe } from "./useOptimizedRecipes";
-import { toggleLikeInDB } from "@/services/likesService";
 import { useAuth } from "@/hooks/useAuth";
-import { useDataMigration } from "@/hooks/useDataMigration";
-import { useFavorites } from "@/hooks/useFavoritesRefactored";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export function useIndexPage() {
   const { user } = useAuth();
