@@ -1,7 +1,6 @@
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useFavorites } from '@/hooks/useFavorites';
-import { useAuth } from '@/hooks/useAuth';
 
 interface LikeButtonProps {
   recipeId: string;
@@ -14,11 +13,9 @@ export default function LikeButton({
   showCount = true,
   size = 'md',
 }: LikeButtonProps) {
-  const { user } = useAuth();
-  const { isFavorite, toggleFavorite, favorites } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const isLiked = isFavorite(recipeId);
-  const favoriteCount = favorites.filter(f => f.recipe_id === recipeId).length;
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();

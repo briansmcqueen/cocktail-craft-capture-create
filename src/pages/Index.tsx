@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
-import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -22,11 +21,8 @@ export default function Index() {
   // Onboarding for new users
   const {
     showProfileSetup,
-    showOnboarding,
     loading: onboardingLoading,
     completeProfileSetup,
-    completeOnboarding,
-    skipOnboarding,
   } = useOnboarding(user);
   
   const {
@@ -208,13 +204,6 @@ export default function Index() {
           onComplete={completeProfileSetup}
         />
       )}
-
-      {/* Onboarding Modal for feature tour */}
-      <OnboardingModal
-        open={showOnboarding}
-        onComplete={completeOnboarding}
-        onSkip={skipOnboarding}
-      />
     </>
   );
 }
