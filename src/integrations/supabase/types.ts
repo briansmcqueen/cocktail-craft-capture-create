@@ -524,6 +524,7 @@ export type Database = {
           min_servings: number | null
           name: string
           notes: string | null
+          photo_credit: Json | null
           prep_time: number | null
           rating: number | null
           scaling_notes: string | null
@@ -546,6 +547,7 @@ export type Database = {
           min_servings?: number | null
           name: string
           notes?: string | null
+          photo_credit?: Json | null
           prep_time?: number | null
           rating?: number | null
           scaling_notes?: string | null
@@ -568,6 +570,7 @@ export type Database = {
           min_servings?: number | null
           name?: string
           notes?: string | null
+          photo_credit?: Json | null
           prep_time?: number | null
           rating?: number | null
           scaling_notes?: string | null
