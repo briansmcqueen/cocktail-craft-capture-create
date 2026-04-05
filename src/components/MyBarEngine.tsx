@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { User } from "lucide-react";
+
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
