@@ -140,6 +140,10 @@ export default function RecipePage() {
     );
   }
 
+  const scrollToRatings = () => {
+    document.getElementById('ratings-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <>
       <TopNavigation
@@ -159,7 +163,7 @@ export default function RecipePage() {
           />
         </div>
         
-        <main className="flex-1">
+        <main className="flex-1 min-w-0">
           <div className="max-w-6xl mx-auto px-4 py-6">
             {shouldShowBackButton && <BackButton onClick={handleGoBack} className="mb-6" />}
 
@@ -196,14 +200,16 @@ export default function RecipePage() {
                 </div>
               )}
 
-              {/* Aggregate rating stars */}
-              <RecipeRatingStars recipeId={recipe.id} />
+              {/* Aggregate rating stars - clickable anchor */}
+              <button onClick={scrollToRatings} className="hover:opacity-80 transition-opacity cursor-pointer">
+                <RecipeRatingStars recipeId={recipe.id} />
+              </button>
               
               {recipe.origin && <TagBadge className="mt-2">{recipe.origin}</TagBadge>}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Left column - Image + action buttons */}
+              {/* Left column - Image, action buttons, ratings & comments (desktop) */}
               <div className="lg:col-span-1">
                 <img
                   src={recipe.image} alt={recipe.name}
@@ -251,6 +257,19 @@ export default function RecipePage() {
                       <Edit size={16} /> Edit
                     </Button>
                   )}
+                </div>
+
+                {/* Rating & Comments - on left column for desktop, shown after right column content on mobile */}
+                <div className="hidden lg:block" id="ratings-section">
+                  <div className="mb-6 pt-4 border-t border-border">
+                    <RecipeRatingStars recipeId={recipe.id} size={20} />
+                    <div className="mt-3">
+                      <RecipeRatingInput recipeId={recipe.id} />
+                    </div>
+                  </div>
+                  <div className="mb-6 pt-4 border-t border-border">
+                    <RecipeComments recipeId={recipe.id} />
+                  </div>
                 </div>
               </div>
 
@@ -362,19 +381,19 @@ export default function RecipePage() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
 
-                {/* Rating section - after recipe content */}
-                <div className="mb-6 pt-4 border-t border-border">
-                  <RecipeRatingStars recipeId={recipe.id} size={20} />
-                  <div className="mt-3">
-                    <RecipeRatingInput recipeId={recipe.id} />
-                  </div>
+            {/* Rating & Comments - mobile only, full width below the grid */}
+            <div className="lg:hidden mt-8" id="ratings-section-mobile">
+              <div className="mb-6 pt-4 border-t border-border">
+                <RecipeRatingStars recipeId={recipe.id} size={20} />
+                <div className="mt-3">
+                  <RecipeRatingInput recipeId={recipe.id} />
                 </div>
-
-                {/* Comments section - after ratings */}
-                <div className="mb-6 pt-4 border-t border-border">
-                  <RecipeComments recipeId={recipe.id} />
-                </div>
+              </div>
+              <div className="mb-6 pt-4 border-t border-border">
+                <RecipeComments recipeId={recipe.id} />
               </div>
             </div>
           </div>
@@ -386,5 +405,3 @@ export default function RecipePage() {
     </>
   );
 }
-
-
