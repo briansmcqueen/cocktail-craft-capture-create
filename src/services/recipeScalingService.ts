@@ -42,7 +42,7 @@ export class RecipeScalingService {
       // "2 oz gin" or "1 1/2 oz gin" or "1/2 oz gin"
       /^(\d+(?:\s+\d+\/\d+|\s*\d+\/\d+)?)\s+([a-zA-Z]+)\s+(.+)$/,
       // "2oz gin" (no space)
-      /^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)\s+(.+)$/,
+      /^(\d*\.?\d+)\s*([a-zA-Z]+)\s+(.+)$/,
       // "dash of bitters" or "splash of lime juice"
       /^(\d*)\s*(dash|dashes|splash|splashes|barspoon|barspoons)\s+(?:of\s+)?(.+)$/i,
       // "1 lime wheel" or "2 cherry"
