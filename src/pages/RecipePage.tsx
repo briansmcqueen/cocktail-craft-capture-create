@@ -217,7 +217,7 @@ export default function RecipePage() {
                   className="w-full aspect-square object-cover rounded-organic-lg border border-border shadow-glass"
                 />
                 {recipe.photo_credit && (
-                  <div className="flex items-center gap-1 mt-2 mb-4">
+                  <div className="gap-1 mt-2 mb-4 flex items-start justify-start">
                     <span className="text-xs text-muted-foreground italic">photo by</span>
                     {recipe.photo_credit.url ? (
                       <a
