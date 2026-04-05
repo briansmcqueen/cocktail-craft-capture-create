@@ -156,7 +156,7 @@ export default function RecipePage() {
       />
       
       <div className="min-h-screen flex w-full bg-background">
-        <div className="hidden lg:block">
+        <div className="hidden md:block">
           <Sidebar active="recipe" onSelect={() => {}} onAdd={() => navigate('/recipes/my-drinks')}
             user={user} onSignInClick={() => setShowAuthModal(true)} onSignUpClick={() => setShowAuthModal(true)}
             onProfileClick={() => user && navigate(`/user/${user.id}`)}
@@ -209,9 +209,9 @@ export default function RecipePage() {
               {recipe.origin && <TagBadge className="mt-2">{recipe.origin}</TagBadge>}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Left column - Image, action buttons, ratings & comments (desktop) */}
-              <div className="lg:col-span-1">
+              <div className="md:col-span-1">
                 <img
                   src={recipe.image} alt={recipe.name}
                   className="w-full aspect-square object-cover rounded-organic-lg border border-border shadow-glass"
@@ -261,7 +261,7 @@ export default function RecipePage() {
                 </div>
 
                 {/* Rating & Comments - on left column for desktop, shown after right column content on mobile */}
-                <div className="hidden lg:block" id="ratings-section">
+                <div className="hidden md:block" id="ratings-section">
                   <div className="mb-6 pt-4 border-t border-border">
                     <RecipeRatingStars recipeId={recipe.id} size={20} />
                     <div className="mt-3">
@@ -275,7 +275,7 @@ export default function RecipePage() {
               </div>
 
               {/* Right column - Recipe content */}
-              <div className="lg:col-span-2">
+              <div className="md:col-span-2">
                 {/* Ingredients */}
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-foreground">Ingredients</h2>
@@ -386,7 +386,7 @@ export default function RecipePage() {
             </div>
 
             {/* Rating & Comments - mobile only, full width below the grid */}
-            <div className="lg:hidden mt-8" id="ratings-section-mobile">
+            <div className="md:hidden mt-8" id="ratings-section-mobile">
               <div className="mb-6 pt-4 border-t border-border">
                 <RecipeRatingStars recipeId={recipe.id} size={20} />
                 <div className="mt-3">
