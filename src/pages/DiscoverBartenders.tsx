@@ -40,7 +40,7 @@ export default function DiscoverBartenders() {
   const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
   const [unifiedFeed, setUnifiedFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('feed');
+  const [activeTab, setActiveTab] = useState('suggested');
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   

@@ -7,7 +7,7 @@ import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
-import { getRecipeUrl } from '@/pages/RecipePage';
+import { getRecipeUrl } from '@/utils/slugUtils';
 import { ShareCount } from './ShareCount';
 import { getAvatarUrl } from '@/utils/avatarUrl';
 

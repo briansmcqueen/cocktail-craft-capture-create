@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { useNavigate } from 'react-router-dom';
 
 export function useOnboarding(user: User | null) {
   const [showProfileSetup, setShowProfileSetup] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
@@ -31,9 +32,13 @@ export function useOnboarding(user: User | null) {
         if (data && !data.username) {
           setShowProfileSetup(true);
         } 
-        // Show feature tour if username exists but onboarding not completed
+        // If username exists but onboarding not completed, mark it complete
+        // (the My Bar onboarding handles the rest)
         else if (data && !data.onboarding_completed) {
-          setShowOnboarding(true);
+          await supabase
+            .from('profiles')
+            .update({ onboarding_completed: true })
+            .eq('id', user.id);
         }
       } catch (error) {
         console.error('Error in checkOnboardingStatus:', error);
@@ -45,43 +50,24 @@ export function useOnboarding(user: User | null) {
     checkOnboardingStatus();
   }, [user]);
 
-  const completeProfileSetup = () => {
+  const completeProfileSetup = async () => {
     setShowProfileSetup(false);
-    // After profile setup, show the feature tour
-    setShowOnboarding(true);
-  };
-
-  const completeOnboarding = async () => {
-    if (!user) return;
-
-    try {
-      const { error } = await supabase
+    
+    // Mark onboarding as completed
+    if (user) {
+      await supabase
         .from('profiles')
         .update({ onboarding_completed: true })
         .eq('id', user.id);
-
-      if (error) {
-        console.error('Error completing onboarding:', error);
-        throw error;
-      }
-
-      setShowOnboarding(false);
-    } catch (error) {
-      console.error('Error in completeOnboarding:', error);
-      throw error;
     }
-  };
-
-  const skipOnboarding = async () => {
-    await completeOnboarding();
+    
+    // Navigate to My Bar so the My Bar onboarding triggers
+    navigate('/mybar');
   };
 
   return {
     showProfileSetup,
-    showOnboarding,
     loading,
     completeProfileSetup,
-    completeOnboarding,
-    skipOnboarding,
   };
 }

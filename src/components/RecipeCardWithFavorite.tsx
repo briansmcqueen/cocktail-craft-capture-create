@@ -4,7 +4,7 @@ import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useNavigate } from "react-router-dom";
-import { getRecipeUrl } from "@/pages/RecipePage";
+import { getRecipeUrl } from "@/utils/slugUtils";
 
 type RecipeCardWithFavoriteProps = {
   recipe: Cocktail;
