@@ -5,12 +5,26 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getAggregatedRatingsBatch, AggregatedRating } from "@/services/ratingsService";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
+// Lead with Fraga-photographed cocktails, then fill with other classics
 const SHOWCASE_NAMES = [
   "Negroni",
-  "Margarita",
-  "Daiquiri",
   "Espresso Martini",
+  "Daiquiri",
+  "Martini",
+  "Boulevardier",
+  "Clover Club",
+  "Americano",
+  "Dirty Martini",
+  "Vesper",
+  "Margarita",
   "Manhattan",
   "Mojito",
   "Cosmopolitan",
@@ -51,16 +65,29 @@ export default function ClassicShowcase() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {showcaseRecipes.map((recipe) => (
-          <UniversalRecipeCard
-            key={recipe.id + recipe.name}
-            recipe={recipe}
-            ratingData={ratings[recipe.id]}
-            hideCreator
-            className="h-full"
-          />
-        ))}
+      <div className="relative">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {showcaseRecipes.map((recipe) => (
+              <CarouselItem key={recipe.id + recipe.name} className="pl-4 basis-[75%] sm:basis-1/2 lg:basis-1/3">
+                <UniversalRecipeCard
+                  recipe={recipe}
+                  ratingData={ratings[recipe.id]}
+                  hideCreator
+                  className="h-full"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="hidden md:flex -left-4" />
+          <CarouselNext className="hidden md:flex -right-4" />
+        </Carousel>
       </div>
 
       <div className="mt-4 text-center">
