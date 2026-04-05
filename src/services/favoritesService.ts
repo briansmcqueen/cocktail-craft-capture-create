@@ -103,43 +103,6 @@ export async function removeFavorite(recipeId: string): Promise<boolean> {
   return true;
 }
 
-export async function toggleFavoriteInDB(recipeId: string): Promise<boolean> {
-  const favorites = await getUserFavorites();
-  const isFavorite = favorites.includes(recipeId);
-  
-  if (isFavorite) {
-    return await removeFavorite(recipeId);
-  } else {
-    return await addFavorite(recipeId);
-  }
-}
-
-export async function syncFavoritesFromLocalStorage(): Promise<void> {
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user) return;
-
-  // Get existing localStorage data
-  const localFavoritesKey = "barbook_favorites";
-  const localFavorites = localStorage.getItem(localFavoritesKey);
-  
-  if (!localFavorites) return;
-
-  try {
-    const favoriteIds: string[] = JSON.parse(localFavorites);
-    
-    // Add all favorites to Supabase
-    for (const recipeId of favoriteIds) {
-      await addFavorite(recipeId);
-    }
-    
-    // Clear localStorage after successful sync
-    localStorage.removeItem(localFavoritesKey);
-  } catch (error) {
-    console.error('Error syncing favorites from localStorage:', error);
-  }
-}
-
 export async function getRecipesFavoriteCounts(recipeIds: string[]): Promise<Record<string, number>> {
   if (recipeIds.length === 0) return {};
   
