@@ -887,6 +887,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_batch_recipe_share_counts: {
+        Args: { p_recipe_ids: string[] }
+        Returns: {
+          recipe_id: string
+          share_count: number
+        }[]
+      }
       get_follower_count: { Args: { p_user_id: string }; Returns: number }
       get_following_count: { Args: { p_user_id: string }; Returns: number }
       get_public_profile_by_username: {
