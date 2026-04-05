@@ -99,7 +99,7 @@ export default function MyBarOnboarding({
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center animate-in fade-in duration-500">
         <Wine className="h-16 w-16 text-primary mb-6 opacity-80" />
-        <h1 className="text-3xl font-serif font-normal text-pure-white mb-3 tracking-wide">
+        <h1 className="text-3xl font-medium text-pure-white mb-3 tracking-wide">
           What's in your bar?
         </h1>
         <p className="text-light-text text-base mb-8 max-w-sm">
@@ -126,7 +126,7 @@ export default function MyBarOnboarding({
   if (step === 2) {
     return (
       <div className="px-4 sm:px-0 animate-in fade-in duration-400">
-        <h2 className="text-2xl font-serif font-normal text-pure-white mb-2 tracking-wide">
+        <h2 className="text-2xl font-medium text-pure-white mb-2 tracking-wide">
           Pick your base spirits
         </h2>
         <p className="text-light-text text-sm mb-6">
@@ -181,7 +181,7 @@ export default function MyBarOnboarding({
   if (step === 3) {
     return (
       <div className="px-4 sm:px-0 animate-in fade-in duration-400">
-        <h2 className="text-2xl font-serif font-normal text-pure-white mb-2 tracking-wide">
+        <h2 className="text-2xl font-medium text-pure-white mb-2 tracking-wide">
           Any of these on your shelf?
         </h2>
         <p className="text-light-text text-sm mb-6">
@@ -237,10 +237,10 @@ export default function MyBarOnboarding({
   return (
     <div className="px-4 sm:px-0 animate-in fade-in duration-500">
       <div className="text-center mb-8">
-        <div className="text-5xl font-serif font-normal text-primary mb-2 animate-in zoom-in duration-500">
+        <div className="text-5xl font-bold text-primary mb-2 animate-in zoom-in duration-500">
           {canMake.length}
         </div>
-        <h2 className="text-2xl font-serif font-normal text-pure-white mb-1 tracking-wide">
+        <h2 className="text-2xl font-medium text-pure-white mb-1 tracking-wide">
           {canMake.length === 1 ? "cocktail" : "cocktails"} you can make!
         </h2>
         {oneAway.length > 0 && (

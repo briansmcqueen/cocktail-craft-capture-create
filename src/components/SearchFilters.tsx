@@ -99,8 +99,8 @@ export default function SearchFilters({
                 className={`
                   relative text-xs px-3 py-1.5 cursor-pointer transition-all duration-300 border font-medium
                   ${tagFilters.includes(tag)
-                    ? "bg-primary/20 text-secondary border-primary rounded-organic-sm hover:bg-primary/30 hover:scale-[1.05] hover:rotate-[0.5deg]"
-                    : "bg-card text-light-text border-border rounded-organic-sm hover:bg-muted hover:border-soft-gray hover:scale-[1.02] hover:rotate-[-0.3deg]"
+                    ? "bg-primary/20 text-secondary border-primary rounded-organic-sm hover:bg-primary/30"
+                    : "bg-card text-light-text border-border rounded-organic-sm hover:bg-muted hover:border-soft-gray"
                   }
                 `}
                 style={{ transitionTimingFunction: 'var(--timing-stir)' }}

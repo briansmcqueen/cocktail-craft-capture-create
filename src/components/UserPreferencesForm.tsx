@@ -79,7 +79,7 @@ export default function UserPreferencesForm() {
           <div className="flex gap-2">
             <button
               type="button"
-              className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm ${
+              className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-organic-sm transition-all min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm ${
                 preferredUnit === 'oz'
                   ? 'bg-accent/20 border-accent text-foreground'
                   : 'bg-card border border-border text-foreground hover:border-accent/50 hover:bg-accent/5'
@@ -90,7 +90,7 @@ export default function UserPreferencesForm() {
             </button>
             <button
               type="button"
-              className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm ${
+              className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-organic-sm transition-all min-h-[44px] sm:min-h-auto sm:px-3 sm:py-1.5 sm:text-sm ${
                 preferredUnit === 'ml'
                   ? 'bg-accent/20 border-accent text-foreground'
                   : 'bg-card border border-border text-foreground hover:border-accent/50 hover:bg-accent/5'
