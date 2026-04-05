@@ -1,11 +1,8 @@
-
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, Clock, Users } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
-import { cn } from "@/lib/utils";
-import UniversalRecipeCard from "./UniversalRecipeCard";
+import { useNavigate } from "react-router-dom";
+import { getRecipeUrl } from "@/utils/slugUtils";
 
 type DrinkOfTheDayProps = {
   recipe: Cocktail;
@@ -13,28 +10,81 @@ type DrinkOfTheDayProps = {
   onShowAuthModal?: () => void;
 };
 
-export default function DrinkOfTheDay({ 
-  recipe, 
-  onRecipeClick, 
-  onShowAuthModal 
-}: DrinkOfTheDayProps) {
+export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const url = getRecipeUrl(recipe);
+    navigate(url);
+  };
+
+  const firstSentence = recipe.notes
+    ? recipe.notes.split(/[.!?]/)[0]?.trim() + '.'
+    : `A classic cocktail featuring ${recipe.ingredients.slice(0, 2).map(i => i.replace(/^\d+[\s\w]*\s/, '').split(' ')[0]).join(' and ')}.`;
+
   return (
     <section>
-      <div className="mb-4 md:mb-6">
-        <h2 className="text-pure-white mb-2 tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
-          Drink of the Day
-        </h2>
-        <p className="text-soft-gray text-sm md:text-base leading-relaxed max-w-2xl">
-          Start your journey with today's featured cocktail, carefully selected to inspire your next creation.
-        </p>
-      </div>
-      
-      <div className="w-full">
-        <UniversalRecipeCard
-          recipe={recipe}
-          onShowAuthModal={onShowAuthModal}
-          className="w-full max-w-sm"
+      <div
+        className="relative w-full rounded-organic-lg overflow-hidden cursor-pointer group"
+        style={{ minHeight: '340px' }}
+        onClick={handleClick}
+      >
+        {/* Background image */}
+        <img
+          src={recipe.image}
+          alt={recipe.name}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-end h-full p-6 md:p-10" style={{ minHeight: '340px' }}>
+          <span className="text-xs uppercase tracking-[0.15em] text-emerald-green font-semibold mb-2">
+            Drink of the Day
+          </span>
+
+          <h2 className="text-2xl md:text-4xl font-bold text-pure-white mb-2">
+            {recipe.name}
+          </h2>
+
+          <p className="text-light-text text-sm md:text-base max-w-xl mb-4 line-clamp-2">
+            {firstSentence}
+          </p>
+
+          {/* Metadata chips */}
+          <div className="flex flex-wrap items-center gap-3 mb-5 text-xs md:text-sm text-soft-gray">
+            {recipe.technique && (
+              <span className="flex items-center gap-1.5">
+                🍸 {recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1)}
+              </span>
+            )}
+            {recipe.glassType && (
+              <span className="flex items-center gap-1.5">
+                🥃 {recipe.glassType}
+              </span>
+            )}
+            {recipe.prepTime && (
+              <span className="flex items-center gap-1.5">
+                ⏱ {recipe.prepTime}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <Button
+              size="lg"
+              className="rounded-organic-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClick();
+              }}
+            >
+              View Recipe
+            </Button>
+          </div>
+        </div>
       </div>
     </section>
   );

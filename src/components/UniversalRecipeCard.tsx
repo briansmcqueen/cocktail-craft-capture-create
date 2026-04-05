@@ -17,6 +17,7 @@ interface UniversalRecipeCardProps {
   onShowAuthModal?: () => void;
   className?: string;
   hideCreator?: boolean;
+  ratingData?: { averageRating: number; totalRatings: number };
 }
 
 export default function UniversalRecipeCard({
@@ -24,18 +25,14 @@ export default function UniversalRecipeCard({
   onTagClick,
   onShowAuthModal,
   className,
-  hideCreator = false
+  hideCreator = false,
+  ratingData: externalRatingData
 }: UniversalRecipeCardProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
   const fullAvatarUrl = getAvatarUrl(recipe.creatorAvatar);
   
-  // Skip ratings for now - major performance bottleneck
-  const ratingData = {
-    averageRating: 0,
-    totalRatings: 0,
-    ratingDistribution: {}
-  };
+  const ratingData = externalRatingData || { averageRating: 0, totalRatings: 0 };
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -55,9 +52,7 @@ export default function UniversalRecipeCard({
   };
   
   const handleViewRecipe = () => {
-    console.log('Generating URL for recipe:', { id: recipe.id, name: recipe.name, isUserRecipe: recipe.isUserRecipe, createdBy: recipe.createdBy });
     const url = getRecipeUrl(recipe);
-    console.log('Generated URL:', url);
     navigate(url);
   };
 
