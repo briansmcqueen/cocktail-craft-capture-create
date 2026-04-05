@@ -160,12 +160,6 @@ export default function SearchResults({
         <div className="flex items-center gap-2 text-sm text-light-text">
           <span className="font-medium">{totalResults}</span>
           <span>cocktail{totalResults !== 1 ? 's' : ''} found</span>
-          {canMakeCount > 0 && (
-            <>
-              <span>•</span>
-              <span className="text-primary font-medium">{canMakeCount} you can make</span>
-            </>
-          )}
         </div>
         
         <div className="hidden md:flex items-center gap-1">
