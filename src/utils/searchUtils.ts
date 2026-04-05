@@ -1,5 +1,6 @@
 import { Cocktail } from "@/data/classicCocktails";
 import { SearchFilters, SearchResult, BaseSpirit, FlavorProfile } from "@/types/search";
+import { analyzeRecipes, RecipeAnalysis } from "@/services/ingredientMatchingService";
 
 /**
  * Calculate how many ingredients are missing for a recipe
