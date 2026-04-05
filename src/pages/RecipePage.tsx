@@ -121,12 +121,14 @@ export default function RecipePage() {
   const convertMeasurement = (ingredient: string) => {
     if (isMetric) {
       return ingredient
-        .replace(/(\d+(?:\.\d+)?)\s*oz/gi, (_, num) => `${Math.round(parseFloat(num) * 30)}ml`)
+        // Fractions first (e.g. "1/2 oz", "1 1/2 oz") — must run before decimal regex
         .replace(/(\d+(?:\s+\d+)?\/\d+)\s*oz/gi, (_, frac) => `${Math.round(parseFraction(frac) * 30)}ml`)
-        .replace(/(\d+)\s*tsp/gi, (_, num) => `${Math.round(parseFloat(num) * 5)}ml`)
-        .replace(/(\d+)\s*tbsp/gi, (_, num) => `${Math.round(parseFloat(num) * 15)}ml`);
+        // Decimals (e.g. "1.5 oz", ".5 oz", "2 oz")
+        .replace(/(\d*\.?\d+)\s*oz/gi, (_, num) => `${Math.round(parseFloat(num) * 30)}ml`)
+        .replace(/(\d*\.?\d+)\s*tsp/gi, (_, num) => `${Math.round(parseFloat(num) * 5)}ml`)
+        .replace(/(\d*\.?\d+)\s*tbsp/gi, (_, num) => `${Math.round(parseFloat(num) * 15)}ml`);
     }
-    return ingredient.replace(/(\d+(?:\.\d+)?)\s*ml/gi, (_, num) => {
+    return ingredient.replace(/(\d*\.?\d+)\s*ml/gi, (_, num) => {
       const oz = parseFloat(num) / 30;
       return oz >= 1 ? `${oz.toFixed(1).replace(/\.0$/, '')} oz` : `${oz.toFixed(2)} oz`;
     });
