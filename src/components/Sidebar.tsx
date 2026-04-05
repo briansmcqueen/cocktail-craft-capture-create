@@ -28,7 +28,6 @@ const nav = [
   { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
   { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
-  ];
 ];
 
 const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, user, onSignInClick, onSignUpClick, onProfileClick, onMyRecipesClick, onFavoritesClick }: SidebarProps) {

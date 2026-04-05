@@ -134,7 +134,6 @@ export default function MainContent({
             userRecipes={userRecipes}
           />
         ) : library === "feed" ? (
-        ) : library === "feed" ? (
           <Feed />
         ) : library === "mine" ? (
           user ? (
