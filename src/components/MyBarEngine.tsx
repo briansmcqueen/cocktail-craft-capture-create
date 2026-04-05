@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { User } from "lucide-react";
 import { useMyBarData } from "@/hooks/useMyBarData";
@@ -8,6 +8,7 @@ import TieredIngredientSelector from "./mybar/TieredIngredientSelector";
 import MyBarResults from "./mybar/MyBarResults";
 import MyBarActionBar from "./mybar/MyBarActionBar";
 import ResultsDrawer from "./mybar/ResultsDrawer";
+import MyBarOnboarding from "./mybar/MyBarOnboarding";
 
 type MyBarEngineProps = {
   recipes: Cocktail[];
