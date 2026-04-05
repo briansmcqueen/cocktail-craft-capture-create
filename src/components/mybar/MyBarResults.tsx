@@ -8,7 +8,6 @@ import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
 import WhatToBuyNext from "./WhatToBuyNext";
-import WhatToBuyNext from "./WhatToBuyNext";
 import QuickAddCarousel from "./QuickAddCarousel";
 
 interface RecommendedIngredient {

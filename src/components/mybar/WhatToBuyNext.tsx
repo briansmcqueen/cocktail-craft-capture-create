@@ -102,11 +102,6 @@ export default function WhatToBuyNext({
                             {previewRecipes.map(r => r.name).join(", ")}
                             {hasMore && "..."}
                           </div>
-                          {selectedRetailer && (
-                            <div className="text-xs text-accent mt-1">
-                              Available at {selectedRetailer.name}
-                            </div>
-                          )}
                         </div>
                         <div className="flex items-center justify-center w-8 h-8 bg-accent/20 rounded-full border border-accent/40 group-hover:bg-accent/30 transition-colors">
                           <Plus className="h-4 w-4 text-pure-white" />
