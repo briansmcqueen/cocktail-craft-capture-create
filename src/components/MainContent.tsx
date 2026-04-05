@@ -91,14 +91,14 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "mine" && (
+        {library !== "featured" && library !== "ingredients" && (
           <div className="mb-6">
             <SearchInterface
-              recipes={library === "favorites" ? favoriteRecipes : allRecipes}
+              recipes={library === "favorites" ? favoriteRecipes : library === "mine" ? userRecipes : allRecipes}
               availableIngredients={myBarIngredients}
               onRecipeClick={handleRecipeClick}
               onTagClick={handleTagClick}
-              placeholder={`Search ${library === "favorites" ? "favorites" : "all recipes"}...`}
+              placeholder={`Search ${library === "favorites" ? "favorites" : library === "mine" ? "my drinks" : "all recipes"}...`}
               user={user}
             />
           </div>
