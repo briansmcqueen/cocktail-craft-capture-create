@@ -252,13 +252,11 @@ export default function DiscoverBartenders() {
                 </div>
               ) : (
                   <>
-                    <div className="mb-8">
-                      <h1 className="text-3xl font-semibold text-foreground mb-2">
+                    <div className="mb-8 flex items-center gap-2.5">
+                      <Compass className="h-4 w-4 text-primary flex-shrink-0" />
+                      <h1 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
                         Discover
                       </h1>
-                      <p className="text-muted-foreground">
-                        Explore talented bartenders and delicious cocktails from the community
-                      </p>
                     </div>
 
                     <div className="mb-6">
