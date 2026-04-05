@@ -260,18 +260,6 @@ export default function RecipePage() {
                   )}
                 </div>
 
-                {/* Rating & Comments - on left column for desktop, shown after right column content on mobile */}
-                <div className="hidden md:block" id="ratings-section">
-                  <div className="mb-6 pt-4 border-t border-border">
-                    <RecipeRatingStars recipeId={recipe.id} size={20} />
-                    <div className="mt-3">
-                      <RecipeRatingInput recipeId={recipe.id} />
-                    </div>
-                  </div>
-                  <div className="mb-6 pt-4 border-t border-border">
-                    <RecipeComments recipeId={recipe.id} />
-                  </div>
-                </div>
               </div>
 
               {/* Right column - Recipe content */}
@@ -323,70 +311,71 @@ export default function RecipePage() {
                     <p className="text-pure-white leading-relaxed">{recipe.notes}</p>
                   </div>
                 )}
-
-                {/* Tags */}
-                {recipe.tags && recipe.tags.length > 0 && (
-                  <div className="mb-6">
-                    <h2 className="text-xl font-semibold text-foreground mb-4">Tags</h2>
-                    <div className="flex flex-wrap gap-2">
-                      {recipe.tags.map(tag => <TagBadge key={tag}>{tag}</TagBadge>)}
-                    </div>
-                  </div>
-                )}
-
-                {/* Recipe Details */}
-                {(recipe.technique || recipe.glassType || recipe.garnish || recipe.difficulty || recipe.abv || recipe.prepTime) && (
-                  <div className="mb-6 p-4 bg-medium-charcoal rounded-organic-md border border-light-charcoal">
-                    <h2 className="text-base font-normal text-pure-white mb-4">Recipe Details</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {recipe.technique && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-pure-white">Technique:</span>
-                          <span className="text-base text-pure-white">{recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1).toLowerCase()}</span>
-                        </div>
-                      )}
-                      {recipe.glassType && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-pure-white">Glass:</span>
-                          <span className="text-base text-pure-white">{recipe.glassType}</span>
-                        </div>
-                      )}
-                      {recipe.difficulty && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-pure-white">Difficulty:</span>
-                          <span className="text-base text-pure-white">{recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1).toLowerCase()}</span>
-                        </div>
-                      )}
-                      {recipe.abv && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-pure-white">ABV:</span>
-                          <span className="text-base text-pure-white">{recipe.abv}</span>
-                        </div>
-                      )}
-                      {recipe.prepTime && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-pure-white">Prep time:</span>
-                          <span className="text-base text-pure-white">{recipe.prepTime}</span>
-                        </div>
-                      )}
-                      {recipe.garnish && recipe.garnish.length > 0 && (
-                        <div className="flex items-start gap-2 sm:col-span-2">
-                          <span className="text-base text-pure-white">Garnish:</span>
-                          <div className="flex flex-wrap gap-1">
-                            {recipe.garnish.map((g, i) => (
-                              <span key={i} className="text-base text-pure-white">{g}{i < recipe.garnish.length - 1 ? ', ' : ''}</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Rating & Comments - mobile only, full width below the grid */}
-            <div className="md:hidden mt-8" id="ratings-section-mobile">
+            {/* Full-width sections below the grid */}
+            {/* Tags */}
+            {recipe.tags && recipe.tags.length > 0 && (
+              <div className="mb-6 mt-8">
+                <h2 className="text-xl font-semibold text-foreground mb-4">Tags</h2>
+                <div className="flex flex-wrap gap-2">
+                  {recipe.tags.map(tag => <TagBadge key={tag}>{tag}</TagBadge>)}
+                </div>
+              </div>
+            )}
+
+            {/* Recipe Details */}
+            {(recipe.technique || recipe.glassType || recipe.garnish || recipe.difficulty || recipe.abv || recipe.prepTime) && (
+              <div className="mb-6 p-4 bg-medium-charcoal rounded-organic-md border border-light-charcoal">
+                <h2 className="text-base font-normal text-pure-white mb-4">Recipe Details</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {recipe.technique && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-base text-pure-white">Technique:</span>
+                      <span className="text-base text-pure-white">{recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1).toLowerCase()}</span>
+                    </div>
+                  )}
+                  {recipe.glassType && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-base text-pure-white">Glass:</span>
+                      <span className="text-base text-pure-white">{recipe.glassType}</span>
+                    </div>
+                  )}
+                  {recipe.difficulty && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-base text-pure-white">Difficulty:</span>
+                      <span className="text-base text-pure-white">{recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1).toLowerCase()}</span>
+                    </div>
+                  )}
+                  {recipe.abv && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-base text-pure-white">ABV:</span>
+                      <span className="text-base text-pure-white">{recipe.abv}</span>
+                    </div>
+                  )}
+                  {recipe.prepTime && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-base text-pure-white">Prep time:</span>
+                      <span className="text-base text-pure-white">{recipe.prepTime}</span>
+                    </div>
+                  )}
+                  {recipe.garnish && recipe.garnish.length > 0 && (
+                    <div className="flex items-start gap-2 sm:col-span-2">
+                      <span className="text-base text-pure-white">Garnish:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {recipe.garnish.map((g, i) => (
+                          <span key={i} className="text-base text-pure-white">{g}{i < recipe.garnish.length - 1 ? ', ' : ''}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Rating & Comments - full width */}
+            <div id="ratings-section" className="mt-4">
               <div className="mb-6 pt-4 border-t border-border">
                 <RecipeRatingStars recipeId={recipe.id} size={20} />
                 <div className="mt-3">
