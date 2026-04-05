@@ -255,7 +255,7 @@ export default function Settings() {
                 {/* Password & Security */}
                 <Card className="bg-card border-border">
                   <CardHeader>
-                    <CardTitle className="text-xl font-serif text-pure-white flex items-center gap-2">
+                    <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
                       <Shield className="h-5 w-5" />
                       Password & Security
                     </CardTitle>
