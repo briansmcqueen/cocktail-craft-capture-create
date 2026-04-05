@@ -52,8 +52,10 @@ export default function CocktailFilters({
                 "border rounded-t-lg rounded-b-sm",
                 "hover:scale-[1.02]",
                 isExpanded
-                  ? "bg-primary/10 border-primary text-primary border-b-transparent -mb-px z-10"
-                  : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                   ? "bg-primary/10 border-primary text-pure-white border-b-transparent -mb-px z-10"
+                   : count > 0
+                     ? "bg-card border-border text-pure-white hover:bg-muted"
+                     : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
               style={{ 
                 borderRadius: isExpanded ? '8px 12px 2px 2px' : '6px 10px 4px 4px',
@@ -102,10 +104,7 @@ export default function CocktailFilters({
           />
           
           <div className="relative">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold text-foreground">
-                {FILTER_CATEGORIES[expandedCategory].label}
-              </h4>
+            <div className="flex items-center justify-end mb-3">
               {getCategoryCount(expandedCategory) > 0 && (
                 <button
                   onClick={() => onClearCategory(expandedCategory)}
