@@ -80,25 +80,16 @@ export async function getTrendingRecipesHybrid(
   allRecipes: Cocktail[], 
   limit: number = 10
 ): Promise<Cocktail[]> {
-  // Try the new rating-based system first
   const ratingBasedTrending = await getTrendingRecipesByRating(allRecipes, limit);
   
-  // If we have enough recipes with ratings, use those
   if (ratingBasedTrending.length >= Math.min(5, limit)) {
     return ratingBasedTrending;
   }
   
-  // Otherwise, fall back to the old like-based system and combine
-  const { getTrendingRecipes } = await import('./likes');
-  const likeBasedTrending = getTrendingRecipes(allRecipes);
+  // If not enough rated recipes, fill with random recipes
+  const ratedIds = new Set(ratingBasedTrending.map(r => r.id));
+  const remaining = allRecipes.filter(r => !ratedIds.has(r.id));
+  const filler = remaining.slice(0, limit - ratingBasedTrending.length);
   
-  // Combine both systems, prioritizing rating-based results
-  const combined = [
-    ...ratingBasedTrending,
-    ...likeBasedTrending.filter(recipe => 
-      !ratingBasedTrending.some(ratedRecipe => ratedRecipe.id === recipe.id)
-    )
-  ];
-  
-  return combined.slice(0, limit);
+  return [...ratingBasedTrending, ...filler].slice(0, limit);
 }
