@@ -4,8 +4,9 @@ import { User } from "lucide-react";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
-import TieredIngredientSelector from "./mybar/TieredIngredientSelector";
-import MyBarResults from "./mybar/MyBarResults";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import IngredientManager from "./mybar/IngredientManager";
+import MyBarResultsPanel from "./mybar/MyBarResultsPanel";
 import MyBarActionBar from "./mybar/MyBarActionBar";
 import ResultsDrawer from "./mybar/ResultsDrawer";
 import MyBarOnboarding from "./mybar/MyBarOnboarding";
@@ -42,16 +43,15 @@ export default function MyBarEngine({
     updatePreset
   } = useMyBarData(forceUpdate);
 
-  const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
+  const [includeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
 
-  // Onboarding dismissal state
+  // Onboarding
   const onboardingKey = user ? `barbook_onboarding_completed_${user.id}` : null;
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
-    if (!onboardingKey) return true; // Not authenticated = skip onboarding
+    if (!onboardingKey) return true;
     return localStorage.getItem(onboardingKey) === "true";
   });
 
-  // Sync onboarding state when user changes
   useEffect(() => {
     if (onboardingKey) {
       setHasCompletedOnboarding(localStorage.getItem(onboardingKey) === "true");
@@ -60,10 +60,8 @@ export default function MyBarEngine({
     }
   }, [onboardingKey]);
 
-  const markOnboardingComplete = (dismiss: boolean) => {
-    if (onboardingKey) {
-      localStorage.setItem(onboardingKey, "true");
-    }
+  const markOnboardingComplete = () => {
+    if (onboardingKey) localStorage.setItem(onboardingKey, "true");
     setHasCompletedOnboarding(true);
   };
 
@@ -73,11 +71,15 @@ export default function MyBarEngine({
     whatToBuyNext
   } = useRecipeAnalysis(recipes, myBarIngredients, myBar, includeAssumed);
 
-  // Mobile results drawer state
+  // Mobile state
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"can" | "one">("can");
+  const [mobileTab, setMobileTab] = useState<string>(() => {
+    // Default to cocktails tab if user has ingredients
+    return "cocktails";
+  });
 
-  // Show onboarding if user has no ingredients and hasn't dismissed it
+  // Show onboarding if user has no ingredients and hasn't dismissed
   if (user && !loading && myBarIngredients.length === 0 && !hasCompletedOnboarding) {
     return (
       <MyBarOnboarding
@@ -85,81 +87,111 @@ export default function MyBarEngine({
         recipes={recipes}
         onComplete={(selectedIds) => {
           selectedIds.forEach((id) => toggleIngredient(id));
-          markOnboardingComplete(false);
+          markOnboardingComplete();
         }}
-        onSkip={() => markOnboardingComplete(true)}
+        onSkip={() => markOnboardingComplete()}
       />
     );
   }
 
+  const ingredientManagerPanel = (
+    <IngredientManager
+      allIngredients={allIngredients}
+      myBar={myBar}
+      myBarIngredients={myBarIngredients}
+      ingredientMap={ingredientMap}
+      toggleIngredient={toggleIngredient}
+      user={user}
+      setCustomIngredients={setCustomIngredients}
+      onSavePreset={savePreset}
+    />
+  );
+
+  const resultsPanel = (
+    <MyBarResultsPanel
+      myBarIngredients={myBarIngredients}
+      recipesICanMake={recipesICanMake}
+      recipesNeedingOneIngredient={recipesNeedingOneIngredient}
+      whatToBuyNext={whatToBuyNext}
+      ingredientMap={ingredientMap}
+      onRecipeClick={onRecipeClick}
+      onToggleFavorite={onToggleFavorite}
+      onTagClick={onTagClick}
+      onAddIngredient={toggleIngredient}
+      user={user}
+      loading={loading}
+    />
+  );
+
   return (
-    <div className="space-y-6 px-4 sm:px-0">
+    <div className="px-4 sm:px-0">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <User className="text-primary" size={24} />
-        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
-          My Bar
-        </h2>
-      </div>
-      <p className="text-light-text text-sm mb-6">
-        Build your inventory and discover what cocktails you can make
-      </p>
-
-      {/* Ingredient Selection */}
-      <TieredIngredientSelector
-        allIngredients={allIngredients}
-        myBar={myBar}
-        myBarIngredients={myBarIngredients}
-        ingredientMap={ingredientMap}
-        toggleIngredient={toggleIngredient}
-        user={user}
-        setCustomIngredients={setCustomIngredients}
-        includeAssumed={includeAssumed}
-        onToggleAssumed={setIncludeAssumed}
-        presets={presets}
-        onSavePreset={savePreset}
-        onLoadPreset={loadPreset}
-        onDeletePreset={deletePreset}
-        onUpdatePreset={updatePreset}
-      />
-
-      {/* Results Section (kept for larger screens) */}
-      <div className="hidden md:block">
-        <MyBarResults
-          myBarIngredients={myBarIngredients}
-          recipesICanMake={recipesICanMake}
-          recipesNeedingOneIngredient={recipesNeedingOneIngredient}
-          whatToBuyNext={whatToBuyNext}
-          ingredientMap={ingredientMap}
-          onRecipeClick={onRecipeClick}
-          onToggleFavorite={onToggleFavorite}
-          onTagClick={onTagClick}
-          onAddIngredient={toggleIngredient}
-          user={user}
-          loading={loading}
-          allIngredients={allIngredients}
-        />
-      </div>
-
-      {/* Mobile Sticky Action Bar */}
-      {!drawerOpen && (
-        <div className="md:hidden">
-          <MyBarActionBar
-            canMakeCount={recipesICanMake.length}
-            oneAwayCount={recipesNeedingOneIngredient.length}
-            onOpenCanMake={() => {
-              setActiveTab("can");
-              setDrawerOpen(true);
-            }}
-            onOpenOneAway={() => {
-              setActiveTab("one");
-              setDrawerOpen(true);
-            }}
-          />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <User className="text-primary" size={24} />
+          <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
+            My Bar
+          </h2>
         </div>
-      )}
+        {myBarIngredients.length > 0 && (
+          <span className="text-sm text-soft-gray">
+            {myBarIngredients.length} bottle{myBarIngredients.length !== 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
 
-      {/* Mobile Results Drawer */}
+      {/* Desktop: Two-column layout */}
+      <div className="hidden md:grid md:grid-cols-[35%_1fr] md:gap-6">
+        {/* Left column - sticky ingredient manager */}
+        <div className="sticky top-0 h-[calc(100vh-120px)] overflow-y-auto pr-2 scrollbar-thin">
+          {ingredientManagerPanel}
+        </div>
+
+        {/* Right column - results */}
+        <div>
+          {resultsPanel}
+        </div>
+      </div>
+
+      {/* Mobile: Tab-based layout */}
+      <div className="md:hidden">
+        <Tabs value={mobileTab} onValueChange={setMobileTab}>
+          <TabsList className="w-full mb-4">
+            <TabsTrigger value="bottles" className="flex-1">My Bottles</TabsTrigger>
+            <TabsTrigger value="cocktails" className="flex-1">Cocktails</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="bottles" className="mt-0">
+            {ingredientManagerPanel}
+          </TabsContent>
+
+          <TabsContent value="cocktails" className="mt-0">
+            {resultsPanel}
+          </TabsContent>
+        </Tabs>
+
+        {/* Sticky bottom summary bar */}
+        {(recipesICanMake.length > 0 || recipesNeedingOneIngredient.length > 0) && mobileTab === "bottles" && (
+          <div className="fixed bottom-0 inset-x-0 z-50 px-3 pb-3 pt-2 pointer-events-none">
+            <button
+              onClick={() => setMobileTab("cocktails")}
+              className="w-full max-w-3xl mx-auto bg-card/90 backdrop-blur border border-border rounded-organic-pill shadow-glass px-4 py-3 flex items-center justify-center gap-2 pointer-events-auto"
+            >
+              <span className="text-lg">🍸</span>
+              <span className="text-sm text-pure-white font-medium">
+                {recipesICanMake.length} cocktail{recipesICanMake.length !== 1 ? 's' : ''}
+              </span>
+              {recipesNeedingOneIngredient.length > 0 && (
+                <span className="text-sm text-soft-gray">
+                  • {recipesNeedingOneIngredient.length} close
+                </span>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Results Drawer (kept for backward compat but mostly replaced by tabs) */}
       <ResultsDrawer
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
