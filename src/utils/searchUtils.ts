@@ -189,7 +189,9 @@ export function searchCocktails(
   availableIngredients: string[] = []
 ): SearchResult[] {
   // Use the proper ingredient matching service for availability analysis
-  const analyses = availableIngredients.length > 0
+  // Only run analysis when user actually has bar ingredients
+  const hasBarIngredients = availableIngredients.length > 0;
+  const analyses = hasBarIngredients
     ? analyzeRecipes(recipes, availableIngredients, true)
     : null;
   
