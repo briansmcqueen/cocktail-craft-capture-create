@@ -216,8 +216,26 @@ export default function RecipePage() {
               <div className="lg:col-span-1">
                 <img
                   src={recipe.image} alt={recipe.name}
-                  className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
+                  className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass"
                 />
+                {recipe.photo_credit && (
+                  <div className="flex items-center gap-1.5 mt-2 mb-4">
+                    <span className="text-xs text-muted-foreground">📷</span>
+                    {recipe.photo_credit.url ? (
+                      <a
+                        href={recipe.photo_credit.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {recipe.photo_credit.name}
+                      </a>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">{recipe.photo_credit.name}</span>
+                    )}
+                  </div>
+                )}
+                {!recipe.photo_credit && <div className="mb-6" />}
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
