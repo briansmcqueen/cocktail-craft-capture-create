@@ -22,7 +22,6 @@ export function useIndexPage() {
   const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   const [shareRecipe, setShareRecipe] = useState<Cocktail | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   // Memoize expensive calculations
   const allRecipes = useMemo(() => [...classicCocktails, ...userRecipes], [userRecipes]);
@@ -114,8 +113,7 @@ export function useIndexPage() {
 
   const handleLike = async (recipe: Cocktail) => {
     if (!user) return;
-    await toggleLikeInDB(recipe.id);
-    setForceUpdate(prev => prev + 1);
+    await toggleFavorite(recipe.id);
   };
 
   const handleTagClick = (tag: string) => {
@@ -142,7 +140,7 @@ export function useIndexPage() {
     setEditingRecipe,
     shareRecipe,
     setShareRecipe,
-    forceUpdate,
+    isMobile,
     isMobile,
     userRecipes,
     isLoading,
