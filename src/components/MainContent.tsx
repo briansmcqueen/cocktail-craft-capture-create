@@ -134,18 +134,7 @@ export default function MainContent({
           />
         ) : library === "mine" ? (
           user ? (
-            <LazyRecipeGrid
-                recipes={userRecipes}
-                onRecipeClick={handleRecipeClick}
-                onToggleFavorite={() => {}}
-                onLike={handleLikeWithAuth}
-                onShareRecipe={handleShareRecipe}
-                onTagClick={handleTagClick}
-                onShowForm={handleAddRecipe}
-                forceUpdate={forceUpdate}
-                library={library}
-                onShowAuthModal={() => setShowAuthModal(true)}
-              />
+            null
           ) : (
             <AuthPrompt
               icon={Edit}
