@@ -10,7 +10,7 @@ import DrinkOfTheDay from "./DrinkOfTheDay";
 import FeaturedBartendersSection from "./FeaturedBartendersSection";
 import CommunityCreationsSection from "./CommunityCreationsSection";
 import CommunityCallToAction from "./CommunityCallToAction";
-import TechniquesSection from "./TechniquesSection";
+import { useNavigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 type FeaturedProps = {
@@ -134,8 +134,7 @@ export default function Featured({
             onShowForm={onShowForm}
           />
 
-          {/* Techniques Section */}
-          <TechniquesSection onShowAuthModal={onShowAuthModal} />
+        
         </div>
       </div>
     </div>

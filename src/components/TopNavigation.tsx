@@ -50,11 +50,6 @@ const nav = [{
   label: "My Drinks",
   icon: Edit,
   path: "/recipes/my-drinks"
-}, {
-  id: "learn",
-  label: "Learn",
-  icon: TrendingUp,
-  path: "/learn"
 }];
 const TopNavigation = memo(function TopNavigation({
   user,
