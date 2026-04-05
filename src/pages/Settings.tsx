@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { Lock, Mail, Shield, AlertTriangle } from 'lucide-react';
+import { Lock, Mail, Shield, AlertTriangle, Settings as Settings2 } from 'lucide-react';
 
 export default function Settings() {
   const { user, loading } = useAuth();
