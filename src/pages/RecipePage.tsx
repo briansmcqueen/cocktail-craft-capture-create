@@ -175,7 +175,7 @@ export default function RecipePage() {
               {recipe.origin && <TagBadge className="mb-2">{recipe.origin}</TagBadge>}
 
               {/* Aggregate rating stars - clickable anchor */}
-              <button onClick={scrollToRatings} className="hover:opacity-80 transition-opacity cursor-pointer mb-3">
+              <button onClick={scrollToRatings} className="hover:opacity-80 transition-opacity cursor-pointer mb-3 empty:hidden empty:mb-0">
                 <RecipeRatingStars recipeId={recipe.id} />
               </button>
               
