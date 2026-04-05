@@ -188,15 +188,31 @@ export function searchCocktails(
   filters: SearchFilters,
   availableIngredients: string[] = []
 ): SearchResult[] {
+  // Use the proper ingredient matching service for availability analysis
+  const analyses = availableIngredients.length > 0
+    ? analyzeRecipes(recipes, availableIngredients, true)
+    : null;
+  
+  const analysisMap = new Map<string, RecipeAnalysis>();
+  if (analyses) {
+    analyses.forEach(a => analysisMap.set(a.recipe.id, a));
+  }
+
   return recipes
-    .filter(recipe => matchesFilters(recipe, filters, availableIngredients))
+    .filter(recipe => matchesFiltersWithAnalysis(recipe, filters, analysisMap.get(recipe.id)))
     .map(recipe => {
-      const missingIngredients = calculateMissingIngredients(recipe, availableIngredients);
-      const availabilityScore = calculateAvailabilityScore(recipe, availableIngredients);
+      const analysis = analysisMap.get(recipe.id);
+      const missingIngredients = analysis
+        ? analysis.missingIngredients.map(m => m.ingredientId)
+        : recipe.ingredients.map(i => cleanIngredientName(i)); // fallback if no bar
+      const canMake = analysis ? analysis.canMake : false;
+      const availabilityScore = analysis
+        ? Math.round((analysis.availableIngredients.length / Math.max(analysis.requiredIngredients.length, 1)) * 100)
+        : 0;
       
       return {
         cocktail: recipe,
-        canMake: missingIngredients.length === 0,
+        canMake,
         missingIngredients,
         availabilityScore
       };
@@ -214,6 +230,89 @@ export function searchCocktails(
       // Finally alphabetically
       return a.cocktail.name.localeCompare(b.cocktail.name);
     });
+}
+
+/**
+ * Match filters using proper recipe analysis for availability checks
+ */
+function matchesFiltersWithAnalysis(
+  recipe: Cocktail,
+  filters: SearchFilters,
+  analysis?: RecipeAnalysis
+): boolean {
+  // Text search
+  if (filters.query) {
+    const searchableText = `${recipe.name} ${recipe.ingredients.join(' ')} ${recipe.tags?.join(' ')} ${recipe.notes || ''}`.toLowerCase();
+    if (!searchableText.includes(filters.query.toLowerCase())) {
+      return false;
+    }
+  }
+
+  // Can make only filter - use proper analysis
+  if (filters.canMakeOnly) {
+    if (!analysis || !analysis.canMake) return false;
+  }
+
+  // Max missing ingredients - use proper analysis
+  if (filters.maxMissingIngredients !== null) {
+    const missingCount = analysis ? analysis.missingCount : recipe.ingredients.length;
+    if (missingCount > filters.maxMissingIngredients) return false;
+  }
+
+  // Base spirits filter
+  if (filters.baseSpirits.length > 0) {
+    const baseSpirit = extractBaseSpirit(recipe);
+    if (!baseSpirit || !filters.baseSpirits.includes(baseSpirit)) return false;
+  }
+
+  // Difficulty filter
+  if (filters.difficulty !== 'any' && recipe.difficulty) {
+    if (recipe.difficulty !== filters.difficulty) return false;
+  }
+
+  // Technique filter
+  if (filters.technique !== 'any' && recipe.technique) {
+    if (recipe.technique !== filters.technique) return false;
+  }
+
+  // Glass type filter
+  if (filters.glassType !== 'any' && recipe.glassType) {
+    if (recipe.glassType !== filters.glassType) return false;
+  }
+
+  // Flavor profiles filter
+  if (filters.flavorProfiles.length > 0) {
+    const recipeProfiles = extractFlavorProfiles(recipe);
+    const hasMatchingProfile = filters.flavorProfiles.some(profile => 
+      recipeProfiles.includes(profile)
+    );
+    if (!hasMatchingProfile) return false;
+  }
+
+  // Special constraints
+  if (filters.noEggWhites) {
+    const hasEgg = recipe.ingredients.some(ing => 
+      ing.toLowerCase().includes('egg')
+    );
+    if (hasEgg) return false;
+  }
+
+  if (filters.noCream) {
+    const hasCream = recipe.ingredients.some(ing => 
+      ing.toLowerCase().includes('cream') || ing.toLowerCase().includes('milk')
+    );
+    if (hasCream) return false;
+  }
+
+  if (filters.nonAlcoholic) {
+    const alcoholKeywords = ['vodka', 'gin', 'rum', 'whiskey', 'bourbon', 'tequila', 'brandy', 'wine', 'champagne', 'prosecco', 'beer', 'sake', 'liqueur', 'vermouth', 'absinthe', 'mezcal', 'cognac', 'scotch'];
+    const hasAlcohol = recipe.ingredients.some(ing => 
+      alcoholKeywords.some(keyword => ing.toLowerCase().includes(keyword))
+    );
+    if (hasAlcohol) return false;
+  }
+
+  return true;
 }
 
 /**
