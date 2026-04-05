@@ -27,7 +27,6 @@ import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 import { classicCocktails } from '@/data/classicCocktails';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
-import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
 import { getUserActivity, type ActivityItem } from '@/services/activityService';
 import TopNavigation from '@/components/TopNavigation';
