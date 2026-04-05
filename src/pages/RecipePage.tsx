@@ -209,9 +209,9 @@ export default function RecipePage() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Left column - Image, action buttons, ratings & comments (desktop) */}
-              <div className="md:col-span-1">
+              <div>
                 <img
                   src={recipe.image} alt={recipe.name}
                   className="w-full aspect-square object-cover rounded-organic-lg border border-border shadow-glass"
@@ -263,7 +263,7 @@ export default function RecipePage() {
               </div>
 
               {/* Right column - Recipe content */}
-              <div className="md:col-span-2">
+              <div>
                 {/* Ingredients */}
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-foreground">Ingredients</h2>
