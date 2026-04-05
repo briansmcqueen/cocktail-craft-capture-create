@@ -165,7 +165,7 @@ export default function MyBarEngine({
             {ingredientManagerPanel}
           </TabsContent>
 
-          <TabsContent value="cocktails" className="mt-0 pb-4">
+          <TabsContent value="cocktails" className="mt-0 pb-2">
             {resultsPanel}
           </TabsContent>
         </Tabs>
