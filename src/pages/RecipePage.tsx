@@ -39,17 +39,8 @@ export default function RecipePage() {
   const { toast } = useToast();
 
   const shouldShowBackButton = useMemo(() => {
-    if (window.history.length <= 1) return false;
-    const currentPath = location.pathname;
-    const referrer = document.referrer;
-    if (referrer) {
-      try {
-        const referrerUrl = new URL(referrer);
-        if (referrerUrl.pathname === currentPath) return false;
-      } catch (e) {}
-    }
-    return true;
-  }, [location.pathname]);
+    return window.history.length > 1;
+  }, []);
 
   const handleGoBack = useCallback(() => { navigate(-1); }, [navigate]);
 
@@ -216,7 +207,7 @@ export default function RecipePage() {
               <div className="lg:col-span-1">
                 <img
                   src={recipe.image} alt={recipe.name}
-                  className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass"
+                  className="w-full aspect-square object-cover rounded-organic-lg border border-border shadow-glass"
                 />
                 {recipe.photo_credit && (
                   <div className="flex items-center gap-1.5 mt-2 mb-4">
