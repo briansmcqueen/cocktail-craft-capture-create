@@ -1,16 +1,16 @@
-
 import React, { useState, useEffect, useMemo } from "react";
-import { Cocktail } from "@/data/classicCocktails";
+import { Cocktail, classicCocktails } from "@/data/classicCocktails";
 import { getDrinkOfTheDay } from "@/utils/drinkOfTheDay";
-import { getTrendingRecipesHybrid } from "@/utils/trendingRecipes";
 import { getCommunityRecipesFromDB } from "@/services/recipesService";
 import { useMyBarData } from "@/hooks/useMyBarData";
+import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { useAuth } from "@/hooks/useAuth";
 import DrinkOfTheDay from "./DrinkOfTheDay";
+import QuickAccessBar from "./QuickAccessBar";
+import ClassicShowcase from "./ClassicShowcase";
 import FeaturedBartendersSection from "./FeaturedBartendersSection";
 import CommunityCreationsSection from "./CommunityCreationsSection";
-import CommunityCallToAction from "./CommunityCallToAction";
-import { useNavigate } from "react-router-dom";
+import GetStartedCTA from "./GetStartedCTA";
 
 type FeaturedProps = {
   recipes: Cocktail[];
@@ -27,113 +27,62 @@ type FeaturedProps = {
 export default function Featured({ 
   recipes, 
   onRecipeClick, 
-  onEditRecipe, 
-  onShareRecipe, 
-  userRecipes,
-  onToggleFavorite,
   onShowAuthModal,
-  onNavigateToMyBar,
-  onShowForm
 }: FeaturedProps) {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [trendingRecipes, setTrendingRecipes] = useState<Cocktail[]>([]);
   const [communityRecipes, setCommunityRecipes] = useState<Cocktail[]>([]);
   
-  // Combine recipes (communityRecipes already includes user's public recipes, so don't duplicate)
-  const allRecipes = useMemo(() => {
+  // My Bar data for QuickAccessBar
+  const { myBar, myBarIngredients } = useMyBarData(0);
+  const allRecipes = useMemo(() => [...classicCocktails, ...communityRecipes], [communityRecipes]);
+  const { recipesICanMake } = useRecipeAnalysis(allRecipes, myBarIngredients, myBar);
+
+  // Combine for drink of the day
+  const combinedRecipes = useMemo(() => {
     const combined = [...recipes, ...communityRecipes];
-    // Deduplicate by ID
     const seen = new Set<string>();
-    return combined.filter(recipe => {
-      if (seen.has(recipe.id)) return false;
-      seen.add(recipe.id);
+    return combined.filter(r => {
+      if (seen.has(r.id)) return false;
+      seen.add(r.id);
       return true;
     });
   }, [recipes, communityRecipes]);
   
-  // Get drink of the day
-  const drinkOfTheDay = getDrinkOfTheDay(allRecipes);
+  const drinkOfTheDay = getDrinkOfTheDay(combinedRecipes);
   
-  // Fetch community recipes with creator info
   useEffect(() => {
-    const fetchCommunityRecipes = async () => {
-      const recipes = await getCommunityRecipesFromDB(12);
-      setCommunityRecipes(recipes);
-    };
-    
-    fetchCommunityRecipes();
+    getCommunityRecipesFromDB(6).then(setCommunityRecipes);
   }, []);
-  
-  // Fetch trending recipes based on ratings
-  useEffect(() => {
-    const fetchTrendingRecipes = async () => {
-      const trending = await getTrendingRecipesHybrid(allRecipes, 12);
-      // Deduplicate: exclude recipes already shown in community section
-      const communityIds = new Set(communityRecipes.map(r => r.id));
-      const uniqueTrending = trending.filter(recipe => !communityIds.has(recipe.id));
-      setTrendingRecipes(uniqueTrending);
-    };
-    
-    fetchTrendingRecipes();
-  }, [allRecipes, communityRecipes]);
-
-  const handleNavigateToMyBar = () => {
-    onNavigateToMyBar?.();
-  };
-
-  const handleNavigateToDiscover = () => {
-    navigate('/discover');
-  };
-
-  const handleCreateRecipe = () => {
-    onShowForm?.();
-  };
 
   return (
     <div className="w-full max-w-7xl mx-auto">
       <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="space-y-8 md:space-y-12">
-          {/* Drink of the Day */}
-          <DrinkOfTheDay
-            recipe={drinkOfTheDay}
-            onRecipeClick={onRecipeClick}
-            onShowAuthModal={onShowAuthModal}
-          />
+          {/* 1. Hero: Drink of the Day */}
+          <DrinkOfTheDay recipe={drinkOfTheDay} onRecipeClick={onRecipeClick} onShowAuthModal={onShowAuthModal} />
 
-          {/* Featured Bartenders */}
-          <FeaturedBartendersSection
-            onShowAuthModal={onShowAuthModal}
-          />
+          {/* 2. Quick Access Bar (authenticated + has ingredients) */}
+          {user && myBarIngredients.length > 0 && (
+            <QuickAccessBar count={recipesICanMake.length} />
+          )}
 
-          {/* Community Creations - User Recipes */}
-          {communityRecipes.length > 0 && (
+          {/* 3. Classic Cocktails Grid */}
+          <ClassicShowcase />
+
+          {/* 4. Community Spotlight (3+ recipes) */}
+          {communityRecipes.length >= 3 && (
             <CommunityCreationsSection
-              title="From Our Community"
-              description="Discover handcrafted recipes from bartenders and enthusiasts around the world, each with their unique twist and story."
-              recipes={communityRecipes}
+              title="From the Community"
+              recipes={communityRecipes.slice(0, 6)}
               onShowAuthModal={onShowAuthModal}
             />
           )}
 
-          {/* Trending Now - Community Engagement */}
-          {trendingRecipes.length > 0 && (
-            <CommunityCreationsSection
-              title="Trending in the Community"
-              description="See what's capturing everyone's attention right now. These recipes are earning the most love and engagement from our members."
-              recipes={trendingRecipes}
-              onShowAuthModal={onShowAuthModal}
-            />
-          )}
+          {/* 5. Featured Bartenders (min 3 enforced internally) */}
+          <FeaturedBartendersSection onShowAuthModal={onShowAuthModal} />
 
-          {/* Call to Action */}
-          <CommunityCallToAction
-            isAuthenticated={!!user}
-            onShowAuthModal={onShowAuthModal}
-            onShowForm={onShowForm}
-          />
-
-        
+          {/* 6. CTA for unauthenticated users */}
+          {!user && <GetStartedCTA onShowAuthModal={onShowAuthModal} />}
         </div>
       </div>
     </div>
