@@ -23,27 +23,7 @@ import RecipeRatingInput from "@/components/ratings/RecipeRatingInput";
 import RecipeComments from "@/components/RecipeComments";
 
 
-// Convert recipe name to URL slug
-const recipeNameToSlug = (name: string): string => {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-};
-
-// Convert URL slug back to recipe name
-const slugToRecipeName = (slug: string): string => {
-  return slug.replace(/-/g, ' ');
-};
-
-// Generate the correct URL for any recipe
-const getRecipeUrl = (recipe: Cocktail): string => {
-  const slug = recipeNameToSlug(recipe.name);
-  if (recipe.creatorUsername && recipe.isUserRecipe) {
-    return `/cocktail/${recipe.creatorUsername}/${slug}`;
-  }
-  if (recipe.isUserRecipe && recipe.id) {
-    return `/cocktail/id/${recipe.id}`;
-  }
-  return `/cocktail/${slug}`;
-};
+import { recipeNameToSlug, slugToRecipeName, getRecipeUrl } from "@/utils/slugUtils";
 
 export default function RecipePage() {
   const { recipeName, username, recipeId } = useParams<{ recipeName?: string; username?: string; recipeId?: string }>();
@@ -398,4 +378,4 @@ export default function RecipePage() {
   );
 }
 
-export { recipeNameToSlug, slugToRecipeName, getRecipeUrl };
+
