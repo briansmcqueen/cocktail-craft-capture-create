@@ -234,7 +234,7 @@ export default function RecipePage() {
                 {!recipe.photo_credit && <div className="mb-6" />}
 
                 {/* Action buttons */}
-                <div className="flex flex-wrap gap-3 mb-6">
+                <div className="flex flex-wrap gap-3 mb-2 md:mb-6">
                   <Button
                     variant="secondary"
                     className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 hover:scale-[1.02] ${
