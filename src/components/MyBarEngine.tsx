@@ -44,6 +44,29 @@ export default function MyBarEngine({
 
   const [includeAssumed, setIncludeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
 
+  // Onboarding dismissal state
+  const onboardingKey = user ? `barbook_onboarding_completed_${user.id}` : null;
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
+    if (!onboardingKey) return true; // Not authenticated = skip onboarding
+    return localStorage.getItem(onboardingKey) === "true";
+  });
+
+  // Sync onboarding state when user changes
+  useEffect(() => {
+    if (onboardingKey) {
+      setHasCompletedOnboarding(localStorage.getItem(onboardingKey) === "true");
+    } else {
+      setHasCompletedOnboarding(true);
+    }
+  }, [onboardingKey]);
+
+  const markOnboardingComplete = (dismiss: boolean) => {
+    if (onboardingKey) {
+      localStorage.setItem(onboardingKey, "true");
+    }
+    setHasCompletedOnboarding(true);
+  };
+
   const {
     recipesICanMake,
     recipesNeedingOneIngredient,
@@ -53,6 +76,21 @@ export default function MyBarEngine({
   // Mobile results drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"can" | "one">("can");
+
+  // Show onboarding if user has no ingredients and hasn't dismissed it
+  if (user && !loading && myBarIngredients.length === 0 && !hasCompletedOnboarding) {
+    return (
+      <MyBarOnboarding
+        allIngredients={allIngredients}
+        recipes={recipes}
+        onComplete={(selectedIds) => {
+          selectedIds.forEach((id) => toggleIngredient(id));
+          markOnboardingComplete(false);
+        }}
+        onSkip={() => markOnboardingComplete(true)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6 px-4 sm:px-0">
