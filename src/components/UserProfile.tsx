@@ -4,34 +4,21 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuLabel, 
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { Users, Heart, ChefHat, ArrowLeft, Settings, Filter, MessageSquare, ThumbsUp, UserPlus } from 'lucide-react';
+import { Users, Heart, ChefHat, ArrowLeft, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { followUser, unfollowUser, isFollowing, getUserStats, getFollowing, getFollowers, type UserStats } from '@/services/followsService';
 import { useFavorites } from '@/hooks/useFavorites';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { getAvatarUrl } from '@/utils/avatarUrl';
-import RecipeGrid from './RecipeGrid';
 import UserCard from '@/components/social/UserCard';
 import UniversalRecipeCard from '@/components/UniversalRecipeCard';
-import type { Cocktail, Difficulty } from '@/data/classicCocktails';
+import type { Cocktail } from '@/data/classicCocktails';
 import { classicCocktails } from '@/data/classicCocktails';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
-import { getUserActivity, type ActivityItem } from '@/services/activityService';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
-import { formatDistanceToNow, isToday, isYesterday, isThisWeek, startOfWeek } from 'date-fns';
 
 interface Profile {
   id: string;
@@ -70,18 +57,14 @@ export default function UserProfile() {
   const [followingUsers, setFollowingUsers] = useState<any[]>([]);
   const [followerUsers, setFollowerUsers] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('recipes');
-  const [recipeStats, setRecipeStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
-  const [favoriteStats, setFavoriteStats] = useState<Record<string, { likes: number; favorites: number; comments: number; rating: number }>>({});
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
-  const [activityFilter, setActivityFilter] = useState<'all' | 'recipe' | 'comment' | 'like' | 'follow'>('all');
+  const [recipeStats, setRecipeStats] = useState<Record<string, { favorites: number; comments: number; rating: number }>>({});
+  const [favoriteStatsMap, setFavoriteStatsMap] = useState<Record<string, { favorites: number; comments: number; rating: number }>>({});
 
   const isOwnProfile = user?.id === userId;
-
   const handleNoOp = () => {};
 
   useEffect(() => {
     if (!userId) return;
-    
     fetchProfile();
     fetchStats();
     checkFollowStatus();
@@ -89,341 +72,136 @@ export default function UserProfile() {
     fetchUserFavorites();
     fetchFollowingUsers();
     fetchFollowerUsers();
-    fetchUserActivity();
   }, [userId]);
-
-  const fetchUserActivity = async () => {
-    if (!userId) return;
-    const activityData = await getUserActivity(userId);
-    setActivities(activityData);
-  };
-
-  const getFilteredActivities = () => {
-    if (activityFilter === 'all') {
-      return activities;
-    }
-    return activities.filter(activity => activity.type === activityFilter);
-  };
-
-  const groupActivitiesByDate = (activities: ActivityItem[]) => {
-    const groups: { [key: string]: ActivityItem[] } = {
-      'Today': [],
-      'Yesterday': [],
-      'This Week': [],
-      'Earlier': []
-    };
-
-    activities.forEach(activity => {
-      const date = new Date(activity.timestamp);
-      if (isToday(date)) {
-        groups['Today'].push(activity);
-      } else if (isYesterday(date)) {
-        groups['Yesterday'].push(activity);
-      } else if (isThisWeek(date, { weekStartsOn: 0 })) {
-        groups['This Week'].push(activity);
-      } else {
-        groups['Earlier'].push(activity);
-      }
-    });
-
-    // Remove empty groups
-    return Object.entries(groups).filter(([_, items]) => items.length > 0);
-  };
 
   const fetchProfile = async () => {
     if (!userId) return;
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (error) {
-      // Fallback for unauthenticated viewers: fetch only safe public fields via RPC
       try {
         const { data: publicData } = await supabase.rpc('get_public_profiles', { user_ids: [userId] as any });
-        const publicProfile = (publicData as any[] | null)?.[0];
-        if (publicProfile) {
-          setProfile({
-            id: publicProfile.id,
-            username: publicProfile.username,
-            full_name: null,
-            avatar_url: publicProfile.avatar_url,
-            bio: null,
-          });
+        const p = (publicData as any[])?.[0];
+        if (p) {
+          setProfile({ id: p.id, username: p.username, full_name: null, avatar_url: p.avatar_url, bio: null });
           setLoading(false);
           return;
         }
-      } catch (e) {
-        // noop, fall through to error toast
-      }
-
-      console.error('Error fetching profile:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load user profile",
-        variant: "destructive",
-      });
+      } catch {}
+      toast({ title: "Error", description: "Failed to load user profile", variant: "destructive" });
       setLoading(false);
       return;
     }
-
     setProfile(data);
     setLoading(false);
   };
 
-  const fetchStats = async () => {
-    if (!userId) return;
-    const userStats = await getUserStats(userId);
-    setStats(userStats);
-  };
-
-  const checkFollowStatus = async () => {
-    if (!userId || !user) return;
-    const following = await isFollowing(userId);
-    setIsFollowingUser(following);
-  };
+  const fetchStats = async () => { if (userId) setStats(await getUserStats(userId)); };
+  const checkFollowStatus = async () => { if (userId && user) setIsFollowingUser(await isFollowing(userId)); };
 
   const fetchUserRecipes = async () => {
     if (!userId) return;
-
-    const { data, error } = await supabase
-      .from('recipes')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('is_public', true)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching user recipes:', error);
-    } else {
-      setRecipes(data || []);
-      
-      // Fetch stats for all recipes
-      if (data && data.length > 0) {
-        const recipeIds = data.map(r => r.id);
-        const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
-          getRecipesFavoriteCounts(recipeIds),
-          getRecipesCommentCounts(recipeIds),
-          supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: recipeIds })
-        ]);
-        
-        const ratingsData = ratingsResponse.data as Array<{ recipe_id: string; averageRating: number; totalRatings: number }> | null;
-        
-        const stats: Record<string, { likes: number; favorites: number; comments: number; rating: number }> = {};
-        recipeIds.forEach(id => {
-          const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
-          stats[id] = {
-            likes: favCounts[id] || 0,
-            favorites: favCounts[id] || 0,
-            comments: commentCounts[id] || 0,
-            rating: ratingInfo?.averageRating || 0
-          };
-        });
-        setRecipeStats(stats);
-      }
+    const { data, error } = await supabase.from('recipes').select('*').eq('user_id', userId).eq('is_public', true).order('created_at', { ascending: false });
+    if (error) { console.error('Error fetching user recipes:', error); return; }
+    setRecipes(data || []);
+    if (data && data.length > 0) {
+      const ids = data.map(r => r.id);
+      const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
+        getRecipesFavoriteCounts(ids), getRecipesCommentCounts(ids),
+        supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: ids })
+      ]);
+      const ratingsData = ratingsResponse.data as Array<{ recipe_id: string; averageRating: number }> | null;
+      const s: Record<string, { favorites: number; comments: number; rating: number }> = {};
+      ids.forEach(id => {
+        const r = ratingsData?.find(x => x.recipe_id === id);
+        s[id] = { favorites: favCounts[id] || 0, comments: commentCounts[id] || 0, rating: r?.averageRating || 0 };
+      });
+      setRecipeStats(s);
     }
   };
 
   const fetchUserFavorites = async () => {
     if (!userId) return;
-
-    // Fetch favorites, filtering by visibility if not own profile
-    const query = supabase
-      .from('favorites')
-      .select('recipe_id, created_at')
-      .eq('user_id', userId);
-
-    // Only show public favorites if viewing someone else's profile
-    if (!isOwnProfile) {
-      query.eq('is_public', true);
-    }
-
+    const query = supabase.from('favorites').select('recipe_id, created_at').eq('user_id', userId);
+    if (!isOwnProfile) query.eq('is_public', true);
     const { data, error } = await query;
+    if (error) { console.error('Error fetching favorites:', error); return; }
+    const favIds = data?.map(f => f.recipe_id) || [];
+    if (favIds.length === 0) { setFavoriteRecipes([]); return; }
 
-    if (error) {
-      console.error('Error fetching user favorites:', error);
-      return;
-    }
+    const classicIds = favIds.filter(id => !id.includes('-'));
+    const userIds = favIds.filter(id => id.includes('-'));
+    const result: Cocktail[] = [];
 
-    const favoriteIds = data?.map(f => f.recipe_id) || [];
-    
-    if (favoriteIds.length === 0) {
-      setFavoriteRecipes([]);
-      return;
-    }
-
-    // Separate classic cocktails and user recipes
-    const classicFavorites = favoriteIds.filter(id => !id.includes('-'));
-    const userRecipeIds = favoriteIds.filter(id => id.includes('-'));
-
-    const favoriteCocktails: Cocktail[] = [];
-
-    // Get classic cocktails
-    if (classicFavorites.length > 0) {
-      const classics = classicCocktails.filter(c => classicFavorites.includes(c.id));
-      favoriteCocktails.push(...classics);
-    }
-
-    // Get user recipes from database
-    if (userRecipeIds.length > 0) {
-      const { data: userRecipes, error: recipesError } = await supabase
-        .from('recipes')
-        .select('*')
-        .in('id', userRecipeIds)
-        .eq('is_public', true);
-
-      if (!recipesError && userRecipes) {
-        const transformedRecipes: Cocktail[] = userRecipes.map(recipe => ({
-          id: recipe.id,
-          name: recipe.name,
-          notes: recipe.description || undefined,
-          image: recipe.image_url || '',
-          tags: recipe.tags || [],
-          prepTime: `${recipe.prep_time || 5} min`,
-          ingredients: recipe.ingredients,
-          steps: recipe.instructions,
-          isUserRecipe: true,
-        }));
-        favoriteCocktails.push(...transformedRecipes);
+    if (classicIds.length > 0) result.push(...classicCocktails.filter(c => classicIds.includes(c.id)));
+    if (userIds.length > 0) {
+      const { data: userRecipes } = await supabase.from('recipes').select('*').in('id', userIds).eq('is_public', true);
+      if (userRecipes) {
+        result.push(...userRecipes.map(r => ({
+          id: r.id, name: r.name, notes: r.description || undefined, image: r.image_url || '',
+          tags: r.tags || [], prepTime: `${r.prep_time || 5} min`, ingredients: r.ingredients,
+          steps: r.instructions, isUserRecipe: true,
+        })));
       }
     }
+    setFavoriteRecipes(result);
 
-    setFavoriteRecipes(favoriteCocktails);
-
-    // Fetch stats for favorites
-    if (favoriteIds.length > 0) {
-      const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
-        getRecipesFavoriteCounts(favoriteIds),
-        getRecipesCommentCounts(favoriteIds),
-        supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: favoriteIds })
-      ]);
-
-      const ratingsData = ratingsResponse.data as Array<{ recipe_id: string; averageRating: number; totalRatings: number }> | null;
-
-      const stats: Record<string, { likes: number; favorites: number; comments: number; rating: number }> = {};
-      favoriteIds.forEach(id => {
-        const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
-        stats[id] = {
-          likes: favCounts[id] || 0,
-          favorites: favCounts[id] || 0,
-          comments: commentCounts[id] || 0,
-          rating: ratingInfo?.averageRating || 0
-        };
-      });
-      setFavoriteStats(stats);
-    }
+    const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
+      getRecipesFavoriteCounts(favIds), getRecipesCommentCounts(favIds),
+      supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: favIds })
+    ]);
+    const ratingsData = ratingsResponse.data as Array<{ recipe_id: string; averageRating: number }> | null;
+    const s: Record<string, { favorites: number; comments: number; rating: number }> = {};
+    favIds.forEach(id => {
+      const r = ratingsData?.find(x => x.recipe_id === id);
+      s[id] = { favorites: favCounts[id] || 0, comments: commentCounts[id] || 0, rating: r?.averageRating || 0 };
+    });
+    setFavoriteStatsMap(s);
   };
 
   const fetchFollowingUsers = async () => {
     if (!userId) return;
-
-    try {
-      // Get the list of users this profile is following
-      const follows = await getFollowing(userId);
-      
-      if (follows.length === 0) {
-        setFollowingUsers([]);
-        return;
-      }
-
-      // Get user IDs of people they're following
-      const followingIds = follows.map(f => f.following_id);
-
-      // Fetch detailed profile info for all following users
-      const { data: profiles, error } = await supabase.rpc('get_public_profiles', {
-        user_ids: followingIds as any
-      });
-
-      if (error) {
-        console.error('Error fetching following user profiles:', error);
-        return;
-      }
-
-      setFollowingUsers(profiles || []);
-    } catch (error) {
-      console.error('Error fetching following users:', error);
-    }
+    const follows = await getFollowing(userId);
+    if (follows.length === 0) { setFollowingUsers([]); return; }
+    const { data } = await supabase.rpc('get_public_profiles', { user_ids: follows.map(f => f.following_id) as any });
+    setFollowingUsers(data || []);
   };
 
   const fetchFollowerUsers = async () => {
     if (!userId) return;
-
-    try {
-      // Get the list of users following this profile
-      const follows = await getFollowers(userId);
-      
-      if (follows.length === 0) {
-        setFollowerUsers([]);
-        return;
-      }
-
-      // Get user IDs of followers
-      const followerIds = follows.map(f => f.follower_id);
-
-      // Fetch detailed profile info for all followers
-      const { data: profiles, error } = await supabase.rpc('get_public_profiles', {
-        user_ids: followerIds as any
-      });
-
-      if (error) {
-        console.error('Error fetching follower user profiles:', error);
-        return;
-      }
-
-      setFollowerUsers(profiles || []);
-    } catch (error) {
-      console.error('Error fetching follower users:', error);
-    }
+    const follows = await getFollowers(userId);
+    if (follows.length === 0) { setFollowerUsers([]); return; }
+    const { data } = await supabase.rpc('get_public_profiles', { user_ids: follows.map(f => f.follower_id) as any });
+    setFollowerUsers(data || []);
   };
 
   const handleFollowToggle = async () => {
     if (!userId || !user) return;
-
-    const success = isFollowingUser 
-      ? await unfollowUser(userId)
-      : await followUser(userId);
-
+    const success = isFollowingUser ? await unfollowUser(userId) : await followUser(userId);
     if (success) {
       setIsFollowingUser(!isFollowingUser);
-      fetchStats(); // Refresh stats
-      toast({
-        title: isFollowingUser ? "Unfollowed" : "Following",
-        description: `You are ${isFollowingUser ? 'no longer following' : 'now following'} ${profile?.username || profile?.full_name || 'this user'}`,
-      });
+      fetchStats();
+      toast({ title: isFollowingUser ? "Unfollowed" : "Following", description: `You are ${isFollowingUser ? 'no longer following' : 'now following'} ${profile?.username || profile?.full_name || 'this user'}` });
     }
+  };
+
+  const navProps = {
+    user, activeLibrary: "" as const, onLibrarySelect: handleNoOp, onAddRecipe: handleNoOp,
+    onSignInClick: handleNoOp, onSignUpClick: handleNoOp, onProfileClick: handleNoOp,
+    onMyRecipesClick: handleNoOp, onFavoritesClick: handleNoOp,
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <TopNavigation 
-          user={user}
-          activeLibrary=""
-          onLibrarySelect={handleNoOp}
-          onAddRecipe={handleNoOp}
-          onSignInClick={handleNoOp}
-          onSignUpClick={handleNoOp}
-          onProfileClick={handleNoOp}
-          onMyRecipesClick={handleNoOp}
-          onFavoritesClick={handleNoOp}
-        />
+        <TopNavigation {...navProps} />
         <div className="flex h-full">
-          <div className="hidden md:block">
-            <Sidebar 
-              active=""
-              onSelect={handleNoOp}
-              onAdd={handleNoOp}
-              user={user}
-            />
-          </div>
+          <div className="hidden md:block"><Sidebar active="" onSelect={handleNoOp} onAdd={handleNoOp} user={user} /></div>
           <main className="flex-1 overflow-auto lg:ml-0">
             <div className="max-w-4xl mx-auto p-6">
               <div className="animate-pulse space-y-6">
-                <div className="h-48 bg-gray-200 rounded-lg"></div>
-                <div className="h-6 bg-gray-200 rounded w-1/3"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-48 bg-muted rounded-organic-lg" />
+                <div className="h-6 bg-muted rounded w-1/3" />
+                <div className="h-4 bg-muted rounded w-1/2" />
               </div>
             </div>
           </main>
@@ -435,33 +213,13 @@ export default function UserProfile() {
   if (!profile) {
     return (
       <div className="min-h-screen bg-background">
-        <TopNavigation 
-          user={user}
-          activeLibrary=""
-          onLibrarySelect={handleNoOp}
-          onAddRecipe={handleNoOp}
-          onSignInClick={handleNoOp}
-          onSignUpClick={handleNoOp}
-          onProfileClick={handleNoOp}
-          onMyRecipesClick={handleNoOp}
-          onFavoritesClick={handleNoOp}
-        />
+        <TopNavigation {...navProps} />
         <div className="flex h-full">
-          <div className="hidden md:block">
-            <Sidebar 
-              active=""
-              onSelect={handleNoOp}
-              onAdd={handleNoOp}
-              user={user}
-            />
-          </div>
+          <div className="hidden md:block"><Sidebar active="" onSelect={handleNoOp} onAdd={handleNoOp} user={user} /></div>
           <main className="flex-1 overflow-auto lg:ml-0">
             <div className="max-w-4xl mx-auto p-6 text-center">
               <h1 className="text-2xl font-bold text-foreground">User not found</h1>
-              <Button onClick={() => navigate('/')} className="mt-4">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Go Back
-              </Button>
+              <Button onClick={() => navigate('/')} className="mt-4"><ArrowLeft className="w-4 h-4 mr-2" />Go Back</Button>
             </div>
           </main>
         </div>
@@ -471,411 +229,145 @@ export default function UserProfile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <TopNavigation 
-        user={user}
-        activeLibrary=""
-        onLibrarySelect={handleNoOp}
-        onAddRecipe={handleNoOp}
-        onSignInClick={handleNoOp}
-        onSignUpClick={handleNoOp}
-        onProfileClick={handleNoOp}
-        onMyRecipesClick={handleNoOp}
-        onFavoritesClick={handleNoOp}
-      />
+      <TopNavigation {...navProps} />
       <div className="flex h-full">
-        <div className="hidden md:block">
-          <Sidebar 
-            active=""
-            onSelect={handleNoOp}
-            onAdd={handleNoOp}
-            user={user}
-          />
-        </div>
+        <div className="hidden md:block"><Sidebar active="" onSelect={handleNoOp} onAdd={handleNoOp} user={user} /></div>
         <main className="flex-1 overflow-auto lg:ml-0">
           <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate('/')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-        {isOwnProfile && (
-          <Button variant="outline" onClick={() => navigate('/settings')}>
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
-          </Button>
-        )}
-      </div>
-
-      {/* Profile Card */}
-      <Card>
-        <CardContent className="p-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <Avatar className="w-24 h-24">
-              <AvatarImage src={getAvatarUrl(profile.avatar_url) || undefined} />
-              <AvatarFallback className="text-xl">
-                {profile.full_name?.[0] || profile.username?.[0] || 'U'}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1 space-y-4">
-              <div>
-                <h1 className="text-2xl font-bold text-card-foreground">{profile.full_name || 'Anonymous'}</h1>
-                {profile.username && (
-                  <p className="text-muted-foreground">@{profile.username}</p>
-                )}
-                {profile.bio && (
-                  <p className="text-card-foreground mt-2">{profile.bio}</p>
-                )}
-              </div>
-
-              {/* Stats */}
-              <div className="flex gap-6">
-                <button 
-                  onClick={() => setActiveTab('recipes')}
-                  className="text-center hover:opacity-80 transition-opacity"
-                >
-                  <div className="font-bold text-lg text-foreground">{stats.recipes_count}</div>
-                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Recipes</div>
-                </button>
-                <button 
-                  onClick={() => setActiveTab('favorites')}
-                  className="text-center hover:opacity-80 transition-opacity"
-                >
-                  <div className="font-bold text-lg text-foreground">{stats.favorites_count}</div>
-                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Favorites</div>
-                </button>
-                <button 
-                  onClick={() => setActiveTab('followers')}
-                  className="text-center hover:opacity-80 transition-opacity"
-                >
-                  <div className="font-bold text-lg text-foreground">{stats.followers_count}</div>
-                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Followers</div>
-                </button>
-                <button 
-                  onClick={() => setActiveTab('following')}
-                  className="text-center hover:opacity-80 transition-opacity"
-                >
-                  <div className="font-bold text-lg text-foreground">{stats.following_count}</div>
-                  <div className="text-sm text-muted-foreground hover:text-foreground transition-colors">Following</div>
-                </button>
-              </div>
-
-              {/* Follow Button */}
-              {!isOwnProfile && user && (
-                <Button
-                  onClick={handleFollowToggle}
-                  variant={isFollowingUser ? "outline" : "default"}
-                  className="flex items-center gap-2"
-                >
-                  <Users className="w-4 h-4" />
-                  {isFollowingUser ? 'Unfollow' : 'Follow'}
-                </Button>
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <Button variant="ghost" onClick={() => navigate('/')}><ArrowLeft className="w-4 h-4 mr-2" />Back</Button>
+              {isOwnProfile && (
+                <Button variant="outline" onClick={() => navigate('/settings')}><Settings className="w-4 h-4 mr-2" />Settings</Button>
               )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full">
-          <TabsTrigger value="recipes">
-            Recipes
-          </TabsTrigger>
-          <TabsTrigger value="favorites">
-            Favorites
-          </TabsTrigger>
-          <TabsTrigger value="followers">Followers</TabsTrigger>
-          <TabsTrigger value="following">Following</TabsTrigger>
-          <TabsTrigger value="activity">Activity</TabsTrigger>
-        </TabsList>
+            {/* Profile Card */}
+            <Card className="bg-card border-border">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <Avatar className="w-24 h-24">
+                    <AvatarImage src={getAvatarUrl(profile.avatar_url) || undefined} />
+                    <AvatarFallback className="text-xl">{profile.full_name?.[0] || profile.username?.[0] || 'U'}</AvatarFallback>
+                  </Avatar>
 
-        <TabsContent value="recipes" className="mt-6">
-          {recipes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recipes.map((recipe) => {
-                const stats = recipeStats[recipe.id] || { likes: 0, favorites: 0, comments: 0, rating: 0 };
-                
-                // Transform database recipe to Cocktail format
-                const cocktail: Cocktail = {
-                  id: recipe.id,
-                  name: recipe.name,
-                  notes: recipe.description || undefined,
-                  image: recipe.image_url || '',
-                  tags: recipe.tags || [],
-                  prepTime: `${recipe.prep_time || 5} min`,
-                  ingredients: recipe.ingredients,
-                  steps: recipe.instructions,
-                  createdBy: profile?.username || profile?.full_name || undefined,
-                  creatorUsername: profile?.username || undefined,
-                  creatorAvatar: profile?.avatar_url || undefined,
-                  creatorUserId: userId,
-                  isUserRecipe: true,
-                  // Add stats to display
-                  likeCount: stats.likes,
-                  commentCount: stats.comments,
-                  averageRating: stats.rating
-                };
-                
-                return (
-                  <UniversalRecipeCard
-                    key={recipe.id}
-                    recipe={cocktail}
-                    hideCreator={true}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <ChefHat className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">No recipes yet</h3>
-              <p className="text-gray-500">
-                {isOwnProfile ? "Start creating your first recipe!" : "This user hasn't created any recipes yet."}
-              </p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="favorites" className="mt-6">
-          {favoriteRecipes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {favoriteRecipes.map((recipe) => {
-                const stats = favoriteStats[recipe.id] || { likes: 0, favorites: 0, comments: 0, rating: 0 };
-                
-                const cocktail: Cocktail = {
-                  ...recipe,
-                  likeCount: stats.likes,
-                  commentCount: stats.comments,
-                  averageRating: stats.rating
-                };
-                
-                return (
-                  <UniversalRecipeCard
-                    key={recipe.id}
-                    recipe={cocktail}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Heart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">No favorites yet</h3>
-              <p className="text-gray-500">
-                {isOwnProfile ? "Start favoriting recipes to see them here!" : "This user hasn't favorited any recipes yet."}
-              </p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="followers" className="mt-6">
-          {followerUsers.length > 0 ? (
-            <div className="space-y-4">
-              {followerUsers.map((follower) => (
-                <UserCard
-                  key={follower.id}
-                  userId={follower.id}
-                  username={follower.username}
-                  avatarUrl={follower.avatar_url}
-                  isCurrentUser={user?.id === follower.id}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">No followers yet</h3>
-              <p className="text-gray-500">
-                {isOwnProfile ? "Share your recipes to gain followers!" : "This user doesn't have any followers yet."}
-              </p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="following" className="mt-6">
-          {followingUsers.length > 0 ? (
-            <div className="space-y-4">
-              {followingUsers.map((followingUser) => (
-                <UserCard
-                  key={followingUser.id}
-                  userId={followingUser.id}
-                  username={followingUser.username}
-                  avatarUrl={followingUser.avatar_url}
-                  isCurrentUser={user?.id === followingUser.id}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">Not following anyone yet</h3>
-              <p className="text-gray-500">
-                {isOwnProfile ? "Start following other bartenders to see them here!" : "This user isn't following anyone yet."}
-              </p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="activity" className="mt-6">
-          {/* Activity Filters */}
-          <div className="mb-6 flex items-center justify-start">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Filter className="w-4 h-4" />
-                  {activityFilter === 'all' ? 'All Activity' : 
-                   activityFilter === 'recipe' ? 'Recipes' :
-                   activityFilter === 'comment' ? 'Comments' :
-                   activityFilter === 'like' ? 'Likes' : 'Follows'}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuLabel>Filter Activity</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={activityFilter} onValueChange={(value) => setActivityFilter(value as any)}>
-                  <DropdownMenuRadioItem value="all">
-                    All Activity
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="recipe">
-                    Recipes
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="comment">
-                    Comments
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="like">
-                    Likes
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="follow">
-                    Follows
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          {getFilteredActivities().length > 0 ? (
-            <div className="space-y-6">
-              {groupActivitiesByDate(getFilteredActivities()).map(([groupName, groupActivities]) => (
-                <div key={groupName} className="space-y-4">
-                  <h3 className="text-lg font-semibold text-foreground sticky top-0 bg-background py-2 z-10">
-                    {groupName}
-                  </h3>
-                  {groupActivities.map((activity) => (
-                <Card key={activity.id} className="overflow-hidden">
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      {/* Recipe/Profile Image */}
-                      {(activity.type === 'recipe' || activity.type === 'comment' || activity.type === 'like') && activity.recipe_image && (
-                        <button
-                          onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                          className="flex-shrink-0"
-                        >
-                          <img 
-                            src={activity.recipe_image} 
-                            alt={activity.recipe_name}
-                            className="w-16 h-16 rounded-lg object-cover hover:opacity-80 transition-opacity"
-                          />
-                        </button>
-                      )}
-                      
-                      {activity.type === 'follow' && (
-                        <button
-                          onClick={() => navigate(`/user/${activity.followed_user_id}`)}
-                          className="flex-shrink-0"
-                        >
-                          <Avatar className="w-16 h-16">
-                            <AvatarImage src={getAvatarUrl(activity.followed_user_avatar) || undefined} />
-                            <AvatarFallback className="text-sm">
-                              {activity.followed_username?.[0]?.toUpperCase() || 'U'}
-                            </AvatarFallback>
-                          </Avatar>
-                        </button>
-                      )}
-                      
-                      <div className="flex-1 min-w-0">
-                        {activity.type === 'recipe' && (
-                          <p className="text-base font-semibold text-card-foreground">
-                            Created recipe{' '}
-                            <button
-                              onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                              className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
-                            >
-                              {activity.recipe_name}
-                            </button>
-                          </p>
-                        )}
-                        
-                        {activity.type === 'comment' && (
-                          <div>
-                            <p className="text-base font-semibold text-card-foreground">
-                              Commented on{' '}
-                              <button
-                                onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                                className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
-                              >
-                                {activity.recipe_name}
-                              </button>
-                            </p>
-                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                              {activity.comment_content}
-                            </p>
-                          </div>
-                        )}
-                        
-                        {activity.type === 'like' && (
-                          <p className="text-base font-semibold text-card-foreground">
-                            Liked{' '}
-                            <button
-                              onClick={() => navigate(`/recipe/${activity.recipe_id}`)}
-                              className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
-                            >
-                              {activity.recipe_name}
-                            </button>
-                          </p>
-                        )}
-                        
-                        {activity.type === 'follow' && (
-                          <p className="text-base font-semibold text-card-foreground">
-                            Started following{' '}
-                            <button
-                              onClick={() => navigate(`/user/${activity.followed_user_id}`)}
-                              className="font-semibold text-emerald-500 hover:text-emerald-400 hover:underline"
-                            >
-                              @{activity.followed_username}
-                            </button>
-                          </p>
-                        )}
-                        
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
-                        </p>
-                      </div>
+                  <div className="flex-1 space-y-4">
+                    <div>
+                      <h1 className="text-2xl font-bold text-foreground">{profile.full_name || 'Anonymous'}</h1>
+                      {profile.username && <p className="text-muted-foreground">@{profile.username}</p>}
+                      {profile.bio && <p className="text-card-foreground mt-2">{profile.bio}</p>}
                     </div>
-                  </CardContent>
-                </Card>
-                  ))}
+
+                    <div className="flex gap-6">
+                      <button onClick={() => setActiveTab('recipes')} className="text-center hover:opacity-80 transition-opacity">
+                        <div className="font-bold text-lg text-foreground">{stats.recipes_count}</div>
+                        <div className="text-sm text-muted-foreground">Recipes</div>
+                      </button>
+                      <button onClick={() => setActiveTab('favorites')} className="text-center hover:opacity-80 transition-opacity">
+                        <div className="font-bold text-lg text-foreground">{stats.favorites_count}</div>
+                        <div className="text-sm text-muted-foreground">Favorites</div>
+                      </button>
+                      <button onClick={() => setActiveTab('followers')} className="text-center hover:opacity-80 transition-opacity">
+                        <div className="font-bold text-lg text-foreground">{stats.followers_count}</div>
+                        <div className="text-sm text-muted-foreground">Followers</div>
+                      </button>
+                      <button onClick={() => setActiveTab('following')} className="text-center hover:opacity-80 transition-opacity">
+                        <div className="font-bold text-lg text-foreground">{stats.following_count}</div>
+                        <div className="text-sm text-muted-foreground">Following</div>
+                      </button>
+                    </div>
+
+                    {!isOwnProfile && user && (
+                      <Button onClick={handleFollowToggle} variant={isFollowingUser ? "outline" : "default"} className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />{isFollowingUser ? 'Unfollow' : 'Follow'}
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <ChefHat className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">
-                {activities.length === 0 ? "No activity yet" : "No activities match your filters"}
-              </h3>
-              <p className="text-gray-500">
-                {activities.length === 0
-                  ? isOwnProfile 
-                    ? "Start creating recipes and engaging with the community!" 
-                    : "This user hasn't been active yet."
-                  : "Try adjusting your filters to see more activities."}
-              </p>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+              </CardContent>
+            </Card>
+
+            {/* Content Tabs - no Activity tab */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="w-full grid grid-cols-4">
+                <TabsTrigger value="recipes">Recipes</TabsTrigger>
+                <TabsTrigger value="favorites">Favorites</TabsTrigger>
+                <TabsTrigger value="followers">Followers</TabsTrigger>
+                <TabsTrigger value="following">Following</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="recipes" className="mt-6">
+                {recipes.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {recipes.map((recipe) => {
+                      const s = recipeStats[recipe.id] || { favorites: 0, comments: 0, rating: 0 };
+                      const cocktail: Cocktail = {
+                        id: recipe.id, name: recipe.name, notes: recipe.description || undefined,
+                        image: recipe.image_url || '', tags: recipe.tags || [],
+                        prepTime: `${recipe.prep_time || 5} min`, ingredients: recipe.ingredients,
+                        steps: recipe.instructions, createdBy: profile?.username || profile?.full_name || undefined,
+                        creatorUsername: profile?.username || undefined, creatorAvatar: profile?.avatar_url || undefined,
+                        creatorUserId: userId, isUserRecipe: true,
+                        likeCount: s.favorites, commentCount: s.comments, averageRating: s.rating,
+                      };
+                      return <UniversalRecipeCard key={recipe.id} recipe={cocktail} hideCreator={true} />;
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <ChefHat className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-medium text-muted-foreground">No recipes yet</h3>
+                    <p className="text-muted-foreground">{isOwnProfile ? "Start creating your first recipe!" : "This user hasn't created any recipes yet."}</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="favorites" className="mt-6">
+                {favoriteRecipes.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {favoriteRecipes.map((recipe) => {
+                      const s = favoriteStatsMap[recipe.id] || { favorites: 0, comments: 0, rating: 0 };
+                      const cocktail: Cocktail = { ...recipe, likeCount: s.favorites, commentCount: s.comments, averageRating: s.rating };
+                      return <UniversalRecipeCard key={recipe.id} recipe={cocktail} />;
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-medium text-muted-foreground">No favorites yet</h3>
+                    <p className="text-muted-foreground">{isOwnProfile ? "Start favoriting recipes to see them here!" : "This user hasn't favorited any recipes yet."}</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="followers" className="mt-6">
+                {followerUsers.length > 0 ? (
+                  <div className="space-y-4">
+                    {followerUsers.map((f) => <UserCard key={f.id} userId={f.id} username={f.username} avatarUrl={f.avatar_url} isCurrentUser={user?.id === f.id} />)}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-medium text-muted-foreground">No followers yet</h3>
+                    <p className="text-muted-foreground">{isOwnProfile ? "Share your recipes to gain followers!" : "This user doesn't have any followers yet."}</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="following" className="mt-6">
+                {followingUsers.length > 0 ? (
+                  <div className="space-y-4">
+                    {followingUsers.map((f) => <UserCard key={f.id} userId={f.id} username={f.username} avatarUrl={f.avatar_url} isCurrentUser={user?.id === f.id} />)}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-medium text-muted-foreground">Not following anyone yet</h3>
+                    <p className="text-muted-foreground">{isOwnProfile ? "Start following other bartenders!" : "This user isn't following anyone yet."}</p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </main>
       </div>
