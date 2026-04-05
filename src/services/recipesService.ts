@@ -40,7 +40,8 @@ export async function getUserRecipesFromDB(): Promise<Cocktail[]> {
     createdBy: profile?.username || profile?.full_name,
     creatorUsername: profile?.username || undefined,
     creatorUserId: user.id,
-    isUserRecipe: true
+    isUserRecipe: true,
+    photo_credit: recipe.photo_credit ? (recipe.photo_credit as { name: string; url?: string }) : undefined,
   })) || [];
 
   // Debug: Check for duplicates from database
@@ -79,7 +80,8 @@ export async function saveRecipeToDB(recipe: Cocktail): Promise<boolean> {
     instructions: recipe.steps,
     tags: recipe.tags,
     image_url: recipe.image,
-    is_public: true
+    is_public: true,
+    photo_credit: recipe.photo_credit || null,
   };
 
   const { error } = await supabase
@@ -194,6 +196,7 @@ export async function getCommunityRecipesFromDB(limit: number = 50): Promise<Coc
         creatorUsername: profile?.username || undefined,
         creatorAvatar: profile?.avatar_url || undefined,
         creatorUserId: recipe.user_id,
+        photo_credit: recipe.photo_credit ? (recipe.photo_credit as { name: string; url?: string }) : undefined,
       });
     }
 
@@ -262,7 +265,8 @@ export async function getRecipeByUsernameAndName(username: string, recipeName: s
       creatorUsername: publicProfile.username || undefined,
       creatorAvatar: publicProfile.avatar_url || undefined,
       creatorUserId: publicProfile.id,
-      isUserRecipe: true
+      isUserRecipe: true,
+      photo_credit: recipe.photo_credit ? (recipe.photo_credit as { name: string; url?: string }) : undefined,
     };
   } catch (error) {
     console.error('Error fetching recipe by username and name:', error);
@@ -313,7 +317,8 @@ export async function getRecipeById(recipeId: string): Promise<Cocktail | null> 
       creatorUsername: profile?.username || undefined,
       creatorAvatar: profile?.avatar_url || undefined,
       creatorUserId: recipe.user_id,
-      isUserRecipe: true
+      isUserRecipe: true,
+      photo_credit: recipe.photo_credit ? (recipe.photo_credit as { name: string; url?: string }) : undefined,
     };
   } catch (error) {
     console.error('Error fetching recipe by ID:', error);
