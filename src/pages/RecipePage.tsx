@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Edit, Heart, Share, Martini, MessageCircle, User } from "lucide-react";
+import { Edit, Heart, Share, Martini, User } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { Cocktail } from "@/data/classicCocktails";
 import { classicCocktails } from "@/data/classicCocktails";
@@ -18,8 +18,8 @@ import TopNavigation from "@/components/TopNavigation";
 import { useToast } from "@/hooks/use-toast";
 import RecipeScaling from "@/components/RecipeScaling";
 import { useRecipeScaling } from "@/hooks/useRecipeScaling";
-import RecipeOverallRating from "@/components/RecipeOverallRating";
-import RecipeUserRating from "@/components/RecipeUserRating";
+import RecipeRatingStars from "@/components/ratings/RecipeRatingStars";
+import RecipeRatingInput from "@/components/ratings/RecipeRatingInput";
 import RecipeComments from "@/components/RecipeComments";
 
 
@@ -36,18 +36,12 @@ const slugToRecipeName = (slug: string): string => {
 // Generate the correct URL for any recipe
 const getRecipeUrl = (recipe: Cocktail): string => {
   const slug = recipeNameToSlug(recipe.name);
-  
-  // Database user recipe with a valid username
   if (recipe.creatorUsername && recipe.isUserRecipe) {
     return `/cocktail/${recipe.creatorUsername}/${slug}`;
   }
-  
-  // User recipe without username - use ID-based URL
   if (recipe.isUserRecipe && recipe.id) {
     return `/cocktail/id/${recipe.id}`;
   }
-  
-  // Classic recipe
   return `/cocktail/${slug}`;
 };
 
@@ -64,194 +58,112 @@ export default function RecipePage() {
   const [showShareModal, setShowShareModal] = useState(false);
   const { toast } = useToast();
 
-  // Check if we should show the back button
   const shouldShowBackButton = useMemo(() => {
-    // Don't show if we're at the first page or if the previous page is the same as current
     if (window.history.length <= 1) return false;
-    
-    // Check if the referrer is the same as current page (like after a refresh)
     const currentPath = location.pathname;
     const referrer = document.referrer;
-    
     if (referrer) {
       try {
         const referrerUrl = new URL(referrer);
-        const referrerPath = referrerUrl.pathname;
-        if (referrerPath === currentPath) return false;
-      } catch (e) {
-        // If we can't parse referrer, show the button
-      }
+        if (referrerUrl.pathname === currentPath) return false;
+      } catch (e) {}
     }
-    
     return true;
   }, [location.pathname]);
 
-  // Smart back navigation function  
-  const handleGoBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
-  
+  const handleGoBack = useCallback(() => { navigate(-1); }, [navigate]);
 
-  // Load recipe
   useEffect(() => {
     const loadRecipe = async () => {
       let foundRecipe: Cocktail | null = null;
-
-      // ID-based route for community recipes without username
       if (recipeId) {
         foundRecipe = await getRecipeById(recipeId);
       } else if (recipeName) {
         if (username === 'custom') {
-          // Custom recipe from database (user's own recipes)
           if (user) {
             const userRecipes = await getUserRecipesFromDB();
-            foundRecipe = userRecipes.find(r => 
-              recipeNameToSlug(r.name) === recipeName
-            ) || null;
+            foundRecipe = userRecipes.find(r => recipeNameToSlug(r.name) === recipeName) || null;
           }
         } else if (username) {
-          // Database user recipe with username in URL
           foundRecipe = await getRecipeByUsernameAndName(username, recipeName);
         } else {
-          // Classic recipe
-          foundRecipe = classicCocktails.find(r => 
-            recipeNameToSlug(r.name) === recipeName
-          ) || null;
+          foundRecipe = classicCocktails.find(r => recipeNameToSlug(r.name) === recipeName) || null;
         }
       }
-
-      if (foundRecipe) {
-        setRecipe(foundRecipe);
-      } else {
-        navigate('/');
-      }
+      if (foundRecipe) setRecipe(foundRecipe);
+      else navigate('/');
     };
-
     loadRecipe();
 
-    // Load user preferences
     const loadUserPreferences = async () => {
       if (user) {
         const preferences = await getUserPreferences();
-        if (preferences?.preferred_unit) {
-          setIsMetric(preferences.preferred_unit === 'ml');
-        }
+        if (preferences?.preferred_unit) setIsMetric(preferences.preferred_unit === 'ml');
       }
     };
     loadUserPreferences();
   }, [recipeName, username, recipeId, user, navigate]);
 
-  // Initialize scaling hook - use dummy recipe to maintain hook order
   const dummyRecipe: Cocktail = {
-    id: 'dummy',
-    name: 'Loading',
-    image: '',
-    ingredients: ['1 oz placeholder'],
-    steps: 'Loading...',
-    default_servings: 1,
-    min_servings: 1,
-    max_servings: 20
+    id: 'dummy', name: 'Loading', image: '',
+    ingredients: ['1 oz placeholder'], steps: 'Loading...',
+    default_servings: 1, min_servings: 1, max_servings: 20
   };
-  
-  // Always call the scaling hook to maintain hook order
   const scaling = useRecipeScaling(recipe || dummyRecipe);
-  
-  // Check if we have a valid recipe (not the dummy one)
   const hasValidRecipe = recipe && recipe.id !== 'dummy';
   const isUserRecipe = hasValidRecipe ? (recipe?.isUserRecipe || false) : false;
-  
   const isRecipeFavorited = hasValidRecipe ? isFavorite(recipe.id) : false;
 
   const handleToggleFavorite = async () => {
     if (!hasValidRecipe) return;
     await toggleFavorite(recipe.id, () => {
-      if (window.__openAuthModal) {
-        window.__openAuthModal('signup', "Love this drink? Save it to your favorites!");
-      }
+      if (window.__openAuthModal) window.__openAuthModal('signup', "Love this drink? Save it to your favorites!");
     });
   };
 
-  const handleShare = () => {
-    setShowShareModal(true);
-  };
+  const handleShare = () => setShowShareModal(true);
 
   const handleEdit = () => {
-    // Navigate to main app with editing state
-    navigate('/recipes/my-drinks', { 
-      state: { 
-        editingRecipe: recipe,
-        showForm: true
-      } 
-    });
+    navigate('/recipes/my-drinks', { state: { editingRecipe: recipe, showForm: true } });
   };
 
   const handleRiff = () => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
-    
-    // Navigate to main app with remix state
-    const remixedRecipe = { 
-      ...recipe, 
-      id: undefined,
-      name: `${recipe.name} (Remix)`
-    };
-    
-    navigate('/recipes/my-drinks', { 
-      state: { 
-        editingRecipe: remixedRecipe,
-        showForm: true
-      } 
-    });
+    if (!user) { setShowAuthModal(true); return; }
+    navigate('/recipes/my-drinks', { state: { editingRecipe: { ...recipe, id: undefined, name: `${recipe.name} (Remix)` }, showForm: true } });
   };
 
-  // Safe fraction parser - replaces unsafe eval()
   const parseFraction = (frac: string): number => {
     const parts = frac.trim().split(/\s+/);
     let total = 0;
     for (const part of parts) {
       if (part.includes('/')) {
         const [num, den] = part.split('/').map(Number);
-        if (!isNaN(num) && !isNaN(den) && den !== 0) {
-          total += num / den;
-        }
+        if (!isNaN(num) && !isNaN(den) && den !== 0) total += num / den;
       } else {
         const num = Number(part);
-        if (!isNaN(num)) {
-          total += num;
-        }
+        if (!isNaN(num)) total += num;
       }
     }
     return total;
   };
 
-  // Convert measurements based on toggle
   const convertMeasurement = (ingredient: string) => {
     if (isMetric) {
-      // Convert oz to ml
       return ingredient
-        .replace(/(\d+(?:\.\d+)?)\s*oz/gi, (match, num) => `${Math.round(parseFloat(num) * 30)}ml`)
-        .replace(/(\d+(?:\s+\d+)?\/\d+)\s*oz/gi, (match, frac) => {
-          const decimal = parseFraction(frac);
-          return `${Math.round(decimal * 30)}ml`;
-        })
-        .replace(/(\d+)\s*tsp/gi, (match, num) => `${Math.round(parseFloat(num) * 5)}ml`)
-        .replace(/(\d+)\s*tbsp/gi, (match, num) => `${Math.round(parseFloat(num) * 15)}ml`);
-    } else {
-      // Convert ml to oz
-      return ingredient
-        .replace(/(\d+(?:\.\d+)?)\s*ml/gi, (match, num) => {
-          const oz = parseFloat(num) / 30;
-          return oz >= 1 ? `${oz.toFixed(1).replace(/\.0$/, '')} oz` : `${(oz).toFixed(2)} oz`;
-        });
+        .replace(/(\d+(?:\.\d+)?)\s*oz/gi, (_, num) => `${Math.round(parseFloat(num) * 30)}ml`)
+        .replace(/(\d+(?:\s+\d+)?\/\d+)\s*oz/gi, (_, frac) => `${Math.round(parseFraction(frac) * 30)}ml`)
+        .replace(/(\d+)\s*tsp/gi, (_, num) => `${Math.round(parseFloat(num) * 5)}ml`)
+        .replace(/(\d+)\s*tbsp/gi, (_, num) => `${Math.round(parseFloat(num) * 15)}ml`);
     }
+    return ingredient.replace(/(\d+(?:\.\d+)?)\s*ml/gi, (_, num) => {
+      const oz = parseFloat(num) / 30;
+      return oz >= 1 ? `${oz.toFixed(1).replace(/\.0$/, '')} oz` : `${oz.toFixed(2)} oz`;
+    });
   };
 
-  // Show loading state when no valid recipe
   if (!hasValidRecipe) {
     return (
-      <div className="min-h-screen bg-rich-charcoal flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-lg text-light-text">Loading...</div>
       </div>
     );
@@ -259,48 +171,32 @@ export default function RecipePage() {
 
   return (
     <>
-      {/* Top Navigation for Mobile/Tablet */}
       <TopNavigation
-        user={user}
-        activeLibrary="recipe"
-        onLibrarySelect={() => {}}
+        user={user} activeLibrary="recipe" onLibrarySelect={() => {}}
         onAddRecipe={() => navigate('/recipes/my-drinks')}
-        onSignInClick={() => setShowAuthModal(true)}
-        onSignUpClick={() => setShowAuthModal(true)}
+        onSignInClick={() => setShowAuthModal(true)} onSignUpClick={() => setShowAuthModal(true)}
         onProfileClick={() => user && navigate(`/user/${user.id}`)}
-        onMyRecipesClick={() => navigate('/recipes/my-drinks')}
-        onFavoritesClick={() => navigate('/favorites')}
+        onMyRecipesClick={() => navigate('/recipes/my-drinks')} onFavoritesClick={() => navigate('/favorites')}
       />
       
       <div className="min-h-screen flex w-full bg-background">
-        {/* Desktop Sidebar - Hidden on mobile */}
         <div className="hidden lg:block">
-          <Sidebar 
-            active="recipe" 
-            onSelect={() => {}} 
-            onAdd={() => navigate('/recipes/my-drinks')}
-            user={user}
-            onSignInClick={() => setShowAuthModal(true)}
-            onSignUpClick={() => setShowAuthModal(true)}
+          <Sidebar active="recipe" onSelect={() => {}} onAdd={() => navigate('/recipes/my-drinks')}
+            user={user} onSignInClick={() => setShowAuthModal(true)} onSignUpClick={() => setShowAuthModal(true)}
             onProfileClick={() => user && navigate(`/user/${user.id}`)}
-            onMyRecipesClick={() => navigate('/recipes/my-drinks')}
-            onFavoritesClick={() => navigate('/favorites')}
+            onMyRecipesClick={() => navigate('/recipes/my-drinks')} onFavoritesClick={() => navigate('/favorites')}
           />
         </div>
         
-        {/* Main Content */}
         <main className="flex-1">
           <div className="max-w-6xl mx-auto px-4 py-6">
-            {/* Back button - only show if we should */}
-            {shouldShowBackButton && (
-              <BackButton onClick={handleGoBack} className="mb-6" />
-            )}
+            {shouldShowBackButton && <BackButton onClick={handleGoBack} className="mb-6" />}
 
             {/* Recipe header */}
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{recipe.name}</h1>
               
-              {/* Created By Section for user recipes */}
+              {/* Created By */}
               {recipe.isUserRecipe && (recipe.creatorUsername || recipe.createdBy) && (
                 <div className="flex items-center gap-3 mb-3">
                   {recipe.creatorUsername ? (
@@ -309,11 +205,8 @@ export default function RecipePage() {
                       className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
                     >
                       {recipe.creatorAvatar ? (
-                        <img 
-                          src={recipe.creatorAvatar} 
-                          alt={recipe.creatorUsername}
-                          className="w-6 h-6 rounded-full object-cover border border-border group-hover:border-primary transition-colors"
-                        />
+                        <img src={recipe.creatorAvatar} alt={recipe.creatorUsername}
+                          className="w-6 h-6 rounded-full object-cover border border-border group-hover:border-primary transition-colors" />
                       ) : (
                         <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                           <User size={14} className="text-muted-foreground group-hover:text-primary" />
@@ -331,43 +224,26 @@ export default function RecipePage() {
                   )}
                 </div>
               )}
+
+              {/* Aggregate rating stars */}
+              <RecipeRatingStars recipeId={recipe.id} />
               
-              {recipe.origin && (
-                <TagBadge>
-                  {recipe.origin}
-                </TagBadge>
-              )}
+              {recipe.origin && <TagBadge className="mt-2">{recipe.origin}</TagBadge>}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Left column - Image and ratings */}
+              {/* Left column - Image + action buttons */}
               <div className="lg:col-span-1">
                 <img
-                  src={recipe.image}
-                  alt={recipe.name}
+                  src={recipe.image} alt={recipe.name}
                   className="w-full h-64 md:h-80 object-cover rounded-organic-lg border border-border shadow-glass mb-6"
                 />
-
-                {/* Comments Section */}
-                <div className="mb-4">
-                  <RecipeComments recipeId={recipe.id} />
-                </div>
-
-                {/* Ratings Section */}
-                <div className="mb-6">
-                  <RecipeOverallRating recipeId={recipe.id} />
-                  {user && (
-                    <div className="mt-3">
-                      <RecipeUserRating recipeId={recipe.id} />
-                    </div>
-                  )}
-                </div>
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
                   <Button
                     variant="secondary"
-                    className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 hover:scale-[1.02] hover:rotate-[0.5deg] ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-organic-sm transition-all duration-300 hover:scale-[1.02] ${
                       isRecipeFavorited ? 'text-heart-red border-heart-red/30 bg-heart-red/10 hover:bg-heart-red/20' : 'text-pure-white hover:text-heart-red'
                     }`}
                     onClick={handleToggleFavorite}
@@ -375,85 +251,54 @@ export default function RecipePage() {
                     <Heart size={16} fill={isRecipeFavorited ? 'currentColor' : 'none'} />
                     {isRecipeFavorited ? 'Favorited' : 'Favorite'}
                   </Button>
-                  
-                  <Button
-                    variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
-                    onClick={handleShare}
-                  >
-                    <Share size={16} />
-                    Share
+                  <Button variant="secondary" className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary" onClick={handleShare}>
+                    <Share size={16} /> Share
                   </Button>
-
-                  <Button
-                    variant="secondary"
-                    className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
-                    onClick={handleRiff}
-                  >
-                    <Martini size={16} />
-                    Riff
+                  <Button variant="secondary" className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-pure-white hover:text-secondary" onClick={handleRiff}>
+                    <Martini size={16} /> Riff
                   </Button>
-
                   {isUserRecipe && (
-                    <Button
-                      variant="outline"
-                      className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-light-text hover:text-foreground"
-                      onClick={handleEdit}
-                    >
-                      <Edit size={16} />
-                      Edit
+                    <Button variant="outline" className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-light-text hover:text-foreground" onClick={handleEdit}>
+                      <Edit size={16} /> Edit
                     </Button>
                   )}
                 </div>
               </div>
+
+              {/* Right column - Recipe content */}
               <div className="lg:col-span-2">
                 {/* Ingredients */}
                 <div className="mb-6">
-                   <h2 className="text-xl font-semibold text-foreground">Ingredients</h2>
-                   <div className="mb-4">
-                     <ul className="list-disc pl-5 text-light-text space-y-2">
-                       {(hasValidRecipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
-                         <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
-                       ))}
-                     </ul>
-                   </div>
+                  <h2 className="text-xl font-semibold text-foreground">Ingredients</h2>
+                  <ul className="list-disc pl-5 text-light-text space-y-2 mb-4">
+                    {(hasValidRecipe && scaling?.scaledRecipe.ingredients || recipe.ingredients).map((ing, i) => (
+                      <li key={i} className="leading-relaxed">{convertMeasurement(ing)}</li>
+                    ))}
+                  </ul>
 
-                   {/* Unit Toggle */}
-                   <div className="flex items-center justify-start mb-4">
-                     <div className="relative">
-                       <div className="toggle-button-cover">
-                         <div className="button-cover">
-                            <div className="button custom-toggle">
-                              <input 
-                                type="checkbox" 
-                                className="checkbox" 
-                                checked={isMetric}
-                                onChange={async (e) => {
-                                  const newIsMetric = e.target.checked;
-                                  setIsMetric(newIsMetric);
-                                  if (user) {
-                                    await updateUserPreferences({
-                                      preferred_unit: newIsMetric ? 'ml' : 'oz'
-                                    });
-                                  }
-                                }}
-                              />
-                              <div className="knobs">
-                                <span>{isMetric ? 'ML' : 'OZ'}</span>
-                              </div>
-                              <div className="layer"></div>
-                            </div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-
-                {/* Recipe Scaling */}
-                {hasValidRecipe && scaling && (
-                  <div className="mb-6">
-                    <RecipeScaling scaling={scaling} />
+                  {/* Unit Toggle */}
+                  <div className="flex items-center justify-start mb-4">
+                    <div className="relative">
+                      <div className="toggle-button-cover"><div className="button-cover">
+                        <div className="button custom-toggle">
+                          <input type="checkbox" className="checkbox" checked={isMetric}
+                            onChange={async (e) => {
+                              const newIsMetric = e.target.checked;
+                              setIsMetric(newIsMetric);
+                              if (user) await updateUserPreferences({ preferred_unit: newIsMetric ? 'ml' : 'oz' });
+                            }}
+                          />
+                          <div className="knobs"><span>{isMetric ? 'ML' : 'OZ'}</span></div>
+                          <div className="layer"></div>
+                        </div>
+                      </div></div>
+                    </div>
                   </div>
+                </div>
+
+                {/* Scaling */}
+                {hasValidRecipe && scaling && (
+                  <div className="mb-6"><RecipeScaling scaling={scaling} /></div>
                 )}
 
                 {/* Instructions */}
@@ -475,15 +320,10 @@ export default function RecipePage() {
                   <div className="mb-6">
                     <h2 className="text-xl font-semibold text-foreground mb-4">Tags</h2>
                     <div className="flex flex-wrap gap-2">
-                      {recipe.tags.map(tag => (
-                        <TagBadge key={tag}>
-                          {tag}
-                        </TagBadge>
-                      ))}
+                      {recipe.tags.map(tag => <TagBadge key={tag}>{tag}</TagBadge>)}
                     </div>
                   </div>
                 )}
-
 
                 {/* Recipe Details */}
                 {(recipe.technique || recipe.glassType || recipe.garnish || recipe.difficulty || recipe.abv || recipe.prepTime) && (
@@ -491,73 +331,69 @@ export default function RecipePage() {
                     <h2 className="text-base font-normal text-pure-white mb-4">Recipe Details</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {recipe.technique && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-base text-pure-white">Technique:</span>
-                           <span className="text-base text-pure-white">
-                             {recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1).toLowerCase()}
-                           </span>
-                         </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base text-pure-white">Technique:</span>
+                          <span className="text-base text-pure-white">{recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1).toLowerCase()}</span>
+                        </div>
                       )}
                       {recipe.glassType && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-base text-pure-white">Glass:</span>
-                           <span className="text-base text-pure-white">
-                             {recipe.glassType}
-                           </span>
-                         </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base text-pure-white">Glass:</span>
+                          <span className="text-base text-pure-white">{recipe.glassType}</span>
+                        </div>
                       )}
                       {recipe.difficulty && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-base text-pure-white">Difficulty:</span>
-                           <span className="text-base text-pure-white">
-                             {recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1).toLowerCase()}
-                           </span>
-                         </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base text-pure-white">Difficulty:</span>
+                          <span className="text-base text-pure-white">{recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1).toLowerCase()}</span>
+                        </div>
                       )}
                       {recipe.abv && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-base text-pure-white">ABV:</span>
-                           <span className="text-base text-pure-white">{recipe.abv}</span>
-                         </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base text-pure-white">ABV:</span>
+                          <span className="text-base text-pure-white">{recipe.abv}</span>
+                        </div>
                       )}
                       {recipe.prepTime && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-base text-pure-white">Prep time:</span>
-                           <span className="text-base text-pure-white">{recipe.prepTime}</span>
-                         </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-base text-pure-white">Prep time:</span>
+                          <span className="text-base text-pure-white">{recipe.prepTime}</span>
+                        </div>
                       )}
                       {recipe.garnish && recipe.garnish.length > 0 && (
-                         <div className="flex items-start gap-2 sm:col-span-2">
-                           <span className="text-base text-pure-white">Garnish:</span>
-                           <div className="flex flex-wrap gap-1">
-                             {recipe.garnish.map((garnish, index) => (
-                               <span key={index} className="text-base text-pure-white">
-                                 {garnish}{index < recipe.garnish.length - 1 ? ', ' : ''}
-                               </span>
-                             ))}
-                           </div>
+                        <div className="flex items-start gap-2 sm:col-span-2">
+                          <span className="text-base text-pure-white">Garnish:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {recipe.garnish.map((g, i) => (
+                              <span key={i} className="text-base text-pure-white">{g}{i < recipe.garnish.length - 1 ? ', ' : ''}</span>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
                   </div>
-                 )}
-               </div>
-             </div>
-           </div>
-         </main>
-       </div>
-      
-      <AuthModal 
-        open={showAuthModal} 
-        onOpenChange={setShowAuthModal}
-        initialMode="signin"
-      />
+                )}
 
-      <ShareRecipe 
-        recipe={recipe} 
-        open={showShareModal} 
-        onOpenChange={setShowShareModal} 
-      />
+                {/* Rating section - after recipe content */}
+                <div className="mb-6 pt-4 border-t border-border">
+                  <RecipeRatingStars recipeId={recipe.id} size={20} />
+                  <div className="mt-3">
+                    <RecipeRatingInput recipeId={recipe.id} />
+                  </div>
+                </div>
+
+                {/* Comments section - after ratings */}
+                <div className="mb-6 pt-4 border-t border-border">
+                  <RecipeComments recipeId={recipe.id} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+      
+      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} initialMode="signin" />
+      <ShareRecipe recipe={recipe} open={showShareModal} onOpenChange={setShowShareModal} />
     </>
   );
 }
