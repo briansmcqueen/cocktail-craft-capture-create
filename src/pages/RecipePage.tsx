@@ -141,7 +141,8 @@ export default function RecipePage() {
   }
 
   const scrollToRatings = () => {
-    document.getElementById('ratings-section')?.scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById('ratings-section') || document.getElementById('ratings-section-mobile');
+    el?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
