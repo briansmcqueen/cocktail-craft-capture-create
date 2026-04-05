@@ -154,18 +154,18 @@ export default function MyBarEngine({
       </div>
 
       {/* Mobile: Tab-based layout */}
-      <div className="md:hidden">
+      <div className="md:hidden pb-20">
         <Tabs value={mobileTab} onValueChange={setMobileTab}>
           <TabsList className="w-full mb-4">
             <TabsTrigger value="bottles" className="flex-1">My Bottles</TabsTrigger>
             <TabsTrigger value="cocktails" className="flex-1">Cocktails</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="bottles" className="mt-0">
+          <TabsContent value="bottles" className="mt-0 pb-4">
             {ingredientManagerPanel}
           </TabsContent>
 
-          <TabsContent value="cocktails" className="mt-0">
+          <TabsContent value="cocktails" className="mt-0 pb-4">
             {resultsPanel}
           </TabsContent>
         </Tabs>
