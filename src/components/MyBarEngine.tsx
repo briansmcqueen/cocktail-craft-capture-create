@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
-import { User } from "lucide-react";
+
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
@@ -127,12 +127,9 @@ export default function MyBarEngine({
     <div className="px-4 sm:px-0">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <User className="text-primary" size={24} />
-          <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
-            My Bar
-          </h2>
-        </div>
+        <h2 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
+          My Bar
+        </h2>
         {myBarIngredients.length > 0 && (
           <span className="text-sm text-soft-gray">
             {myBarIngredients.length} bottle{myBarIngredients.length !== 1 ? 's' : ''}
