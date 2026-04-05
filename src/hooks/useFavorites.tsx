@@ -1,13 +1,23 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import { useAuth } from './useAuth';
-import { getUserFavorites, toggleFavoriteInDB } from '@/services/favoritesService';
+import { getUserFavorites, addFavorite, removeFavorite } from '@/services/favoritesService';
 
-export function useFavorites() {
+interface FavoritesContextType {
+  favoriteIds: string[];
+  loading: boolean;
+  isFavorite: (recipeId: string) => boolean;
+  toggleFavorite: (recipeId: string, onUnauthenticated?: () => void) => Promise<boolean>;
+  refreshFavorites: () => Promise<void>;
+}
+
+const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
+
+export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const loadFavorites = useCallback(async () => {
+  const refreshFavorites = useCallback(async () => {
     if (!user) {
       setFavoriteIds([]);
       return;
@@ -25,57 +35,74 @@ export function useFavorites() {
   }, [user]);
 
   useEffect(() => {
-    loadFavorites();
-  }, [loadFavorites]);
+    refreshFavorites();
+  }, [refreshFavorites]);
 
   const isFavorite = useCallback((recipeId: string) => {
     return favoriteIds.includes(recipeId);
   }, [favoriteIds]);
 
-  const toggleFavorite = useCallback(async (recipeId: string) => {
-    if (!user) return false;
+  const toggleFavorite = useCallback(async (recipeId: string, onUnauthenticated?: () => void) => {
+    if (!user) {
+      onUnauthenticated?.();
+      return false;
+    }
     
-    console.log('Toggling favorite for recipe:', recipeId);
+    const wasLiked = favoriteIds.includes(recipeId);
     
-    // Optimistically update the UI immediately
-    setFavoriteIds(prev => {
-      const newFavorites = prev.includes(recipeId) 
+    // Optimistic update
+    setFavoriteIds(prev => 
+      wasLiked 
         ? prev.filter(id => id !== recipeId)
-        : [...prev, recipeId];
-      console.log('Updated favorites optimistically:', newFavorites);
-      return newFavorites;
-    });
+        : [...prev, recipeId]
+    );
     
-    // Then sync with database
     try {
-      const success = await toggleFavoriteInDB(recipeId);
-      console.log('Database toggle result:', success);
+      const success = wasLiked 
+        ? await removeFavorite(recipeId)
+        : await addFavorite(recipeId);
+      
       if (!success) {
         // Revert on failure
-        setFavoriteIds(prev => {
-          return prev.includes(recipeId) 
-            ? prev.filter(id => id !== recipeId)
-            : [...prev, recipeId];
-        });
+        setFavoriteIds(prev => 
+          wasLiked 
+            ? [...prev, recipeId]
+            : prev.filter(id => id !== recipeId)
+        );
       }
+      
       return success;
     } catch (error) {
       console.error('Error toggling favorite:', error);
       // Revert on error
-      setFavoriteIds(prev => {
-        return prev.includes(recipeId) 
-          ? prev.filter(id => id !== recipeId)
-          : [...prev, recipeId];
-      });
+      setFavoriteIds(prev => 
+        wasLiked 
+          ? [...prev, recipeId]
+          : prev.filter(id => id !== recipeId)
+      );
       return false;
     }
-  }, [user]);
+  }, [user, favoriteIds]);
 
-  return {
+  const value = {
     favoriteIds,
     loading,
     isFavorite,
     toggleFavorite,
-    refresh: loadFavorites
+    refreshFavorites
   };
+
+  return (
+    <FavoritesContext.Provider value={value}>
+      {children}
+    </FavoritesContext.Provider>
+  );
+}
+
+export function useFavorites() {
+  const context = useContext(FavoritesContext);
+  if (context === undefined) {
+    throw new Error('useFavorites must be used within a FavoritesProvider');
+  }
+  return context;
 }

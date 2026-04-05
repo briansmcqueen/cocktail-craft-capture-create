@@ -6,7 +6,7 @@ import { Heart, Star, Edit } from 'lucide-react';
 import { Cocktail } from '@/data/classicCocktails';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { useFavorites } from '@/hooks/useFavoritesRefactored';
+import { useFavorites } from '@/hooks/useFavorites';
 import { getRecipeUrl } from '@/pages/RecipePage';
 import { ShareCount } from './ShareCount';
 import { getAvatarUrl } from '@/utils/avatarUrl';

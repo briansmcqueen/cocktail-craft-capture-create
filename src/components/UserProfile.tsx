@@ -26,7 +26,6 @@ import UserCard from '@/components/social/UserCard';
 import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import type { Cocktail, Difficulty } from '@/data/classicCocktails';
 import { classicCocktails } from '@/data/classicCocktails';
-import { getRecipesLikeCounts } from '@/services/likesService';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
 import { getUserActivity, type ActivityItem } from '@/services/activityService';
@@ -204,8 +203,7 @@ export default function UserProfile() {
       // Fetch stats for all recipes
       if (data && data.length > 0) {
         const recipeIds = data.map(r => r.id);
-        const [likeCounts, favCounts, commentCounts, ratingsResponse] = await Promise.all([
-          getRecipesLikeCounts(recipeIds),
+        const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
           getRecipesFavoriteCounts(recipeIds),
           getRecipesCommentCounts(recipeIds),
           supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: recipeIds })
@@ -217,7 +215,7 @@ export default function UserProfile() {
         recipeIds.forEach(id => {
           const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
           stats[id] = {
-            likes: likeCounts[id] || 0,
+            likes: favCounts[id] || 0,
             favorites: favCounts[id] || 0,
             comments: commentCounts[id] || 0,
             rating: ratingInfo?.averageRating || 0
@@ -296,8 +294,7 @@ export default function UserProfile() {
 
     // Fetch stats for favorites
     if (favoriteIds.length > 0) {
-      const [likeCounts, favCounts, commentCounts, ratingsResponse] = await Promise.all([
-        getRecipesLikeCounts(favoriteIds),
+      const [favCounts, commentCounts, ratingsResponse] = await Promise.all([
         getRecipesFavoriteCounts(favoriteIds),
         getRecipesCommentCounts(favoriteIds),
         supabase.rpc('get_recipe_rating_stats_batch', { p_recipe_ids: favoriteIds })
@@ -309,7 +306,7 @@ export default function UserProfile() {
       favoriteIds.forEach(id => {
         const ratingInfo = ratingsData?.find((r) => r.recipe_id === id);
         stats[id] = {
-          likes: likeCounts[id] || 0,
+          likes: favCounts[id] || 0,
           favorites: favCounts[id] || 0,
           comments: commentCounts[id] || 0,
           rating: ratingInfo?.averageRating || 0

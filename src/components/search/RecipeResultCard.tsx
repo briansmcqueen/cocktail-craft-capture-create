@@ -8,7 +8,7 @@ import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { getRecipeUrl } from '@/pages/RecipePage';
-import { useFavorites } from '@/hooks/useFavoritesRefactored';
+import { useFavorites } from '@/hooks/useFavorites';
 import { ratingsCache } from '@/services/ratingsCache';
 import { getAggregatedRating } from '@/services/ratingsService';
 

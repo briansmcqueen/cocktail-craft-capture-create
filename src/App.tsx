@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import { FavoritesProvider } from "@/hooks/useFavoritesRefactored";
+import { FavoritesProvider } from "@/hooks/useFavorites";
 import { AuthModalProvider } from "@/contexts/AuthModalContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import AuthModal from "@/components/auth/AuthModal";

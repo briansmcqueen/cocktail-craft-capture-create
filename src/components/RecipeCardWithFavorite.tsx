@@ -2,7 +2,7 @@ import React from "react";
 import { Heart } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import RecipeCard from "./RecipeCard";
-import { useFavorites } from "@/hooks/useFavoritesRefactored";
+import { useFavorites } from "@/hooks/useFavorites";
 import { useNavigate } from "react-router-dom";
 import { getRecipeUrl } from "@/pages/RecipePage";
 

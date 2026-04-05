@@ -3,7 +3,6 @@ import { Edit, ThumbsUp, Heart, MessageSquare, Star } from "lucide-react";
 import { Cocktail } from "@/data/classicCocktails";
 import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
-import { getLikeCount } from "@/utils/likes";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRecipeUrl } from "@/pages/RecipePage";
@@ -24,7 +23,6 @@ const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?a
 
 export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick, showOrigin = true, showTags = true, variant = 'default' }: RecipeCardProps) {
   const navigate = useNavigate();
-  const likeCount = getLikeCount(recipe.id);
   const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
   const [hasErrored, setHasErrored] = useState(false);
   
