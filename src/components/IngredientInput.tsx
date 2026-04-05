@@ -106,7 +106,7 @@ export default function IngredientInput({
           type="button"
           variant="secondary"
           size="sm"
-          className="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+          className="text-xs bg-medium-charcoal text-light-text hover:bg-light-charcoal border-light-charcoal transition-all duration-300"
           onClick={toggleQuickAdd}
         >
           Quick Add
@@ -134,13 +134,13 @@ export default function IngredientInput({
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
           ref={suggestionsRef}
-          className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto"
+          className="absolute z-50 mt-1 w-full bg-medium-charcoal border border-light-charcoal rounded-organic-sm shadow-lg max-h-48 overflow-y-auto"
         >
           {filteredSuggestions.map((ingredient, i) => (
             <button
               key={i}
               type="button"
-              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors text-gray-700 border-b border-gray-100 last:border-b-0"
+              className="w-full text-left px-3 py-2 text-sm hover:bg-light-charcoal transition-colors text-light-text border-b border-light-charcoal last:border-b-0"
               onClick={() => addIngredient(ingredient)}
             >
               {ingredient}

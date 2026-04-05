@@ -89,7 +89,7 @@ const TopNavigation = memo(function TopNavigation({
                 
                 {/* Navigation with organic shapes */}
                 <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
-                  {nav.map((item, index) => <Link key={item.id} to={item.path} className={cn("flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm", location.pathname === item.path ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:transform hover:scale-[1.01]")} onClick={() => setOpen(false)} style={{
+                  {nav.map((item, index) => <Link key={item.id} to={item.path} className={cn("flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm", location.pathname === item.path ? "bg-primary/20 text-emerald border border-primary/30" : "text-light-text hover:bg-medium-charcoal hover:text-pure-white")} onClick={() => setOpen(false)} style={{
                   transitionTimingFunction: 'var(--timing-stir)',
                   transitionDelay: `${index * 50}ms`
                 }}>
@@ -100,7 +100,7 @@ const TopNavigation = memo(function TopNavigation({
 
                 {/* Bottom section with organic styling */}
                 <div className="border-t border-border p-6 space-y-4">
-                  <button className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-md flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium hover:transform hover:scale-[1.02] hover:rotate-[0.5deg] active:scale-[0.98]" onClick={handleAddRecipe} style={{
+                  <button className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-md flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium" onClick={handleAddRecipe} style={{
                   transitionTimingFunction: 'var(--timing-pour)'
                 }}>
                     <Plus size={18} />
@@ -128,7 +128,7 @@ const TopNavigation = memo(function TopNavigation({
                         <Button onClick={() => {
                       onSignUpClick();
                       setOpen(false);
-                    }} variant="secondary" className="w-full gap-2 rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300">
+                    }} variant="secondary" className="w-full gap-2 rounded-organic-sm transition-all duration-300">
                           <User className="h-4 w-4" />
                           Create Account
                         </Button>

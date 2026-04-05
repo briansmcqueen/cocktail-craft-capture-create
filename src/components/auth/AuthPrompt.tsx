@@ -23,7 +23,7 @@ export default function AuthPrompt({
   return (
     <div className="container mx-auto px-md py-xl text-center animate-fade-in">
       <Icon className={`mx-auto mb-lg ${iconClassName}`} size={iconSize} />
-      <h2 className="text-3xl font-medium mb-md text-pure-white">{title}</h2>
+      <h2 className="text-3xl font-medium mb-4 text-pure-white">{title}</h2>
       <p className="text-light-text text-base max-w-md mx-auto mb-lg">
         {description}
       </p>

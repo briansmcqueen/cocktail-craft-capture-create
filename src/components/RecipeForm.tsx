@@ -162,7 +162,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
 
       {/* Validation errors */}
       {Object.keys(errors).length > 0 && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3 space-y-1">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-organic-md p-3 space-y-1">
           {Object.entries(errors).map(([field, error]) => (
             <p key={field} className="text-sm text-destructive">{error}</p>
           ))}
@@ -174,7 +174,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           type="button" 
           variant="secondary" 
           onClick={onCancel}
-          className="hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+          className="transition-all duration-300"
         >
           Cancel
         </Button>

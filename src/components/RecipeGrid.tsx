@@ -31,7 +31,7 @@ export default function RecipeGrid({
 }: RecipeGridProps) {
   if (recipes.length === 0) {
     return (
-      <div className="text-center text-gray-500 mt-12 lg:mt-16 px-4">
+      <div className="text-center text-muted-foreground mt-12 lg:mt-16 px-4">
         <p className="mb-4 text-sm lg:text-base">No recipes yet in this library.</p>
         {library !== "classics" && library !== "favorites" && (
           <Button 

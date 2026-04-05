@@ -160,7 +160,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
               <Mail className="h-7 w-7 text-primary" />
             </div>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-serif text-center text-pure-white">
+              <DialogTitle className="text-2xl font-semibold text-center text-pure-white">
                 Check your email
               </DialogTitle>
             </DialogHeader>
@@ -205,7 +205,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" aria-describedby="auth-description">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif text-center text-pure-white">
+          <DialogTitle className="text-2xl font-semibold text-center text-pure-white">
             {mode === 'reset' ? 'Reset Password' : mode === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
           {contextMessage ? (

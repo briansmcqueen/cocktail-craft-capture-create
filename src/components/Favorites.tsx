@@ -93,7 +93,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
     return (
       <div className="container mx-auto px-md py-xl text-center animate-fade-in">
         <Heart className="mx-auto mb-lg text-muted-foreground" size={48} />
-        <h2 className="text-3xl font-medium mb-md text-foreground">No favorites yet</h2>
+        <h2 className="text-3xl font-medium mb-4 text-foreground">No favorites yet</h2>
         <p className="text-muted-foreground text-base max-w-md mx-auto">
           Start favoriting recipes by clicking the heart icon on any cocktail you love!
         </p>
@@ -116,7 +116,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md lg:gap-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
         {favoriteRecipes.map((recipe) => {
           const visibility = getFavoriteVisibility(recipe.id);
           

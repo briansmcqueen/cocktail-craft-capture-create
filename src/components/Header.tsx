@@ -47,7 +47,7 @@ export default function Header({
           <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-lg">B</span>
           </div>
-          <h1 className="text-2xl font-serif font-normal text-foreground tracking-wide">
+          <h1 className="text-2xl font-medium text-foreground tracking-wide">
             Barbook
           </h1>
         </div>
@@ -64,7 +64,7 @@ export default function Header({
               <Button 
                 onClick={onSignUpClick}
                 variant="secondary"
-                className="gap-2 rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+                className="gap-2 rounded-organic-sm transition-all duration-300"
               >
                 <User className="h-4 w-4" />
                 Create Account

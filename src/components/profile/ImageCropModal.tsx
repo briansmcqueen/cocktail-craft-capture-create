@@ -170,7 +170,7 @@ export default function ImageCropModal({ open, imageUrl, onCropComplete, onCance
 
         <div className="space-y-6">
           {/* Crop Area */}
-          <div className="relative h-[400px] bg-black/50 rounded-lg overflow-hidden">
+          <div className="relative h-[400px] bg-black/50 rounded-organic-md overflow-hidden">
             <Cropper
               image={imageUrl}
               crop={crop}

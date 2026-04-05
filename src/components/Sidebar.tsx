@@ -49,8 +49,8 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
             className={cn(
               "flex items-center gap-3 px-3 py-3 rounded-organic-sm transition-all font-medium duration-300",
               location.pathname === item.path
-                ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
-                : "text-light-text hover:bg-medium-charcoal hover:text-pure-white hover:scale-[1.01] hover:rotate-[-0.3deg]"
+                ? "bg-primary/20 text-emerald border border-primary/30" 
+                : "text-light-text hover:bg-medium-charcoal hover:text-pure-white"
             )}
             onClick={() => {
               if (onCloseForm) {
@@ -65,7 +65,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
       </nav>
       <div className="mt-auto px-6 space-y-3">
         <button
-          className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-sm flex items-center gap-2 justify-center hover:bg-primary/90 hover:scale-[1.02] hover:rotate-[0.5deg] transition-all font-medium duration-300"
+          className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-sm flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium duration-300"
           onClick={onAdd}
         >
           <Plus size={18} /> <span>Add New Recipe</span>
@@ -97,7 +97,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
               <Button 
                 onClick={onSignUpClick}
                 variant="secondary"
-                className="w-full gap-2 rounded-organic-sm text-pure-white hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+                className="w-full gap-2 rounded-organic-sm text-pure-white transition-all duration-300"
               >
                 <User className="h-4 w-4" />
                 Create Account

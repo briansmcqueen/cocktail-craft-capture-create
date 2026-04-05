@@ -30,7 +30,7 @@ export default function CommunityCallToAction({
 
   return (
     <section className="mb-8 md:mb-12">
-      <div className="relative overflow-hidden rounded-lg md:rounded-2xl bg-gradient-to-br from-primary/10 via-background to-accent/10 border border-primary/20 p-8 md:p-12 text-center">
+      <div className="relative overflow-hidden rounded-organic-md md:rounded-organic-lg bg-gradient-to-br from-primary/10 via-background to-accent/10 border border-primary/20 p-8 md:p-12 text-center">
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 right-0 w-48 h-48 bg-primary/30 rounded-full blur-3xl" />
@@ -66,14 +66,6 @@ export default function CommunityCallToAction({
               <Users className="mr-2" size={20} />
               Discover More
             </Button>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-border/40">
-            <p className="text-sm text-muted-foreground">
-              Join <span className="font-bold text-foreground">1,000+ bartenders</span> sharing{" "}
-              <span className="font-bold text-foreground">5,000+ recipes</span>
-            </p>
           </div>
         </div>
       </div>

@@ -83,8 +83,8 @@ export default function MobileNavigation({
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 transition-all font-medium rounded-organic-sm",
                   activeLibrary === item.id 
-                    ? "bg-primary/20 text-emerald border border-primary/30 transform scale-[1.02] rotate-[0.5deg]" 
-                    : "text-light-text hover:bg-muted/50 hover:text-pure-white hover:transform hover:scale-[1.01]"
+                    ? "bg-primary/20 text-emerald border border-primary/30" 
+                    : "text-light-text hover:bg-muted/50 hover:text-pure-white"
                 )}
                 onClick={() => setOpen(false)}
                 style={{ 
@@ -101,7 +101,7 @@ export default function MobileNavigation({
           {/* Bottom section with organic styling */}
           <div className="border-t border-border p-6 space-y-4">
             <button
-              className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-md flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium hover:transform hover:scale-[1.02] hover:rotate-[0.5deg] active:scale-[0.98]"
+              className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-organic-md flex items-center gap-2 justify-center hover:bg-primary/90 transition-all font-medium"
               onClick={handleAddRecipe}
               style={{ transitionTimingFunction: 'var(--timing-pour)' }}
             >
@@ -138,7 +138,7 @@ export default function MobileNavigation({
                     setOpen(false);
                   }}
                   variant="secondary"
-                  className="w-full gap-2 rounded-organic-sm hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+                  className="w-full gap-2 rounded-organic-sm transition-all duration-300"
                   size="sm"
                 >
                   <User className="h-4 w-4" />
