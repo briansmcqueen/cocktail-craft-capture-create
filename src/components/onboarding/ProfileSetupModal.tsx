@@ -273,7 +273,7 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl text-center text-pure-white font-serif">
+          <DialogTitle className="text-2xl text-center text-pure-white font-semibold">
             Choose a username
           </DialogTitle>
           <DialogDescription className="text-center text-light-text">

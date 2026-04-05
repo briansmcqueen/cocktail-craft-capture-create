@@ -109,7 +109,7 @@ export default function PublicProfilePage() {
               {/* Header */}
               <div className="bg-rich-charcoal border border-light-charcoal rounded-organic-md mb-6 mt-4">
                 <div className="p-6">
-                  <div className="md:gap-6 gap-md flex items-center justify-start">
+                  <div className="md:gap-6 gap-4 flex items-center justify-start">
                     {/* Avatar and Follow Button Column */}
                     <div className="flex flex-col items-center gap-3 shrink-0">
                       <Avatar className="h-20 w-20 md:h-32 md:w-32 border-2 border-primary/20">

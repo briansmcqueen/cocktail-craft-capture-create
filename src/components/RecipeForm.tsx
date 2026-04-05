@@ -162,7 +162,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
 
       {/* Validation errors */}
       {Object.keys(errors).length > 0 && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3 space-y-1">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-organic-md p-3 space-y-1">
           {Object.entries(errors).map(([field, error]) => (
             <p key={field} className="text-sm text-destructive">{error}</p>
           ))}

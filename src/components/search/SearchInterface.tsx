@@ -162,7 +162,7 @@ export default function SearchInterface({
 
         {/* Search suggestions dropdown */}
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-organic-md shadow-lg z-50 max-h-80 overflow-y-auto">
             {/* Recent searches */}
             {recentSearches.length > 0 && !searchQuery && (
               <div className="p-3 border-b border-border">

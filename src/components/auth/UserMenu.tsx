@@ -76,7 +76,7 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-gray-100">
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-muted">
           <Avatar className="h-10 w-10">
             <AvatarImage src={getAvatarUrl(user.user_metadata?.avatar_url) || undefined} />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">{initials}</AvatarFallback>

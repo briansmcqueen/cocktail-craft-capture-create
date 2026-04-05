@@ -212,12 +212,12 @@ export default function CategorizedIngredientFilter({
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <ChefHat className="text-primary" size={24} />
-        <h2 className="text-2xl lg:text-3xl font-serif font-normal text-pure-white tracking-wide">
+        <h2 className="text-2xl lg:text-3xl font-medium text-pure-white tracking-wide">
           Find Cocktails by Ingredients
         </h2>
       </div>
 
-      <div className="bg-card p-6 rounded-lg border border-border">
+      <div className="bg-card p-6 rounded-organic-md border border-border">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium text-pure-white">
             Select ingredients you have:
@@ -253,7 +253,7 @@ export default function CategorizedIngredientFilter({
       {selectedIngredients.length === 0 ? (
         <div className="text-center text-light-text mt-12 lg:mt-16 px-4">
           <ChefHat className="mx-auto mb-4 text-light-text/60" size={48} />
-          <h3 className="text-xl font-serif font-normal mb-2 text-pure-white">Select ingredients to get started</h3>
+          <h3 className="text-xl font-medium mb-2 text-pure-white">Select ingredients to get started</h3>
           <p className="mb-4 text-sm lg:text-base">
             Choose the ingredients you have available and we'll show you cocktails you can make!
           </p>
