@@ -8,7 +8,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 
 export function useIndexPage() {
   const { user } = useAuth();
-  useDataMigration(); // Auto-migrate localStorage data
+  
   const { favoriteIds, toggleFavorite } = useFavorites();
   const { data: userRecipes = [], isLoading } = useUserRecipes();
   const saveRecipeMutation = useSaveRecipe();
@@ -21,7 +21,7 @@ export function useIndexPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   const [shareRecipe, setShareRecipe] = useState<Cocktail | null>(null);
-  const [forceUpdate, setForceUpdate] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Memoize expensive calculations
