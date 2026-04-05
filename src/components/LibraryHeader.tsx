@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Home, Book, Heart, Edit, Rss, GraduationCap, LucideIcon } from "lucide-react";
 
 type Library = "featured" | "all" | "classics" | "favorites" | "mine" | "ingredients" | "feed" | "learn";
 
@@ -8,42 +8,36 @@ type LibraryHeaderProps = {
   library: Library;
 };
 
-function getLibraryTitle(library: Library): string {
+function getLibraryConfig(library: Library): { title: string; icon: LucideIcon } | null {
   switch (library) {
-    case "featured": return "Featured";
-    case "all": return "Recipes";
-    case "classics": return "Classic Collection";
-    case "favorites": return "Your Favorites";
-    case "mine": return "My Drinks";
-    case "feed": return "Your Feed";
-    case "learn": return "Learn";
-    default: return "Cocktails";
+    case "featured": return null; // Has its own section headings
+    case "all": return { title: "Recipes", icon: Book };
+    case "classics": return { title: "Classic Collection", icon: Book };
+    case "favorites": return { title: "Favorites", icon: Heart };
+    case "mine": return { title: "My Drinks", icon: Edit };
+    case "feed": return { title: "Your Feed", icon: Rss };
+    case "learn": return { title: "Learn", icon: GraduationCap };
+    default: return { title: "Cocktails", icon: Book };
   }
 }
 
 export default function LibraryHeader({ library }: LibraryHeaderProps) {
-  // Don't render anything for the featured page, ingredients page, feed, or learn since they have their own section headings
+  // Don't render for pages that have their own headings
   if (library === "featured" || library === "ingredients" || library === "feed" || library === "learn") {
     return null;
   }
 
-  return (
-    <>
-      {/* Mobile library title with consistent padding */}
-      <div className="lg:hidden mb-4 px-4 sm:px-0">
-        <h2 className="text-xl font-display font-semibold text-pure-white">
-          {getLibraryTitle(library)}
-        </h2>
-      </div>
+  const config = getLibraryConfig(library);
+  if (!config) return null;
 
-      {/* Desktop header with NYT styling */}
-      <div className="hidden lg:flex items-center justify-between mb-8">
-        <div>
-          <h2 className="text-3xl xl:text-4xl font-display font-light text-pure-white mb-1 tracking-wide">
-            {getLibraryTitle(library)}
-          </h2>
-        </div>
-      </div>
-    </>
+  const Icon = config.icon;
+
+  return (
+    <div className="flex items-center gap-2.5 mb-6 px-4 sm:px-0">
+      <Icon className="h-4 w-4 text-primary flex-shrink-0" />
+      <h2 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
+        {config.title}
+      </h2>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { Lock, Mail, Shield, AlertTriangle } from 'lucide-react';
+import { Lock, Mail, Shield, AlertTriangle, Settings as Settings2 } from 'lucide-react';
 
 export default function Settings() {
   const { user, loading } = useAuth();
@@ -238,13 +238,11 @@ export default function Settings() {
         <div className="flex-1 overflow-auto">
           <main className="w-full h-full">
             <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
-              <div className="mb-8">
-                <h1 className="text-3xl font-semibold text-foreground mb-2">
+              <div className="mb-8 flex items-center gap-2.5">
+                <Settings2 className="h-4 w-4 text-primary flex-shrink-0" />
+                <h1 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
                   Settings
                 </h1>
-                <p className="text-muted-foreground">
-                  Manage your account settings and preferences
-                </p>
               </div>
 
               <div className="space-y-6">
