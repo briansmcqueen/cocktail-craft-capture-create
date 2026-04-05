@@ -12,7 +12,7 @@ export default function TagBadge({ children, removable, className, onClick, ...p
   return (
     <span
       className={cn(
-        "inline-flex items-center px-3 py-1 text-xs font-medium rounded-organic-sm bg-medium-charcoal border border-light-charcoal text-pure-white mr-1",
+        "inline-flex items-center px-3 py-0.5 text-xs font-medium rounded-organic-sm bg-medium-charcoal border border-light-charcoal text-pure-white mr-1",
         className
       )}
       {...props}
