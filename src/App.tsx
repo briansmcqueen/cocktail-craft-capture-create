@@ -11,6 +11,9 @@ import { AuthModalProvider } from "@/contexts/AuthModalContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import AuthModal from "@/components/auth/AuthModal";
 import { useAuthModal } from "@/contexts/AuthModalContext";
+import { useAuth } from "@/hooks/useAuth";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
 
 // Lazy load components for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -58,6 +61,21 @@ function AuthModalWrapper() {
   return <AuthModal open={isOpen} onOpenChange={closeAuthModal} initialMode={mode} contextMessage={contextMessage} />;
 }
 
+function OnboardingWrapper() {
+  const { user } = useAuth();
+  const { showProfileSetup, loading, completeProfileSetup } = useOnboarding(user);
+  
+  if (!user || loading || !showProfileSetup) return null;
+  
+  return (
+    <ProfileSetupModal
+      open={showProfileSetup}
+      userId={user.id}
+      onComplete={completeProfileSetup}
+    />
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -68,6 +86,7 @@ const App = () => (
             <Sonner />
             <AuthModalWrapper />
             <BrowserRouter>
+              <OnboardingWrapper />
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
                   <Route path="/" element={<Index />} />

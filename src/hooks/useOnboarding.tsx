@@ -14,6 +14,13 @@ export function useOnboarding(user: User | null) {
       return;
     }
 
+    // Quick check: if we already cached that onboarding is complete, skip the query
+    const cachedComplete = localStorage.getItem(`barbook_onboarding_complete_${user.id}`);
+    if (cachedComplete === 'true') {
+      setLoading(false);
+      return;
+    }
+
     const checkOnboardingStatus = async () => {
       try {
         const { data, error } = await supabase
@@ -31,14 +38,17 @@ export function useOnboarding(user: User | null) {
         // Show profile setup if user doesn't have a username
         if (data && !data.username) {
           setShowProfileSetup(true);
-        } 
-        // If username exists but onboarding not completed, mark it complete
-        // (the My Bar onboarding handles the rest)
-        else if (data && !data.onboarding_completed) {
-          await supabase
-            .from('profiles')
-            .update({ onboarding_completed: true })
-            .eq('id', user.id);
+        } else if (data?.username) {
+          // Cache the result so we don't query again
+          localStorage.setItem(`barbook_onboarding_complete_${user.id}`, 'true');
+          
+          // If username exists but onboarding not completed, mark it complete
+          if (!data.onboarding_completed) {
+            await supabase
+              .from('profiles')
+              .update({ onboarding_completed: true })
+              .eq('id', user.id);
+          }
         }
       } catch (error) {
         console.error('Error in checkOnboardingStatus:', error);
@@ -53,16 +63,18 @@ export function useOnboarding(user: User | null) {
   const completeProfileSetup = async () => {
     setShowProfileSetup(false);
     
-    // Mark onboarding as completed
     if (user) {
       await supabase
         .from('profiles')
         .update({ onboarding_completed: true })
         .eq('id', user.id);
+      
+      // Cache completion
+      localStorage.setItem(`barbook_onboarding_complete_${user.id}`, 'true');
     }
     
-    // Navigate to My Bar so the My Bar onboarding triggers
-    navigate('/mybar');
+    // Small delay before navigation for smoother transition
+    setTimeout(() => navigate('/mybar'), 300);
   };
 
   return {

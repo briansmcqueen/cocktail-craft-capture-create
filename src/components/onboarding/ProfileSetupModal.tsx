@@ -2,8 +2,6 @@ import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Loader2, User, CheckCircle2, XCircle, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,15 +19,13 @@ interface ProfileSetupModalProps {
 
 const usernameSchema = z.string()
   .min(3, 'Username must be at least 3 characters')
-  .max(20, 'Username must be less than 20 characters')
-  .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores')
-  .refine(val => val === val.toLowerCase(), 'Username must be lowercase');
+  .max(30, 'Username must be 30 characters or less')
+  .regex(/^[a-z0-9_-]+$/, 'Lowercase letters, numbers, underscores, and hyphens only')
+  .refine(val => !val.startsWith('-') && !val.endsWith('-'), 'Cannot start or end with a hyphen');
 
 export default function ProfileSetupModal({ open, userId, onComplete }: ProfileSetupModalProps) {
   const { refreshUser } = useAuth();
   const [username, setUsername] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [bio, setBio] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarBlob, setAvatarBlob] = useState<Blob | null>(null);
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
@@ -40,6 +36,7 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const [usernameError, setUsernameError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
   const { toast } = useToast();
 
   const checkUsernameAvailability = async (value: string) => {
@@ -92,19 +89,19 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
     setUsernameError('');
     setUsernameAvailable(null);
 
-    // Debounce the availability check
-    const timeoutId = setTimeout(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
       checkUsernameAvailability(lowercase);
     }, 500);
-
-    return () => clearTimeout(timeoutId);
   };
 
   const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Invalid file type",
@@ -114,7 +111,6 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
       return;
     }
 
-    // Validate file size (10MB limit)
     const maxFileSize = 10 * 1024 * 1024;
     if (file.size > maxFileSize) {
       toast({
@@ -125,33 +121,23 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
       return;
     }
 
-    // Create temporary URL for cropping
     const tempUrl = URL.createObjectURL(file);
     setTempImageUrl(tempUrl);
     setShowCropModal(true);
     
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
   const handleCropComplete = (croppedBlob: Blob) => {
-    // Store the cropped blob
     setAvatarBlob(croppedBlob);
-    
-    // Create preview URL from cropped blob
     const previewUrl = URL.createObjectURL(croppedBlob);
-    
-    // Clean up old preview URL
     if (avatarUrl) {
       URL.revokeObjectURL(avatarUrl);
     }
-    
     setAvatarUrl(previewUrl);
     setShowCropModal(false);
-    
-    // Clean up temp URL
     if (tempImageUrl) {
       URL.revokeObjectURL(tempImageUrl);
       setTempImageUrl(null);
@@ -160,8 +146,6 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
 
   const handleCropCancel = () => {
     setShowCropModal(false);
-    
-    // Clean up temp URL
     if (tempImageUrl) {
       URL.revokeObjectURL(tempImageUrl);
       setTempImageUrl(null);
@@ -173,19 +157,11 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
 
     try {
       setUploading(true);
-      
-      // The avatar is already cropped and processed, just need to compress slightly more
       const compressedBlob = await compressImage(
         new File([avatarBlob], 'avatar.jpg', { type: 'image/jpeg' }),
-        400,
-        400,
-        0.85
+        400, 400, 0.85
       );
-      
-      // Generate filename
       const fileName = `${userId}/avatar.jpg`;
-      
-      // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, compressedBlob, { 
@@ -193,11 +169,8 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
           contentType: 'image/jpeg',
         });
 
-      if (uploadError) {
-        throw uploadError;
-      }
+      if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
@@ -230,7 +203,6 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
 
     setLoading(true);
     try {
-      // Validate username one more time
       try {
         usernameSchema.parse(username);
       } catch (error) {
@@ -245,19 +217,15 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         }
       }
 
-      // Upload avatar if one was cropped and selected
       let uploadedAvatarUrl: string | null = null;
       if (avatarBlob) {
         uploadedAvatarUrl = await uploadAvatar();
       }
 
-      // Update profile with all info
       const { error } = await supabase
         .from('profiles')
         .update({
           username: username,
-          full_name: fullName.trim() || null,
-          bio: bio.trim() || null,
           avatar_url: uploadedAvatarUrl || null,
         })
         .eq('id', userId);
@@ -272,13 +240,10 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         return;
       }
 
-      // Also update auth user metadata for consistency
       if (uploadedAvatarUrl) {
         await supabase.auth.updateUser({
           data: { avatar_url: uploadedAvatarUrl }
         });
-        
-        // Refresh user session to get updated metadata
         await refreshUser();
       }
 
@@ -303,38 +268,38 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="sm:max-w-md bg-rich-charcoal border-light-charcoal"
+        className="sm:max-w-md bg-rich-charcoal border-light-charcoal [&>button]:hidden"
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl text-center text-pure-white">
-            Welcome to Barbook!
+          <DialogTitle className="text-2xl text-center text-pure-white font-serif">
+            Choose a username
           </DialogTitle>
           <DialogDescription className="text-center text-light-text">
-            Let's set up your profile to get started.
+            This is how other bartenders will find you.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5 mt-6">
-          {/* Avatar Upload */}
-          <div className="flex flex-col items-center gap-3">
-            <div className="relative group">
-              <Avatar className="h-24 w-24 border-2 border-border">
+        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
+          {/* Avatar - compact inline */}
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={loading || uploading}
+              className="relative group"
+            >
+              <Avatar className="h-16 w-16 border-2 border-border">
                 <AvatarImage src={avatarUrl || undefined} />
-                <AvatarFallback className="bg-primary/10 text-primary text-2xl">
-                  <User size={32} />
+                <AvatarFallback className="bg-primary/10 text-primary text-xl">
+                  <User size={24} />
                 </AvatarFallback>
               </Avatar>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={loading || uploading}
-                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <Camera className="text-white" size={24} />
-              </button>
-            </div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera className="text-white" size={16} />
+              </div>
+            </button>
             <Input
               ref={fileInputRef}
               type="file"
@@ -342,25 +307,12 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
               onChange={handleAvatarChange}
               className="hidden"
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={loading || uploading}
-              className="text-xs"
-            >
-              <Camera className="h-3 w-3 mr-2" />
-              {avatarUrl ? 'Change Photo' : 'Add Photo (Optional)'}
-            </Button>
           </div>
 
           {/* Username field */}
           <div className="space-y-2">
-            <Label htmlFor="username" className="text-foreground">
-              Username <span className="text-destructive">*</span>
-            </Label>
             <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</div>
               <Input
                 id="username"
                 type="text"
@@ -368,7 +320,7 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
                 value={username}
                 onChange={(e) => handleUsernameChange(e.target.value)}
                 disabled={loading}
-                className={`pr-10 ${usernameError ? 'border-destructive' : ''}`}
+                className={`pl-7 pr-10 ${usernameError ? 'border-destructive' : ''}`}
                 required
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -388,43 +340,7 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
               <p className="text-sm text-primary">Username is available!</p>
             )}
             <p className="text-xs text-muted-foreground">
-              3-20 characters, lowercase letters, numbers, and underscores only
-            </p>
-          </div>
-
-          {/* Full name field */}
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-foreground">
-              Full Name (Optional)
-            </Label>
-            <Input
-              id="fullName"
-              type="text"
-              placeholder="John Doe"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              disabled={loading}
-              maxLength={100}
-            />
-          </div>
-
-          {/* Bio field */}
-          <div className="space-y-2">
-            <Label htmlFor="bio" className="text-foreground">
-              Bio (Optional)
-            </Label>
-            <Textarea
-              id="bio"
-              placeholder="Tell us about yourself..."
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              disabled={loading}
-              maxLength={200}
-              rows={3}
-              className="resize-none"
-            />
-            <p className="text-xs text-muted-foreground text-right">
-              {bio.length}/200
+              3–30 characters, lowercase letters, numbers, underscores, and hyphens
             </p>
           </div>
 
@@ -436,7 +352,7 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
             {loading || uploading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {uploading ? 'Uploading avatar...' : 'Setting up...'}
+                {uploading ? 'Uploading...' : 'Setting up...'}
               </>
             ) : (
               'Continue'
@@ -445,7 +361,6 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
         </form>
       </DialogContent>
 
-      {/* Image Crop Modal */}
       {tempImageUrl && (
         <ImageCropModal
           open={showCropModal}

@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { Mail, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthModalProps {
   open: boolean;
@@ -16,12 +18,14 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ open, onOpenChange, initialMode = 'signin', contextMessage }: AuthModalProps) {
-  const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>(initialMode);
+  const [mode, setMode] = useState<'signin' | 'signup' | 'reset' | 'confirm'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [signupEmail, setSignupEmail] = useState('');
   const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
 
   // Reset mode when modal opens with new initialMode
@@ -63,11 +67,8 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
             variant: "destructive",
           });
         } else {
-          toast({
-            title: "Check your email",
-            description: "We've sent you a confirmation link to complete your registration.",
-          });
-          onOpenChange(false);
+          setSignupEmail(email);
+          setMode('confirm');
         }
       } else {
         const { error } = await signIn(email, password);
@@ -90,6 +91,33 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
     }
   };
 
+  const handleResendConfirmation = async () => {
+    if (!signupEmail) return;
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: signupEmail,
+      });
+      if (error) {
+        toast({
+          title: "Resend failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Email sent",
+          description: "We've resent the confirmation link.",
+        });
+      }
+    } catch (error) {
+      console.error('Error resending confirmation:', error);
+    } finally {
+      setResending(false);
+    }
+  };
+
   const resetForm = () => {
     setEmail('');
     setPassword('');
@@ -98,7 +126,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
   };
 
   const switchMode = () => {
-    if (mode === 'reset') {
+    if (mode === 'reset' || mode === 'confirm') {
       setMode('signin');
     } else {
       setMode(mode === 'signin' ? 'signup' : 'signin');
@@ -117,11 +145,61 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
           variant: "destructive",
         });
       }
-      // Note: The redirect happens automatically, so we don't close the modal here
     } finally {
       setLoading(false);
     }
   };
+
+  // Confirmation screen after signup
+  if (mode === 'confirm') {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md" aria-describedby="auth-confirm-description">
+          <div className="flex flex-col items-center text-center py-4 space-y-4">
+            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+              <Mail className="h-7 w-7 text-primary" />
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-serif text-center text-pure-white">
+                Check your email
+              </DialogTitle>
+            </DialogHeader>
+            <p id="auth-confirm-description" className="text-sm text-light-text">
+              We sent a confirmation link to{' '}
+              <span className="font-medium text-pure-white">{signupEmail}</span>.
+              <br />Click the link to activate your account.
+            </p>
+            <div className="flex flex-col gap-2 w-full pt-2">
+              <Button
+                variant="outline"
+                onClick={handleResendConfirmation}
+                disabled={resending}
+                className="w-full"
+              >
+                {resending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  "Didn't get it? Resend"
+                )}
+              </Button>
+              <Button
+                onClick={() => {
+                  setMode('signin');
+                  resetForm();
+                }}
+                className="w-full"
+              >
+                I've confirmed → Sign In
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

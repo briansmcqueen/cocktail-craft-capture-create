@@ -7,8 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
-import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
-import { useOnboarding } from "@/hooks/useOnboarding";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Index() {
@@ -17,13 +15,6 @@ export default function Index() {
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
-  
-  // Onboarding for new users
-  const {
-    showProfileSetup,
-    loading: onboardingLoading,
-    completeProfileSetup,
-  } = useOnboarding(user);
   
   const {
     library,
@@ -52,7 +43,7 @@ export default function Index() {
   } = useIndexPage();
 
   // Get user's bar ingredients for search filtering
-  const forceUpdate = 0; // Legacy prop - favorites context handles re-renders now
+  const forceUpdate = 0;
   const { myBarIngredients } = useMyBarData(forceUpdate);
 
   // Set library based on URL path
@@ -77,7 +68,6 @@ export default function Index() {
     if (state?.editingRecipe && state?.showForm) {
       setEditingRecipe(state.editingRecipe);
       setShowForm(true);
-      // Clear the state to prevent re-triggering
       window.history.replaceState({}, document.title);
     }
   }, [location.state, setEditingRecipe, setShowForm]);
@@ -105,7 +95,6 @@ export default function Index() {
   const handleLikeWithAuth = (recipe: any) => {
     handleAuthenticatedAction(() => handleLike(recipe));
   };
-
 
   const handleSignInClick = () => {
     setAuthModalMode('signin');
@@ -136,7 +125,6 @@ export default function Index() {
       setShowAuthModal(true);
       return;
     }
-    // Create a new recipe based on the original but with no ID
     const remixedRecipe = { 
       ...recipe, 
       id: undefined,
@@ -146,7 +134,7 @@ export default function Index() {
     setShowForm(true);
   };
 
-  if (loading || onboardingLoading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
@@ -168,7 +156,7 @@ export default function Index() {
         favoriteRecipes={favoriteRecipes}
         userRecipes={userRecipes}
         getFilteredRecipes={() => filteredRecipes}
-        handleRecipeClick={() => {}} // No longer needed since we use URL navigation
+        handleRecipeClick={() => {}}
         handleSaveRecipe={handleSaveRecipe}
         handleEditRecipe={handleEditRecipe}
         handleShareRecipe={handleShareRecipe}
@@ -195,15 +183,6 @@ export default function Index() {
         open={!!shareRecipe} 
         onOpenChange={(open) => !open && setShareRecipe(null)} 
       />
-      
-      {/* Profile Setup Modal for new users */}
-      {user && (
-        <ProfileSetupModal
-          open={showProfileSetup}
-          userId={user.id}
-          onComplete={completeProfileSetup}
-        />
-      )}
     </>
   );
 }
