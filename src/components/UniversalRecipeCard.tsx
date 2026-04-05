@@ -84,11 +84,6 @@ export default function UniversalRecipeCard({
             alt={recipe.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          {recipe.photo_credit && (
-            <div className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-0.5">
-              <span className="text-[10px] text-white/70">📷 {recipe.photo_credit.name}</span>
-            </div>
-          )}
           
           {/* Creator info overlay - only show if we have creator data with username */}
           {!hideCreator && recipe.creatorUsername && recipe.creatorUserId && (
