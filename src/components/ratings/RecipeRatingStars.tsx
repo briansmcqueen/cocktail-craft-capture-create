@@ -18,7 +18,7 @@ export default function RecipeRatingStars({ recipeId, size = 16, onClick, classN
   if (rating.totalRatings === 0) return null;
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className={`flex items-center gap-1.5 ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''} ${className || ''}`} onClick={onClick}>
       <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
