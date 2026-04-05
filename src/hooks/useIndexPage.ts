@@ -141,7 +141,6 @@ export function useIndexPage() {
     shareRecipe,
     setShareRecipe,
     isMobile,
-    isMobile,
     userRecipes,
     isLoading,
     handleRecipeClick,
