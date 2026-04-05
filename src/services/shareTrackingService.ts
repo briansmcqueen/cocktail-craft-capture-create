@@ -80,19 +80,16 @@ export async function getBatchRecipeShareCounts(
 ): Promise<Record<string, number>> {
   try {
     const { data, error } = await supabase
-      .from('recipe_shares')
-      .select('recipe_id')
-      .in('recipe_id', recipeIds);
+      .rpc('get_batch_recipe_share_counts', { p_recipe_ids: recipeIds });
 
     if (error) {
       console.error('Error fetching batch share counts:', error);
       return {};
     }
 
-    // Count shares per recipe
     const counts: Record<string, number> = {};
-    data?.forEach((share) => {
-      counts[share.recipe_id] = (counts[share.recipe_id] || 0) + 1;
+    (data as any[])?.forEach((row: { recipe_id: string; share_count: number }) => {
+      counts[row.recipe_id] = Number(row.share_count);
     });
 
     return counts;
