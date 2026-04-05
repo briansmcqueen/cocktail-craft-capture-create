@@ -169,7 +169,7 @@ export default function RecipePage() {
             {shouldShowBackButton && <BackButton onClick={handleGoBack} className="mb-6" />}
 
             {/* Recipe header */}
-            <div className="mb-8">
+            <div className="mb-8 flex flex-col items-start">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-1">{recipe.name}</h1>
               
               {recipe.origin && <TagBadge className="mb-2">{recipe.origin}</TagBadge>}
