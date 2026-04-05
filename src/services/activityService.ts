@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 export interface ActivityItem {
   id: string;
-  type: 'recipe' | 'comment' | 'like' | 'follow';
+  type: 'recipe' | 'comment' | 'favorite' | 'follow';
   timestamp: string;
   recipe_id?: string;
   recipe_name?: string;
@@ -30,7 +30,7 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
       activities.push(...recipes.map(r => ({
         id: `recipe-${r.id}`,
         type: 'recipe' as const,
-        timestamp: r.created_at,
+        timestamp: r.created_at || new Date().toISOString(),
         recipe_id: r.id,
         recipe_name: r.name,
         recipe_image: r.image_url || undefined
@@ -40,44 +40,36 @@ export async function getUserActivity(userId: string, limit: number = 20): Promi
     // Fetch recent comments
     const { data: comments } = await supabase
       .from('recipe_comments')
-      .select('id, content, created_at, recipe_id, recipes!inner(name, is_public, image_url)')
+      .select('id, content, created_at, recipe_id')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(limit);
 
     if (comments) {
-      activities.push(...comments
-        .filter(c => (c as any).recipes?.is_public)
-        .map(c => ({
-          id: `comment-${c.id}`,
-          type: 'comment' as const,
-          timestamp: c.created_at,
-          recipe_id: c.recipe_id,
-          recipe_name: (c as any).recipes?.name,
-          recipe_image: (c as any).recipes?.image_url || undefined,
-          comment_content: c.content
-        })));
+      activities.push(...comments.map(c => ({
+        id: `comment-${c.id}`,
+        type: 'comment' as const,
+        timestamp: c.created_at,
+        recipe_id: c.recipe_id,
+        comment_content: c.content
+      })));
     }
 
-    // Fetch recent likes
-    const { data: likes } = await supabase
-      .from('likes')
-      .select('id, created_at, recipe_id, recipes!inner(name, is_public, image_url)')
+    // Fetch recent favorites (instead of likes)
+    const { data: favs } = await supabase
+      .from('favorites')
+      .select('id, created_at, recipe_id')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(limit);
 
-    if (likes) {
-      activities.push(...likes
-        .filter(l => (l as any).recipes?.is_public)
-        .map(l => ({
-          id: `like-${l.id}`,
-          type: 'like' as const,
-          timestamp: l.created_at || new Date().toISOString(),
-          recipe_id: l.recipe_id,
-          recipe_name: (l as any).recipes?.name,
-          recipe_image: (l as any).recipes?.image_url || undefined
-        })));
+    if (favs) {
+      activities.push(...favs.map(f => ({
+        id: `favorite-${f.id}`,
+        type: 'favorite' as const,
+        timestamp: f.created_at || new Date().toISOString(),
+        recipe_id: f.recipe_id,
+      })));
     }
 
     // Fetch recent follows

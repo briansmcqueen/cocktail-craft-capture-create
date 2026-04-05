@@ -7,7 +7,7 @@ import { SearchResult } from '@/types/search';
 import { TECHNIQUE_ICONS, GLASS_ICONS } from '@/types/search';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { getRecipeUrl } from '@/pages/RecipePage';
+import { getRecipeUrl } from '@/utils/slugUtils';
 import { useFavorites } from '@/hooks/useFavorites';
 import { ratingsCache } from '@/services/ratingsCache';
 import { getAggregatedRating } from '@/services/ratingsService';

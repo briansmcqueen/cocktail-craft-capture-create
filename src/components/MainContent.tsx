@@ -6,7 +6,7 @@ import LibraryHeader from "@/components/LibraryHeader";
 import SearchInterface from "@/components/search/SearchInterface";
 import Featured from "@/components/Featured";
 import Favorites from "@/components/Favorites";
-import Feed from "@/components/Feed";
+
 import LazyRecipeGrid from "@/components/LazyRecipeGrid";
 import MyBarEngine from "@/components/MyBarEngine";
 import { Edit } from "lucide-react";
@@ -91,7 +91,7 @@ export default function MainContent({
           library={library as any}
         />
 
-        {library !== "featured" && library !== "ingredients" && library !== "feed" && library !== "mine" && (
+        {library !== "featured" && library !== "ingredients" && library !== "mine" && (
           <div className="mb-6">
             <SearchInterface
               recipes={library === "favorites" ? favoriteRecipes : allRecipes}
@@ -132,8 +132,6 @@ export default function MainContent({
             onShareRecipe={handleShareRecipe}
             userRecipes={userRecipes}
           />
-        ) : library === "feed" ? (
-          <Feed />
         ) : library === "mine" ? (
           user ? (
             <LazyRecipeGrid

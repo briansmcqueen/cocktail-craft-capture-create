@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import TagBadge from "./ui/tag";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getRecipeUrl } from "@/pages/RecipePage";
+import { getRecipeUrl } from "@/utils/slugUtils";
 import { ShareCount } from "./ShareCount";
 
 type RecipeCardProps = {
