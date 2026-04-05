@@ -170,7 +170,14 @@ export default function RecipePage() {
 
             {/* Recipe header */}
             <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{recipe.name}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-1">{recipe.name}</h1>
+              
+              {recipe.origin && <TagBadge className="mb-2">{recipe.origin}</TagBadge>}
+
+              {/* Aggregate rating stars - clickable anchor */}
+              <button onClick={scrollToRatings} className="hover:opacity-80 transition-opacity cursor-pointer mb-3">
+                <RecipeRatingStars recipeId={recipe.id} />
+              </button>
               
               {/* Created By */}
               {recipe.isUserRecipe && (recipe.creatorUsername || recipe.createdBy) && (
@@ -200,13 +207,6 @@ export default function RecipePage() {
                   )}
                 </div>
               )}
-
-              {/* Aggregate rating stars - clickable anchor */}
-              <button onClick={scrollToRatings} className="hover:opacity-80 transition-opacity cursor-pointer">
-                <RecipeRatingStars recipeId={recipe.id} />
-              </button>
-              
-              {recipe.origin && <TagBadge className="mt-2">{recipe.origin}</TagBadge>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
