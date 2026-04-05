@@ -4,19 +4,21 @@ import { useRecipeRating } from '@/hooks/useRecipeRatings';
 interface RecipeRatingStarsProps {
   recipeId: string;
   size?: number;
+  onClick?: () => void;
+  className?: string;
 }
 
-export default function RecipeRatingStars({ recipeId, size = 16 }: RecipeRatingStarsProps) {
+export default function RecipeRatingStars({ recipeId, size = 16, onClick, className }: RecipeRatingStarsProps) {
   const { rating, loading } = useRecipeRating(recipeId);
 
   if (loading) {
-    return <div className="h-5 w-24 animate-pulse bg-muted rounded-organic-sm" />;
+    return <div className={`h-5 w-24 animate-pulse bg-muted rounded-organic-sm ${className || ''}`} />;
   }
 
   if (rating.totalRatings === 0) return null;
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className={`flex items-center gap-1.5 ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''} ${className || ''}`} onClick={onClick}>
       <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star

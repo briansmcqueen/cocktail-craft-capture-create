@@ -175,9 +175,7 @@ export default function RecipePage() {
               {recipe.origin && <TagBadge className="mb-2">{recipe.origin}</TagBadge>}
 
               {/* Aggregate rating stars - clickable anchor */}
-              <button onClick={scrollToRatings} className="hover:opacity-80 transition-opacity cursor-pointer mb-3">
-                <RecipeRatingStars recipeId={recipe.id} />
-              </button>
+              <RecipeRatingStars recipeId={recipe.id} onClick={scrollToRatings} className="mb-3" />
               
               {/* Created By */}
               {recipe.isUserRecipe && (recipe.creatorUsername || recipe.createdBy) && (
