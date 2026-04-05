@@ -24,7 +24,6 @@ const fallback = "https://images.unsplash.com/photo-1570197788417-0e82375c9371?a
 export default function RecipeCard({ recipe, onSelect, onEdit, editable, onTagClick, showOrigin = true, showTags = true, variant = 'default' }: RecipeCardProps) {
   const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
-  const [imageSrc, setImageSrc] = useState(recipe.image || fallback);
   const [hasErrored, setHasErrored] = useState(false);
   
   // Reset image state when recipe changes
