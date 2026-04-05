@@ -174,7 +174,7 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
           type="button" 
           variant="secondary" 
           onClick={onCancel}
-          className="hover:scale-[1.02] hover:rotate-[0.5deg] transition-all duration-300"
+          className="transition-all duration-300"
         >
           Cancel
         </Button>
