@@ -41,12 +41,12 @@ export default function MyBarResultsPanel({
   return (
     <div className="space-y-6">
       {/* Hero Stat */}
-      <div className="text-center py-6">
-        <div className="text-5xl font-bold text-primary">{recipesICanMake.length}</div>
-        <div className="text-soft-gray mt-1">cocktails you can make</div>
+      <div className="text-center py-2 md:py-0 md:text-left md:flex md:items-baseline md:gap-3 md:mb-2">
+        <div className="text-5xl md:text-3xl font-bold text-primary">{recipesICanMake.length}</div>
+        <div className="text-soft-gray mt-1 md:mt-0">cocktails you can make</div>
         {recipesNeedingOneIngredient.length > 0 && (
-          <div className="text-sm text-golden-amber mt-2">
-            + {recipesNeedingOneIngredient.length} just 1 ingredient away
+          <div className="text-sm text-golden-amber mt-2 md:mt-0">
+            · {recipesNeedingOneIngredient.length} just 1 away
           </div>
         )}
       </div>
