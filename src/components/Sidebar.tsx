@@ -1,4 +1,4 @@
-import { Book, Plus, Edit, Star, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
+import { Book, Plus, Edit, Heart, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ const nav = [
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
   { id: "discover", label: "Discover", icon: TrendingUp, path: "/discover" },
   { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
-  { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
+  { id: "favorites", label: "Favorites", icon: Heart, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
 ];
 
