@@ -1,4 +1,4 @@
-import { Book, Plus, Edit, Star, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
+import { Book, Plus, Edit, Heart, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
