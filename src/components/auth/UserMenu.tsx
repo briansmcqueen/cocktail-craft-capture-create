@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, LogOut, Settings, Heart, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,6 +24,7 @@ interface UserMenuProps {
 
 export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavoritesClick }: UserMenuProps) {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSignOut = async () => {
@@ -72,8 +74,12 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onProfileClick}>
+          <User className="mr-2 h-4 w-4" />
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
-          Profile Settings
+          Settings
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onMyRecipesClick}>
           <BookOpen className="mr-2 h-4 w-4" />
