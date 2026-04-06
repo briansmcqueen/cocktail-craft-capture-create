@@ -28,7 +28,7 @@ export default function MyBarModule({
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Martini size={16} className="text-primary" />
+            <Martini size={16} className="text-emerald" />
             <span className="text-pure-white tracking-[0.08em] uppercase font-bold text-sm">
               My Bar
             </span>
@@ -43,9 +43,9 @@ export default function MyBarModule({
           {/* Can make */}
           <button
             onClick={() => navigate('/mybar')}
-            className="bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-3 text-center hover:border-primary/40 transition-colors"
+            className="bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-3 text-center hover:border-emerald/40 transition-colors"
           >
-            <div className="text-2xl font-bold text-primary">{canMakeCount}</div>
+            <div className="text-2xl font-bold text-emerald">{canMakeCount}</div>
             <div className="text-xs text-muted-foreground mt-0.5">
               cocktails ready
             </div>
@@ -71,7 +71,7 @@ export default function MyBarModule({
               <p className="text-sm text-pure-white font-medium truncate">
                 {topRecommendation.name}
               </p>
-              <p className="text-xs text-primary">
+              <p className="text-xs text-emerald">
                 unlocks {topRecommendation.unlocks} more recipe{topRecommendation.unlocks !== 1 ? 's' : ''}
               </p>
             </div>
