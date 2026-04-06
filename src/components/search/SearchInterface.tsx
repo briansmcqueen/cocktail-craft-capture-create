@@ -39,6 +39,8 @@ export default function SearchInterface({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     const saved = localStorage.getItem('recentSearches');
     return saved ? JSON.parse(saved) : [];
@@ -121,17 +123,53 @@ export default function SearchInterface({
   const handleSearchChange = useCallback((value: string) => {
     setSearchQuery(value);
     setShowSuggestions(value.length > 0);
+    setFocusedSuggestionIndex(-1);
   }, []);
+
+  // Build flat list of all visible suggestion items
+  const allSuggestionItems = useMemo(() => {
+    const items: string[] = [];
+    if (recentSearches.length > 0 && !searchQuery) {
+      items.push(...recentSearches.slice(0, 3));
+    }
+    if (suggestions.length > 0) {
+      items.push(...suggestions);
+    }
+    return items;
+  }, [recentSearches, searchQuery, suggestions]);
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setSearchQuery(suggestion);
     setShowSuggestions(false);
+    setFocusedSuggestionIndex(-1);
     saveToRecentSearches(suggestion);
   }, [saveToRecentSearches]);
+
+  const handleSearchKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!showSuggestions || allSuggestionItems.length === 0) return;
+
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      setFocusedSuggestionIndex(prev => {
+        const next = e.shiftKey ? prev - 1 : prev + 1;
+        if (next < 0) return allSuggestionItems.length - 1;
+        if (next >= allSuggestionItems.length) return 0;
+        return next;
+      });
+    } else if (e.key === 'Enter' && focusedSuggestionIndex >= 0) {
+      e.preventDefault();
+      handleSuggestionClick(allSuggestionItems[focusedSuggestionIndex]);
+      setFocusedSuggestionIndex(-1);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      setFocusedSuggestionIndex(-1);
+    }
+  }, [showSuggestions, allSuggestionItems, focusedSuggestionIndex, handleSuggestionClick]);
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
     setShowSuggestions(false);
+    setFocusedSuggestionIndex(-1);
     searchInputRef.current?.focus();
   }, []);
 
@@ -154,15 +192,18 @@ export default function SearchInterface({
           onClear={handleClearSearch}
           onFocus={() => setShowSuggestions(searchQuery.length > 0)}
           onBlur={() => {
-            // Delay hiding suggestions to allow clicks
-            setTimeout(() => setShowSuggestions(false), 200);
+            setTimeout(() => {
+              setShowSuggestions(false);
+              setFocusedSuggestionIndex(-1);
+            }, 200);
           }}
+          onKeyDown={handleSearchKeyDown}
           aria-label="Search cocktails"
         />
 
         {/* Search suggestions dropdown */}
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-organic-md shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div ref={suggestionsRef} className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-organic-md shadow-lg z-50 max-h-80 overflow-y-auto">
             {/* Recent searches */}
             {recentSearches.length > 0 && !searchQuery && (
               <div className="p-3 border-b border-border">
@@ -174,7 +215,10 @@ export default function SearchInterface({
                   <button
                     key={index}
                     onClick={() => handleSuggestionClick(search)}
-                    className="block w-full text-left px-2 py-1 text-sm text-card-foreground hover:bg-muted rounded"
+                    className={cn(
+                      "block w-full text-left px-2 py-1 text-sm text-card-foreground rounded transition-colors",
+                      focusedSuggestionIndex === index ? "bg-primary/20 text-pure-white" : "hover:bg-muted"
+                    )}
                   >
                     {search}
                   </button>
@@ -189,15 +233,21 @@ export default function SearchInterface({
                   <TrendingUp size={12} />
                   Suggestions
                 </div>
-                {suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="block w-full text-left px-2 py-1 text-sm text-card-foreground hover:bg-muted rounded"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
+                {suggestions.map((suggestion, index) => {
+                  const globalIndex = (!searchQuery ? recentSearches.slice(0, 3).length : 0) + index;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className={cn(
+                        "block w-full text-left px-2 py-1 text-sm text-card-foreground rounded transition-colors",
+                        focusedSuggestionIndex === globalIndex ? "bg-primary/20 text-pure-white" : "hover:bg-muted"
+                      )}
+                    >
+                      {suggestion}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
