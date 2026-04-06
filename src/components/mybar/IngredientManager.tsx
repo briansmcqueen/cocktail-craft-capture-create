@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import { Search, X, Check, ChevronLeft, MoreVertical, Save, Trash2, Martini } from "lucide-react";
+import { Search, X, Check, ChevronLeft, ChevronDown, ChevronRight, MoreVertical, Save, Trash2, Martini } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -263,24 +263,9 @@ export default function IngredientManager({
             </DropdownMenu>
           </div>
 
-          <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+          <div className="space-y-1">
             {Object.entries(selectedByCategory).map(([category, ingredients]) => (
-              <div key={category}>
-                <h4 className="text-xs font-medium text-soft-gray mb-1.5">{category}</h4>
-                <div className="flex flex-wrap gap-1.5">
-                  {ingredients.map((ing) => (
-                    <Badge
-                      key={ing.id}
-                      variant="secondary"
-                      className="px-2.5 py-1 bg-accent/20 border-accent/40 text-pure-white hover:bg-destructive/20 hover:border-destructive/40 cursor-pointer group text-xs"
-                      onClick={() => toggleIngredient(ing.id)}
-                    >
-                      {ing.name}
-                      <X className="h-3 w-3 ml-1 opacity-50 group-hover:opacity-100" />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+              <CollapsibleCategory key={category} category={category} ingredients={ingredients} toggleIngredient={toggleIngredient} />
             ))}
           </div>
         </div>
