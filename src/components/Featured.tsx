@@ -37,18 +37,8 @@ export default function Featured({
   const allRecipes = useMemo(() => [...classicCocktails, ...communityRecipes], [communityRecipes]);
   const { recipesICanMake } = useRecipeAnalysis(allRecipes, myBarIngredients, myBar);
 
-  // Combine for drink of the day
-  const combinedRecipes = useMemo(() => {
-    const combined = [...recipes, ...communityRecipes];
-    const seen = new Set<string>();
-    return combined.filter(r => {
-      if (seen.has(r.id)) return false;
-      seen.add(r.id);
-      return true;
-    });
-  }, [recipes, communityRecipes]);
-  
-  const drinkOfTheDay = getDrinkOfTheDay(combinedRecipes);
+  // Compute Drink of the Day from stable classics array only to prevent flicker
+  const drinkOfTheDay = useMemo(() => getDrinkOfTheDay(recipes), [recipes]);
   
   useEffect(() => {
     getCommunityRecipesFromDB(6).then(setCommunityRecipes);

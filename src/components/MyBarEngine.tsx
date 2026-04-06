@@ -85,8 +85,10 @@ export default function MyBarEngine({
       <MyBarOnboarding
         allIngredients={allIngredients}
         recipes={recipes}
-        onComplete={(selectedIds) => {
-          selectedIds.forEach((id) => toggleIngredient(id));
+        onComplete={async (selectedIds) => {
+          for (const id of selectedIds) {
+            await toggleIngredient(id);
+          }
           markOnboardingComplete();
         }}
         onSkip={() => markOnboardingComplete()}
