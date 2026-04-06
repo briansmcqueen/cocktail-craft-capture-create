@@ -109,6 +109,7 @@ export default function IngredientManager({
   useSearchShortcut(inputRef);
 
   const [open, setOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const [showClearAllDialog, setShowClearAllDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [presetName, setPresetName] = useState("");
