@@ -39,6 +39,40 @@ interface IngredientManagerProps {
   onSavePreset: (name: string) => Promise<void>;
 }
 
+function CollapsibleCategory({ category, ingredients, toggleIngredient }: { 
+  category: string; 
+  ingredients: Ingredient[]; 
+  toggleIngredient: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 w-full py-1.5 text-xs font-medium text-soft-gray hover:text-light-text transition-colors"
+      >
+        {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+        {category} ({ingredients.length})
+      </button>
+      {open && (
+        <div className="flex flex-wrap gap-1.5 pb-1.5">
+          {ingredients.map((ing) => (
+            <Badge
+              key={ing.id}
+              variant="secondary"
+              className="px-2.5 py-1 bg-accent/20 border-accent/40 text-pure-white hover:bg-destructive/20 hover:border-destructive/40 cursor-pointer group text-xs"
+              onClick={() => toggleIngredient(ing.id)}
+            >
+              {ing.name}
+              <X className="h-3 w-3 ml-1 opacity-50 group-hover:opacity-100" />
+            </Badge>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function IngredientManager({
   allIngredients,
   myBar,
