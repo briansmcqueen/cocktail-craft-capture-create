@@ -73,6 +73,26 @@ function CollapsibleCategory({ category, ingredients, toggleIngredient }: {
   );
 }
 
+function CollapsibleSection({ title, children, defaultOpen = true }: { 
+  title: string; 
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 w-full text-sm font-semibold text-pure-white uppercase tracking-wider hover:text-light-text transition-colors"
+      >
+        {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+        {title}
+      </button>
+      {open && children}
+    </div>
+  );
+}
+
 export default function IngredientManager({
   allIngredients,
   myBar,
