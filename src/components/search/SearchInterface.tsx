@@ -138,6 +138,13 @@ export default function SearchInterface({
     return items;
   }, [recentSearches, searchQuery, suggestions]);
 
+  const handleSuggestionClick = useCallback((suggestion: string) => {
+    setSearchQuery(suggestion);
+    setShowSuggestions(false);
+    setFocusedSuggestionIndex(-1);
+    saveToRecentSearches(suggestion);
+  }, [saveToRecentSearches]);
+
   const handleSearchKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (!showSuggestions || allSuggestionItems.length === 0) return;
 
@@ -158,13 +165,6 @@ export default function SearchInterface({
       setFocusedSuggestionIndex(-1);
     }
   }, [showSuggestions, allSuggestionItems, focusedSuggestionIndex, handleSuggestionClick]);
-
-  const handleSuggestionClick = useCallback((suggestion: string) => {
-    setSearchQuery(suggestion);
-    setShowSuggestions(false);
-    setFocusedSuggestionIndex(-1);
-    saveToRecentSearches(suggestion);
-  }, [saveToRecentSearches]);
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
