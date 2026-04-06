@@ -5,7 +5,7 @@ import { getCommunityRecipesFromDB } from "@/services/recipesService";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { useAuth } from "@/hooks/useAuth";
-import { DEFAULT_MYBAR_SETTINGS } from "@/types/ingredientTiers";
+
 import DrinkOfTheDay from "./DrinkOfTheDay";
 import MyBarModule from "./QuickAccessBar";
 import ClassicShowcase from "./ClassicShowcase";
