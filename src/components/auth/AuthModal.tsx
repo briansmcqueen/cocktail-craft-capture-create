@@ -27,6 +27,10 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => {
+    return localStorage.getItem('rememberMe') === 'true';
+  });
   const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
 
   // Reset mode when modal opens with new initialMode
