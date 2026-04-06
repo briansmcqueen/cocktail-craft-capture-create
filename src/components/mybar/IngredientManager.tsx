@@ -236,8 +236,8 @@ export default function IngredientManager({
             setFocusedIndex(-1);
           }}
           onFocus={handleInputFocus}
-          onBlur={(e) => {
-            handleInputBlur(e);
+          onBlur={() => {
+            handleInputBlur();
             setFocusedIndex(-1);
           }}
           onKeyDown={(e) => {
