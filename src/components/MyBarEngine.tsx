@@ -135,12 +135,7 @@ export default function MyBarEngine({
             My Bar
           </h2>
         </div>
-        {myBarIngredients.length > 0 && (
-          <span className="text-sm text-soft-gray">
-            {myBarIngredients.length} bottle{myBarIngredients.length !== 1 ? 's' : ''}
-          </span>
-        )}
-      </div>
+        </div>
 
       {/* Desktop: Two-column layout */}
       <div className="hidden md:grid md:grid-cols-[35%_1fr] md:gap-6 md:items-start">
