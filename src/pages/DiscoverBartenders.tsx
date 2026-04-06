@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Users, Flame, Compass } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
@@ -36,6 +36,17 @@ type FeedItem =
 export default function DiscoverBartenders() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebar_collapsed') === 'true';
+  });
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('sidebar_collapsed', String(next));
+      return next;
+    });
+  }, []);
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
   const [unifiedFeed, setUnifiedFeed] = useState<FeedItem[]>([]);
@@ -232,6 +243,8 @@ export default function DiscoverBartenders() {
             onProfileClick={() => user && navigate(`/user/${user.id}`)}
             onMyRecipesClick={() => navigate('/recipes/my-drinks')}
             onFavoritesClick={() => navigate('/favorites')}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={toggleSidebar}
           />
         </div>
 
