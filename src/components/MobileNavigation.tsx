@@ -26,7 +26,7 @@ const nav = [
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
   { id: "discover", label: "Discover", icon: TrendingUp, path: "/discover" },
   { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
-  { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
+  { id: "favorites", label: "Favorites", icon: Heart, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
 ];
 
