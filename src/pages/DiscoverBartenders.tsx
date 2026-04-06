@@ -36,6 +36,17 @@ type FeedItem =
 export default function DiscoverBartenders() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebar_collapsed') === 'true';
+  });
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('sidebar_collapsed', String(next));
+      return next;
+    });
+  }, []);
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
   const [unifiedFeed, setUnifiedFeed] = useState<FeedItem[]>([]);
