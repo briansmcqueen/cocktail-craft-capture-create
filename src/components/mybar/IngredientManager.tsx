@@ -307,8 +307,7 @@ export default function IngredientManager({
 
       {/* Category Browsing */}
       {!selectedCategory ? (
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-pure-white uppercase tracking-wider">Browse by Category</h3>
+        <CollapsibleSection title="Browse by Category">
           <div className="grid grid-cols-2 gap-2">
             {categories.map((category) => (
               <button
@@ -325,7 +324,7 @@ export default function IngredientManager({
               </button>
             ))}
           </div>
-        </div>
+        </CollapsibleSection>
       ) : (
         /* Category checklist view */
         <div className="space-y-2">
