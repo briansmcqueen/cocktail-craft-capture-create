@@ -344,7 +344,7 @@ export default function IngredientManager({
             </Badge>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5 max-h-[50vh] overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5">
             {categoryIngredients.map((ingredient) => {
               const inBar = myBar[ingredient.id];
               return (
