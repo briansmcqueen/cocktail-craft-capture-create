@@ -123,17 +123,53 @@ export default function SearchInterface({
   const handleSearchChange = useCallback((value: string) => {
     setSearchQuery(value);
     setShowSuggestions(value.length > 0);
+    setFocusedSuggestionIndex(-1);
   }, []);
+
+  // Build flat list of all visible suggestion items
+  const allSuggestionItems = useMemo(() => {
+    const items: string[] = [];
+    if (recentSearches.length > 0 && !searchQuery) {
+      items.push(...recentSearches.slice(0, 3));
+    }
+    if (suggestions.length > 0) {
+      items.push(...suggestions);
+    }
+    return items;
+  }, [recentSearches, searchQuery, suggestions]);
+
+  const handleSearchKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!showSuggestions || allSuggestionItems.length === 0) return;
+
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      setFocusedSuggestionIndex(prev => {
+        const next = e.shiftKey ? prev - 1 : prev + 1;
+        if (next < 0) return allSuggestionItems.length - 1;
+        if (next >= allSuggestionItems.length) return 0;
+        return next;
+      });
+    } else if (e.key === 'Enter' && focusedSuggestionIndex >= 0) {
+      e.preventDefault();
+      handleSuggestionClick(allSuggestionItems[focusedSuggestionIndex]);
+      setFocusedSuggestionIndex(-1);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      setFocusedSuggestionIndex(-1);
+    }
+  }, [showSuggestions, allSuggestionItems, focusedSuggestionIndex, handleSuggestionClick]);
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setSearchQuery(suggestion);
     setShowSuggestions(false);
+    setFocusedSuggestionIndex(-1);
     saveToRecentSearches(suggestion);
   }, [saveToRecentSearches]);
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
     setShowSuggestions(false);
+    setFocusedSuggestionIndex(-1);
     searchInputRef.current?.focus();
   }, []);
 
