@@ -231,13 +231,42 @@ export default function IngredientManager({
           ref={inputRef}
           placeholder="Search ingredients..."
           value={searchValue}
-          onChange={handleSearchChange}
+          onChange={(e) => {
+            handleSearchChange(e);
+            setFocusedIndex(-1);
+          }}
           onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
+          onBlur={(e) => {
+            handleInputBlur(e);
+            setFocusedIndex(-1);
+          }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && filteredIngredients.length > 0) {
-              e.preventDefault();
-              addIngredient(filteredIngredients[0].id);
+            const visible = filteredIngredients.slice(0, 20);
+            if (open && visible.length > 0) {
+              if (e.key === 'Tab') {
+                e.preventDefault();
+                setFocusedIndex(prev => {
+                  const next = e.shiftKey ? prev - 1 : prev + 1;
+                  if (next < 0) return visible.length - 1;
+                  if (next >= visible.length) return 0;
+                  return next;
+                });
+                return;
+              }
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                const idx = focusedIndex >= 0 ? focusedIndex : 0;
+                const ing = visible[idx];
+                if (ing) {
+                  myBar[ing.id] ? toggleIngredient(ing.id) : addIngredient(ing.id);
+                }
+                return;
+              }
+              if (e.key === 'Escape') {
+                setOpen(false);
+                setFocusedIndex(-1);
+                return;
+              }
             }
           }}
           className="pl-10 pr-16 h-11 text-sm bg-medium-charcoal border-light-charcoal text-light-text"
