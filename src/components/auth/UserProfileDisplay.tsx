@@ -1,7 +1,6 @@
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAvatarUrl } from '@/utils/avatarUrl';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 interface UserProfileDisplayProps {
@@ -19,23 +18,19 @@ export default function UserProfileDisplay({
   className = '',
   onAvatarClick
 }: UserProfileDisplayProps) {
-  const [username, setUsername] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUsername = async () => {
+  const { data: username } = useQuery({
+    queryKey: ['profile-username', user.id],
+    queryFn: async () => {
       const { data } = await supabase
         .from('profiles')
         .select('username')
         .eq('id', user.id)
         .single();
-      
-      if (data?.username) {
-        setUsername(data.username);
-      }
-    };
-
-    fetchUsername();
-  }, [user.id]);
+      return data?.username || null;
+    },
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30,
+  });
 
   const initials = user.user_metadata?.full_name
     ?.split(' ')
