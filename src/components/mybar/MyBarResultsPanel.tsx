@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Cocktail } from "@/data/classicCocktails";
 import { Ingredient } from "@/data/ingredients";
 import UniversalRecipeCard from "@/components/UniversalRecipeCard";
-import WhatToBuyNext from "./WhatToBuyNext";
 
 interface RecommendedIngredient {
   ingredient: Ingredient;
