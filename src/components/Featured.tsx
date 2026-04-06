@@ -5,8 +5,9 @@ import { getCommunityRecipesFromDB } from "@/services/recipesService";
 import { useMyBarData } from "@/hooks/useMyBarData";
 import { useRecipeAnalysis } from "@/hooks/useRecipeAnalysis";
 import { useAuth } from "@/hooks/useAuth";
+
 import DrinkOfTheDay from "./DrinkOfTheDay";
-import QuickAccessBar from "./QuickAccessBar";
+import MyBarModule from "./QuickAccessBar";
 import ClassicShowcase from "./ClassicShowcase";
 import FeaturedBartendersSection from "./FeaturedBartendersSection";
 import CommunityCreationsSection from "./CommunityCreationsSection";
@@ -32,10 +33,10 @@ export default function Featured({
   const { user } = useAuth();
   const [communityRecipes, setCommunityRecipes] = useState<Cocktail[]>([]);
   
-  // My Bar data for QuickAccessBar
+  // My Bar data for MyBarModule
   const { myBar, myBarIngredients } = useMyBarData(0);
   const allRecipes = useMemo(() => [...classicCocktails, ...communityRecipes], [communityRecipes]);
-  const { recipesICanMake } = useRecipeAnalysis(allRecipes, myBarIngredients, myBar);
+  const { recipesICanMake, recipesNeedingOneIngredient, whatToBuyNext } = useRecipeAnalysis(allRecipes, myBarIngredients, myBar);
 
   // Compute Drink of the Day from stable classics array only to prevent flicker
   const drinkOfTheDay = useMemo(() => getDrinkOfTheDay(recipes), [recipes]);
@@ -51,9 +52,18 @@ export default function Featured({
           {/* 1. Hero: Drink of the Day */}
           <DrinkOfTheDay recipe={drinkOfTheDay} onRecipeClick={onRecipeClick} onShowAuthModal={onShowAuthModal} />
 
-          {/* 2. Quick Access Bar (authenticated + has ingredients) */}
+          {/* 2. My Bar Module (authenticated + has ingredients) */}
           {user && myBarIngredients.length > 0 && (
-            <QuickAccessBar count={recipesICanMake.length} />
+            <MyBarModule
+              ingredientCount={myBarIngredients.length}
+              canMakeCount={recipesICanMake.length}
+              oneAwayCount={recipesNeedingOneIngredient.length}
+              topRecommendation={
+                whatToBuyNext.length > 0
+                  ? { name: whatToBuyNext[0].ingredient.name, unlocks: whatToBuyNext[0].newRecipesUnlocked.length }
+                  : undefined
+              }
+            />
           )}
 
           {/* 3. Classic Cocktails Grid */}

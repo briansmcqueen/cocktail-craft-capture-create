@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Cocktail } from "@/data/classicCocktails";
 import { useNavigate } from "react-router-dom";
 import { getRecipeUrl } from "@/utils/slugUtils";
+import { Flame, GlassWater, Clock } from "lucide-react";
 
 type DrinkOfTheDayProps = {
   recipe: Cocktail;
@@ -57,17 +58,20 @@ export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayPr
           <div className="flex flex-wrap items-center gap-3 mb-5 text-xs md:text-sm text-soft-gray">
             {recipe.technique && (
               <span className="flex items-center gap-1.5">
-                🍸 {recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1)}
+                <Flame size={14} className="text-primary/70" />
+                {recipe.technique.charAt(0).toUpperCase() + recipe.technique.slice(1)}
               </span>
             )}
             {recipe.glassType && (
               <span className="flex items-center gap-1.5">
-                🥃 {recipe.glassType}
+                <GlassWater size={14} className="text-primary/70" />
+                {recipe.glassType}
               </span>
             )}
             {recipe.prepTime && (
               <span className="flex items-center gap-1.5">
-                ⏱ {recipe.prepTime}
+                <Clock size={14} className="text-primary/70" />
+                {recipe.prepTime}
               </span>
             )}
           </div>

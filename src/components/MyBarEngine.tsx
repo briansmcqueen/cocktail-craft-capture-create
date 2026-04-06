@@ -179,7 +179,7 @@ export default function MyBarEngine({
               onClick={() => setMobileTab("cocktails")}
               className="w-full max-w-3xl mx-auto bg-card/90 backdrop-blur border border-border rounded-organic-pill shadow-glass px-4 py-3 flex items-center justify-center gap-2 pointer-events-auto"
             >
-              <span className="text-lg">🍸</span>
+              <Martini size={18} className="text-primary" />
               <span className="text-sm text-pure-white font-medium">
                 {recipesICanMake.length} cocktail{recipesICanMake.length !== 1 ? 's' : ''}
               </span>
