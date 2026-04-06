@@ -61,10 +61,10 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
 
   const shareUrl = `${window.location.origin}/?recipe=${encodeURIComponent(recipe.name)}`;
   
-  const shareText = `🍸 Check out this ${recipe.name} recipe on Barbook!\n\nIngredients:\n${recipe.ingredients.map(ing => `• ${ing}`).join('\n')}\n\nSteps: ${recipe.steps}\n\n${shareUrl}`;
+  const shareText = `Check out this ${recipe.name} recipe on Barbook!\n\nIngredients:\n${recipe.ingredients.map(ing => `• ${ing}`).join('\n')}\n\nSteps: ${recipe.steps}\n\n${shareUrl}`;
   
   // Shortened text for Twitter (X) character limit
-  const shortShareText = `🍸 ${recipe.name} recipe on Barbook! ${shareUrl}`;
+  const shortShareText = `${recipe.name} recipe on Barbook! ${shareUrl}`;
   
   // Check if user is on mobile device
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -82,7 +82,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
     try {
       await navigator.share({
         title: `${recipe.name} Recipe`,
-        text: `🍸 Check out this ${recipe.name} recipe on Barbook!`,
+        text: `Check out this ${recipe.name} recipe on Barbook!`,
         url: shareUrl,
       });
       
@@ -249,7 +249,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
             Share {recipe.name}
           </DialogTitle>
           <DialogDescription className="text-light-text text-xs sm:text-sm">
-            Share this recipe with friends! 🍹
+            Share this recipe with friends
           </DialogDescription>
         </DialogHeader>
         
