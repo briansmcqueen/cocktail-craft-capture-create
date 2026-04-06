@@ -5,7 +5,7 @@ import { Menu, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
+import { Book, Edit, Heart, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
 
@@ -26,7 +26,7 @@ const nav = [
   { id: "all", label: "Recipes", icon: Book, path: "/recipes" },
   { id: "discover", label: "Discover", icon: TrendingUp, path: "/discover" },
   { id: "ingredients", label: "My Bar", icon: Martini, path: "/mybar" },
-  { id: "favorites", label: "Favorites", icon: Star, path: "/favorites" },
+  { id: "favorites", label: "Favorites", icon: Heart, path: "/favorites" },
   { id: "mine", label: "My Drinks", icon: Edit, path: "/recipes/my-drinks" },
 ];
 
