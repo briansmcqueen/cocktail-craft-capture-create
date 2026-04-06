@@ -73,7 +73,7 @@ export default function UniversalRecipeCard({
     >
       <CardContent className="p-0">
         {/* Hero image */}
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative aspect-square overflow-hidden">
           <img
             src={recipe.image}
             alt={recipe.name}

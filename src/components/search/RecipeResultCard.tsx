@@ -102,7 +102,7 @@ export default function RecipeResultCard({
       onClick={handleViewRecipe}
     >
       <CardContent className="p-0">
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative aspect-square overflow-hidden">
           <img
             src={cocktail.image}
             alt={cocktail.name}
