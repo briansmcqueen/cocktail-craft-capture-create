@@ -71,7 +71,7 @@ export default function MyBarResultsPanel({
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-pure-white flex items-center gap-2">
             <Plus className="h-4 w-4" />
-            1 Away ({recipesNeedingOneIngredient.length})
+            Missing 1 Ingredient ({recipesNeedingOneIngredient.length})
           </h2>
           <Carousel className="w-full" opts={{ align: "start", loop: false }}>
             <CarouselContent className="-ml-2 md:-ml-4">
