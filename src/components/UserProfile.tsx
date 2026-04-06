@@ -258,22 +258,22 @@ export default function UserProfile() {
                       {profile.bio && <p className="text-card-foreground mt-2">{profile.bio}</p>}
                     </div>
 
-                    <div className="flex gap-6">
+                    <div className="grid grid-cols-4 gap-2 sm:gap-4">
                       <button onClick={() => setActiveTab('recipes')} className="text-center hover:opacity-80 transition-opacity">
-                        <div className="font-bold text-lg text-foreground">{stats.recipes_count}</div>
-                        <div className="text-sm text-muted-foreground">Recipes</div>
+                        <div className="font-bold text-base sm:text-lg text-foreground">{stats.recipes_count}</div>
+                        <div className="text-xs text-muted-foreground">Recipes</div>
                       </button>
                       <button onClick={() => setActiveTab('favorites')} className="text-center hover:opacity-80 transition-opacity">
-                        <div className="font-bold text-lg text-foreground">{stats.favorites_count}</div>
-                        <div className="text-sm text-muted-foreground">Favorites</div>
+                        <div className="font-bold text-base sm:text-lg text-foreground">{stats.favorites_count}</div>
+                        <div className="text-xs text-muted-foreground">Favorites</div>
                       </button>
                       <button onClick={() => setActiveTab('followers')} className="text-center hover:opacity-80 transition-opacity">
-                        <div className="font-bold text-lg text-foreground">{stats.followers_count}</div>
-                        <div className="text-sm text-muted-foreground">Followers</div>
+                        <div className="font-bold text-base sm:text-lg text-foreground">{stats.followers_count}</div>
+                        <div className="text-xs text-muted-foreground">Followers</div>
                       </button>
                       <button onClick={() => setActiveTab('following')} className="text-center hover:opacity-80 transition-opacity">
-                        <div className="font-bold text-lg text-foreground">{stats.following_count}</div>
-                        <div className="text-sm text-muted-foreground">Following</div>
+                        <div className="font-bold text-base sm:text-lg text-foreground">{stats.following_count}</div>
+                        <div className="text-xs text-muted-foreground">Following</div>
                       </button>
                     </div>
 

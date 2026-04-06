@@ -10,7 +10,7 @@ import UniversalRecipeCard from "@/components/UniversalRecipeCard";
 interface MyBarOnboardingProps {
   allIngredients: Ingredient[];
   recipes: Cocktail[];
-  onComplete: (selectedIds: string[]) => void;
+  onComplete: (selectedIds: string[]) => Promise<void> | void;
   onSkip: () => void;
 }
 
@@ -48,6 +48,7 @@ export default function MyBarOnboarding({
   const [selectedSpirits, setSelectedSpirits] = useState<string[]>([]);
   const [selectedModifiers, setSelectedModifiers] = useState<string[]>([]);
   const [spiritError, setSpiritError] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const allSelected = useMemo(
     () => [...selectedSpirits, ...selectedModifiers],
@@ -90,8 +91,9 @@ export default function MyBarOnboarding({
     setStep(4);
   };
 
-  const handleComplete = () => {
-    onComplete(allSelected);
+  const handleComplete = async () => {
+    setSaving(true);
+    await onComplete(allSelected);
   };
 
   // Step 1: Welcome
@@ -270,10 +272,11 @@ export default function MyBarOnboarding({
       <div className="flex justify-center">
         <Button
           onClick={handleComplete}
+          disabled={saving}
           className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-base rounded-organic-md"
         >
-          Explore My Bar
-          <ChevronRight className="ml-2 h-4 w-4" />
+          {saving ? 'Setting up your bar...' : 'Explore My Bar'}
+          {!saving && <ChevronRight className="ml-2 h-4 w-4" />}
         </Button>
       </div>
     </div>

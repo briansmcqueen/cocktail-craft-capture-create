@@ -284,7 +284,7 @@ export default function Settings() {
                               type="button"
                               variant="outline"
                               onClick={() => setShowEmailChange(true)}
-                              className="rounded-organic-sm border-border whitespace-nowrap"
+                              className="rounded-organic-sm border-border w-full sm:w-auto whitespace-nowrap"
                             >
                               Change Email
                             </Button>
@@ -346,11 +346,11 @@ export default function Settings() {
                             </AlertDescription>
                           </Alert>
 
-                          <div className="flex gap-3">
+                          <div className="flex flex-col sm:flex-row gap-3">
                             <Button
                               type="submit"
                               disabled={changingEmail || !emailData.newEmail || !emailData.password}
-                              className="rounded-organic-sm"
+                              className="rounded-organic-sm w-full sm:w-auto"
                             >
                               {changingEmail ? 'Verifying...' : 'Change Email'}
                             </Button>
@@ -361,7 +361,7 @@ export default function Settings() {
                                 setShowEmailChange(false);
                                 setEmailData({ newEmail: '', password: '' });
                               }}
-                              className="rounded-organic-sm border-border"
+                              className="rounded-organic-sm border-border w-full sm:w-auto"
                             >
                               Cancel
                             </Button>
@@ -423,11 +423,11 @@ export default function Settings() {
                           />
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           <Button
                             type="submit"
                             disabled={changingPassword || !passwordData.newPassword || !passwordData.confirmPassword}
-                            className="rounded-organic-sm"
+                            className="rounded-organic-sm w-full sm:w-auto"
                           >
                             {changingPassword ? 'Changing Password...' : 'Change Password'}
                           </Button>
@@ -435,7 +435,7 @@ export default function Settings() {
                             type="button"
                             variant="outline"
                             onClick={handleSendPasswordReset}
-                            className="rounded-organic-sm border-border"
+                            className="rounded-organic-sm border-border w-full sm:w-auto"
                           >
                             Send Reset Email
                           </Button>
@@ -450,7 +450,7 @@ export default function Settings() {
                                 confirmPassword: '',
                               });
                             }}
-                            className="rounded-organic-sm"
+                            className="rounded-organic-sm w-full sm:w-auto"
                           >
                             Cancel
                           </Button>

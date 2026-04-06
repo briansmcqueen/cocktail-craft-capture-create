@@ -60,7 +60,7 @@ export default function FeaturedBartendersSection({ onShowAuthModal }: FeaturedB
     );
   }
 
-  if (bartenders.length < 3) {
+  if (bartenders.length === 0) {
     return null;
   }
 
