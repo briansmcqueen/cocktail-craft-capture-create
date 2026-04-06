@@ -4,7 +4,7 @@ import { Menu, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Book, Edit, Star, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
+import { Book, Edit, Heart, TrendingUp, Home, Martini, User, LogIn, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserMenu from "@/components/auth/UserMenu";
 import UserProfileDisplay from "@/components/auth/UserProfileDisplay";
@@ -43,7 +43,7 @@ const nav = [{
 }, {
   id: "favorites",
   label: "Favorites",
-  icon: Star,
+  icon: Heart,
   path: "/favorites"
 }, {
   id: "mine",
