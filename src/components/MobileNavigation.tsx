@@ -68,7 +68,7 @@ export default function MobileNavigation({
               <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
                 <Martini className="text-primary-foreground" size={20} />
               </div>
-              <span className="text-3xl font-medium text-primary tracking-tight hover:text-primary/80 transition-colors">BARBOOK</span>
+              <span className="text-3xl font-medium text-primary tracking-tight">BARBOOK</span>
             </Link>
             {/* Organic top accent */}
             <div className="absolute top-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
