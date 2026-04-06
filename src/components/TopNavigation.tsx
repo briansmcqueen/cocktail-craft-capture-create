@@ -82,12 +82,12 @@ const TopNavigation = memo(function TopNavigation({
               <div className="flex flex-col h-full bg-background">
                 {/* Header with organic accent */}
                 <div className="px-6 py-6 border-b border-border relative">
-                  <div className="flex items-center gap-3">
+                  <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
                     <div className="w-8 h-8 bg-primary rounded-organic-sm flex items-center justify-center">
                       <span className="text-primary-foreground font-bold text-lg">B</span>
                     </div>
-                    <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
-                  </div>
+                    <span className="text-3xl font-medium text-pure-white tracking-tight hover:text-primary transition-colors">BARBOOK</span>
+                  </Link>
                   {/* Organic accent bar */}
                   <div className="absolute top-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
                 </div>
