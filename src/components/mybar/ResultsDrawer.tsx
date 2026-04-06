@@ -47,16 +47,6 @@ export default function ResultsDrawer({
           <DrawerTitle className="text-pure-white">Your Results</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-6 space-y-4">
-          {/* What to Buy Next (mobile quick picks) */}
-          {whatToBuyNext && whatToBuyNext.length > 0 && (
-            <WhatToBuyNext 
-              recommendations={whatToBuyNext}
-              onAddIngredient={(id) => onAddIngredient?.(id)}
-              onAddToShoppingList={(id) => onAddToShoppingList?.(id)}
-              userIngredients={userIngredients}
-              ingredientMap={new Map(Object.entries(ingredientMap))}
-            />
-          )}
           <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as any)}>
             <TabsList className="w-full justify-start">
               <TabsTrigger value="can">Can Make ({recipesICanMake.length})</TabsTrigger>

@@ -143,14 +143,14 @@ export default function MyBarEngine({
       </div>
 
       {/* Desktop: Two-column layout */}
-      <div className="hidden md:grid md:grid-cols-[35%_1fr] md:gap-6 md:items-start">
+      <div className="hidden md:grid md:grid-cols-[35%_1fr] md:gap-6 md:items-start md:h-[calc(100vh-120px)] md:overflow-hidden">
         {/* Left column - sticky ingredient manager */}
-        <div className="sticky top-0 h-[calc(100vh-120px)] overflow-y-auto pr-2 scrollbar-thin min-w-0">
+        <div className="h-full overflow-y-auto pr-2 scrollbar-thin min-w-0">
           {ingredientManagerPanel}
         </div>
 
         {/* Right column - results */}
-        <div className="h-[calc(100vh-120px)] overflow-y-auto pr-2 min-w-0">
+        <div className="h-full overflow-y-auto pr-2 min-w-0">
           {resultsPanel}
         </div>
       </div>

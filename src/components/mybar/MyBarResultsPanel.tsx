@@ -118,15 +118,6 @@ export default function MyBarResultsPanel({
         </div>
       )}
 
-      {/* What to Buy Next */}
-      {whatToBuyNext.length > 0 && (
-        <WhatToBuyNext
-          recommendations={whatToBuyNext}
-          onAddIngredient={onAddIngredient}
-          userIngredients={myBarIngredients}
-          ingredientMap={new Map(Object.entries(ingredientMap))}
-        />
-      )}
 
       {/* Empty State */}
       {myBarIngredients.length > 0 && recipesICanMake.length === 0 && recipesNeedingOneIngredient.length === 0 && (
