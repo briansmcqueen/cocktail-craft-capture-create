@@ -283,14 +283,17 @@ export default function IngredientManager({
         {/* Search dropdown */}
         {open && filteredIngredients.length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
-            {filteredIngredients.slice(0, 20).map((ingredient) => {
+            {filteredIngredients.slice(0, 20).map((ingredient, index) => {
               const inBar = myBar[ingredient.id];
               return (
                 <button
                   key={ingredient.id}
                   onClick={() => inBar ? toggleIngredient(ingredient.id) : addIngredient(ingredient.id)}
                   onMouseDown={(e) => e.preventDefault()}
-                  className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
+                  className={cn(
+                    "w-full flex items-center justify-between px-3 py-2 text-sm text-left border-b border-light-charcoal last:border-b-0 transition-colors",
+                    focusedIndex === index ? "bg-primary/20" : "hover:bg-light-charcoal"
+                  )}
                 >
                   <div className="flex items-center gap-2">
                     {inBar && <Check className="h-3.5 w-3.5 text-emerald-400" />}
