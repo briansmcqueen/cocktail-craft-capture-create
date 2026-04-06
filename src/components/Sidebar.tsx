@@ -46,7 +46,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
           {!collapsed && (
             <h1 className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</h1>
           )}
-          <div className="flex items-center gap-1">
+          <div className={cn("flex items-center gap-1", collapsed && "w-full justify-center")}>
             {user && !collapsed && <NotificationsDropdown />}
             {onToggleCollapse && (
               <Button
@@ -60,6 +60,11 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
             )}
           </div>
         </div>
+        {user && collapsed && (
+          <div className="flex justify-center mt-2">
+            <NotificationsDropdown />
+          </div>
+        )}
       </div>
 
       {/* Navigation */}
