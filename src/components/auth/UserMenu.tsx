@@ -24,6 +24,7 @@ interface UserMenuProps {
 
 export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavoritesClick }: UserMenuProps) {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSignOut = async () => {
