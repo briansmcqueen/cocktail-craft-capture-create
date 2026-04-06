@@ -192,15 +192,18 @@ export default function SearchInterface({
           onClear={handleClearSearch}
           onFocus={() => setShowSuggestions(searchQuery.length > 0)}
           onBlur={() => {
-            // Delay hiding suggestions to allow clicks
-            setTimeout(() => setShowSuggestions(false), 200);
+            setTimeout(() => {
+              setShowSuggestions(false);
+              setFocusedSuggestionIndex(-1);
+            }, 200);
           }}
+          onKeyDown={handleSearchKeyDown}
           aria-label="Search cocktails"
         />
 
         {/* Search suggestions dropdown */}
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-organic-md shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div ref={suggestionsRef} className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-organic-md shadow-lg z-50 max-h-80 overflow-y-auto">
             {/* Recent searches */}
             {recentSearches.length > 0 && !searchQuery && (
               <div className="p-3 border-b border-border">
@@ -212,7 +215,10 @@ export default function SearchInterface({
                   <button
                     key={index}
                     onClick={() => handleSuggestionClick(search)}
-                    className="block w-full text-left px-2 py-1 text-sm text-card-foreground hover:bg-muted rounded"
+                    className={cn(
+                      "block w-full text-left px-2 py-1 text-sm text-card-foreground rounded transition-colors",
+                      focusedSuggestionIndex === index ? "bg-primary/20 text-pure-white" : "hover:bg-muted"
+                    )}
                   >
                     {search}
                   </button>
@@ -227,15 +233,21 @@ export default function SearchInterface({
                   <TrendingUp size={12} />
                   Suggestions
                 </div>
-                {suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="block w-full text-left px-2 py-1 text-sm text-card-foreground hover:bg-muted rounded"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
+                {suggestions.map((suggestion, index) => {
+                  const globalIndex = (!searchQuery ? recentSearches.slice(0, 3).length : 0) + index;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className={cn(
+                        "block w-full text-left px-2 py-1 text-sm text-card-foreground rounded transition-colors",
+                        focusedSuggestionIndex === globalIndex ? "bg-primary/20 text-pure-white" : "hover:bg-muted"
+                      )}
+                    >
+                      {suggestion}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
