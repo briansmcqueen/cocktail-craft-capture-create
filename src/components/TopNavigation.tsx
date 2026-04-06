@@ -31,6 +31,11 @@ const nav = [{
   icon: Book,
   path: "/recipes"
 }, {
+  id: "discover",
+  label: "Discover",
+  icon: TrendingUp,
+  path: "/discover"
+}, {
   id: "ingredients",
   label: "My Bar",
   icon: Martini,
