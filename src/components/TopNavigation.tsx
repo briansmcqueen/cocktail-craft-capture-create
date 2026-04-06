@@ -152,9 +152,9 @@ const TopNavigation = memo(function TopNavigation({
           </Sheet>
           
           
-          <h1 className="text-2xl font-medium text-pure-white tracking-tight">
+          <Link to="/" className="text-2xl font-medium text-pure-white tracking-tight hover:text-primary transition-colors">
             BARBOOK
-          </h1>
+          </Link>
         </div>
         
         {/* Right side actions */}
