@@ -24,11 +24,14 @@ export default function MyBarModule({
 
   return (
     <section>
-      <div className="bg-card border border-border rounded-organic-md p-5">
+      <button
+        onClick={() => navigate('/mybar')}
+        className="w-full bg-card border border-border rounded-organic-md p-5 text-left hover:border-light-charcoal transition-colors"
+      >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Martini size={16} className="text-emerald" />
+            <Martini size={16} className="text-pure-white" />
             <span className="text-pure-white tracking-[0.08em] uppercase font-bold text-sm">
               My Bar
             </span>
@@ -38,55 +41,30 @@ export default function MyBarModule({
           </span>
         </div>
 
-        {/* Stats row */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          {/* Can make */}
-          <button
-            onClick={() => navigate('/mybar')}
-            className="bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-3 text-center hover:border-emerald/40 transition-colors"
-          >
-            <div className="text-2xl font-bold text-emerald">{canMakeCount}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              cocktails ready
-            </div>
-          </button>
-
-          {/* One away */}
-          <button
-            onClick={() => navigate('/mybar')}
-            className="bg-medium-charcoal border border-light-charcoal rounded-organic-sm p-3 text-center hover:border-golden-amber/40 transition-colors"
-          >
-            <div className="text-2xl font-bold text-golden-amber">{oneAwayCount}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              one ingredient away
-            </div>
-          </button>
+        {/* Stats */}
+        <div className="flex items-baseline gap-6 mb-3">
+          <div>
+            <span className="text-2xl font-bold text-pure-white">{canMakeCount}</span>
+            <span className="text-sm text-muted-foreground ml-1.5">ready</span>
+          </div>
+          <div>
+            <span className="text-2xl font-bold text-pure-white">{oneAwayCount}</span>
+            <span className="text-sm text-muted-foreground ml-1.5">one away</span>
+          </div>
         </div>
 
-        {/* Top recommendation */}
+        {/* Recommendation */}
         {topRecommendation && topRecommendation.unlocks > 0 && (
-          <div className="flex items-center justify-between bg-medium-charcoal/50 border border-light-charcoal/50 rounded-organic-sm px-3 py-2.5 mb-4">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground">Next bottle to buy</p>
-              <p className="text-sm text-pure-white font-medium truncate">
-                {topRecommendation.name}
-              </p>
-              <p className="text-xs text-emerald">
-                unlocks {topRecommendation.unlocks} more recipe{topRecommendation.unlocks !== 1 ? 's' : ''}
-              </p>
-            </div>
-          </div>
+          <p className="text-xs text-muted-foreground">
+            Add <span className="text-light-text font-medium">{topRecommendation.name}</span> to unlock {topRecommendation.unlocks} more
+          </p>
         )}
 
-        {/* CTA */}
-        <Button
-          variant="ghost"
-          className="w-full justify-center text-sm text-muted-foreground hover:text-pure-white gap-1"
-          onClick={() => navigate('/mybar')}
-        >
-          Explore My Bar <ArrowRight size={14} />
-        </Button>
-      </div>
+        {/* CTA hint */}
+        <div className="flex items-center gap-1 mt-3 text-xs text-muted-foreground">
+          Explore My Bar <ArrowRight size={12} />
+        </div>
+      </button>
     </section>
   );
 }
