@@ -51,6 +51,15 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
     setLoading(true);
 
     try {
+      // Save remember me preference
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('rememberedEmail');
+      }
+
       if (mode === 'reset') {
         const { error } = await resetPassword(email);
         if (error) {
