@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { Cocktail } from "@/data/classicCocktails";
 import Sidebar from "@/components/Sidebar";
@@ -69,6 +70,18 @@ export default function AuthenticatedView({
   forceUpdate,
   myBarIngredients
 }: AuthenticatedViewProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebar_collapsed') === 'true';
+  });
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('sidebar_collapsed', String(next));
+      return next;
+    });
+  };
+
   const handleCloseForm = () => {
     setShowForm(false);
     setEditingRecipe(null);
@@ -107,6 +120,8 @@ export default function AuthenticatedView({
             onProfileClick={onProfileClick}
             onMyRecipesClick={onMyRecipesClick}
             onFavoritesClick={onFavoritesClick}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={toggleSidebar}
           />
         </div>
 
