@@ -37,7 +37,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
 
   return (
     <aside className={cn(
-      "bg-rich-charcoal border-r border-light-charcoal h-screen flex flex-col py-6 gap-2 sticky top-0 overflow-hidden transition-all duration-300",
+      "bg-rich-charcoal border-r border-light-charcoal h-screen flex flex-col py-6 gap-2 sticky top-0 overflow-visible transition-all duration-300 z-40",
       collapsed ? "w-16" : "w-60"
     )}>
       {/* Header */}
