@@ -38,6 +38,11 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
     if (open) {
       setMode(initialMode);
       resetForm();
+      setShowPassword(false);
+      const savedEmail = localStorage.getItem('rememberedEmail');
+      if (savedEmail && rememberMe) {
+        setEmail(savedEmail);
+      }
     }
   }, [open, initialMode]);
 
