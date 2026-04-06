@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from 'react';
-import { User, LogOut, Settings, Heart, BookOpen, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { User, LogOut, Settings, Heart, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
-import { userRolesService } from '@/services/userRolesService';
 import { toast } from '@/hooks/use-toast';
 import { getAvatarUrl } from '@/utils/avatarUrl';
 import UserProfileDisplay from '@/components/auth/UserProfileDisplay';
@@ -25,26 +24,6 @@ interface UserMenuProps {
 export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavoritesClick }: UserMenuProps) {
   const { user, signOut } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      checkAdminStatus();
-    }
-  }, [user]);
-
-  const checkAdminStatus = async () => {
-    try {
-      const adminStatus = await userRolesService.isAdmin();
-      setIsAdmin(adminStatus);
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-    }
-  };
-
-  const handleAdminClick = () => {
-    window.location.href = '/admin';
-  };
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -104,12 +83,6 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
           <Heart className="mr-2 h-4 w-4" />
           Favorites
         </DropdownMenuItem>
-        {isAdmin && (
-          <DropdownMenuItem onClick={handleAdminClick}>
-            <Shield className="mr-2 h-4 w-4" />
-            Admin Panel
-          </DropdownMenuItem>
-        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} disabled={loading}>
           <LogOut className="mr-2 h-4 w-4" />

@@ -17,7 +17,7 @@ import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
 
 // Lazy load components for code splitting
 const Index = lazy(() => import("./pages/Index"));
-const Admin = lazy(() => import("./pages/Admin"));
+
 const UserProfile = lazy(() => import("./components/UserProfile"));
 const PublicProfilePage = lazy(() => import("./pages/PublicProfilePage"));
 const DiscoverBartenders = lazy(() => import("./pages/DiscoverBartenders"));
@@ -95,7 +95,7 @@ const App = () => (
                   <Route path="/favorites" element={<Index />} />
                   <Route path="/recipes/my-drinks" element={<Index />} />
                   
-                  <Route path="/admin" element={<Admin />} />
+                  
                   <Route path="/user/:userId" element={<UserProfile />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/profile/:username" element={<PublicProfilePage />} />
