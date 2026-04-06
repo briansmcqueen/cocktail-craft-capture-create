@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef } from "react";
 import { Search, X, Check, ChevronLeft, ChevronDown, ChevronRight, MoreVertical, Save, Trash2, Martini } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
