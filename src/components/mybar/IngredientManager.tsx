@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef } from "react";
 import { Search, X, Check, ChevronLeft, ChevronDown, ChevronRight, MoreVertical, Save, Trash2, Martini } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -109,6 +110,7 @@ export default function IngredientManager({
   useSearchShortcut(inputRef);
 
   const [open, setOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const [showClearAllDialog, setShowClearAllDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [presetName, setPresetName] = useState("");
@@ -230,13 +232,42 @@ export default function IngredientManager({
           ref={inputRef}
           placeholder="Search ingredients..."
           value={searchValue}
-          onChange={handleSearchChange}
+          onChange={(e) => {
+            handleSearchChange(e);
+            setFocusedIndex(-1);
+          }}
           onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
+          onBlur={() => {
+            handleInputBlur();
+            setFocusedIndex(-1);
+          }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && filteredIngredients.length > 0) {
-              e.preventDefault();
-              addIngredient(filteredIngredients[0].id);
+            const visible = filteredIngredients.slice(0, 20);
+            if (open && visible.length > 0) {
+              if (e.key === 'Tab') {
+                e.preventDefault();
+                setFocusedIndex(prev => {
+                  const next = e.shiftKey ? prev - 1 : prev + 1;
+                  if (next < 0) return visible.length - 1;
+                  if (next >= visible.length) return 0;
+                  return next;
+                });
+                return;
+              }
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                const idx = focusedIndex >= 0 ? focusedIndex : 0;
+                const ing = visible[idx];
+                if (ing) {
+                  myBar[ing.id] ? toggleIngredient(ing.id) : addIngredient(ing.id);
+                }
+                return;
+              }
+              if (e.key === 'Escape') {
+                setOpen(false);
+                setFocusedIndex(-1);
+                return;
+              }
             }
           }}
           className="pl-10 pr-16 h-11 text-sm bg-medium-charcoal border-light-charcoal text-light-text"
@@ -253,14 +284,17 @@ export default function IngredientManager({
         {/* Search dropdown */}
         {open && filteredIngredients.length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
-            {filteredIngredients.slice(0, 20).map((ingredient) => {
+            {filteredIngredients.slice(0, 20).map((ingredient, index) => {
               const inBar = myBar[ingredient.id];
               return (
                 <button
                   key={ingredient.id}
                   onClick={() => inBar ? toggleIngredient(ingredient.id) : addIngredient(ingredient.id)}
                   onMouseDown={(e) => e.preventDefault()}
-                  className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-light-charcoal text-left border-b border-light-charcoal last:border-b-0 transition-colors"
+                  className={cn(
+                    "w-full flex items-center justify-between px-3 py-2 text-sm text-left border-b border-light-charcoal last:border-b-0 transition-colors",
+                    focusedIndex === index ? "bg-primary/20" : "hover:bg-light-charcoal"
+                  )}
                 >
                   <div className="flex items-center gap-2">
                     {inBar && <Check className="h-3.5 w-3.5 text-emerald-400" />}
