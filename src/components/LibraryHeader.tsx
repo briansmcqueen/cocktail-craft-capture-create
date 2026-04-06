@@ -33,7 +33,7 @@ export default function LibraryHeader({ library }: LibraryHeaderProps) {
   const Icon = config.icon;
 
   return (
-    <div className="flex items-center gap-2.5 mb-6 px-4 sm:px-0">
+    <div className="flex items-center gap-2.5 mb-6">
       <Icon className="h-4 w-4 text-pure-white flex-shrink-0" />
       <h2 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">
         {config.title}
