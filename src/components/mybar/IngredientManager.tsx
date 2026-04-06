@@ -73,6 +73,26 @@ function CollapsibleCategory({ category, ingredients, toggleIngredient }: {
   );
 }
 
+function CollapsibleSection({ title, children, defaultOpen = true }: { 
+  title: string; 
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 w-full text-sm font-semibold text-pure-white uppercase tracking-wider hover:text-light-text transition-colors"
+      >
+        {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+        {title}
+      </button>
+      {open && children}
+    </div>
+  );
+}
+
 export default function IngredientManager({
   allIngredients,
   myBar,
@@ -307,8 +327,7 @@ export default function IngredientManager({
 
       {/* Category Browsing */}
       {!selectedCategory ? (
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-pure-white uppercase tracking-wider">Browse by Category</h3>
+        <CollapsibleSection title="Browse by Category">
           <div className="grid grid-cols-2 gap-2">
             {categories.map((category) => (
               <button
@@ -325,7 +344,7 @@ export default function IngredientManager({
               </button>
             ))}
           </div>
-        </div>
+        </CollapsibleSection>
       ) : (
         /* Category checklist view */
         <div className="space-y-2">
@@ -344,7 +363,7 @@ export default function IngredientManager({
             </Badge>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5 max-h-[50vh] overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5">
             {categoryIngredients.map((ingredient) => {
               const inBar = myBar[ingredient.id];
               return (
