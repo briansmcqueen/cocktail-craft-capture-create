@@ -81,14 +81,6 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={onMyRecipesClick}>
-          <BookOpen className="mr-2 h-4 w-4" />
-          My Recipes
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onFavoritesClick}>
-          <Heart className="mr-2 h-4 w-4" />
-          Favorites
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} disabled={loading}>
           <LogOut className="mr-2 h-4 w-4" />
