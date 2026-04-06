@@ -187,16 +187,26 @@ export default function NotificationsDropdown() {
         <div className="p-3 border-b border-light-charcoal">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-pure-white">Notifications</h3>
-            {unreadCount > 0 && (
+            <div className="flex items-center gap-1">
+              {unreadCount > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleMarkAllAsRead}
+                  className="h-7 text-xs hover:bg-medium-charcoal"
+                >
+                  Mark all read
+                </Button>
+              )}
               <Button
                 variant="ghost"
-                size="sm"
-                onClick={handleMarkAllAsRead}
-                className="h-7 text-xs hover:bg-medium-charcoal"
+                size="icon"
+                className="h-7 w-7 hover:bg-medium-charcoal"
+                onClick={() => setOpen(false)}
               >
-                Mark all read
+                <X className="h-4 w-4 text-soft-gray" />
               </Button>
-            )}
+            </div>
           </div>
         </div>
 
@@ -294,25 +304,6 @@ export default function NotificationsDropdown() {
               </div>
             ))}
           </ScrollArea>
-        )}
-
-        {/* Footer */}
-        {notifications.length > 0 && (
-          <>
-            <DropdownMenuSeparator className="bg-light-charcoal" />
-            <div className="p-2">
-              <Button
-                variant="ghost"
-                className="w-full hover:bg-medium-charcoal rounded-organic-sm"
-                onClick={() => {
-                  setOpen(false);
-                  navigate('/feed');
-                }}
-              >
-                View Feed
-              </Button>
-            </div>
-          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
