@@ -74,8 +74,12 @@ export default function UserMenu({ onProfileClick, onMyRecipesClick, onFavorites
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onProfileClick}>
+          <User className="mr-2 h-4 w-4" />
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
-          Profile Settings
+          Settings
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onMyRecipesClick}>
           <BookOpen className="mr-2 h-4 w-4" />
