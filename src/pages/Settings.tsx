@@ -237,7 +237,7 @@ export default function Settings() {
 
         <div className="flex-1 overflow-auto">
           <main className="w-full h-full">
-            <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
+            <div className="max-w-4xl mx-auto px-5 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
               <div className="mb-8 flex items-center gap-2.5">
                 <Settings2 className="h-4 w-4 text-pure-white flex-shrink-0" />
                 <h1 className="text-pure-white tracking-[0.08em] leading-[1.45] uppercase font-bold text-sm md:text-[1rem]">

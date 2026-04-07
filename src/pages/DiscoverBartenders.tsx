@@ -250,7 +250,7 @@ export default function DiscoverBartenders() {
 
         <div className="flex-1 overflow-auto">
           <main className="w-full h-full">
-            <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
+            <div className="max-w-4xl mx-auto px-5 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
               {!user ? (
                 <div className="flex items-center justify-center py-16">
                   <AuthPrompt
