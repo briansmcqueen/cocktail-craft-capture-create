@@ -33,7 +33,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "London Dry Gin",
     category: "Spirits",
     subCategory: "Gin",
-    aliases: ["Gin", "London Gin"],
+    aliases: ["Gin", "London Gin", "Old Tom Gin", "Plymouth Gin"],
     description: "A style of gin characterized by a prominent juniper flavor. It is the base for many classic cocktails like the Martini and Gin and Tonic.",
     isCustom: false
   },
@@ -51,7 +51,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "White Rum",
     category: "Spirits",
     subCategory: "Rum",
-    aliases: ["Light Rum", "Silver Rum"],
+    aliases: ["Light Rum", "Silver Rum", "Bacardí Superior Rum", "Bacardi Rum"],
     description: "A light, clean rum perfect for tropical cocktails like Daiquiris and Mojitos.",
     isCustom: false
   },
@@ -60,7 +60,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "Dark Rum",
     category: "Spirits",
     subCategory: "Rum",
-    aliases: ["Aged Rum", "Gold Rum"],
+    aliases: ["Aged Rum", "Gold Rum", "Jamaican Rum", "Pusser's Rum", "Gold Rum"],
     description: "A rich, aged rum with deeper flavors and color, excellent for sipping or complex cocktails.",
     isCustom: false
   },
@@ -69,7 +69,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "Blanco Tequila",
     category: "Spirits",
     subCategory: "Tequila",
-    aliases: ["Silver Tequila", "White Tequila"],
+    aliases: ["Silver Tequila", "White Tequila", "Tequila Blanco", "Tequila"],
     description: "A clear tequila that showcases the pure agave flavor, essential for Margaritas and Palomas.",
     isCustom: false
   },
@@ -107,7 +107,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "Orange Liqueur",
     category: "Liqueurs",
     subCategory: "Fruit Liqueur",
-    aliases: ["Triple Sec", "Cointreau", "Grand Marnier", "Curaçao"],
+    aliases: ["Triple Sec", "Cointreau", "Grand Marnier", "Curaçao", "Orange Curaçao", "Blue Curaçao"],
     description: "A sweet, orange-flavored liqueur essential for Margaritas, Cosmopolitans, and Sidecars. Varieties range from dry (sec) to sweet and brandy-based.",
     isCustom: false
   },
