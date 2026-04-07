@@ -47,7 +47,7 @@ export default function Featured({
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+      <div className="sm:px-6 lg:px-8 py-6 lg:py-8 px-0">
         <div className="space-y-8 md:space-y-12">
           {/* 1. Hero: Drink of the Day */}
           <DrinkOfTheDay recipe={drinkOfTheDay} onRecipeClick={onRecipeClick} onShowAuthModal={onShowAuthModal} />
