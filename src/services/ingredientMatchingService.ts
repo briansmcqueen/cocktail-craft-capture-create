@@ -54,13 +54,15 @@ ingredientDatabase.forEach(ingredient => {
 function normalizeIngredientText(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[\d.\/]+\s*(oz|ml|cup|tbsp|tsp|dash|splash|drop|part|cl)\s*/g, '') // Remove measurements
-    .replace(/\s+(for\s+garnish|garnish|optional)$/g, '') // Remove garnish notes
+    .replace(/[\d.\/]+\s*(oz|ml|cup|cups|tbsp|tsp|dash|dashes|splash|splashes|drop|drops|part|parts|cl|barspoon|barspoons|bar spoon|bsp)\s*/g, '') // Remove measurements
+    .replace(/\s+(for\s+garnish|garnish|optional)\s*$/g, '') // Remove garnish notes
+    .replace(/\(.*?\)/g, '') // Remove parenthetical notes like (e.g., Chambord)
     .replace(/^\s*fresh\s+/g, '') // Remove "fresh" prefix
     .replace(/\s+juice$/g, '') // Remove "juice" suffix for citrus
     .replace(/\s+peel$/g, '') // Remove "peel" suffix
     .replace(/\s+zest$/g, '') // Remove "zest" suffix
     .replace(/\s+twist$/g, '') // Remove "twist" suffix
+    .replace(/\s+for garnish$/g, '') // Remove trailing garnish
     .trim();
 }
 

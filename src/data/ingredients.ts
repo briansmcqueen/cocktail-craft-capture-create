@@ -33,7 +33,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "London Dry Gin",
     category: "Spirits",
     subCategory: "Gin",
-    aliases: ["Gin", "London Gin"],
+    aliases: ["Gin", "London Gin", "Old Tom Gin", "Plymouth Gin"],
     description: "A style of gin characterized by a prominent juniper flavor. It is the base for many classic cocktails like the Martini and Gin and Tonic.",
     isCustom: false
   },
@@ -51,7 +51,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "White Rum",
     category: "Spirits",
     subCategory: "Rum",
-    aliases: ["Light Rum", "Silver Rum"],
+    aliases: ["Light Rum", "Silver Rum", "Bacardí Superior Rum", "Bacardi Rum"],
     description: "A light, clean rum perfect for tropical cocktails like Daiquiris and Mojitos.",
     isCustom: false
   },
@@ -60,7 +60,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "Dark Rum",
     category: "Spirits",
     subCategory: "Rum",
-    aliases: ["Aged Rum", "Gold Rum"],
+    aliases: ["Aged Rum", "Gold Rum", "Jamaican Rum", "Pusser's Rum", "Gold Rum"],
     description: "A rich, aged rum with deeper flavors and color, excellent for sipping or complex cocktails.",
     isCustom: false
   },
@@ -69,7 +69,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "Blanco Tequila",
     category: "Spirits",
     subCategory: "Tequila",
-    aliases: ["Silver Tequila", "White Tequila"],
+    aliases: ["Silver Tequila", "White Tequila", "Tequila Blanco", "Tequila"],
     description: "A clear tequila that showcases the pure agave flavor, essential for Margaritas and Palomas.",
     isCustom: false
   },
@@ -107,7 +107,7 @@ export const ingredientDatabase: Ingredient[] = [
     name: "Orange Liqueur",
     category: "Liqueurs",
     subCategory: "Fruit Liqueur",
-    aliases: ["Triple Sec", "Cointreau", "Grand Marnier", "Curaçao"],
+    aliases: ["Triple Sec", "Cointreau", "Grand Marnier", "Curaçao", "Orange Curaçao", "Blue Curaçao"],
     description: "A sweet, orange-flavored liqueur essential for Margaritas, Cosmopolitans, and Sidecars. Varieties range from dry (sec) to sweet and brandy-based.",
     isCustom: false
   },
@@ -506,6 +506,324 @@ export const ingredientDatabase: Ingredient[] = [
     subCategory: "Dairy",
     aliases: ["Heavy Cream", "Heavy Whipping Cream", "Fresh Cream"],
     description: "Heavy cream used in creamy cocktails like the Alexander and Brandy Alexander.",
+    isCustom: false
+  },
+
+  // === Missing ingredients discovered by recipe scan ===
+
+  // Spirits
+  {
+    id: "spirit_013",
+    name: "Scotch Whisky",
+    category: "Spirits",
+    subCategory: "Whiskey",
+    aliases: ["Scotch", "Blended Scotch", "Blended Scotch Whisky", "Single Malt Scotch", "Blended Whiskey"],
+    description: "A malt or grain whisky made in Scotland, ranging from smooth blends to peaty single malts.",
+    isCustom: false
+  },
+  {
+    id: "spirit_014",
+    name: "Irish Whiskey",
+    category: "Spirits",
+    subCategory: "Whiskey",
+    aliases: ["Irish Whisky"],
+    description: "A smooth, triple-distilled whiskey from Ireland with a light and approachable character.",
+    isCustom: false
+  },
+  {
+    id: "spirit_015",
+    name: "Cachaça",
+    category: "Spirits",
+    subCategory: "Rum",
+    aliases: ["Brazilian Rum", "Cachaça"],
+    description: "A Brazilian spirit distilled from fresh sugarcane juice, essential for the Caipirinha.",
+    isCustom: false
+  },
+  {
+    id: "spirit_016",
+    name: "Calvados",
+    category: "Spirits",
+    subCategory: "Brandy",
+    aliases: ["Apple Brandy", "French Apple Brandy"],
+    description: "A French apple brandy from the Normandy region with rich, fruity, and oaky flavors.",
+    isCustom: false
+  },
+  {
+    id: "spirit_017",
+    name: "Absinthe",
+    category: "Spirits",
+    subCategory: "Anise Spirit",
+    aliases: ["Absinthe Verte", "Green Absinthe"],
+    description: "A high-proof anise-flavored spirit used in rinses and dashes for cocktails like the Sazerac.",
+    isCustom: false
+  },
+  {
+    id: "spirit_018",
+    name: "Brandy",
+    category: "Spirits",
+    subCategory: "Brandy",
+    aliases: ["Grape Brandy", "VS Brandy"],
+    description: "A spirit distilled from wine or fermented fruit juice, used in many classic cocktails.",
+    isCustom: false
+  },
+
+  // Liqueurs
+  {
+    id: "liqueur_011",
+    name: "Crème de Cacao",
+    category: "Liqueurs",
+    subCategory: "Chocolate Liqueur",
+    aliases: ["White Crème de Cacao", "Dark Crème de Cacao", "Cacao Liqueur"],
+    description: "A chocolate-flavored liqueur available in white (clear) and dark varieties.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_012",
+    name: "Crème de Menthe",
+    category: "Liqueurs",
+    subCategory: "Mint Liqueur",
+    aliases: ["Green Crème de Menthe", "White Crème de Menthe", "Peppermint Liqueur"],
+    description: "A sweet, mint-flavored liqueur available in green and white (clear) varieties.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_013",
+    name: "Galliano",
+    category: "Liqueurs",
+    subCategory: "Herbal Liqueur",
+    aliases: ["Galliano L'Autentico", "Italian Herbal Liqueur"],
+    description: "A sweet Italian herbal liqueur with vanilla and anise notes, used in the Harvey Wallbanger.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_014",
+    name: "Fernet-Branca",
+    category: "Liqueurs",
+    subCategory: "Amaro",
+    aliases: ["Fernet", "Italian Digestivo"],
+    description: "A bitter Italian amaro with intense herbal and menthol flavors, used in the Hanky Panky.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_015",
+    name: "Bénédictine",
+    category: "Liqueurs",
+    subCategory: "Herbal Liqueur",
+    aliases: ["Benedictine", "DOM Bénédictine", "D.O.M."],
+    description: "A French herbal liqueur with honey and spice notes, used in classic cocktails like the Vieux Carré.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_016",
+    name: "Cherry Heering",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Cherry Liqueur", "Cherry Brandy"],
+    description: "A Danish cherry liqueur essential for the Singapore Sling and Blood and Sand.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_017",
+    name: "Crème de Cassis",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Blackcurrant Liqueur", "Cassis"],
+    description: "A sweet, dark red liqueur made from blackcurrants, essential for Kir and Kir Royale.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_018",
+    name: "Crème de Mure",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Blackberry Liqueur", "Mure"],
+    description: "A sweet blackberry liqueur essential for the Bramble cocktail.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_019",
+    name: "Falernum",
+    category: "Liqueurs",
+    subCategory: "Spiced Liqueur",
+    aliases: ["Ginger-Syrup Liqueur", "Velvet Falernum"],
+    description: "A Caribbean liqueur or syrup with flavors of lime, almond, clove, and ginger.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_020",
+    name: "Drambuie",
+    category: "Liqueurs",
+    subCategory: "Whisky Liqueur",
+    aliases: ["Scotch Liqueur", "Honey Scotch Liqueur"],
+    description: "A Scottish liqueur made from Scotch whisky, honey, herbs, and spices. Essential for the Rusty Nail.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_021",
+    name: "Cynar",
+    category: "Liqueurs",
+    subCategory: "Amaro",
+    aliases: ["Artichoke Liqueur", "Artichoke Amaro"],
+    description: "An Italian bitter liqueur made from artichoke and herbs, used in the Rabo de Galo.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_022",
+    name: "Amaro Nonino",
+    category: "Liqueurs",
+    subCategory: "Amaro",
+    aliases: ["Nonino", "Amaro Nonino Quintessentia"],
+    description: "A premium Italian amaro with notes of orange, herbs, and caramel. Essential for the Paper Plane.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_023",
+    name: "Peach Liqueur",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Peach Schnapps", "Peach Brandy"],
+    description: "A sweet peach-flavored liqueur used in cocktails like Sex on the Beach and Fish House Punch.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_024",
+    name: "Raspberry Liqueur",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Chambord", "Black Raspberry Liqueur", "Framboise"],
+    description: "A rich berry liqueur, often Chambord, used in French Martinis and other fruity cocktails.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_025",
+    name: "Apricot Brandy",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Apricot Liqueur"],
+    description: "A sweet fruit liqueur with apricot flavor, used in classic cocktails like the Angel Face and Paradise.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_026",
+    name: "Orgeat Syrup",
+    category: "Pantry",
+    subCategory: "Syrups",
+    aliases: ["Orgeat", "Almond Syrup"],
+    description: "A sweet almond-flavored syrup essential for Mai Tais and other tiki cocktails.",
+    isCustom: false
+  },
+  {
+    id: "liqueur_027",
+    name: "Passoã",
+    category: "Liqueurs",
+    subCategory: "Fruit Liqueur",
+    aliases: ["Passion Fruit Liqueur", "Passoa"],
+    description: "A passion fruit liqueur essential for the Porn Star Martini.",
+    isCustom: false
+  },
+
+  // Wines
+  {
+    id: "wine_006",
+    name: "Red Wine",
+    category: "Wines & Vermouths",
+    subCategory: "Wine",
+    aliases: ["Dry Red Wine", "Cabernet", "Merlot", "Pinot Noir"],
+    description: "Red wine used as a float in cocktails like the New York Sour.",
+    isCustom: false
+  },
+  {
+    id: "wine_007",
+    name: "Ruby Port",
+    category: "Wines & Vermouths",
+    subCategory: "Fortified Wine",
+    aliases: ["Port", "Port Wine", "Ruby Port Wine"],
+    description: "A sweet, red Portuguese fortified wine used in flips and dessert cocktails.",
+    isCustom: false
+  },
+  {
+    id: "wine_008",
+    name: "White Wine",
+    category: "Wines & Vermouths",
+    subCategory: "Wine",
+    aliases: ["Dry White Wine", "Bourgogne Aligoté", "Sauvignon Blanc", "Chardonnay"],
+    description: "Dry white wine used in aperitif cocktails like the Kir.",
+    isCustom: false
+  },
+
+  // Mixers
+  {
+    id: "mixer_009",
+    name: "Cola",
+    category: "Mixers",
+    subCategory: "Carbonated",
+    aliases: ["Coca-Cola", "Coke", "Pepsi"],
+    description: "A carbonated cola soft drink used in Cuba Libres, Long Island Iced Teas, and other highballs.",
+    isCustom: false
+  },
+  {
+    id: "mixer_010",
+    name: "Ginger Ale",
+    category: "Mixers",
+    subCategory: "Carbonated",
+    aliases: ["Dry Ginger Ale"],
+    description: "A mildly spiced carbonated drink used in highballs like the Horse's Neck.",
+    isCustom: false
+  },
+  {
+    id: "mixer_011",
+    name: "Espresso",
+    category: "Mixers",
+    subCategory: "Coffee",
+    aliases: ["Fresh Espresso", "Hot Espresso", "Espresso Shot"],
+    description: "Strong brewed coffee essential for the Espresso Martini.",
+    isCustom: false
+  },
+  {
+    id: "mixer_012",
+    name: "Coconut Cream",
+    category: "Mixers",
+    subCategory: "Tropical",
+    aliases: ["Cream of Coconut", "Coco Lopez"],
+    description: "A sweet coconut product essential for Piña Coladas and tropical cocktails.",
+    isCustom: false
+  },
+
+  // Pantry additions
+  {
+    id: "pantry_013",
+    name: "Raspberry Syrup",
+    category: "Pantry",
+    subCategory: "Syrups",
+    aliases: ["Raspberry Simple Syrup"],
+    description: "A sweet syrup made from raspberries, used in the Clover Club.",
+    isCustom: false
+  },
+  {
+    id: "pantry_014",
+    name: "Worcestershire Sauce",
+    category: "Pantry",
+    subCategory: "Seasonings",
+    aliases: ["Worcester Sauce", "Lea & Perrins"],
+    description: "A fermented condiment essential for Bloody Marys.",
+    isCustom: false
+  },
+  {
+    id: "pantry_015",
+    name: "Tabasco",
+    category: "Pantry",
+    subCategory: "Seasonings",
+    aliases: ["Tabasco Sauce", "Hot Sauce"],
+    description: "A hot pepper sauce used in Bloody Marys and other savory cocktails.",
+    isCustom: false
+  },
+  {
+    id: "pantry_016",
+    name: "Orange Flower Water",
+    category: "Pantry",
+    subCategory: "Flavorings",
+    aliases: ["Orange Blossom Water"],
+    description: "A fragrant water distilled from orange blossoms, used in the Ramos Gin Fizz.",
     isCustom: false
   }
 ];
