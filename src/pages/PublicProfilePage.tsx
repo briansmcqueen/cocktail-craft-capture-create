@@ -100,7 +100,7 @@ export default function PublicProfilePage() {
 
         <div className="flex-1 overflow-auto">
           <main className="w-full h-full">
-            <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
+            <div className="max-w-5xl mx-auto px-5 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
               {/* Back Button */}
               <BackButton onClick={() => navigate(-1)}>
                 Back
