@@ -195,6 +195,15 @@ export const ingredientDatabase: Ingredient[] = [
     isCustom: false
   },
   {
+    id: "wine_005",
+    name: "Lillet Blanc",
+    category: "Wines & Vermouths",
+    subCategory: "Aromatized Wine",
+    aliases: ["Lillet", "Lillet Blanc Vermouth", "Kina Lillet"],
+    description: "A French aromatized wine with subtle citrus and floral notes. Essential for the classic Vesper martini.",
+    isCustom: false
+  },
+  {
     id: "wine_003",
     name: "Champagne",
     category: "Wines & Vermouths",
