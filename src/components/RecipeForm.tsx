@@ -132,9 +132,9 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
     <div>
       <BackButton onClick={onCancel} className="mb-6" />
 
-      <form
-        className={cn("w-full max-w-2xl p-6 rounded-organic-lg shadow-lg border border-border space-y-4 px-0 py-0")}
-        style={{ backgroundColor: '#202938' }}
+       <form
+         className={cn("w-full max-w-2xl p-6 rounded-organic-lg border-border space-y-4 px-0 py-0 border-0 shadow-none")}
+         style={{ backgroundColor: '#202938' }}
         onSubmit={handleSubmit}
         autoComplete="off"
         noValidate
