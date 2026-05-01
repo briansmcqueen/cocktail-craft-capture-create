@@ -1,38 +1,36 @@
 
 import { useState, useMemo } from "react";
-import { Cocktail } from "@/data/classicCocktails";
-import { classicCocktails } from "@/data/classicCocktails";
+import { toast } from "sonner";
+import { Cocktail, classicCocktails } from "@/data/classicCocktails";
 import { useUserRecipes, useSaveRecipe, useDeleteRecipe } from "./useOptimizedRecipes";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
+import type { LibraryKey } from "@/types/library";
 
-export function useIndexPage() {
+export function useIndexPage(library: LibraryKey) {
   const { user } = useAuth();
-  
+
   const { favoriteIds, toggleFavorite } = useFavorites();
   const { data: userRecipes = [], isLoading } = useUserRecipes();
   const saveRecipeMutation = useSaveRecipe();
   const deleteRecipeMutation = useDeleteRecipe();
-  
-  const [selectedRecipe, setSelectedRecipe] = useState<Cocktail | null>(null);
-  const [library, setLibrary] = useState("featured");
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   const [shareRecipe, setShareRecipe] = useState<Cocktail | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   // Memoize expensive calculations
   const allRecipes = useMemo(() => [...classicCocktails, ...userRecipes], [userRecipes]);
-  
-  const favoriteRecipes = useMemo(() => 
+
+  const favoriteRecipes = useMemo(() =>
     user ? allRecipes.filter(recipe => favoriteIds.includes(recipe.id)) : [],
     [allRecipes, favoriteIds, user]
   );
 
   const filteredRecipes = useMemo(() => {
-    let recipes = library === "classics" ? classicCocktails 
+    let recipes = library === "classics" ? classicCocktails
                  : library === "mine" ? userRecipes
                  : library === "favorites" ? favoriteRecipes
                  : allRecipes;
@@ -59,45 +57,35 @@ export function useIndexPage() {
   }, [library, userRecipes, favoriteRecipes, allRecipes, searchTerm, selectedTags]);
 
 
-  const handleRecipeClick = (recipe: Cocktail) => {
-    setSelectedRecipe(recipe);
-  };
-
-  const handleSaveRecipe = async (recipe: Cocktail) => {
+  const handleSaveRecipe = (recipe: Cocktail) => {
     if (!user) {
-      console.error('User not authenticated for recipe save');
+      toast.error("You need to be signed in to save a recipe.");
       return;
     }
-    
-    try {
-      // Optimistically close form immediately for better UX
-      setShowForm(false);
-      setEditingRecipe(null);
-      
-      // Show immediate success feedback
-      console.log('Saving recipe in background...');
-      
-      // Save in background without blocking UI
-      saveRecipeMutation.mutate(recipe, {
-        onSuccess: () => {
-          console.log('Recipe saved successfully');
-        },
-        onError: (error) => {
-          console.error('Failed to save recipe:', error);
-          // Could show error toast here if needed
-        }
-      });
-    } catch (error) {
-      console.error('Failed to save recipe:', error);
-    }
+
+    // Optimistically close form for better UX
+    setShowForm(false);
+    setEditingRecipe(null);
+
+    saveRecipeMutation.mutate(recipe, {
+      onSuccess: () => {
+        toast.success(recipe.id ? "Recipe updated" : "Recipe saved");
+      },
+      onError: (error) => {
+        console.error("Failed to save recipe:", error);
+        toast.error("Couldn't save your recipe. Please try again.");
+      },
+    });
   };
 
   const handleDeleteRecipe = async (id: string) => {
     if (!user) return;
     try {
       await deleteRecipeMutation.mutateAsync(id);
+      toast.success("Recipe deleted");
     } catch (error) {
-      console.error('Failed to delete recipe:', error);
+      console.error("Failed to delete recipe:", error);
+      toast.error("Couldn't delete that recipe. Please try again.");
     }
   };
 
@@ -113,7 +101,12 @@ export function useIndexPage() {
 
   const handleLike = async (recipe: Cocktail) => {
     if (!user) return;
-    await toggleFavorite(recipe.id);
+    try {
+      await toggleFavorite(recipe.id);
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+      toast.error("Couldn't update your favorites. Please try again.");
+    }
   };
 
   const handleTagClick = (tag: string) => {
@@ -126,10 +119,6 @@ export function useIndexPage() {
 
 
   return {
-    selectedRecipe,
-    setSelectedRecipe,
-    library,
-    setLibrary,
     searchTerm,
     setSearchTerm,
     selectedTags,
@@ -140,10 +129,8 @@ export function useIndexPage() {
     setEditingRecipe,
     shareRecipe,
     setShareRecipe,
-    isMobile,
     userRecipes,
     isLoading,
-    handleRecipeClick,
     handleSaveRecipe,
     handleDeleteRecipe,
     handleEditRecipe,
