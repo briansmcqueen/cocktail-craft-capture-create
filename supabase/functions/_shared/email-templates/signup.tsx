@@ -32,6 +32,7 @@ export const SignupEmail = ({
     <Preview>Confirm your email for {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
+        <Text style={wordmark}>BARBOOK</Text>
         <Heading style={h1}>Confirm your email</Heading>
         <Text style={text}>
           Thanks for signing up for{' '}
@@ -60,27 +61,46 @@ export const SignupEmail = ({
 
 export default SignupEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
+const main = { backgroundColor: '#ffffff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }
+const container = { padding: '32px 28px', maxWidth: '520px' }
+const wordmark = {
+  fontSize: '14px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  letterSpacing: '0.25em',
+  color: '#065F46',
+  textTransform: 'uppercase' as const,
+  margin: '0 0 28px',
+}
+const h1 = {
+  fontSize: '24px',
+  fontWeight: '600' as const,
+  color: '#111827',
   margin: '0 0 20px',
+  letterSpacing: '-0.01em',
 }
 const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  fontSize: '15px',
+  color: '#4B5563',
+  lineHeight: '1.6',
+  margin: '0 0 24px',
 }
-const link = { color: 'inherit', textDecoration: 'underline' }
+const link = { color: '#065F46', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#065F46',
   color: '#ffffff',
   fontSize: '14px',
+  fontWeight: '500' as const,
   borderRadius: '8px',
-  padding: '12px 20px',
+  padding: '12px 24px',
   textDecoration: 'none',
+  letterSpacing: '0.025em',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const codeStyle = {
+  fontFamily: 'Courier, monospace',
+  fontSize: '24px',
+  fontWeight: 'bold' as const,
+  color: '#065F46',
+  letterSpacing: '0.15em',
+  margin: '0 0 30px',
+}
+const footer = { fontSize: '12px', color: '#9CA3AF', margin: '32px 0 0', lineHeight: '1.5' }
