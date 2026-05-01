@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/hooks/useAuth";
 import { FavoritesProvider } from "@/hooks/useFavorites";
 import { AuthModalProvider } from "@/contexts/AuthModalContext";
@@ -81,6 +82,7 @@ function OnboardingWrapper() {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+   <HelmetProvider>
     <AuthProvider>
       <FavoritesProvider>
         <AuthModalProvider>
@@ -125,6 +127,7 @@ const App = () => (
         </AuthModalProvider>
       </FavoritesProvider>
     </AuthProvider>
+   </HelmetProvider>
   </QueryClientProvider>
 );
 
