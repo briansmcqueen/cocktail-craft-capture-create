@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useIndexPage } from "@/hooks/useIndexPage";
 import { useMyBarData } from "@/hooks/useMyBarData";
@@ -8,6 +8,11 @@ import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import {
+  LIBRARY_TO_PATH,
+  libraryFromPath,
+  type LibraryKey,
+} from "@/types/library";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -15,10 +20,14 @@ export default function Index() {
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
-  
+
+  // Library derived from the current URL — single source of truth
+  const library = useMemo<LibraryKey>(
+    () => libraryFromPath(location.pathname),
+    [location.pathname]
+  );
+
   const {
-    library,
-    setLibrary,
     searchTerm,
     setSearchTerm,
     selectedTags,
@@ -28,43 +37,23 @@ export default function Index() {
     setEditingRecipe,
     shareRecipe,
     setShareRecipe,
-    
-    isMobile,
     userRecipes,
     handleSaveRecipe,
-    handleDeleteRecipe,
     handleEditRecipe,
     handleShareRecipe,
     handleLike,
     handleTagClick,
     allRecipes,
     favoriteRecipes,
-    filteredRecipes
-  } = useIndexPage();
+    filteredRecipes,
+  } = useIndexPage(library);
 
   // Get user's bar ingredients for search filtering
-  const forceUpdate = 0;
-  const { myBarIngredients } = useMyBarData(forceUpdate);
-
-  // Set library based on URL path
-  useEffect(() => {
-    const path = location.pathname;
-    if (path === '/') {
-      setLibrary('featured');
-    } else if (path === '/recipes') {
-      setLibrary('all');
-    } else if (path === '/mybar') {
-      setLibrary('ingredients');
-    } else if (path === '/favorites') {
-      setLibrary('favorites');
-    } else if (path === '/recipes/my-drinks') {
-      setLibrary('mine');
-    }
-  }, [location.pathname, setLibrary]);
+  const { myBarIngredients } = useMyBarData();
 
   // Handle navigation state from other pages (like RecipePage)
   useEffect(() => {
-    const state = location.state as any;
+    const state = location.state as { editingRecipe?: any; showForm?: boolean } | null;
     if (state?.editingRecipe && state?.showForm) {
       setEditingRecipe(state.editingRecipe);
       setShowForm(true);
@@ -81,11 +70,13 @@ export default function Index() {
   };
 
   const handleLibraryChange = (newLibrary: string) => {
-    if ((newLibrary === "favorites" || newLibrary === "mine") && !user) {
+    const key = newLibrary as LibraryKey;
+    if ((key === "favorites" || key === "mine") && !user) {
       setShowAuthModal(true);
       return;
     }
-    setLibrary(newLibrary);
+    const path = LIBRARY_TO_PATH[key];
+    if (path && path !== location.pathname) navigate(path);
   };
 
   const handleAddRecipe = () => {
@@ -112,27 +103,8 @@ export default function Index() {
     }
   };
 
-  const handleMyRecipesClick = () => {
-    setLibrary("mine");
-  };
-
-  const handleFavoritesClick = () => {
-    setLibrary("favorites");
-  };
-
-  const handleRemixRecipe = (recipe: any) => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
-    const remixedRecipe = { 
-      ...recipe, 
-      id: undefined,
-      name: `${recipe.name} (Remix)`
-    };
-    setEditingRecipe(remixedRecipe);
-    setShowForm(true);
-  };
+  const handleMyRecipesClick = () => handleLibraryChange("mine");
+  const handleFavoritesClick = () => handleLibraryChange("favorites");
 
   if (loading) {
     return <LoadingSpinner />;
@@ -148,7 +120,6 @@ export default function Index() {
         setShowForm={setShowForm}
         editingRecipe={editingRecipe}
         setEditingRecipe={setEditingRecipe}
-        isMobile={isMobile}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedTags={selectedTags}
@@ -169,7 +140,6 @@ export default function Index() {
         onProfileClick={handleProfileClick}
         onMyRecipesClick={handleMyRecipesClick}
         onFavoritesClick={handleFavoritesClick}
-        forceUpdate={forceUpdate}
         myBarIngredients={myBarIngredients}
       />
 

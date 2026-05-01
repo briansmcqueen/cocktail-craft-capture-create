@@ -55,17 +55,7 @@ export async function updateUserPreferences(preferences: Partial<Omit<UserPrefer
   return true;
 }
 
-// Analytics functions for learning user behavior
-export async function trackRecipeView(recipeId: string): Promise<void> {
-  // This would typically go to an analytics service
-  // For now, we'll just log it
-  console.log(`Recipe viewed: ${recipeId}`);
-}
-
-export async function trackIngredientAdded(ingredientId: string): Promise<void> {
-  console.log(`Ingredient added: ${ingredientId}`);
-}
-
-export async function trackRecipeMade(recipeId: string): Promise<void> {
-  console.log(`Recipe made: ${recipeId}`);
-}
+// Analytics stubs — no-ops until a real analytics service is wired up.
+export async function trackRecipeView(_recipeId: string): Promise<void> {}
+export async function trackIngredientAdded(_ingredientId: string): Promise<void> {}
+export async function trackRecipeMade(_recipeId: string): Promise<void> {}

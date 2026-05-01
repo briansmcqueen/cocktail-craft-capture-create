@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Users, Flame, Compass } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
@@ -14,6 +14,7 @@ import { SearchInput } from '@/components/ui/search-input';
 import { useSearchShortcut } from '@/hooks/useSearchShortcut';
 import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import { supabase } from '@/integrations/supabase/client';
+import { useSidebarCollapsed } from '@/hooks/useSidebarCollapsed';
 
 interface Recipe {
   id: string;
@@ -36,17 +37,7 @@ type FeedItem =
 export default function DiscoverBartenders() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    return localStorage.getItem('sidebar_collapsed') === 'true';
-  });
-
-  const toggleSidebar = useCallback(() => {
-    setSidebarCollapsed(prev => {
-      const next = !prev;
-      localStorage.setItem('sidebar_collapsed', String(next));
-      return next;
-    });
-  }, []);
+  const [sidebarCollapsed, toggleSidebar] = useSidebarCollapsed();
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [discoverRecipes, setDiscoverRecipes] = useState<Recipe[]>([]);
   const [unifiedFeed, setUnifiedFeed] = useState<FeedItem[]>([]);
@@ -230,7 +221,6 @@ export default function DiscoverBartenders() {
               if (library === 'featured') navigate('/');
               else if (library === 'all') navigate('/recipes');
               else if (library === 'ingredients') navigate('/mybar');
-              else if (library === 'feed') navigate('/feed');
               else if (library === 'favorites') navigate('/favorites');
               else if (library === 'mine') navigate('/recipes/my-drinks');
               else if (library === 'learn') navigate('/learn');

@@ -10,7 +10,6 @@ type CategorizedIngredientFilterProps = {
   onRecipeClick: (recipe: Cocktail) => void;
   onToggleFavorite: (recipe: Cocktail) => void;
   onTagClick: (tag: string) => void;
-  forceUpdate: number;
 };
 
 export default function CategorizedIngredientFilter({
@@ -18,7 +17,6 @@ export default function CategorizedIngredientFilter({
   onRecipeClick,
   onToggleFavorite,
   onTagClick,
-  forceUpdate
 }: CategorizedIngredientFilterProps) {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 
@@ -268,7 +266,7 @@ export default function CategorizedIngredientFilter({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
           {filteredRecipes.map((recipe) => (
             <UniversalRecipeCard
-              key={`${recipe.id}-${forceUpdate}`}
+              key={recipe.id}
               recipe={recipe}
             />
           ))}
