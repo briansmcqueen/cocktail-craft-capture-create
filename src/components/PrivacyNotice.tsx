@@ -42,7 +42,7 @@ export default function PrivacyNotice() {
     <div
       role="region"
       aria-label="Privacy notice"
-      className="fixed bottom-20 md:bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[60] bg-medium-charcoal border border-border-gray rounded-organic-md shadow-2xl p-4"
+      className="fixed bottom-20 md:bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[60] bg-medium-charcoal border border-light-charcoal rounded-organic-md shadow-2xl p-4"
     >
       <div className="flex items-start gap-3">
         <div className="flex-1">
@@ -66,7 +66,7 @@ export default function PrivacyNotice() {
             <Button
               size="sm"
               onClick={dismiss}
-              className="bg-deep-forest hover:bg-dark-forest text-pure-white h-8"
+              className="bg-forest-green hover:bg-forest-green-dark text-pure-white h-8"
             >
               Got it
             </Button>
