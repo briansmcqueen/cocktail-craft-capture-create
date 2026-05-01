@@ -13,7 +13,6 @@ interface AuthenticatedViewProps {
   setShowForm: (show: boolean) => void;
   editingRecipe: Cocktail | null;
   setEditingRecipe: (recipe: Cocktail | null) => void;
-  isMobile: boolean;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedTags: string[];
@@ -46,7 +45,6 @@ export default function AuthenticatedView({
   setShowForm,
   editingRecipe,
   setEditingRecipe,
-  isMobile,
   searchTerm,
   setSearchTerm,
   selectedTags,
@@ -133,7 +131,6 @@ export default function AuthenticatedView({
                 library={library}
                 showForm={showForm}
                 editingRecipe={editingRecipe}
-                isMobile={isMobile}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 selectedTags={selectedTags}
