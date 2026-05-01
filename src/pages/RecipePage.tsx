@@ -166,7 +166,7 @@ export default function RecipePage() {
           />
         </div>
         
-        <main className="flex-1 min-w-0">
+        <main id="main-content" className="flex-1 min-w-0">
           <div className="max-w-6xl mx-auto px-4 py-6">
             {shouldShowBackButton && <BackButton onClick={handleGoBack} className="mb-6" />}
 

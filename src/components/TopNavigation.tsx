@@ -74,7 +74,7 @@ const TopNavigation = memo(function TopNavigation({
         <div className="flex items-center gap-3">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="hover:bg-muted rounded-organic-sm">
+              <Button variant="ghost" size="icon" aria-label="Open navigation menu" className="hover:bg-muted rounded-organic-sm">
                 <Menu className="h-6 w-6 text-foreground" />
               </Button>
             </SheetTrigger>
