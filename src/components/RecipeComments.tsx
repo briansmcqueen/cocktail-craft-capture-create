@@ -223,8 +223,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         <div className="flex gap-2 items-start pt-2">
           <Textarea
             value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
+            onChange={(e) => setNewComment(e.target.value.slice(0, 1000))}
             placeholder="Add a comment..."
+            maxLength={1000}
             className="min-h-[60px] bg-input border-border rounded-organic-sm text-sm flex-1"
           />
           <Button
