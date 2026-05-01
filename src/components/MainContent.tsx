@@ -122,7 +122,6 @@ export default function MainContent({
             onRecipeClick={handleRecipeClick}
             onToggleFavorite={() => {}}
             onTagClick={handleTagClick}
-            forceUpdate={forceUpdate}
           />
         ) : library === "favorites" ? (
           <Favorites
