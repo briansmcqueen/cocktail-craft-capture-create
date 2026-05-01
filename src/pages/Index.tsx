@@ -158,3 +158,49 @@ export default function Index() {
     </>
   );
 }
+
+function IndexSEO({ library, pathname }: { library: LibraryKey; pathname: string }) {
+  const map: Record<string, { title: string; description: string; path: string }> = {
+    "/": {
+      title: "Barbook — Craft Cocktails, Your Bar, Endless Recipes",
+      description:
+        "Track your home bar inventory, discover cocktails you can make right now, and save originals. The modern companion for craft bartenders.",
+      path: "/",
+    },
+    "/recipes": {
+      title: "All Cocktail Recipes | Barbook",
+      description:
+        "Browse every cocktail in Barbook — classics, modern originals, and recipes from creators around the world.",
+      path: "/recipes",
+    },
+    "/mybar": {
+      title: "My Bar — Track Ingredients & Find Drinks | Barbook",
+      description:
+        "Add the spirits, mixers, and bitters you have on hand and instantly see every cocktail you can make.",
+      path: "/mybar",
+    },
+    "/favorites": {
+      title: "Favorite Cocktails | Barbook",
+      description: "Your saved cocktail recipes — quick access to the drinks you love most.",
+      path: "/favorites",
+    },
+  };
+  const meta = map[pathname] ?? map["/"];
+  const isHome = pathname === "/";
+
+  const jsonLd = isHome
+    ? {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Barbook",
+        url: "https://barbook.io",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: "https://barbook.io/recipes?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      }
+    : undefined;
+
+  return <PageSEO {...meta} jsonLd={jsonLd} />;
+}
