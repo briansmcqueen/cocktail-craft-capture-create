@@ -17,7 +17,6 @@ interface MainContentProps {
   library: string;
   showForm: boolean;
   editingRecipe: Cocktail | null;
-  isMobile: boolean;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedTags: string[];
@@ -36,7 +35,6 @@ interface MainContentProps {
   setEditingRecipe: (recipe: Cocktail | null) => void;
   setShowAuthModal: (show: boolean) => void;
   onNavigateToMyBar: () => void;
-  forceUpdate: number;
   myBarIngredients: string[];
 }
 
@@ -45,7 +43,6 @@ export default function MainContent({
   library,
   showForm,
   editingRecipe,
-  isMobile,
   searchTerm,
   setSearchTerm,
   selectedTags,
@@ -64,7 +61,6 @@ export default function MainContent({
   setEditingRecipe,
   setShowAuthModal,
   onNavigateToMyBar,
-  forceUpdate,
   myBarIngredients
 }: MainContentProps) {
   if (showForm) {
