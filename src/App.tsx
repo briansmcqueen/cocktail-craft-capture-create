@@ -31,6 +31,7 @@ const RecipePage = lazy(() => import("./pages/RecipePage"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
+const AdminModeration = lazy(() => import("./pages/AdminModeration"));
 
 
 // Optimize React Query configuration
@@ -121,6 +122,7 @@ const AppShell = () => (
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
+                  <Route path="/admin/moderation" element={<AdminModeration />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>

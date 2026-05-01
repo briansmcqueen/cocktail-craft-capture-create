@@ -10,6 +10,7 @@ import { useOptimizedComments } from '@/hooks/useOptimizedComments';
 import { toast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import type { RecipeComment } from '@/services/commentsService';
+import ReportButton from '@/components/moderation/ReportButton';
 
 interface RecipeCommentsProps {
   recipeId: string;
@@ -119,6 +120,17 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         ) : (
           <>
             <p className="text-sm text-card-foreground mt-0.5 break-words">{comment.content}</p>
+            {user && user.id !== comment.user_id && (
+              <div className="mt-1.5">
+                <ReportButton
+                  targetType="comment"
+                  targetId={comment.id}
+                  targetOwnerId={comment.user_id}
+                  variant="text"
+                  className="text-xs text-muted-foreground hover:text-pure-white px-0 h-auto py-0"
+                />
+              </div>
+            )}
             {user?.id === comment.user_id && (
               <div className="flex items-center gap-3 mt-1.5">
                 <button
@@ -211,8 +223,9 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         <div className="flex gap-2 items-start pt-2">
           <Textarea
             value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
+            onChange={(e) => setNewComment(e.target.value.slice(0, 1000))}
             placeholder="Add a comment..."
+            maxLength={1000}
             className="min-h-[60px] bg-input border-border rounded-organic-sm text-sm flex-1"
           />
           <Button

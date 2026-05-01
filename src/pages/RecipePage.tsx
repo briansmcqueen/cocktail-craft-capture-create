@@ -22,6 +22,7 @@ import RecipeRatingStars from "@/components/ratings/RecipeRatingStars";
 import RecipeRatingInput from "@/components/ratings/RecipeRatingInput";
 import RecipeComments from "@/components/RecipeComments";
 import RecipeMeta from "@/components/RecipeMeta";
+import ReportButton from "@/components/moderation/ReportButton";
 
 
 import { recipeNameToSlug, slugToRecipeName, getRecipeUrl } from "@/utils/slugUtils";
@@ -259,6 +260,16 @@ export default function RecipePage() {
                     <Button variant="outline" className="flex items-center gap-2 px-4 py-2 rounded-organic-sm text-light-text hover:text-foreground" onClick={handleEdit}>
                       <Edit size={16} /> Edit
                     </Button>
+                  )}
+                  {recipe.isUserRecipe && !isUserRecipe && (
+                    <ReportButton
+                      targetType="recipe"
+                      targetId={recipe.id}
+                      targetOwnerId={(recipe as { user_id?: string }).user_id ?? null}
+                      targetLabel={recipe.name}
+                      variant="text"
+                      className="text-soft-gray hover:text-pure-white"
+                    />
                   )}
                 </div>
 
