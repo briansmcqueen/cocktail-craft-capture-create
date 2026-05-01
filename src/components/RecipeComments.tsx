@@ -120,6 +120,17 @@ export default function RecipeComments({ recipeId }: RecipeCommentsProps) {
         ) : (
           <>
             <p className="text-sm text-card-foreground mt-0.5 break-words">{comment.content}</p>
+            {user && user.id !== comment.user_id && (
+              <div className="mt-1.5">
+                <ReportButton
+                  targetType="comment"
+                  targetId={comment.id}
+                  targetOwnerId={comment.user_id}
+                  variant="text"
+                  className="text-xs text-muted-foreground hover:text-pure-white px-0 h-auto py-0"
+                />
+              </div>
+            )}
             {user?.id === comment.user_id && (
               <div className="flex items-center gap-3 mt-1.5">
                 <button
