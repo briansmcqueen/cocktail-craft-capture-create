@@ -31,6 +31,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
   const [rememberMe, setRememberMe] = useState(() => {
     return localStorage.getItem('rememberMe') === 'true';
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
 
   // Reset mode when modal opens with new initialMode
@@ -39,6 +40,7 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
       setMode(initialMode);
       resetForm();
       setShowPassword(false);
+      setAcceptedTerms(false);
       const savedEmail = localStorage.getItem('rememberedEmail');
       if (savedEmail && rememberMe) {
         setEmail(savedEmail);
@@ -77,6 +79,15 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
           resetForm();
         }
       } else if (mode === 'signup') {
+        if (!acceptedTerms) {
+          toast({
+            title: "Please accept the Terms",
+            description: "You must agree to the Terms and Privacy Policy to create an account.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
         const fullName = `${firstName} ${lastName}`.trim();
         const { error } = await signUp(email, password, fullName);
         if (error) {
@@ -86,6 +97,18 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
             variant: "destructive",
           });
         } else {
+          // Best-effort: record terms acceptance on the profile (RLS-safe; runs once session exists)
+          try {
+            const { data: { user: newUser } } = await supabase.auth.getUser();
+            if (newUser) {
+              await supabase
+                .from('profiles')
+                .update({ terms_accepted_at: new Date().toISOString() })
+                .eq('id', newUser.id);
+            }
+          } catch {
+            // Non-blocking: profile may not exist yet until email confirmation
+          }
           setSignupEmail(email);
           setMode('confirm');
         }
