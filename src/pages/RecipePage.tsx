@@ -150,6 +150,7 @@ export default function RecipePage() {
 
   return (
     <>
+      {recipe && <RecipeMeta recipe={recipe} />}
       <TopNavigation
         user={user} activeLibrary="recipe" onLibrarySelect={() => {}}
         onAddRecipe={() => navigate('/recipes/my-drinks')}
