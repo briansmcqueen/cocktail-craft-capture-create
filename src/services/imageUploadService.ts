@@ -23,18 +23,21 @@ export function validateImageFile(file: File): void {
 }
 
 /**
- * Compresses an image file to reduce size before upload
+ * Compresses an image file to a WebP blob to reduce size before upload.
+ * Falls back to JPEG only if the browser cannot encode WebP.
  * @param file - The image file to compress
- * @param maxWidth - Maximum width in pixels (default: 1200)
- * @param maxHeight - Maximum height in pixels (default: 1200)
- * @param quality - JPEG quality 0-1 (default: 0.8)
- * @returns Compressed image as a Blob
+ * @param maxWidth - Maximum width in pixels (default: 1600)
+ * @param maxHeight - Maximum height in pixels (default: 1600)
+ * @param quality - Encoder quality 0-1 (default: 0.8)
+ * @param mimeType - Output mime type (default: 'image/webp')
+ * @returns Compressed image as a Blob (WebP when supported)
  */
 export async function compressImage(
   file: File,
-  maxWidth: number = 1200,
-  maxHeight: number = 1200,
-  quality: number = 0.8
+  maxWidth: number = 1600,
+  maxHeight: number = 1600,
+  quality: number = 0.8,
+  mimeType: string = 'image/webp'
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -76,16 +79,24 @@ export async function compressImage(
         
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Convert to blob
+        // Convert to blob — try requested mime (WebP by default), fallback to JPEG
         canvas.toBlob(
           (blob) => {
-            if (blob) {
+            if (blob && blob.type === mimeType) {
               resolve(blob);
-            } else {
-              reject(new Error('Failed to create blob'));
+              return;
             }
+            // Browser ignored mime (older Safari etc.) — fallback to JPEG
+            canvas.toBlob(
+              (jpegBlob) => {
+                if (jpegBlob) resolve(jpegBlob);
+                else reject(new Error('Failed to create blob'));
+              },
+              'image/jpeg',
+              quality
+            );
           },
-          'image/jpeg',
+          mimeType,
           quality
         );
       };
@@ -127,19 +138,19 @@ export async function uploadImage(
     
     // Compress the image
     const compressedBlob = await compressImage(file);
-    
-    // Generate unique filename with user-scoped path
-    const fileExt = file.name.split('.').pop() || 'jpg';
+
+    // Use the compressed blob's actual mime to derive the extension (webp or jpeg fallback)
+    const outExt = compressedBlob.type === 'image/webp' ? 'webp' : 'jpg';
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
-    const fileName = `${timestamp}-${randomString}.${fileExt}`;
+    const fileName = `${timestamp}-${randomString}.${outExt}`;
     const filePath = `${user.id}/${folder}/${fileName}`;
-    
+
     // Upload to Supabase Storage
     const { error: uploadError } = await supabase.storage
       .from(bucket)
       .upload(filePath, compressedBlob, {
-        contentType: 'image/jpeg',
+        contentType: compressedBlob.type,
         cacheControl: '3600',
         upsert: false
       });

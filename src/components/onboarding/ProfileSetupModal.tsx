@@ -158,15 +158,16 @@ export default function ProfileSetupModal({ open, userId, onComplete }: ProfileS
     try {
       setUploading(true);
       const compressedBlob = await compressImage(
-        new File([avatarBlob], 'avatar.jpg', { type: 'image/jpeg' }),
+        new File([avatarBlob], 'avatar', { type: 'image/jpeg' }),
         400, 400, 0.85
       );
-      const fileName = `${userId}/avatar.jpg`;
+      const fileExt = compressedBlob.type === 'image/webp' ? 'webp' : 'jpg';
+      const fileName = `${userId}/avatar.${fileExt}`;
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(fileName, compressedBlob, { 
+        .upload(fileName, compressedBlob, {
           upsert: true,
-          contentType: 'image/jpeg',
+          contentType: compressedBlob.type,
         });
 
       if (uploadError) throw uploadError;
