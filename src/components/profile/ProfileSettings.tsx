@@ -119,7 +119,7 @@ export default function ProfileSettings() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card border-border">
+      <Card className="bg-transparent border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
             <User className="h-5 w-5 text-pure-white" />
@@ -148,7 +148,7 @@ export default function ProfileSettings() {
       <UserPreferencesForm />
 
       {/* Sign Out Section */}
-      <Card className="bg-card border-border">
+      <Card className="bg-transparent border-0 shadow-none">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
             <LogOut className="h-5 w-5 text-pure-white" />

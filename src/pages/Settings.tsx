@@ -253,7 +253,7 @@ export default function Settings() {
                 <PrivacySettings />
 
                 {/* Password & Security */}
-                <Card className="bg-card border-border">
+                <Card className="bg-transparent border-0 shadow-none">
                   <CardHeader>
                     <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
                       <Shield className="h-5 w-5 text-pure-white" />
