@@ -122,6 +122,7 @@ const AppShell = () => (
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
+                  <Route path="/admin/moderation" element={<AdminModeration />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>
