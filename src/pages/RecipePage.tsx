@@ -21,6 +21,7 @@ import { useRecipeScaling } from "@/hooks/useRecipeScaling";
 import RecipeRatingStars from "@/components/ratings/RecipeRatingStars";
 import RecipeRatingInput from "@/components/ratings/RecipeRatingInput";
 import RecipeComments from "@/components/RecipeComments";
+import RecipeMeta from "@/components/RecipeMeta";
 
 
 import { recipeNameToSlug, slugToRecipeName, getRecipeUrl } from "@/utils/slugUtils";
@@ -149,6 +150,7 @@ export default function RecipePage() {
 
   return (
     <>
+      {recipe && <RecipeMeta recipe={recipe} />}
       <TopNavigation
         user={user} activeLibrary="recipe" onLibrarySelect={() => {}}
         onAddRecipe={() => navigate('/recipes/my-drinks')}
