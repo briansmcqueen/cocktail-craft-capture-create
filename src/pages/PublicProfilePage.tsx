@@ -13,6 +13,7 @@ import Sidebar from '@/components/Sidebar';
 import { BackButton } from '@/components/ui/back-button';
 import { publicProfileService, PublicProfile, PublicRecipe } from '@/services/publicProfileService';
 import { followsService, FollowStats } from '@/services/followsService';
+import PageSEO from '@/components/PageSEO';
 import { useAuth } from '@/hooks/useAuth';
 import { classicCocktails } from '@/data/classicCocktails';
 import { getAvatarUrl } from '@/utils/avatarUrl';
@@ -108,6 +109,28 @@ export default function PublicProfilePage() {
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
+      <PageSEO
+        title={`${profile.full_name || profile.username} (@${profile.username}) | Barbook`}
+        description={
+          profile.bio?.slice(0, 160) ||
+          `Cocktail recipes and bartending profile for @${profile.username} on Barbook.`
+        }
+        path={`/profile/${profile.username}`}
+        image={profile.avatar_url || undefined}
+        type="profile"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          mainEntity: {
+            "@type": "Person",
+            name: profile.full_name || profile.username,
+            alternateName: profile.username,
+            description: profile.bio || undefined,
+            image: profile.avatar_url || undefined,
+            url: `https://barbook.io/profile/${profile.username}`,
+          },
+        }}
+      />
       <TopNavigation
         user={user}
         activeLibrary=""

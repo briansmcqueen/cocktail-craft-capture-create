@@ -4,6 +4,7 @@ import TopNavigation from "@/components/TopNavigation";
 import Sidebar from "@/components/Sidebar";
 import { BackButton } from "@/components/ui/back-button";
 import { Shield } from "lucide-react";
+import PageSEO from "@/components/PageSEO";
 
 export default function Privacy() {
   const { user } = useAuth();
@@ -11,6 +12,11 @@ export default function Privacy() {
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
+      <PageSEO
+        title="Privacy Policy | Barbook"
+        description="How Barbook collects, uses, and protects your data — including cookieless analytics and locally stored bar inventory."
+        path="/privacy"
+      />
       <TopNavigation
         user={user}
         activeLibrary=""

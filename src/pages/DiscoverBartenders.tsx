@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '@/components/ui/search-input';
 import { useSearchShortcut } from '@/hooks/useSearchShortcut';
 import UniversalRecipeCard from '@/components/UniversalRecipeCard';
+import PageSEO from '@/components/PageSEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useSidebarCollapsed } from '@/hooks/useSidebarCollapsed';
 
@@ -199,6 +200,11 @@ export default function DiscoverBartenders() {
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
+      <PageSEO
+        title="Discover Bartenders & Cocktails | Barbook"
+        description="Find creators, trending bartenders, and fresh cocktail recipes from the Barbook community."
+        path="/discover"
+      />
       {/* Top Navigation for Mobile Only */}
       <TopNavigation
         user={user}
