@@ -10,6 +10,7 @@ import { useOptimizedComments } from '@/hooks/useOptimizedComments';
 import { toast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import type { RecipeComment } from '@/services/commentsService';
+import ReportButton from '@/components/moderation/ReportButton';
 
 interface RecipeCommentsProps {
   recipeId: string;
