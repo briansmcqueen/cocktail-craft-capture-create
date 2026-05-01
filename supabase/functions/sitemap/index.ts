@@ -9,6 +9,9 @@
 // it.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { initSentry, captureEdgeError } from "../_shared/sentry.ts";
+
+const Sentry = initSentry("sitemap");
 
 const SITE = "https://barbook.io";
 
@@ -38,6 +41,7 @@ interface PublicRecipe {
 }
 
 Deno.serve(async () => {
+  try {
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
@@ -104,4 +108,8 @@ Deno.serve(async () => {
       "Cache-Control": "public, max-age=3600",
     },
   });
+  } catch (err) {
+    await captureEdgeError(Sentry, err);
+    return new Response("sitemap error", { status: 500 });
+  }
 });
