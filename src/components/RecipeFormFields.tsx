@@ -28,6 +28,7 @@ type RecipeFormFieldsProps = {
   setIsPrivate: (value: boolean) => void;
   commonIngredients: string[];
   stepTemplates: string[];
+  errors?: Record<string, string>;
 };
 
 export default function RecipeFormFields({
@@ -49,6 +50,7 @@ export default function RecipeFormFields({
   setIsPrivate,
   commonIngredients,
   stepTemplates,
+  errors = {},
 }: RecipeFormFieldsProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -127,17 +129,35 @@ export default function RecipeFormFields({
   return (
     <>
       <div>
-        <label className="font-medium mb-1 block text-pure-white">Recipe Name</label>
+        <label htmlFor="recipe-name" className="font-medium mb-1 block text-pure-white">
+          Recipe Name <span className="text-destructive" aria-hidden="true">*</span>
+        </label>
         <Input
+          id="recipe-name"
+          name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Espresso Martini"
           required
+          aria-required="true"
+          aria-invalid={!!errors.name}
+          aria-describedby={errors.name ? "recipe-name-error" : "recipe-name-hint"}
+          maxLength={100}
         />
+        <p id="recipe-name-hint" className="mt-1 text-xs text-light-text">
+          3–100 characters
+        </p>
+        {errors.name && (
+          <p id="recipe-name-error" role="alert" className="mt-1 text-xs text-destructive">
+            {errors.name}
+          </p>
+        )}
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-pure-white">Image</label>
+        <label htmlFor="recipe-image-upload" className="font-medium mb-1 block text-pure-white">
+          Image <span className="text-xs text-light-text">(optional)</span>
+        </label>
         <div className="flex items-center gap-3">
           {image && (
             <div className="relative">
@@ -175,11 +195,13 @@ export default function RecipeFormFields({
           )}
           <input
             ref={inputRef}
+            id="recipe-image-upload"
             className="hidden"
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
             disabled={uploading}
+            aria-describedby="recipe-image-hint"
           />
           <div className="flex flex-col gap-1">
             <Button
@@ -218,6 +240,7 @@ export default function RecipeFormFields({
         onChange={setIngredients}
         placeholder="2 oz Vodka&#10;1 oz Espresso&#10;1/2 oz Coffee Liqueur"
         commonIngredients={commonIngredients}
+        error={errors.ingredients}
       />
       
       <StepsInput
@@ -225,35 +248,56 @@ export default function RecipeFormFields({
         onChange={setSteps}
         placeholder="Combine all ingredients in a shaker with ice. Shake well..."
         stepTemplates={stepTemplates}
+        error={errors.steps}
       />
       
       <div>
-        <label className="font-medium mb-1 block text-pure-white">
+        <label htmlFor="recipe-tags" className="font-medium mb-1 block text-pure-white">
           Tags <span className="text-xs text-light-text">(keywords, separated)</span>
         </label>
-        <TagInput value={tags} onChange={setTags} />
+        <TagInput value={tags} onChange={setTags} inputId="recipe-tags" />
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-pure-white">
+        <label htmlFor="recipe-notes" className="font-medium mb-1 block text-pure-white">
           Notes <span className="text-xs text-light-text">(optional)</span>
         </label>
         <Input
+          id="recipe-notes"
+          name="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Invented at Soho Brasserie, London, 1980s"
+          maxLength={1000}
+          aria-invalid={!!errors.notes}
+          aria-describedby={errors.notes ? "recipe-notes-error" : undefined}
         />
+        {errors.notes && (
+          <p id="recipe-notes-error" role="alert" className="mt-1 text-xs text-destructive">
+            {errors.notes}
+          </p>
+        )}
       </div>
       
       <div>
-        <label className="font-medium mb-1 block text-pure-white">
+        <label htmlFor="recipe-origin" className="font-medium mb-1 block text-pure-white">
           Region / Origin <span className="text-xs text-light-text">(optional)</span>
         </label>
         <Input
+          id="recipe-origin"
+          name="origin"
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="e.g. Italy"
+          maxLength={100}
+          aria-invalid={!!errors.origin}
+          aria-describedby={errors.origin ? "recipe-origin-error" : undefined}
         />
+        {errors.origin && (
+          <p id="recipe-origin-error" role="alert" className="mt-1 text-xs text-destructive">
+            {errors.origin}
+          </p>
+        )}
       </div>
       
       <div className="flex items-center gap-3">
@@ -262,11 +306,12 @@ export default function RecipeFormFields({
           id="isPrivate"
           checked={isPrivate}
           onChange={(e) => setIsPrivate(e.target.checked)}
+          aria-describedby="isPrivate-hint"
           className="h-4 w-4 text-primary focus:ring-primary border-border rounded"
         />
         <label htmlFor="isPrivate" className="font-medium text-pure-white">
           Make this recipe private
-          <span className="block text-xs text-light-text">Only you can see private recipes</span>
+          <span id="isPrivate-hint" className="block text-xs text-light-text">Only you can see private recipes</span>
         </label>
       </div>
     </>

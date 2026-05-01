@@ -9,13 +9,15 @@ type IngredientInputProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   commonIngredients: string[];
+  error?: string;
 };
 
 export default function IngredientInput({
   value,
   onChange,
   placeholder,
-  commonIngredients
+  commonIngredients,
+  error,
 }: IngredientInputProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -99,8 +101,8 @@ export default function IngredientInput({
   return (
     <div className="relative">
       <div className="flex items-center justify-between mb-1">
-        <label className="font-medium text-pure-white">
-          Ingredients <span className="text-xs text-light-text">(one per line)</span>
+        <label htmlFor="recipe-ingredients" className="font-medium text-pure-white">
+          Ingredients <span className="text-destructive" aria-hidden="true">*</span> <span className="text-xs text-light-text">(one per line)</span>
         </label>
         <Button
           type="button"
@@ -108,6 +110,8 @@ export default function IngredientInput({
           size="sm"
           className="text-xs bg-medium-charcoal text-light-text hover:bg-light-charcoal border-light-charcoal transition-all duration-300"
           onClick={toggleQuickAdd}
+          aria-expanded={showSuggestions}
+          aria-controls="recipe-ingredients-suggestions"
         >
           Quick Add
         </Button>
@@ -115,11 +119,18 @@ export default function IngredientInput({
       
       <Textarea
         ref={textareaRef}
+        id="recipe-ingredients"
+        name="ingredients"
         value={value}
         onChange={(e) => handleInputChange(e.target.value)}
         onBlur={handleBlur}
         placeholder={placeholder}
         required
+        aria-required="true"
+        aria-invalid={!!error}
+        aria-describedby={error ? "recipe-ingredients-error recipe-ingredients-hint" : "recipe-ingredients-hint"}
+        aria-autocomplete="list"
+        aria-controls="recipe-ingredients-suggestions"
         onFocus={() => {
           if (currentLine.trim().length > 0) {
             const filtered = commonIngredients.filter(ingredient =>
@@ -130,16 +141,29 @@ export default function IngredientInput({
           }
         }}
       />
+      <p id="recipe-ingredients-hint" className="mt-1 text-xs text-light-text">
+        Enter one ingredient per line, e.g. "2 oz Vodka"
+      </p>
+      {error && (
+        <p id="recipe-ingredients-error" role="alert" className="mt-1 text-xs text-destructive">
+          {error}
+        </p>
+      )}
       
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div 
           ref={suggestionsRef}
+          id="recipe-ingredients-suggestions"
+          role="listbox"
+          aria-label="Ingredient suggestions"
           className="absolute z-50 mt-1 w-full bg-medium-charcoal border border-light-charcoal rounded-organic-sm shadow-lg max-h-48 overflow-y-auto"
         >
           {filteredSuggestions.map((ingredient, i) => (
             <button
               key={i}
               type="button"
+              role="option"
+              aria-selected="false"
               className="w-full text-left px-3 py-2 text-sm hover:bg-light-charcoal transition-colors text-light-text border-b border-light-charcoal last:border-b-0"
               onClick={() => addIngredient(ingredient)}
             >

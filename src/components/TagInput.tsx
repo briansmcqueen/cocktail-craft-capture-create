@@ -8,9 +8,10 @@ import { Button } from "./ui/button";
 type TagInputProps = {
   value: string[];
   onChange: (tags: string[]) => void;
+  inputId?: string;
 };
 
-export default function TagInput({ value, onChange }: TagInputProps) {
+export default function TagInput({ value, onChange, inputId }: TagInputProps) {
   const [input, setInput] = useState("");
   const tags = value || [];
 
@@ -42,7 +43,7 @@ export default function TagInput({ value, onChange }: TagInputProps) {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-2">
+      <div className="flex flex-wrap gap-2 mb-2" role="list" aria-label="Selected tags">
         {tags.map((tag, i) => (
           <TagBadge
             key={`${tag}-${i}`}
@@ -56,17 +57,22 @@ export default function TagInput({ value, onChange }: TagInputProps) {
       </div>
       <div className="flex gap-2">
         <Input
+          id={inputId}
+          name="tag-input"
           placeholder="Add tag and press enter"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           className="flex-1"
+          aria-label="Add a tag"
+          maxLength={40}
         />
         <Button 
           type="button" 
           onClick={handleAdd} 
           size="sm" 
           variant="secondary" 
+          aria-label="Add tag"
           className="rounded-organic-sm text-pure-white hover:text-pure-white transition-all duration-300"
         >
           <Tag size={16} />

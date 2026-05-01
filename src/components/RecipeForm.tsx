@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import { Save } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
@@ -71,6 +71,13 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
   const [tags, setTags] = useState<string[]>(initial?.tags || []);
   const [isPrivate, setIsPrivate] = useState(initial?.isPrivate || false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      errorSummaryRef.current?.focus();
+    }
+  }, [errors]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -130,9 +137,11 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         style={{ backgroundColor: '#202938' }}
         onSubmit={handleSubmit}
         autoComplete="off"
+        noValidate
+        aria-labelledby="recipe-form-title"
       >
         <div className="mb-4">
-          <h2 className="text-2xl font-medium text-pure-white tracking-wide mb-2">
+          <h2 id="recipe-form-title" className="text-2xl font-medium text-pure-white tracking-wide mb-2">
             {initial?.id ? 'Edit Recipe' : 'Create New Recipe'}
           </h2>
         </div>
@@ -156,14 +165,29 @@ export default function RecipeForm({ initial, onSave, onCancel }: FormProps) {
         setIsPrivate={setIsPrivate}
         commonIngredients={COMMON_INGREDIENTS}
         stepTemplates={STEP_TEMPLATES}
+        errors={errors}
       />
 
       {/* Validation errors */}
       {Object.keys(errors).length > 0 && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-organic-md p-3 space-y-1">
-          {Object.entries(errors).map(([field, error]) => (
-            <p key={field} className="text-sm text-destructive">{error}</p>
-          ))}
+        <div
+          ref={errorSummaryRef}
+          tabIndex={-1}
+          role="alert"
+          aria-live="assertive"
+          aria-labelledby="recipe-form-error-heading"
+          className="bg-destructive/10 border border-destructive/30 rounded-organic-md p-3 space-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
+        >
+          <p id="recipe-form-error-heading" className="text-sm font-semibold text-destructive">
+            Please fix the {Object.keys(errors).length === 1 ? 'following error' : `${Object.keys(errors).length} errors`} below:
+          </p>
+          <ul className="list-disc list-inside space-y-1">
+            {Object.entries(errors).map(([field, error]) => (
+              <li key={field} className="text-sm text-destructive">
+                <a href={`#recipe-${field}`} className="underline hover:no-underline">{error}</a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       

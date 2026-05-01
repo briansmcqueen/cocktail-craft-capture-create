@@ -8,13 +8,15 @@ type StepsInputProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   stepTemplates: string[];
+  error?: string;
 };
 
 export default function StepsInput({
   value,
   onChange,
   placeholder,
-  stepTemplates
+  stepTemplates,
+  error,
 }: StepsInputProps) {
   const [showTemplates, setShowTemplates] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -49,13 +51,17 @@ export default function StepsInput({
   return (
     <div className="relative">
       <div className="flex items-center justify-between mb-1">
-        <label className="font-medium text-pure-white">Steps</label>
+        <label htmlFor="recipe-steps" className="font-medium text-pure-white">
+          Steps <span className="text-destructive" aria-hidden="true">*</span>
+        </label>
         <Button
           type="button"
           variant="secondary"
           size="sm"
           className="text-xs bg-medium-charcoal text-light-text hover:bg-light-charcoal border-light-charcoal transition-all duration-300"
           onClick={() => setShowTemplates(!showTemplates)}
+          aria-expanded={showTemplates}
+          aria-controls="recipe-steps-templates"
         >
           Quick Add
         </Button>
@@ -63,21 +69,40 @@ export default function StepsInput({
       
       <Textarea
         ref={textareaRef}
+        id="recipe-steps"
+        name="steps"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required
+        aria-required="true"
+        aria-invalid={!!error}
+        aria-describedby={error ? "recipe-steps-error recipe-steps-hint" : "recipe-steps-hint"}
+        maxLength={5000}
       />
+      <p id="recipe-steps-hint" className="mt-1 text-xs text-light-text">
+        10–5000 characters
+      </p>
+      {error && (
+        <p id="recipe-steps-error" role="alert" className="mt-1 text-xs text-destructive">
+          {error}
+        </p>
+      )}
       
       {showTemplates && (
         <div 
           ref={templatesRef}
+          id="recipe-steps-templates"
+          role="listbox"
+          aria-label="Step templates"
           className="absolute z-50 mt-1 w-full bg-medium-charcoal border border-light-charcoal rounded-organic-sm shadow-lg max-h-48 overflow-y-auto"
         >
           {stepTemplates.map((template, i) => (
             <button
               key={i}
               type="button"
+              role="option"
+              aria-selected="false"
               className="w-full text-left px-3 py-2 text-sm hover:bg-light-charcoal transition-colors text-light-text border-b border-light-charcoal last:border-b-0"
               onClick={() => addStepTemplate(template)}
             >
