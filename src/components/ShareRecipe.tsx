@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { trackShare, type SharePlatform } from "@/services/shareTrackingService";
 import { useAuth } from "@/hooks/useAuth";
+import { getRecipeUrl } from "@/utils/slugUtils";
 
 // Custom X (Twitter) Icon Component
 const XIcon = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
@@ -59,7 +60,7 @@ export default function ShareRecipe({ recipe, open, onOpenChange }: ShareRecipeP
     return null;
   }
 
-  const shareUrl = `${window.location.origin}/?recipe=${encodeURIComponent(recipe.name)}`;
+  const shareUrl = `${window.location.origin}${getRecipeUrl(recipe)}`;
   
   const shareText = `Check out this ${recipe.name} recipe on Barbook!\n\nIngredients:\n${recipe.ingredients.map(ing => `• ${ing}`).join('\n')}\n\nSteps: ${recipe.steps}\n\n${shareUrl}`;
   
