@@ -34,6 +34,9 @@ export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayPr
         <img
           src={recipe.image}
           alt={recipe.name}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
