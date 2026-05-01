@@ -14,3 +14,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://barbook.io/sitemap.xml
+Sitemap: https://qwfoumoaotswlzbzbcdt.supabase.co/functions/v1/sitemap
