@@ -185,6 +185,54 @@ export type Database = {
         }
         Relationships: []
       }
+      content_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["report_status"]
+          target_id: string
+          target_owner_id: string | null
+          target_type: Database["public"]["Enums"]["report_target_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          target_id: string
+          target_owner_id?: string | null
+          target_type: Database["public"]["Enums"]["report_target_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          target_id?: string
+          target_owner_id?: string | null
+          target_type?: Database["public"]["Enums"]["report_target_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       custom_ingredients: {
         Row: {
           aliases: string[] | null
@@ -357,6 +405,7 @@ export type Database = {
           onboarding_completed: boolean | null
           profile_visibility: string | null
           recipe_visibility: string | null
+          terms_accepted_at: string | null
           updated_at: string | null
           username: string | null
         }
@@ -370,6 +419,7 @@ export type Database = {
           onboarding_completed?: boolean | null
           profile_visibility?: string | null
           recipe_visibility?: string | null
+          terms_accepted_at?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -383,6 +433,7 @@ export type Database = {
           onboarding_completed?: boolean | null
           profile_visibility?: string | null
           recipe_visibility?: string | null
+          terms_accepted_at?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -981,6 +1032,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      report_status: "pending" | "reviewed" | "dismissed" | "actioned"
+      report_target_type: "recipe" | "comment" | "profile"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1109,6 +1162,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      report_status: ["pending", "reviewed", "dismissed", "actioned"],
+      report_target_type: ["recipe", "comment", "profile"],
     },
   },
 } as const
