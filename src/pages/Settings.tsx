@@ -254,7 +254,7 @@ export default function Settings() {
 
                 {/* Password & Security */}
                 <Card className="bg-transparent border-0 shadow-none">
-                  <CardHeader>
+                  <CardHeader className="px-0 pt-0">
                     <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
                       <Shield className="h-5 w-5 text-pure-white" />
                       Password & Security
@@ -263,7 +263,7 @@ export default function Settings() {
                       Update your email and password to keep your account secure
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-6 px-0">
                     {/* Email Change Section */}
                     <div className="space-y-4">
                       <div className="space-y-2">
