@@ -113,6 +113,7 @@ export default function Index() {
 
   return (
     <>
+      <IndexSEO library={library} pathname={location.pathname} />
       <AuthenticatedView
         user={user}
         library={library}
