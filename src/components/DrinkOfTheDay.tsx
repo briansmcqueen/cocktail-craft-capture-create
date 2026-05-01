@@ -1,8 +1,10 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Cocktail } from "@/data/classicCocktails";
 import { useNavigate } from "react-router-dom";
 import { getRecipeUrl } from "@/utils/slugUtils";
+import { optimizedImageUrl } from "@/utils/imageUrl";
 import { Flame, GlassWater, Clock } from "lucide-react";
 
 type DrinkOfTheDayProps = {
@@ -13,6 +15,10 @@ type DrinkOfTheDayProps = {
 
 export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayProps) {
   const navigate = useNavigate();
+
+  // Optimized hero source — Lighthouse flagged the original 1440px image as
+  // ~192 KiB of wasted bytes. Cap at ~1280px wide for the LCP slot.
+  const heroSrc = optimizedImageUrl(recipe.image, { width: 1280, quality: 75 });
 
   const handleClick = () => {
     const url = getRecipeUrl(recipe);
@@ -25,6 +31,11 @@ export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayPr
 
   return (
     <section>
+      {/* Preload the LCP image so it starts downloading alongside the HTML
+          instead of after React mounts (was a 2.5s "resource load delay"). */}
+      <Helmet>
+        <link rel="preload" as="image" href={heroSrc} fetchpriority="high" />
+      </Helmet>
       <div
         role="link"
         tabIndex={0}
@@ -41,7 +52,7 @@ export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayPr
       >
         {/* Background image */}
         <img
-          src={recipe.image}
+          src={heroSrc}
           alt={recipe.name}
           loading="eager"
           fetchPriority="high"
