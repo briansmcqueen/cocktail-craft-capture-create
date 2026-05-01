@@ -37,7 +37,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
 
   return (
     <aside className={cn(
-      "bg-rich-charcoal border-r border-light-charcoal h-screen flex flex-col py-6 gap-2 sticky top-0 overflow-visible transition-all duration-300 z-40",
+      "bg-rich-charcoal border-r border-light-charcoal h-screen flex flex-col pt-6 pb-3 gap-2 sticky top-0 overflow-visible transition-all duration-300 z-40",
       collapsed ? "w-16" : "w-60"
     )}>
       {/* Header */}
@@ -107,7 +107,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
       </nav>
 
       {/* Footer */}
-      <div className={cn("mt-auto space-y-3", collapsed ? "px-2" : "px-6")}>
+      <div className={cn("mt-auto space-y-2", collapsed ? "px-2" : "px-6")}>
         {/* Add Recipe */}
         {collapsed ? (
           <Tooltip delayDuration={0}>
