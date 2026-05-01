@@ -43,7 +43,7 @@ export default function Terms() {
         <div className="flex-1 overflow-auto">
           <main id="main-content" className="w-full h-full">
             <div className="max-w-3xl mx-auto px-5 sm:px-4 lg:px-6 py-6 lg:py-8 pb-24 md:pb-6">
-              <BackButton />
+              <BackButton onClick={() => navigate(-1)} />
 
               <div className="mb-8 mt-4 flex items-center gap-2.5">
                 <FileText className="h-4 w-4 text-pure-white flex-shrink-0" />
