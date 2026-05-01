@@ -25,6 +25,8 @@ const FollowersPage = lazy(() => import("./pages/FollowersPage"));
 const Settings = lazy(() => import("./pages/Settings"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const RecipePage = lazy(() => import("./pages/RecipePage"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 
 
 // Optimize React Query configuration
@@ -110,6 +112,8 @@ const App = () => (
                   <Route path="/cocktail/:recipeName" element={<RecipePage />} />
                   <Route path="/cocktail/id/:recipeId" element={<RecipePage />} />
                   <Route path="/cocktail/:username/:recipeName" element={<RecipePage />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>

@@ -1,43 +1,92 @@
-# Modernize Public Profile Page Styling
+# Pre-Launch Checklist Implementation
 
-The public profile route (`/profile/:username`) currently uses an older layout with a heavy charcoal card, bordered avatar column, and vertically stacked stat rows. The own-profile view (`/user/:userId`, rendered by `UserProfile.tsx`) uses a cleaner, more current pattern. This plan brings `PublicProfilePage.tsx` in line with that modern pattern while preserving its public-only behavior (privacy gating, public favorites, public recipes).
+Ship the four blockers before public launch: legal pages, sitemap, correct OG URL, and basic analytics.
 
-## What changes
+## 1. Legal Pages (Terms + Privacy)
 
-**File:** `src/pages/PublicProfilePage.tsx` (only this file)
+Create two new routes under the existing app shell:
 
-### 1. Profile header card
-Replace the current `bg-rich-charcoal border-light-charcoal` card with the cleaner `bg-card border-border` Card pattern used in `UserProfile.tsx`:
+- `src/pages/Terms.tsx` → `/terms`
+- `src/pages/Privacy.tsx` → `/privacy`
 
-- Use shadcn `Card` + `CardContent` with `p-6 md:p-8`
-- Two-column layout: avatar on the left (single column, no follow button stacked underneath), text/info on the right
-- Avatar: `w-20 h-20 md:w-24 md:h-24`, no heavy primary border ring
-- Name as `text-2xl font-bold text-foreground`, `@username` as `text-muted-foreground`, optional bio as `text-card-foreground mt-2`
-- Replace the vertically stacked stat rows (BookOpen / Heart / Users / Users) with the 4-column stats grid from `UserProfile.tsx`:
-  - Recipes / Favorites / Followers / Following
-  - Each stat is a button that switches the active tab (Followers/Following stats keep their existing navigation to `/profile/:username/followers`)
-- Move the `FollowButton` next to the stats (below the grid, left-aligned, only when not own profile and viewer is logged in) instead of stacking it under the avatar
+Both pages:
+- Use `TopNavigation` + `Sidebar` layout for consistency with `Settings.tsx`
+- Standard page header (uppercase, tracking-widest, white Lucide icon — `FileText` and `Shield`)
+- Long-form prose styled with semantic tokens (`text-foreground`, `text-muted-foreground`)
+- Unified `BackButton` at top
+- `max-w-3xl` content column, `px-5` mobile gutters
 
-### 2. Tabs
-Expand from 2 tabs to 4 tabs to match the modern profile (still respecting public visibility):
+Content covers (boilerplate, Barbook-specific):
+- **Terms**: account rules, user-generated content ownership, acceptable use (no spam/abuse), recipe content licensing back to user, account termination, disclaimers, contact email
+- **Privacy**: what we collect (email, profile, recipes, bar inventory, favorites), Supabase as data processor, cookies/localStorage usage, profile visibility model, data deletion request flow, contact email
 
-- `Recipes` — existing public recipes list, unchanged
-- `Favorites` — existing public favorites list, unchanged
-- `Followers` — new tab; reuses `followsService.getFollowers(profile.id)` + `get_public_profiles` RPC + `UserCard` (same approach as `UserProfile.tsx`)
-- `Following` — new tab; reuses `followsService.getFollowing(profile.id)` + `get_public_profiles` RPC + `UserCard`
+Add footer links in `Sidebar.tsx` (desktop) and a small footer block on auth modal so users see them at signup.
 
-Use the same `TabsList` styling pattern as `UserProfile.tsx` (`grid grid-cols-4` on desktop), keeping the existing minimal underline tab style from the design system.
+Register both routes in `src/App.tsx` as lazy imports.
 
-### 3. Removed/cleaned up
-- Drop the custom `bg-rich-charcoal` / `border-light-charcoal` / `text-pure-white` / `text-soft-gray` / `text-light-text` hardcoded color classes in this file in favor of semantic tokens (`bg-card`, `border-border`, `text-foreground`, `text-muted-foreground`)
-- Remove the duplicated avatar-with-ring + stacked-stats block
+## 2. Sitemap
 
-### 4. Preserved behavior
-- Privacy gating, navigation, BackButton, TopNavigation/Sidebar wrapper, mobile padding (`pb-24 md:pb-6`), and the existing data fetches (`publicProfileService`, `followsService`, classic-cocktail favorites filter) all stay the same
-- `hideCreator` on recipe cards stays per the existing memory rule
-- The Followers/Following stat buttons can still deep-link to `/profile/:username/followers` if desired, OR simply switch tabs — recommend switching tabs for consistency with the own-profile view
+Create `public/sitemap.xml` with static entries:
+- `/` (homepage)
+- `/discover`
+- `/recipes`, `/mybar`, `/favorites`
+- `/terms`, `/privacy`
+- All 90+ classic cocktail URLs generated from `src/data/classicCocktails.ts` slugs
 
-## Out of scope
-- No changes to `UserProfile.tsx`, `UserCard`, services, or routing
-- No new endpoints or DB changes
-- Avatar upload, settings link, and edit affordances remain own-profile-only and are not added here
+Approach: write a small Node script `scripts/generate-sitemap.mjs` that imports the classics data and writes `public/sitemap.xml`. Run it once during this task; commit the generated file. (No build-step integration — keep simple.)
+
+Update `public/robots.txt` to add:
+```
+Sitemap: https://barbook.io/sitemap.xml
+```
+
+## 3. Fix OG URL
+
+Update `index.html`:
+- `<meta property="og:url">` → `https://barbook.io`
+- `<link rel="canonical">` → `https://barbook.io`
+
+Leave OG image (Americano) as-is per memory.
+
+## 4. Analytics
+
+Add **Plausible** (privacy-friendly, no cookie banner needed, lightweight). Single script tag in `index.html` `<head>`:
+
+```html
+<script defer data-domain="barbook.io" src="https://plausible.io/js/script.js"></script>
+```
+
+No app-code changes needed — Plausible auto-tracks pageviews including SPA route changes via the default script. User will need to create a free Plausible account and add `barbook.io` as a site after deploy.
+
+(If user prefers PostHog or GA4 instead, swap the snippet — flag this in the implementation.)
+
+## Files Touched
+
+**New:**
+- `src/pages/Terms.tsx`
+- `src/pages/Privacy.tsx`
+- `public/sitemap.xml`
+- `scripts/generate-sitemap.mjs`
+
+**Edited:**
+- `src/App.tsx` (register `/terms`, `/privacy` routes)
+- `src/components/Sidebar.tsx` (footer links)
+- `src/components/auth/AuthModal.tsx` (small "By signing up you agree to..." line)
+- `public/robots.txt` (add Sitemap line)
+- `index.html` (OG URL, canonical, Plausible snippet)
+
+## Out of Scope (Post-Launch)
+
+- Cookie consent banner — Plausible doesn't require one
+- Email digest / transactional emails
+- Sentry / error monitoring
+- PWA manifest / install prompt
+- Editorial curation system
+
+## After This Ships
+
+User action items (cannot be done in code):
+1. Click **Publish → Update** to push frontend changes live
+2. Create free account at plausible.io and add `barbook.io`
+3. Submit `https://barbook.io/sitemap.xml` to Google Search Console
+4. Replace placeholder contact email in Terms/Privacy with real address

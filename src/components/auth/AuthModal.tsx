@@ -382,6 +382,16 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
             }
           </Button>
         </div>
+
+        {mode === 'signup' && (
+          <p className="text-xs text-soft-gray text-center px-4">
+            By creating an account, you agree to our{' '}
+            <a href="/terms" className="text-light-text hover:underline">Terms</a>
+            {' '}and{' '}
+            <a href="/privacy" className="text-light-text hover:underline">Privacy Policy</a>
+            .
+          </p>
+        )}
       </DialogContent>
     </Dialog>
   );
