@@ -34,7 +34,7 @@ export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayPr
       {/* Preload the LCP image so it starts downloading alongside the HTML
           instead of after React mounts (was a 2.5s "resource load delay"). */}
       <Helmet>
-        <link rel="preload" as="image" href={heroSrc} fetchpriority="high" />
+        <link rel="preload" as="image" href={heroSrc} fetchPriority="high" />
       </Helmet>
       <div
         role="link"
