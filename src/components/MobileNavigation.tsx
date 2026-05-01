@@ -56,7 +56,7 @@ export default function MobileNavigation({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="lg:hidden hover:bg-muted rounded-organic-sm">
+        <Button variant="ghost" size="icon" aria-label="Open navigation menu" className="lg:hidden hover:bg-muted rounded-organic-sm">
           <Menu className="h-6 w-6 text-foreground" />
         </Button>
       </SheetTrigger>
