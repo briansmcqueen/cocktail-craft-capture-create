@@ -67,13 +67,13 @@ export default function UserPreferencesForm() {
 
   return (
     <Card className="bg-transparent border-0 shadow-none">
-      <CardHeader>
+      <CardHeader className="px-0 pt-0">
         <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
           <SlidersHorizontal className="h-5 w-5 text-pure-white" />
           Your Preferences
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 px-0">
         <div className="space-y-3">
           <Label>Preferred Unit for Recipes</Label>
           <div className="flex gap-2">
