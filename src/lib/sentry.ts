@@ -8,7 +8,9 @@ import * as Sentry from "@sentry/react";
  * The DSN is a publishable identifier — safe to ship to the browser.
  */
 export function initSentry() {
-  const dsn = import.meta.env.VITE_SENTRY_DSN as string | undefined;
+  const dsn =
+    (import.meta.env.VITE_SENTRY_DSN as string | undefined) ||
+    "https://b8199b40f47ba8f38ea0e45e6ab56686@o4511312544137216.ingest.us.sentry.io/4511312550297600";
   if (!dsn) return;
 
   if (import.meta.env.DEV) return;
