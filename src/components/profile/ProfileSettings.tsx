@@ -119,14 +119,14 @@ export default function ProfileSettings() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card border-border">
-        <CardHeader>
+      <Card className="bg-transparent border-0 shadow-none">
+        <CardHeader className="px-0 pt-0">
           <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
             <User className="h-5 w-5 text-pure-white" />
             Profile Settings
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-0">
           <AvatarUpload
             avatarUrl={getAvatarUrl(profile.avatar_url)}
             fullName={profile.full_name}
@@ -148,14 +148,14 @@ export default function ProfileSettings() {
       <UserPreferencesForm />
 
       {/* Sign Out Section */}
-      <Card className="bg-card border-border">
-        <CardHeader>
+      <Card className="bg-transparent border-0 shadow-none">
+        <CardHeader className="px-0 pt-0">
           <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
             <LogOut className="h-5 w-5 text-pure-white" />
             Account
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-0">
           <Separator className="mb-4 bg-border" />
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>

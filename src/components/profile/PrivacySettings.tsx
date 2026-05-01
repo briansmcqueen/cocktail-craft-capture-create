@@ -173,7 +173,7 @@ export default function PrivacySettings() {
 
   if (loading) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-transparent border-0 shadow-none">
         <CardContent className="p-8">
           <div className="flex justify-center">Loading privacy settings...</div>
         </CardContent>
@@ -182,8 +182,8 @@ export default function PrivacySettings() {
   }
 
   return (
-    <Card className="bg-card border-border">
-      <CardHeader>
+    <Card className="bg-transparent border-0 shadow-none">
+      <CardHeader className="px-0 pt-0">
         <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
           <Shield className="h-5 w-5 text-pure-white" />
           Privacy & Visibility
@@ -192,7 +192,7 @@ export default function PrivacySettings() {
           Control who can see your profile, recipes, and follow you
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 px-0">
         <Alert className="bg-primary/10 border-primary/30">
           <Info className="h-4 w-4 text-primary" />
           <AlertDescription className="text-foreground text-sm">
