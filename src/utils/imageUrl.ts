@@ -18,28 +18,17 @@ export interface SupabaseImageOptions {
   resize?: 'cover' | 'contain' | 'fill';
 }
 
-const SUPABASE_PUBLIC = '/storage/v1/object/public/';
-const SUPABASE_RENDER = '/storage/v1/render/image/public/';
-
+/**
+ * NOTE: The Supabase on-the-fly image transform endpoint
+ * (`/storage/v1/render/image/public/...`) requires a paid Supabase plan.
+ * On the Free tier it returns 400/404, which broke the classic cocktail
+ * carousel thumbnails and Featured grid. Until the project is upgraded,
+ * we pass URLs through unchanged and rely on the original WebP assets +
+ * native lazy-loading for image performance.
+ */
 export function optimizedImageUrl(
   src: string | null | undefined,
-  opts: SupabaseImageOptions = {}
+  _opts: SupabaseImageOptions = {}
 ): string {
-  if (!src) return '';
-  // Only rewrite Supabase public storage URLs; pass through everything else
-  // (Unsplash, base64, relative bundled assets, etc.).
-  if (!src.includes(SUPABASE_PUBLIC)) return src;
-
-  const { width, height, quality = 75, resize = 'cover' } = opts;
-  const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1;
-
-  const params = new URLSearchParams();
-  if (width) params.set('width', String(Math.round(width * dpr)));
-  if (height) params.set('height', String(Math.round(height * dpr)));
-  params.set('quality', String(quality));
-  params.set('resize', resize);
-
-  const rewritten = src.replace(SUPABASE_PUBLIC, SUPABASE_RENDER);
-  const sep = rewritten.includes('?') ? '&' : '?';
-  return `${rewritten}${sep}${params.toString()}`;
+  return src ?? '';
 }
