@@ -11,7 +11,6 @@ type LazyRecipeGridProps = {
   onShareRecipe: (recipe: Cocktail) => void;
   onTagClick: (tag: string) => void;
   onShowForm: () => void;
-  forceUpdate: number;
   library: string;
   onShowAuthModal?: () => void;
   itemsPerPage?: number;
@@ -25,7 +24,6 @@ export default function LazyRecipeGrid({
   onShareRecipe,
   onTagClick,
   onShowForm,
-  forceUpdate,
   library,
   onShowAuthModal,
   itemsPerPage = 12

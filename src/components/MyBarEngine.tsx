@@ -16,7 +16,6 @@ type MyBarEngineProps = {
   onRecipeClick: (recipe: Cocktail) => void;
   onToggleFavorite: (recipe: Cocktail) => void;
   onTagClick: (tag: string) => void;
-  forceUpdate: number;
 };
 
 export default function MyBarEngine({
@@ -24,7 +23,6 @@ export default function MyBarEngine({
   onRecipeClick,
   onToggleFavorite,
   onTagClick,
-  forceUpdate
 }: MyBarEngineProps) {
   const {
     myBar,
@@ -41,7 +39,7 @@ export default function MyBarEngine({
     loadPreset,
     deletePreset,
     updatePreset
-  } = useMyBarData(forceUpdate);
+  } = useMyBarData();
 
   const [includeAssumed] = useState(DEFAULT_MYBAR_SETTINGS.assumeBasicIngredients);
 

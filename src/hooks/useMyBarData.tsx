@@ -18,7 +18,7 @@ interface MyBarInventory {
   [ingredientId: string]: boolean;
 }
 
-export function useMyBarData(forceUpdate: number) {
+export function useMyBarData() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [myBar, setMyBar] = useState<MyBarInventory>({});
@@ -109,7 +109,7 @@ export function useMyBarData(forceUpdate: number) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, forceUpdate]);
+  }, [user]);
 
   // Create combined ingredient lookup map (database + custom)
   const allIngredients = useMemo(() => {
