@@ -1,13 +1,14 @@
-import { useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { Cocktail } from "@/data/classicCocktails";
 import Sidebar from "@/components/Sidebar";
 import MainContent from "@/components/MainContent";
 import TopNavigation from "@/components/TopNavigation";
+import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
+import type { LibraryKey } from "@/types/library";
 
 interface AuthenticatedViewProps {
   user: User | null;
-  library: string;
+  library: LibraryKey;
   setLibrary: (library: string) => void;
   showForm: boolean;
   setShowForm: (show: boolean) => void;
@@ -33,7 +34,6 @@ interface AuthenticatedViewProps {
   onProfileClick: () => void;
   onMyRecipesClick: () => void;
   onFavoritesClick: () => void;
-  forceUpdate: number;
   myBarIngredients: string[];
 }
 
@@ -65,20 +65,9 @@ export default function AuthenticatedView({
   onProfileClick,
   onMyRecipesClick,
   onFavoritesClick,
-  forceUpdate,
   myBarIngredients
 }: AuthenticatedViewProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    return localStorage.getItem('sidebar_collapsed') === 'true';
-  });
-
-  const toggleSidebar = () => {
-    setSidebarCollapsed(prev => {
-      const next = !prev;
-      localStorage.setItem('sidebar_collapsed', String(next));
-      return next;
-    });
-  };
+  const [sidebarCollapsed, toggleSidebar] = useSidebarCollapsed();
 
   const handleCloseForm = () => {
     setShowForm(false);
@@ -149,7 +138,6 @@ export default function AuthenticatedView({
                 setEditingRecipe={setEditingRecipe}
                 setShowAuthModal={setShowAuthModal}
                 onNavigateToMyBar={handleNavigateToMyBar}
-                forceUpdate={forceUpdate}
                 myBarIngredients={myBarIngredients}
               />
             </div>
