@@ -10,6 +10,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { getRecipeUrl } from '@/utils/slugUtils';
 import { ShareCount } from './ShareCount';
 import { getAvatarUrl } from '@/utils/avatarUrl';
+import { optimizedImageUrl } from '@/utils/imageUrl';
 
 interface UniversalRecipeCardProps {
   recipe: Cocktail;
@@ -75,8 +76,12 @@ export default function UniversalRecipeCard({
         {/* Hero image */}
         <div className="relative aspect-square overflow-hidden">
           <img
-            src={recipe.image}
+            src={optimizedImageUrl(recipe.image, { width: 480, quality: 70 })}
             alt={recipe.name}
+            loading="lazy"
+            decoding="async"
+            width={480}
+            height={480}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           
@@ -90,7 +95,7 @@ export default function UniversalRecipeCard({
             >
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8 border-2 border-white/20">
-                  <AvatarImage src={fullAvatarUrl || undefined} />
+                  <AvatarImage src={optimizedImageUrl(fullAvatarUrl || '', { width: 64, quality: 70 }) || undefined} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                     {recipe.creatorUsername.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
