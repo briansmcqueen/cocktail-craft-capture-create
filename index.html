@@ -9,10 +9,13 @@
     <meta name="author" content="Barbook" />
     <meta name="fo-verify" content="a6f9a397-a24e-4594-97a4-96452e443417" />
 
-    <!-- Trendy Google Fonts -->
+    <!-- Fonts: only Inter is actually used. Drop unused families to cut render-blocking CSS. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Speed up the LCP hero image (Drink of the Day) by warming up the Supabase image CDN. -->
+    <link rel="preconnect" href="https://qwfoumoaotswlzbzbcdt.supabase.co" crossorigin>
 
     <!-- Rich Open Graph metadata for social sharing -->
     <meta property="og:title" content="Barbook - Your Digital Cocktail Companion" />
