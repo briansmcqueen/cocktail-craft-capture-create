@@ -21,6 +21,7 @@ import { useRecipeScaling } from "@/hooks/useRecipeScaling";
 import RecipeRatingStars from "@/components/ratings/RecipeRatingStars";
 import RecipeRatingInput from "@/components/ratings/RecipeRatingInput";
 import RecipeComments from "@/components/RecipeComments";
+import RecipeMeta from "@/components/RecipeMeta";
 
 
 import { recipeNameToSlug, slugToRecipeName, getRecipeUrl } from "@/utils/slugUtils";
