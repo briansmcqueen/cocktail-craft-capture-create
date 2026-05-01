@@ -79,20 +79,23 @@ export default function AvatarUpload({
     setUploading(true);
 
     try {
-      // Compress the cropped image
+      // Compress the cropped image to WebP (with JPEG fallback)
       const compressedBlob = await compressImage(
-        new File([croppedBlob], 'avatar.jpg', { type: 'image/jpeg' }),
+        new File([croppedBlob], 'avatar', { type: 'image/jpeg' }),
         400,
         400,
         0.85
       );
-      
-      const fileExt = 'jpg';
+
+      const fileExt = compressedBlob.type === 'image/webp' ? 'webp' : 'jpg';
       const fileName = `${userId}/avatar.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(fileName, compressedBlob, { upsert: true });
+        .upload(fileName, compressedBlob, {
+          upsert: true,
+          contentType: compressedBlob.type,
+        });
 
       if (uploadError) {
         toast({
