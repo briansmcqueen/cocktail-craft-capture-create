@@ -9,10 +9,21 @@
     <meta name="author" content="Barbook" />
     <meta name="fo-verify" content="a6f9a397-a24e-4594-97a4-96452e443417" />
 
-    <!-- Fonts: only Inter is actually used. Drop unused families to cut render-blocking CSS. -->
+    <!-- Fonts: only Inter is used. Load it async (non-render-blocking) so the
+         system font shows immediately and Inter swaps in once available.
+         Lighthouse flagged the synchronous <link rel="stylesheet"> as ~750ms
+         of render-blocking time on mobile. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    >
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
 
     <!-- Speed up the LCP hero image (Drink of the Day) by warming up the Supabase image CDN. -->
     <link rel="preconnect" href="https://qwfoumoaotswlzbzbcdt.supabase.co" crossorigin>
