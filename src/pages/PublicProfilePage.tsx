@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import UserCard from '@/components/social/UserCard';
 import FollowButton from '@/components/FollowButton';
+import ReportButton from '@/components/moderation/ReportButton';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
 import { BackButton } from '@/components/ui/back-button';
