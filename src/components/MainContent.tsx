@@ -65,7 +65,7 @@ export default function MainContent({
 }: MainContentProps) {
   if (showForm) {
     return (
-      <div className="flex justify-center min-h-screen p-4 lg:p-6">
+      <div className="flex justify-center min-h-screen p-4 lg:p-6 px-0 py-0">
         <div className="w-full max-w-2xl">
           <RecipeForm
             initial={editingRecipe || undefined}
