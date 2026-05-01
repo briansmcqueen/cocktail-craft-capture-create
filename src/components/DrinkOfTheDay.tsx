@@ -26,14 +26,26 @@ export default function DrinkOfTheDay({ recipe, onRecipeClick }: DrinkOfTheDayPr
   return (
     <section>
       <div
+        role="link"
+        tabIndex={0}
+        aria-label={`Drink of the Day: ${recipe.name}. View recipe.`}
         className="relative w-full rounded-organic-lg overflow-hidden cursor-pointer group"
         style={{ minHeight: '340px' }}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         {/* Background image */}
         <img
           src={recipe.image}
           alt={recipe.name}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
