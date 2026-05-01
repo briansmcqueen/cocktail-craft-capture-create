@@ -34,7 +34,7 @@ export default function Featured({
   const [communityRecipes, setCommunityRecipes] = useState<Cocktail[]>([]);
   
   // My Bar data for MyBarModule
-  const { myBar, myBarIngredients } = useMyBarData(0);
+  const { myBar, myBarIngredients } = useMyBarData();
   const allRecipes = useMemo(() => [...classicCocktails, ...communityRecipes], [communityRecipes]);
   const { recipesICanMake, recipesNeedingOneIngredient, whatToBuyNext } = useRecipeAnalysis(allRecipes, myBarIngredients, myBar);
 
