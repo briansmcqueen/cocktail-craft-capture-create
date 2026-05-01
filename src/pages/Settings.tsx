@@ -245,15 +245,20 @@ export default function Settings() {
                 </h1>
               </div>
 
-              <div className="space-y-6">
+              <div className="divide-y divide-border">
                 {/* Profile Settings */}
-                <ProfileSettings />
+                <div className="pb-10">
+                  <ProfileSettings />
+                </div>
 
                 {/* Privacy Settings */}
-                <PrivacySettings />
+                <div className="py-10">
+                  <PrivacySettings />
+                </div>
 
                 {/* Password & Security */}
-                <Card className="bg-transparent border-0 shadow-none">
+                <div className="pt-10">
+                <Card className="bg-transparent border-0 !shadow-none">
                   <CardHeader className="px-0 pt-0">
                     <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
                       <Shield className="h-5 w-5 text-pure-white" />
@@ -459,6 +464,7 @@ export default function Settings() {
                     )}
                   </CardContent>
                 </Card>
+                </div>
               </div>
             </div>
           </main>

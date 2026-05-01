@@ -66,7 +66,7 @@ export default function UserPreferencesForm() {
   }
 
   return (
-    <Card className="bg-transparent border-0 shadow-none">
+    <Card className="bg-transparent border-0 !shadow-none">
       <CardHeader className="px-0 pt-0">
         <CardTitle className="text-lg font-semibold text-pure-white flex items-center gap-2">
           <SlidersHorizontal className="h-5 w-5 text-pure-white" />
