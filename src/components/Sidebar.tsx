@@ -205,10 +205,10 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
 
         {/* Legal links */}
         {!collapsed && (
-          <div className="flex items-center text-xs text-soft-gray pt-0 gap-[12px]">
-            <Link to="/terms" className="hover:text-light-text transition-colors">Terms</Link>
+          <div className="flex items-center text-xs leading-none text-soft-gray pt-0 gap-[12px]">
+            <Link to="/terms" className="inline-flex h-auto py-0 leading-none hover:text-light-text transition-colors">Terms</Link>
             <span>·</span>
-            <Link to="/privacy" className="hover:text-light-text transition-colors">Privacy</Link>
+            <Link to="/privacy" className="inline-flex h-auto py-0 leading-none hover:text-light-text transition-colors">Privacy</Link>
           </div>
         )}
       </div>
