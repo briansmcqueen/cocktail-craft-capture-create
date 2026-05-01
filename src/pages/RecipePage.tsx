@@ -261,6 +261,16 @@ export default function RecipePage() {
                       <Edit size={16} /> Edit
                     </Button>
                   )}
+                  {recipe.isUserRecipe && !isUserRecipe && (
+                    <ReportButton
+                      targetType="recipe"
+                      targetId={recipe.id}
+                      targetOwnerId={(recipe as { user_id?: string }).user_id ?? null}
+                      targetLabel={recipe.name}
+                      variant="text"
+                      className="text-soft-gray hover:text-pure-white"
+                    />
+                  )}
                 </div>
 
               </div>
