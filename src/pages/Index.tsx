@@ -8,6 +8,7 @@ import AuthModal from "@/components/auth/AuthModal";
 import ShareRecipe from "@/components/ShareRecipe";
 import AuthenticatedView from "@/components/AuthenticatedView";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import PageSEO from "@/components/PageSEO";
 import {
   LIBRARY_TO_PATH,
   libraryFromPath,
