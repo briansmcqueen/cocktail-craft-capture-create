@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import PageSEO from '@/components/PageSEO';
 import { Lock, Mail, Shield, AlertTriangle, Settings as Settings2 } from 'lucide-react';
 
 export default function Settings() {
@@ -198,6 +199,12 @@ export default function Settings() {
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
+      <PageSEO
+        title="Settings | Barbook"
+        description="Manage your Barbook profile, privacy, and account preferences."
+        path="/settings"
+        noindex
+      />
       <TopNavigation
         user={user}
         activeLibrary=""
