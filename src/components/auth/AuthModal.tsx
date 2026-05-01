@@ -349,7 +349,33 @@ export default function AuthModal({ open, onOpenChange, initialMode = 'signin', 
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          {mode === 'signup' && (
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id="acceptTerms"
+                checked={acceptedTerms}
+                onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                className="mt-0.5"
+              />
+              <Label htmlFor="acceptTerms" className="text-xs text-soft-gray cursor-pointer leading-relaxed">
+                I am 21+ and agree to the{' '}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-light-text hover:underline">
+                  Terms
+                </a>{' '}
+                and{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-light-text hover:underline">
+                  Privacy Policy
+                </a>
+                , including the community guidelines.
+              </Label>
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading || (mode === 'signup' && !acceptedTerms)}
+          >
             {loading ? 'Loading...' : mode === 'reset' ? 'Send Reset Link' : mode === 'signin' ? 'Sign In' : 'Create Account'}
           </Button>
         </form>
