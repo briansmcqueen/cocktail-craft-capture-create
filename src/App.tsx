@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import * as Sentry from "@sentry/react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { FavoritesProvider } from "@/hooks/useFavorites";
 import { AuthModalProvider } from "@/contexts/AuthModalContext";
@@ -81,7 +82,7 @@ function OnboardingWrapper() {
   );
 }
 
-const App = () => (
+const AppShell = () => (
   <QueryClientProvider client={queryClient}>
    <HelmetProvider>
     <AuthProvider>
@@ -131,6 +132,12 @@ const App = () => (
     </AuthProvider>
    </HelmetProvider>
   </QueryClientProvider>
+);
+
+const App = () => (
+  <Sentry.ErrorBoundary fallback={<div />}>
+    <AppShell />
+  </Sentry.ErrorBoundary>
 );
 
 export default App;
