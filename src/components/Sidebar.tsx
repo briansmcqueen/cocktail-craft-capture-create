@@ -68,7 +68,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
       </div>
 
       {/* Navigation */}
-      <nav className={cn("flex flex-col gap-1 overflow-y-auto min-h-0", collapsed ? "px-2" : "px-3")}>
+      <nav className={cn("flex flex-col gap-1 flex-1 overflow-y-auto min-h-0", collapsed ? "px-2" : "px-3")}>
         {nav.map((item) => {
           const isActive = location.pathname === item.path;
           const linkContent = (
@@ -107,7 +107,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
       </nav>
 
       {/* Footer */}
-      <div className={cn("space-y-2 mt-4", collapsed ? "px-2" : "px-6")}>
+      <div className={cn("space-y-2", collapsed ? "px-2" : "px-6")}>
         {/* Add Recipe */}
         {collapsed ? (
           <Tooltip delayDuration={0}>
