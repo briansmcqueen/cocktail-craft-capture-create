@@ -400,6 +400,8 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string | null
+          deletion_requested_at: string | null
+          deletion_scheduled_for: string | null
           full_name: string | null
           id: string
           onboarding_completed: boolean | null
@@ -414,6 +416,8 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string | null
+          deletion_requested_at?: string | null
+          deletion_scheduled_for?: string | null
           full_name?: string | null
           id: string
           onboarding_completed?: boolean | null
@@ -428,6 +432,8 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string | null
+          deletion_requested_at?: string | null
+          deletion_scheduled_for?: string | null
           full_name?: string | null
           id?: string
           onboarding_completed?: boolean | null
@@ -929,6 +935,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cancel_account_deletion: { Args: never; Returns: undefined }
       check_rate_limit: {
         Args: {
           p_action: string
@@ -1031,6 +1038,14 @@ export type Database = {
       is_user_blocked: {
         Args: { p_blocked_id: string; p_blocker_id: string }
         Returns: boolean
+      }
+      purge_user_account: { Args: { p_user_id: string }; Returns: undefined }
+      request_account_deletion: {
+        Args: never
+        Returns: {
+          deletion_requested_at: string
+          deletion_scheduled_for: string
+        }[]
       }
       validate_affiliate_url: { Args: { url: string }; Returns: boolean }
       verify_admin_access: { Args: { p_user_id?: string }; Returns: boolean }
