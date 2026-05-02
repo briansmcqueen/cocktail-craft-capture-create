@@ -31,15 +31,14 @@ export async function getRecipeComments(recipeId: string): Promise<RecipeComment
   return (data as any[]).slice(0, 50).map((row) => ({
     id: row.id,
     recipe_id: row.recipe_id,
-    // user_id is intentionally not exposed by the safe RPC; keep blank for type compat.
-    user_id: '',
+    user_id: row.user_id,
     content: row.content,
     category: row.category as 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
     photo_url: row.photo_url ?? undefined,
     created_at: row.created_at,
     updated_at: row.updated_at,
     user: {
-      id: '',
+      id: row.user_id,
       username: row.user_display_name ?? null,
       full_name: row.user_display_name ?? null,
       avatar_url: row.user_avatar_url ?? null,
