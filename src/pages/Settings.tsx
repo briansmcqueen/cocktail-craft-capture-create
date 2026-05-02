@@ -5,6 +5,7 @@ import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import PrivacySettings from '@/components/profile/PrivacySettings';
+import DangerZone from '@/components/settings/DangerZone';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,7 @@ export default function Settings() {
   const [showEmailChange, setShowEmailChange] = useState(false);
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -39,6 +41,20 @@ export default function Settings() {
       navigate('/');
     }
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (!cancelled) setUsername((data as any)?.username ?? null);
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -471,6 +487,11 @@ export default function Settings() {
                     )}
                   </CardContent>
                 </Card>
+                </div>
+
+                {/* Danger Zone */}
+                <div className="pt-10">
+                  <DangerZone username={username} />
                 </div>
               </div>
             </div>

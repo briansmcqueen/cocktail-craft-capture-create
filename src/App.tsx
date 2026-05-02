@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import ProfileSetupModal from "@/components/onboarding/ProfileSetupModal";
 import PrivacyNotice from "@/components/PrivacyNotice";
+import DeletionPendingBanner from "@/components/DeletionPendingBanner";
 
 // Lazy load components for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -32,6 +33,7 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const AdminModeration = lazy(() => import("./pages/AdminModeration"));
+const AccountDeleted = lazy(() => import("./pages/AccountDeleted"));
 
 
 // Optimize React Query configuration
@@ -96,6 +98,7 @@ const AppShell = () => (
             <BrowserRouter>
               <OnboardingWrapper />
               <PrivacyNotice />
+              <DeletionPendingBanner />
               <a
                 href="#main-content"
                 className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-organic-sm focus:shadow-lg"
@@ -123,7 +126,7 @@ const AppShell = () => (
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
                   <Route path="/admin/moderation" element={<AdminModeration />} />
-                  
+                  <Route path="/account-deleted" element={<AccountDeleted />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
