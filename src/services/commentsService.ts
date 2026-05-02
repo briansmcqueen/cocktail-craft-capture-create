@@ -18,52 +18,32 @@ export interface RecipeComment {
 }
 
 export async function getRecipeComments(recipeId: string): Promise<RecipeComment[]> {
-  // Optimized: Fetch comments first, then fetch only needed public profile fields via RPC
-  const commentsResult = await supabase
-    .from('recipe_comments')
-    .select('*')
-    .eq('recipe_id', recipeId)
-    .order('created_at', { ascending: false })
-    .limit(50); // Limit for better performance
+  // Use SECURITY DEFINER RPC so we never expose recipe_comments.user_id to anonymous visitors.
+  const { data, error } = await supabase.rpc('get_safe_comment_data', { p_recipe_id: recipeId });
 
-  if (commentsResult.error) {
-    console.error('Error fetching recipe comments:', commentsResult.error);
+  if (error) {
+    console.error('Error fetching recipe comments:', error);
     return [];
   }
 
-  if (!commentsResult.data || commentsResult.data.length === 0) {
-    return [];
-  }
+  if (!data || data.length === 0) return [];
 
-  // Collect unique user_ids for the comments
-  const userIds = Array.from(new Set(commentsResult.data.map((c) => c.user_id)));
-
-  // Fetch only safe public fields for those users via SECURITY DEFINER RPC (bypasses RLS safely)
-  type PublicProfile = { id: string; username: string | null; avatar_url: string | null };
-  const { data: publicProfiles, error: profilesError } = await supabase
-    .rpc('get_public_profiles', { user_ids: userIds as any });
-
-  if (profilesError) {
-    console.warn('Warning fetching public profiles (fallback to anonymous):', profilesError);
-  }
-
-  // Create a lookup map for profiles for O(1) access
-  const profilesMap = new Map<string, PublicProfile>();
-  (publicProfiles as PublicProfile[] | null)?.forEach((p) => {
-    profilesMap.set(p.id, p);
-  });
-
-  // Map comments with user data using the lookup map
-  return commentsResult.data.map((comment) => ({
-    id: comment.id,
-    recipe_id: comment.recipe_id,
-    user_id: comment.user_id,
-    content: comment.content,
-    category: comment.category as 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
-    photo_url: comment.photo_url,
-    created_at: comment.created_at,
-    updated_at: comment.updated_at,
-    user: profilesMap.get(comment.user_id) as any,
+  return (data as any[]).slice(0, 50).map((row) => ({
+    id: row.id,
+    recipe_id: row.recipe_id,
+    // user_id is intentionally not exposed by the safe RPC; keep blank for type compat.
+    user_id: '',
+    content: row.content,
+    category: row.category as 'general' | 'variation' | 'substitution' | 'technique' | 'presentation',
+    photo_url: row.photo_url ?? undefined,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    user: {
+      id: '',
+      username: row.user_display_name ?? null,
+      full_name: row.user_display_name ?? null,
+      avatar_url: row.user_avatar_url ?? null,
+    },
   }));
 }
 
