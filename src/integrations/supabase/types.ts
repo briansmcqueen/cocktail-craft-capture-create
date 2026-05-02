@@ -984,6 +984,7 @@ export type Database = {
           updated_at: string
           user_avatar_url: string
           user_display_name: string
+          user_id: string
         }[]
       }
       get_safe_rating_stats: { Args: { p_recipe_id: string }; Returns: Json }
