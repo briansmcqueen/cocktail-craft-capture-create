@@ -19,16 +19,39 @@ export interface SupabaseImageOptions {
 }
 
 /**
- * NOTE: The Supabase on-the-fly image transform endpoint
- * (`/storage/v1/render/image/public/...`) requires a paid Supabase plan.
- * On the Free tier it returns 400/404, which broke the classic cocktail
- * carousel thumbnails and Featured grid. Until the project is upgraded,
- * we pass URLs through unchanged and rely on the original WebP assets +
- * native lazy-loading for image performance.
+ * Supabase's on-the-fly transform endpoint requires a paid plan, so we leave
+ * Supabase URLs untouched. Unsplash, however, supports free on-the-fly
+ * resizing via query params (`w`, `q`, `auto=format`, `fit=crop`). When the
+ * source is an `images.unsplash.com` URL we rewrite it to request an
+ * appropriately-sized WebP/AVIF variant — this is the biggest win for the
+ * new Unsplash+ hero/card photos without touching any component code.
  */
 export function optimizedImageUrl(
   src: string | null | undefined,
-  _opts: SupabaseImageOptions = {}
+  opts: SupabaseImageOptions = {}
 ): string {
-  return src ?? '';
+  if (!src) return '';
+
+  // Only rewrite Unsplash URLs — everything else passes through unchanged.
+  if (!src.includes('images.unsplash.com')) return src;
+
+  try {
+    const url = new URL(src);
+    const { width, height, quality = 75, resize = 'cover' } = opts;
+
+    // Account for high-DPI screens up to 2x.
+    const dpr = typeof window !== 'undefined'
+      ? Math.min(window.devicePixelRatio || 1, 2)
+      : 1;
+
+    if (width) url.searchParams.set('w', String(Math.round(width * dpr)));
+    if (height) url.searchParams.set('h', String(Math.round(height * dpr)));
+    url.searchParams.set('q', String(quality));
+    url.searchParams.set('auto', 'format');
+    url.searchParams.set('fit', resize === 'contain' ? 'max' : 'crop');
+
+    return url.toString();
+  } catch {
+    return src;
+  }
 }
