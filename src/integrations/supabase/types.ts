@@ -938,6 +938,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      create_comment_notification: {
+        Args: { p_comment_id: string }
+        Returns: undefined
+      }
       get_batch_recipe_share_counts: {
         Args: { p_recipe_ids: string[] }
         Returns: {
