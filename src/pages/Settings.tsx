@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import PrivacySettings from '@/components/profile/PrivacySettings';
 import DangerZone from '@/components/settings/DangerZone';
+import DataExport from '@/components/settings/DataExport';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -487,6 +488,11 @@ export default function Settings() {
                     )}
                   </CardContent>
                 </Card>
+                </div>
+
+                {/* Data Export */}
+                <div className="py-10">
+                  <DataExport />
                 </div>
 
                 {/* Danger Zone */}
