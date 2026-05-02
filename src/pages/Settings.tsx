@@ -488,6 +488,11 @@ export default function Settings() {
                   </CardContent>
                 </Card>
                 </div>
+
+                {/* Danger Zone */}
+                <div className="pt-10">
+                  <DangerZone username={username} />
+                </div>
               </div>
             </div>
           </main>
