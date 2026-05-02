@@ -200,7 +200,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "10",
     name: "Aviation",
-    image: "https://images.unsplash.com/photo-1614313519322-2715307a513c?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/aviation.webp",
     ingredients: [
       "2 oz gin",
       "0.75 oz maraschino liqueur",
@@ -743,7 +743,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "45",
     name: "Manhattan",
-    image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/manhattan.webp",
     ingredients: [
       "2 oz rye whiskey",
       "1 oz sweet vermouth",
@@ -790,7 +790,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "83",
     name: "Mojito",
-    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/mojito.webp",
     ingredients: [
       "3 mint leaves",
       "0.5 oz simple syrup",
@@ -807,7 +807,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "5",
     name: "Cosmopolitan",
-    image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/cosmopolitan.webp",
     ingredients: [
       "1.5 oz citron vodka",
       "0.75 oz Cointreau",
@@ -823,7 +823,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "6",
     name: "Bellini",
-    image: "https://images.unsplash.com/photo-1561542796-0b5159c9b8c8?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/bellini.webp",
     ingredients: [
       "1.5 oz fresh peach puree",
       "4 oz Prosecco (sparkling wine)",
@@ -850,7 +850,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "8",
     name: "Bloody Mary",
-    image: "https://images.unsplash.com/photo-1514328525431-6e4c453964f1?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/bloody-mary.webp",
     ingredients: [
       "2 oz vodka",
       "4 oz tomato juice",
@@ -868,7 +868,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "9",
     name: "Caipirinha",
-    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/caiparihna.webp",
     ingredients: [
       "2 oz cachaça (Brazilian rum)",
       "1 oz lime wedges",
@@ -914,7 +914,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "12",
     name: "Cuba Libre",
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/cuba-libre.webp",
     ingredients: [
       "2 oz light rum",
       "4 oz cola",
@@ -929,7 +929,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "13",
     name: "French 75",
-    image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/french-75.webp",
     ingredients: [
       "1 oz gin (or cognac)",
       "0.5 oz fresh lemon juice",
@@ -1017,7 +1017,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "19",
     name: "Lemon Drop Martini",
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/lemon-drop-martini.webp",
     ingredients: [
       "2 oz vodka",
       "0.75 oz fresh lemon juice",
@@ -1094,7 +1094,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "113",
     name: "Mimosa",
-    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/mimosa.webp",
     ingredients: [
       "3 oz champagne or sparkling wine",
       "3 oz fresh orange juice",
@@ -1108,7 +1108,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "24",
     name: "Mint Julep",
-    image: "https://images.unsplash.com/photo-1609119309844-ad5e8f74e2e1?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/mint-julep.webp",
     ingredients: [
       "2 oz bourbon whiskey",
       "Fresh mint leaves",
@@ -1123,7 +1123,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "25",
     name: "Moscow Mule",
-    image: "https://images.unsplash.com/photo-1581984934376-7a6d37e48b04?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/moscow-mule.webp",
     ingredients: [
       "2 oz vodka",
       "4 oz ginger beer",
@@ -1413,7 +1413,7 @@ const rawCocktails: Cocktail[] = [
   {
     id: "43",
     name: "Paloma",
-    image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
+    image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/paloma.webp",
     ingredients: [
       "2 oz tequila (blanco)",
       "4 oz fresh grapefruit soda",
