@@ -114,6 +114,15 @@ export default function Privacy() {
                     deletion removes your profile and personal content; aggregated analytics may persist in
                     de-identified form.
                   </p>
+                  <p>
+                    When you request account deletion from <strong>Settings &rarr; Danger Zone</strong>, your
+                    account is scheduled for permanent removal in <strong>7 days</strong>. During that
+                    window you can sign back in and cancel the request. After the window closes, your
+                    profile, recipes, ratings, comments, follows, favorites, bar inventory, and uploaded
+                    images are permanently erased from our live database. Encrypted backup snapshots are
+                    retained for up to <strong>30 days</strong> on a rolling basis and are overwritten on
+                    their normal rotation; we do not restore deleted accounts from backups.
+                  </p>
                 </section>
 
                 <section className="space-y-2">
