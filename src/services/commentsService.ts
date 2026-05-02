@@ -88,17 +88,14 @@ export async function addComment(
     return false;
   }
 
-  // Create notification for the recipe author (if not commenting on own recipe)
+  // Create notification for the recipe author via SECURITY DEFINER RPC.
+  // The RPC validates that the caller is the comment author and resolves
+  // the recipient (recipe author) server-side, preventing forged inboxes.
   if (recipe && recipe.user_id !== user.id) {
-    const { error: notificationError } = await supabase
-      .from('social_notifications')
-      .insert({
-        user_id: recipe.user_id,
-        actor_id: user.id,
-        notification_type: 'comment',
-        recipe_id: recipeId,
-        comment_id: comment.id
-      });
+    const { error: notificationError } = await supabase.rpc(
+      'create_comment_notification',
+      { p_comment_id: comment.id }
+    );
 
     if (notificationError) {
       console.error('Error creating comment notification:', notificationError);
