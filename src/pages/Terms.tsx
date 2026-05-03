@@ -4,6 +4,7 @@ import TopNavigation from "@/components/TopNavigation";
 import Sidebar from "@/components/Sidebar";
 import { BackButton } from "@/components/ui/back-button";
 import { FileText } from "lucide-react";
+import PageSEO from "@/components/PageSEO";
 
 export default function Terms() {
   const { user } = useAuth();
@@ -11,6 +12,11 @@ export default function Terms() {
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
+      <PageSEO
+        title="Terms of Service | Barbook"
+        description="Read the Barbook terms of service covering account use, age requirements, and content rules for our cocktail community."
+        path="/terms"
+      />
       <TopNavigation
         user={user}
         activeLibrary=""

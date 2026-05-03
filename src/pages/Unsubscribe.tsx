@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { Mail, CheckCircle2, AlertTriangle, Loader2, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import PageSEO from "@/components/PageSEO";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -21,6 +22,8 @@ export default function Unsubscribe() {
   const token = params.get("token");
   const [status, setStatus] = useState<Status>("validating");
   const [errorMsg, setErrorMsg] = useState<string>("");
+
+  // SEO is rendered via PageSEO below; no need to set document.title manually.
 
   useEffect(() => {
     document.title = "Email Preferences — Barbook";
