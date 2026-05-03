@@ -9,10 +9,12 @@ export interface TemplateEntry {
   previewData?: Record<string, any>
 }
 
-// Register transactional email templates here as they are created.
-// Example:
-//   import { template as contactConfirmation } from './contact-confirmation.tsx'
-//   export const TEMPLATES: Record<string, TemplateEntry> = {
-//     'contact-confirmation': contactConfirmation,
-//   }
-export const TEMPLATES: Record<string, TemplateEntry> = {}
+import { template as accountDeletionScheduled } from './account-deletion-scheduled.tsx'
+import { template as accountDeletionCancelled } from './account-deletion-cancelled.tsx'
+import { template as dataExportCompleted } from './data-export-completed.tsx'
+
+export const TEMPLATES: Record<string, TemplateEntry> = {
+  'account-deletion-scheduled': accountDeletionScheduled,
+  'account-deletion-cancelled': accountDeletionCancelled,
+  'data-export-completed': dataExportCompleted,
+}
