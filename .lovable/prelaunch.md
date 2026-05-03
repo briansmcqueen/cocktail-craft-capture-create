@@ -1,19 +1,20 @@
 # BARBOOK Prelaunch Checklist
 
 ## 1. Security & data
-- [ ] Run security scan + Supabase linter; clear all criticals
-- [ ] Verify RLS on every table; storage buckets enforce `${user.id}/` paths
-- [ ] Confirm only anon/publishable key is in client code
+- [x] Run security scan + Supabase linter; clear all criticals (97 low-risk warns remain — acceptable)
+- [x] Verify RLS on every table; storage buckets enforce `${user.id}/` paths
+- [x] Confirm only anon/publishable key is in client code
 
 ## 2. Auth & account lifecycle
-- [ ] End-to-end test GDPR delete-account flow (request → 7-day banner → cron purge)
-- [ ] Test all email templates via preview-transactional-email
-- [ ] Custom email domain verified
+- [x] Code paths verified: edge fn, RPCs, banner, cron job all present
+- [ ] Live end-to-end test of delete-account flow (manual QA)
+- [ ] Test all email templates via preview-transactional-email (manual QA)
+- [ ] Custom email domain verified (manual — Cloud → Emails)
 
 ## 3. SEO & sharing
-- [ ] Sitemap edge function returns current URLs; robots.txt allows indexing
-- [ ] OG/Twitter image renders for /, /recipes, /cocktail/[slug]
-- [ ] PageSEO title/meta on every route
+- [x] Sitemap edge function returns current URLs; robots.txt allows indexing
+- [x] OG/Twitter image renders for /, /recipes, /cocktail/[slug] (PageSEO + RecipeMeta)
+- [x] PageSEO title/meta on every route (added Terms, Unsubscribe, FollowersPage)
 
 ## 4. Performance & UX
 - [ ] Lighthouse pass (mobile + desktop) on /, /recipes, /discover, /mybar

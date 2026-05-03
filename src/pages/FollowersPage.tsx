@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { followsService, Follow } from '@/services/followsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import PageSEO from '@/components/PageSEO';
 
 interface UserProfile {
   id: string;
@@ -109,6 +110,12 @@ export default function FollowersPage() {
 
   return (
     <div className="container max-w-4xl mx-auto px-4 py-8">
+      <PageSEO
+        title={`${profile.full_name || username} — Followers | Barbook`}
+        description={`See who follows ${profile.full_name || username} (@${username}) and who they follow on Barbook.`}
+        path={`/profile/${username}/followers`}
+        type="profile"
+      />
       {/* Header */}
       <div className="mb-6">
         <Button
