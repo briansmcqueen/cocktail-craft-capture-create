@@ -61,6 +61,9 @@ export default function UserProfile() {
   const [recipeStats, setRecipeStats] = useState<Record<string, { favorites: number; comments: number; rating: number }>>({});
   const [favoriteStatsMap, setFavoriteStatsMap] = useState<Record<string, { favorites: number; comments: number; rating: number }>>({});
 
+  const recipesShareCounts = useBatchShareCounts(recipes.map((r) => r.id));
+  const favoritesShareCounts = useBatchShareCounts(favoriteRecipes.map((r) => r.id));
+
   const isOwnProfile = user?.id === userId;
   const handleNoOp = () => {};
 
@@ -300,7 +303,7 @@ export default function UserProfile() {
               <TabsContent value="recipes" className="mt-6">
                 {recipes.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {recipes.map((recipe) => {
+                    {recipes.map((recipe, idx) => {
                       const s = recipeStats[recipe.id] || { favorites: 0, comments: 0, rating: 0 };
                       const cocktail: Cocktail = {
                         id: recipe.id, name: recipe.name, notes: recipe.description || undefined,
@@ -311,7 +314,15 @@ export default function UserProfile() {
                         creatorUserId: userId, isUserRecipe: true,
                         likeCount: s.favorites, commentCount: s.comments, averageRating: s.rating,
                       };
-                      return <UniversalRecipeCard key={recipe.id} recipe={cocktail} hideCreator={true} />;
+                      return (
+                        <UniversalRecipeCard
+                          key={recipe.id}
+                          recipe={cocktail}
+                          hideCreator={true}
+                          priority={idx === 0}
+                          shareCount={recipesShareCounts[recipe.id] ?? 0}
+                        />
+                      );
                     })}
                   </div>
                 ) : (
@@ -326,10 +337,17 @@ export default function UserProfile() {
               <TabsContent value="favorites" className="mt-6">
                 {favoriteRecipes.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {favoriteRecipes.map((recipe) => {
+                    {favoriteRecipes.map((recipe, idx) => {
                       const s = favoriteStatsMap[recipe.id] || { favorites: 0, comments: 0, rating: 0 };
                       const cocktail: Cocktail = { ...recipe, likeCount: s.favorites, commentCount: s.comments, averageRating: s.rating };
-                      return <UniversalRecipeCard key={recipe.id} recipe={cocktail} />;
+                      return (
+                        <UniversalRecipeCard
+                          key={recipe.id}
+                          recipe={cocktail}
+                          priority={idx === 0}
+                          shareCount={favoritesShareCounts[recipe.id] ?? 0}
+                        />
+                      );
                     })}
                   </div>
                 ) : (
