@@ -159,6 +159,25 @@ Deno.serve(async (req) => {
     )
   }
 
+  // For end-user callers, restrict sends to:
+  //   (a) templates with a fixed `to` address (e.g., owner-notification flows), OR
+  //   (b) the caller's own email address.
+  // This prevents an authenticated user from spamming arbitrary recipients.
+  if (!isServiceRole && !template.to) {
+    if (
+      !callerEmail ||
+      effectiveRecipient.toLowerCase() !== callerEmail.toLowerCase()
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'Recipient must match the authenticated user' }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      )
+    }
+  }
+
   // Create Supabase client with service role (bypasses RLS)
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
