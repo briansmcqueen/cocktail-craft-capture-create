@@ -59,8 +59,9 @@ export function generateUniqueId(cocktails: Cocktail[], cocktailName: string): s
 export function fixDuplicateIds(cocktails: Cocktail[]): Cocktail[] {
   const usedIds = new Set<string>();
   let nextId = 1;
+  let reassignedCount = 0;
   
-  return cocktails.map(cocktail => {
+  const result = cocktails.map(cocktail => {
     if (usedIds.has(cocktail.id)) {
       // Find next available ID
       while (usedIds.has(nextId.toString())) {
@@ -69,8 +70,7 @@ export function fixDuplicateIds(cocktails: Cocktail[]): Cocktail[] {
       const newId = nextId.toString();
       usedIds.add(newId);
       nextId++;
-      
-      console.warn(`Duplicate ID "${cocktail.id}" found for "${cocktail.name}", reassigned to "${newId}"`);
+      reassignedCount++;
       return { ...cocktail, id: newId };
     } else {
       usedIds.add(cocktail.id);
@@ -82,4 +82,10 @@ export function fixDuplicateIds(cocktails: Cocktail[]): Cocktail[] {
       return cocktail;
     }
   });
+
+  if (reassignedCount > 0 && import.meta.env?.DEV) {
+    console.info(`[cocktails] Reassigned ${reassignedCount} duplicate ID(s) to unique values.`);
+  }
+
+  return result;
 }
