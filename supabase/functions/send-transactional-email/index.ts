@@ -30,9 +30,10 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// Auth note: verify_jwt = true validates the JWT signature, but accepts both
+// anon and service_role keys. To prevent unauthenticated abuse (e.g., spamming
+// arbitrary recipients with the public anon key), we additionally require an
+// authenticated end-user OR a service_role caller in-code.
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -42,8 +43,9 @@ Deno.serve(async (req) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
 
-  if (!supabaseUrl || !supabaseServiceKey) {
+  if (!supabaseUrl || !supabaseServiceKey || !supabaseAnonKey) {
     console.error('Missing required environment variables')
     return new Response(
       JSON.stringify({ error: 'Server configuration error' }),
@@ -52,6 +54,41 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     )
+  }
+
+  // Enforce caller identity: must be either service_role (trusted backend)
+  // or an authenticated end-user. Reject bare anon callers outright.
+  const authHeader = req.headers.get('Authorization') || ''
+  const bearer = authHeader.replace(/^Bearer\s+/i, '')
+  let callerEmail: string | null = null
+  let isServiceRole = false
+
+  if (!bearer) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  if (bearer === supabaseServiceKey) {
+    isServiceRole = true
+  } else {
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: `Bearer ${bearer}` } },
+    })
+    const { data: claimsData, error: claimsError } =
+      await userClient.auth.getClaims(bearer)
+    if (
+      claimsError ||
+      !claimsData?.claims ||
+      claimsData.claims.role !== 'authenticated'
+    ) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+    callerEmail = (claimsData.claims.email as string | undefined) ?? null
   }
 
   // Parse request body
