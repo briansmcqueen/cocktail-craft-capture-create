@@ -17,6 +17,7 @@ import type { Cocktail } from '@/data/classicCocktails';
 import { classicCocktails } from '@/data/classicCocktails';
 import { getRecipesFavoriteCounts } from '@/services/favoritesService';
 import { getRecipesCommentCounts } from '@/services/commentsService';
+import { useBatchShareCounts } from '@/hooks/useBatchShareCounts';
 import TopNavigation from '@/components/TopNavigation';
 import Sidebar from '@/components/Sidebar';
 
