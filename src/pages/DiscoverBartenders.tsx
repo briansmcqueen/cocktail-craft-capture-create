@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserCard from '@/components/social/UserCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { socialService, SuggestedUser, TrendingUser } from '@/services/socialService';
-import { privacyService } from '@/services/privacyService';
 import { useAuth } from '@/hooks/useAuth';
 import AuthPrompt from '@/components/auth/AuthPrompt';
 import TopNavigation from '@/components/TopNavigation';
