@@ -59,7 +59,7 @@ export default function Privacy() {
               </div>
 
               <div className="space-y-6 text-light-text leading-relaxed">
-                <p className="text-sm text-muted-foreground">Last updated: May 1, 2026</p>
+                <p className="text-sm text-muted-foreground">Last updated: May 3, 2026</p>
 
                 <section className="space-y-2">
                   <h2 className="text-lg font-semibold text-pure-white">What we collect</h2>
@@ -110,14 +110,26 @@ export default function Privacy() {
                 <section className="space-y-2">
                   <h2 className="text-lg font-semibold text-pure-white">Your rights</h2>
                   <p>
-                    You can access, edit, or delete your data at any time from Settings, or by emailing us. Account
-                    deletion removes your profile and personal content; aggregated analytics may persist in
-                    de-identified form.
+                    Under GDPR and similar laws, you have the right to:
+                  </p>
+                  <ul className="list-disc pl-6 space-y-1">
+                    <li><strong className="text-pure-white">Access</strong> the personal data we hold about you (Settings → Export my data).</li>
+                    <li><strong className="text-pure-white">Rectify</strong> inaccurate data (Settings → Profile).</li>
+                    <li><strong className="text-pure-white">Erase</strong> your account and content (Settings → Danger Zone).</li>
+                    <li><strong className="text-pure-white">Portability</strong> — download your data as a structured ZIP archive.</li>
+                    <li><strong className="text-pure-white">Object</strong> to specific processing or withdraw consent at any time.</li>
+                    <li><strong className="text-pure-white">Lodge a complaint</strong> with your local data protection authority.</li>
+                  </ul>
+                  <p>
+                    For requests we can't action ourselves, email{' '}
+                    <a href="mailto:hello@barbook.io" className="text-emerald hover:underline">hello@barbook.io</a>{' '}
+                    and we'll respond within 30 days.
                   </p>
                   <p>
                     When you request account deletion from <strong>Settings &rarr; Danger Zone</strong>, your
                     account is scheduled for permanent removal in <strong>7 days</strong>. During that
-                    window you can sign back in and cancel the request. After the window closes, your
+                    window you can sign back in and cancel the request — we'll send a confirmation email
+                    when deletion is scheduled and again if you cancel. After the window closes, your
                     profile, recipes, ratings, comments, follows, favorites, bar inventory, and uploaded
                     images are permanently erased from our live database. Encrypted backup snapshots are
                     retained for up to <strong>30 days</strong> on a rolling basis and are overwritten on
@@ -126,9 +138,24 @@ export default function Privacy() {
                 </section>
 
                 <section className="space-y-2">
+                  <h2 className="text-lg font-semibold text-pure-white">Lawful basis & retention</h2>
+                  <p>
+                    We process account data on the basis of <strong className="text-pure-white">contract</strong>{' '}
+                    (operating Barbook for you), <strong className="text-pure-white">legitimate interests</strong>{' '}
+                    (security, abuse prevention, basic analytics), and{' '}
+                    <strong className="text-pure-white">consent</strong> where required (e.g. optional features).
+                    We retain your data for as long as your account is active and for a short window after
+                    deletion as described above. Security audit logs are retained in anonymized form for up
+                    to 12 months for fraud and abuse investigations.
+                  </p>
+                </section>
+
+                <section className="space-y-2">
                   <h2 className="text-lg font-semibold text-pure-white">Children</h2>
                   <p>
                     Barbook is not intended for users under the legal drinking age in their jurisdiction.
+                    We do not knowingly collect data from anyone below this age; if you believe a child has
+                    provided us with personal data, contact us and we'll remove it.
                   </p>
                 </section>
 

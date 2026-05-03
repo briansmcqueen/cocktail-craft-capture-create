@@ -53,7 +53,7 @@ export default function Terms() {
               </div>
 
               <div className="space-y-6 text-light-text leading-relaxed">
-                <p className="text-sm text-muted-foreground">Last updated: May 1, 2026</p>
+                <p className="text-sm text-muted-foreground">Last updated: May 3, 2026</p>
 
                 <section className="space-y-2">
                   <h2 className="text-lg font-semibold text-pure-white">1. Welcome to Barbook</h2>
