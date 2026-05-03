@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import UniversalRecipeCard from "./UniversalRecipeCard";
 import { Cocktail } from "@/data/classicCocktails";
+import { getBatchRecipeShareCounts } from "@/services/shareTrackingService";
 
 type LazyRecipeGridProps = {
   recipes: Cocktail[];
@@ -30,6 +31,7 @@ export default function LazyRecipeGrid({
 }: LazyRecipeGridProps) {
   const [visibleCount, setVisibleCount] = useState(itemsPerPage);
   const [loading, setLoading] = useState(false);
+  const [shareCounts, setShareCounts] = useState<Record<string, number>>({});
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -48,6 +50,28 @@ export default function LazyRecipeGrid({
   useEffect(() => {
     setVisibleCount(itemsPerPage);
   }, [recipes, itemsPerPage]);
+
+  // Batch-fetch share counts for currently visible recipes (single RPC instead of N).
+  useEffect(() => {
+    const ids = recipes.slice(0, visibleCount).map((r) => r.id).filter(Boolean);
+    const missing = ids.filter((id) => shareCounts[id] === undefined);
+    if (missing.length === 0) return;
+
+    let cancelled = false;
+    getBatchRecipeShareCounts(missing).then((counts) => {
+      if (cancelled) return;
+      setShareCounts((prev) => {
+        const next = { ...prev };
+        for (const id of missing) {
+          next[id] = counts[id] ?? 0;
+        }
+        return next;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [recipes, visibleCount, shareCounts]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -97,11 +121,13 @@ export default function LazyRecipeGrid({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-        {visibleRecipes.map((recipe) => (
+        {visibleRecipes.map((recipe, idx) => (
           <UniversalRecipeCard
             key={recipe.id}
             recipe={recipe}
             onShowAuthModal={onShowAuthModal}
+            priority={idx === 0}
+            shareCount={shareCounts[recipe.id] ?? 0}
           />
         ))}
       </div>
