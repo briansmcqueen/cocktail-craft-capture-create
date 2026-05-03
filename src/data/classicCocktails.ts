@@ -756,7 +756,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["bitter", "boozy", "classic"]
   },
   {
-    id: "2",
+    id: "46",
     name: "Negroni",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/negroni.webp",
     photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
@@ -772,7 +772,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["bitter", "herbal", "aperitif"]
   },
   {
-    id: "3",
+    id: "47",
     name: "Martini",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/martini.webp",
     photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
@@ -805,7 +805,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["refreshing", "minty", "citrusy"]
   },
   {
-    id: "5",
+    id: "84",
     name: "Cosmopolitan",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/cosmopolitan.webp",
     ingredients: [
@@ -821,7 +821,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["fruity", "tart", "pink"]
   },
   {
-    id: "6",
+    id: "85",
     name: "Bellini",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/bellini.webp",
     ingredients: [
@@ -835,7 +835,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["sparkling", "fruity", "sweet"]
   },
   {
-    id: "7",
+    id: "86",
     name: "Black Russian",
     image: "https://images.unsplash.com/photo-1581984934376-7a6d37e48b04?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -848,7 +848,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["strong", "coffee", "sweet"]
   },
   {
-    id: "8",
+    id: "87",
     name: "Bloody Mary",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/bloody-mary.webp",
     ingredients: [
@@ -866,7 +866,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["savory", "spicy", "brunch"]
   },
   {
-    id: "9",
+    id: "88",
     name: "Caipirinha",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/caiparihna.webp",
     ingredients: [
@@ -880,7 +880,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["refreshing", "citrus", "crushed ice"]
   },
   {
-    id: "10",
+    id: "89",
     name: "Champagne Cocktail",
     image: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -895,7 +895,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["sparkling", "bubbly", "elegant"]
   },
   {
-    id: "11",
+    id: "90",
     name: "Corpse Reviver #2",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -912,7 +912,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["bright", "citrus", "herbal"]
   },
   {
-    id: "12",
+    id: "91",
     name: "Cuba Libre",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/cuba-libre.webp",
     ingredients: [
@@ -927,7 +927,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["refreshing", "cola", "rum"]
   },
   {
-    id: "13",
+    id: "92",
     name: "French 75",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/french-75.webp",
     ingredients: [
@@ -943,7 +943,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["bubbly", "citrus", "elegant"]
   },
   {
-    id: "14",
+    id: "93",
     name: "Garibaldi",
     image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -971,7 +971,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["minty", "creamy", "sweet"]
   },
   {
-    id: "16",
+    id: "113",
     name: "Hemingway Special",
     image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -987,7 +987,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["tart", "grapefruit", "refreshing"]
   },
   {
-    id: "17",
+    id: "114",
     name: "Irish Coffee",
     image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1002,7 +1002,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["warm", "sweet", "coffee"]
   },
   {
-    id: "18",
+    id: "115",
     name: "Kir",
     image: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1015,7 +1015,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["light", "sweet", "berry"]
   },
   {
-    id: "19",
+    id: "116",
     name: "Lemon Drop Martini",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/lemon-drop-martini.webp",
     ingredients: [
@@ -1030,7 +1030,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["citrus", "tart", "sweet"]
   },
   {
-    id: "20",
+    id: "117",
     name: "Long Island Iced Tea",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1050,7 +1050,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["strong", "sweet", "cola"]
   },
   {
-    id: "21",
+    id: "118",
     name: "Mai Tai",
     image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1067,7 +1067,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["tropical", "nutty", "citrus"]
   },
   {
-    id: "22",
+    id: "119",
     name: "Margarita",
     image: "https://images.unsplash.com/photo-1581984934376-7a6d37e48b04?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1092,7 +1092,7 @@ const rawCocktails: Cocktail[] = [
     max_servings: 12
   },
   {
-    id: "113",
+    id: "120",
     name: "Mimosa",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/mimosa.webp",
     ingredients: [
@@ -1106,7 +1106,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["brunch", "citrus", "light"]
   },
   {
-    id: "24",
+    id: "121",
     name: "Mint Julep",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/mint-julep.webp",
     ingredients: [
@@ -1121,7 +1121,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["herbal", "cooling", "boozy"]
   },
   {
-    id: "25",
+    id: "122",
     name: "Moscow Mule",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/moscow-mule.webp",
     ingredients: [
@@ -1136,7 +1136,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["gingery", "spicy", "refreshing"]
   },
   {
-    id: "26",
+    id: "123",
     name: "Piña Colada",
     image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1151,7 +1151,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["tropical", "creamy", "sweet"]
   },
   {
-    id: "27",
+    id: "124",
     name: "Pisco Sour",
     image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1167,7 +1167,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["frothy", "tangy", "citrus"]
   },
   {
-    id: "28",
+    id: "125",
     name: "Sea Breeze",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1182,7 +1182,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["fruity", "refreshing", "tart"]
   },
   {
-    id: "29",
+    id: "126",
     name: "Sex on the Beach",
     image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1198,7 +1198,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["fruity", "tropical", "sweet"]
   },
   {
-    id: "30",
+    id: "127",
     name: "Singapore Sling",
     image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1218,7 +1218,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["complex", "tropical", "fruity"]
   },
   {
-    id: "31",
+    id: "128",
     name: "Tequila Sunrise",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1233,7 +1233,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["sweet", "layered", "fruity"]
   },
   {
-    id: "32",
+    id: "129",
     name: "Vesper",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/vesper.webp",
     photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
@@ -1249,7 +1249,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["strong", "bracing", "classic"]
   },
   {
-    id: "33",
+    id: "130",
     name: "Zombie",
     image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1268,7 +1268,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["tiki", "fruity", "potent"]
   },
   {
-    id: "34",
+    id: "131",
     name: "Bee's Knees",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1283,7 +1283,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["citrus", "sweet", "smooth"]
   },
   {
-    id: "35",
+    id: "132",
     name: "Bramble",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1299,7 +1299,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["berry", "refreshing", "tart"]
   },
   {
-    id: "36",
+    id: "133",
     name: "Dark 'N' Stormy",
     image: "https://images.unsplash.com/photo-1581984934376-7a6d37e48b04?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1313,7 +1313,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["ginger", "spicy", "crisp"]
   },
   {
-    id: "37",
+    id: "134",
     name: "Espresso Martini",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/espresso-martini.webp",
     photo_credit: { name: "Jeremy Fraga", url: "https://www.fragaphoto.com/" },
@@ -1330,7 +1330,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["coffee", "bitter", "caffeinated"]
   },
   {
-    id: "38",
+    id: "135",
     name: "French Martini",
     image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1345,7 +1345,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["fruity", "sweet", "berry"]
   },
   {
-    id: "39",
+    id: "136",
     name: "Gin Basil Smash",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1361,7 +1361,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["herbal", "citrus", "bright"]
   },
   {
-    id: "40",
+    id: "137",
     name: "Jungle Bird",
     image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1378,7 +1378,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["tropical", "bitter", "balanced"]
   },
   {
-    id: "41",
+    id: "138",
     name: "New York Sour",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1393,7 +1393,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["tart", "layered", "whiskey"]
   },
   {
-    id: "42",
+    id: "139",
     name: "Old Cuban",
     image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1411,7 +1411,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["minty", "bubbly", "rum"]
   },
   {
-    id: "43",
+    id: "140",
     name: "Paloma",
     image: "https://qwfoumoaotswlzbzbcdt.supabase.co/storage/v1/object/public/recipe-images/paloma.webp",
     ingredients: [
@@ -1426,7 +1426,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["refreshing", "citrus", "zesty"]
   },
   {
-    id: "44",
+    id: "141",
     name: "Paper Plane",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1441,7 +1441,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["balanced", "bittersweet", "citrus"]
   },
   {
-    id: "45",
+    id: "142",
     name: "Penicillin",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1457,7 +1457,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["smoky", "spicy", "soothing"]
   },
   {
-    id: "46",
+    id: "143",
     name: "Pisco Punch",
     image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1473,7 +1473,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["fruity", "smooth", "citrus"]
   },
   {
-    id: "47",
+    id: "144",
     name: "Porn Star Martini",
     image: "https://images.unsplash.com/photo-1559068991-b41b8b0dafe0?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1582,7 +1582,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["citrus", "refreshing", "natural"]
   },
   {
-    id: "92",
+    id: "145",
     name: "Harvey Wallbanger",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1597,7 +1597,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "vodka", "orange", "highball", "1970s"]
   },
   {
-    id: "93",
+    id: "146",
     name: "Horse's Neck",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1883,7 +1883,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "cachaca", "bittersweet", "spirit-forward", "aperitivo"]
   },
   {
-    id: "112",
+    id: "147",
     name: "Ramos Gin Fizz",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1902,7 +1902,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "new-orleans", "gin-fizz", "frothy", "creamy", "labor-intensive"]
   },
   {
-    id: "113",
+    id: "148",
     name: "Rattlesnake",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1919,7 +1919,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "whiskey-sour", "rye", "absinthe", "frothy"]
   },
   {
-    id: "114",
+    id: "149",
     name: "Remember the Maine",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1934,7 +1934,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "whiskey", "rye", "spirit-forward", "prohibition-era"]
   },
   {
-    id: "115",
+    id: "150",
     name: "Rusty Nail",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1948,7 +1948,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "scotch", "simple", "two-ingredient", "digestif"]
   },
   {
-    id: "116",
+    id: "151",
     name: "Sazerac",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1964,7 +1964,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "new-orleans", "whiskey", "rye", "spirit-forward", "19th-century"]
   },
   {
-    id: "117",
+    id: "152",
     name: "Screwdriver",
     image: "https://images.unsplash.com/photo-1544385518-6df7b0dc7be5?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1978,7 +1978,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "highball", "vodka", "simple", "brunch"]
   },
   {
-    id: "118",
+    id: "153",
     name: "Sidecar",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -1994,7 +1994,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "sour", "cognac", "brandy", "WWI-era"]
   },
   {
-    id: "119",
+    id: "154",
     name: "Stinger",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2008,7 +2008,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "digestif", "brandy", "mint", "two-ingredient"]
   },
   {
-    id: "120",
+    id: "155",
     name: "Tipperary",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2023,7 +2023,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "irish-whiskey", "spirit-forward", "herbal"]
   },
   {
-    id: "121",
+    id: "156",
     name: "Tom Collins",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2039,7 +2039,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "highball", "gin", "refreshing", "19th-century"]
   },
   {
-    id: "122",
+    id: "157",
     name: "Tuxedo",
     image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2056,7 +2056,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "martini-variation", "gin", "spirit-forward", "19th-century"]
   },
   {
-    id: "123",
+    id: "158",
     name: "Vieux Carré",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2074,7 +2074,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "new-orleans", "whiskey", "cognac", "spirit-forward", "prohibition-era"]
   },
   {
-    id: "124",
+    id: "159",
     name: "Vodka Tonic",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2088,7 +2088,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "highball", "vodka", "simple", "refreshing"]
   },
   {
-    id: "125",
+    id: "160",
     name: "Ward 8",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2103,7 +2103,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "whiskey-sour", "rye", "fruity", "pre-prohibition"]
   },
   {
-    id: "126",
+    id: "161",
     name: "White Lady",
     image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2118,7 +2118,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "gin-sour", "frothy", "elegant", "prohibition-era"]
   },
   {
-    id: "127",
+    id: "162",
     name: "Widow's Kiss",
     image: "https://images.unsplash.com/photo-1576729211808-f2ed4db73c1a?auto=format&fit=crop&w=400&q=80",
     ingredients: [
@@ -2134,7 +2134,7 @@ const rawCocktails: Cocktail[] = [
     tags: ["classic", "spirit-forward", "herbal", "apple-brandy", "digestif"]
   },
   {
-    id: "128",
+    id: "163",
     name: "Yellow Bird",
     image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=400&q=80",
     ingredients: [
