@@ -37,16 +37,26 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
 
   return (
     <aside className={cn(
-      "bg-rich-charcoal border-r border-light-charcoal h-screen flex flex-col pt-6 pb-0 gap-2 sticky top-0 overflow-visible transition-all duration-300 z-40",
+      "bg-rich-charcoal border-r border-light-charcoal h-screen flex flex-col pt-6 pb-0 gap-2 sticky top-0 overflow-visible transition-[width] duration-300 ease-out z-40",
       collapsed ? "w-16" : "w-60"
     )}>
       {/* Header */}
-      <div className={cn("flex-shrink-0 mb-8", collapsed ? "px-3" : "px-6")}>
-        <div className="flex items-center justify-between gap-2">
-          {!collapsed && (
-            <Link to="/" className="text-3xl font-medium text-pure-white tracking-tight">BARBOOK</Link>
-          )}
-          <div className={cn("flex items-center gap-1", collapsed && "w-full justify-center")}>
+      <div className={cn("flex-shrink-0 mb-8 transition-[padding] duration-300 ease-out", collapsed ? "px-3" : "px-6")}>
+        <div className="flex items-center justify-between gap-2 overflow-hidden">
+          <Link
+            to="/"
+            className={cn(
+              "text-3xl font-medium text-pure-white tracking-tight whitespace-nowrap transition-[opacity,transform] ease-out",
+              collapsed
+                ? "opacity-0 -translate-x-1 duration-150 pointer-events-none w-0 overflow-hidden"
+                : "opacity-100 translate-x-0 duration-200 delay-150"
+            )}
+            aria-hidden={collapsed}
+            tabIndex={collapsed ? -1 : 0}
+          >
+            BARBOOK
+          </Link>
+          <div className={cn("flex items-center gap-1 flex-shrink-0", collapsed && "w-full justify-center")}>
             {user && !collapsed && <NotificationsDropdown />}
             {onToggleCollapse && (
               <Button
@@ -68,7 +78,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
       </div>
 
       {/* Navigation */}
-      <nav className={cn("flex flex-col gap-1 flex-1 overflow-y-auto min-h-0", collapsed ? "px-2" : "px-3")}>
+      <nav className={cn("flex flex-col gap-1 flex-1 overflow-y-auto overflow-x-hidden min-h-0 transition-[padding] duration-300 ease-out", collapsed ? "px-2" : "px-3")}>
         {nav.map((item) => {
           const isActive = location.pathname === item.path;
           const linkContent = (
@@ -76,7 +86,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
               key={item.id}
               to={item.path}
               className={cn(
-                "flex items-center gap-3 rounded-organic-sm transition-all font-medium duration-300",
+                "flex items-center gap-3 rounded-organic-sm font-medium transition-[padding,background-color,color] duration-300 ease-out",
                 collapsed ? "justify-center px-2 py-3" : "px-3 py-3",
                 isActive
                   ? "bg-primary/20 text-emerald border border-primary/30"
@@ -87,7 +97,16 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
               }}
             >
               <item.icon size={20} className="flex-shrink-0" />
-              {!collapsed && <span className="whitespace-nowrap truncate">{item.label}</span>}
+              <span
+                className={cn(
+                  "whitespace-nowrap overflow-hidden transition-[opacity,max-width,margin] ease-out",
+                  collapsed
+                    ? "opacity-0 max-w-0 -ml-3 duration-150"
+                    : "opacity-100 max-w-[180px] ml-0 duration-200 delay-150"
+                )}
+              >
+                {item.label}
+              </span>
             </Link>
           );
 
