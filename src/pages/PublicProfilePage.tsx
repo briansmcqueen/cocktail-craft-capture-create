@@ -19,6 +19,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { classicCocktails } from '@/data/classicCocktails';
 import { getAvatarUrl } from '@/utils/avatarUrl';
 import { supabase } from '@/integrations/supabase/client';
+import { useBatchShareCounts } from '@/hooks/useBatchShareCounts';
 
 interface FollowUser {
   id: string;
