@@ -102,6 +102,8 @@ export default function PublicProfilePage() {
   };
 
   const favoriteRecipes = classicCocktails.filter((c) => favoriteRecipeIds.includes(c.id));
+  const recipesShareCounts = useBatchShareCounts(recipes.map((r) => r.id));
+  const favoritesShareCounts = useBatchShareCounts(favoriteRecipes.map((r) => r.id));
   const fullAvatarUrl = getAvatarUrl(profile?.avatar_url);
 
   if (loading) return <LoadingSpinner />;
@@ -282,7 +284,7 @@ export default function PublicProfilePage() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {recipes.map((recipe) => (
+                      {recipes.map((recipe, idx) => (
                         <UniversalRecipeCard
                           key={recipe.id}
                           recipe={{
@@ -300,6 +302,8 @@ export default function PublicProfilePage() {
                             creatorAvatar: profile.avatar_url || undefined,
                           }}
                           hideCreator
+                          priority={idx === 0}
+                          shareCount={recipesShareCounts[recipe.id] ?? 0}
                         />
                       ))}
                     </div>
@@ -321,8 +325,13 @@ export default function PublicProfilePage() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {favoriteRecipes.map((recipe) => (
-                        <UniversalRecipeCard key={recipe.id} recipe={recipe} />
+                      {favoriteRecipes.map((recipe, idx) => (
+                        <UniversalRecipeCard
+                          key={recipe.id}
+                          recipe={recipe}
+                          priority={idx === 0}
+                          shareCount={favoritesShareCounts[recipe.id] ?? 0}
+                        />
                       ))}
                     </div>
                   )}
