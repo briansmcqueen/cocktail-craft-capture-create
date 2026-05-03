@@ -19,6 +19,10 @@ interface UniversalRecipeCardProps {
   className?: string;
   hideCreator?: boolean;
   ratingData?: { averageRating: number; totalRatings: number };
+  /** When true, the LCP image loads eagerly with high fetch priority. */
+  priority?: boolean;
+  /** Pre-fetched share count; avoids per-card RPC. */
+  shareCount?: number;
 }
 
 export default function UniversalRecipeCard({
@@ -27,7 +31,9 @@ export default function UniversalRecipeCard({
   onShowAuthModal,
   className,
   hideCreator = false,
-  ratingData: externalRatingData
+  ratingData: externalRatingData,
+  priority = false,
+  shareCount,
 }: UniversalRecipeCardProps) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -78,8 +84,9 @@ export default function UniversalRecipeCard({
           <img
             src={optimizedImageUrl(recipe.image, { width: 480, quality: 70 })}
             alt={recipe.name}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
             decoding="async"
+            {...(priority ? { fetchPriority: "high" as const } : {})}
             width={480}
             height={480}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -141,7 +148,7 @@ export default function UniversalRecipeCard({
                 }
               </span>
             </div>
-            <ShareCount recipeId={recipe.id} />
+            <ShareCount recipeId={recipe.id} count={shareCount} />
           </div>
 
           {/* Action buttons */}
