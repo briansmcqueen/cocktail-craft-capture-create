@@ -16,6 +16,7 @@ import UniversalRecipeCard from '@/components/UniversalRecipeCard';
 import PageSEO from '@/components/PageSEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useSidebarCollapsed } from '@/hooks/useSidebarCollapsed';
+import { useBatchShareCounts } from '@/hooks/useBatchShareCounts';
 
 interface Recipe {
   id: string;
@@ -105,11 +106,11 @@ export default function DiscoverBartenders() {
       // Get public recipes from users not being followed
       let query = supabase
         .from('recipes')
-        .select('*')
+        .select('id,name,description,image_url,ingredients,instructions,user_id,created_at,tags')
         .eq('is_public', true)
         .neq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(50); // Fetch more initially since we'll filter
+        .limit(20);
 
       // If user follows someone, exclude their recipes
       if (followingIds.length > 0) {
@@ -119,36 +120,30 @@ export default function DiscoverBartenders() {
       const { data, error } = await query;
 
       if (error) throw error;
-      
-      // Apply privacy filtering and fetch creator info
-      const filteredRecipes: Recipe[] = [];
-      for (const recipe of data || []) {
-        // Check if user is blocked
-        const blocked = await privacyService.isBlockedBy(user.id, recipe.user_id);
-        if (blocked) continue;
 
-        // Check recipe visibility
-        const canView = await privacyService.canViewRecipes(recipe.user_id, user.id);
-        if (!canView.canView) continue;
+      const recipes = data || [];
+      if (recipes.length === 0) return [];
 
-        // Fetch creator profile info separately
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('username, avatar_url')
-          .eq('id', recipe.user_id)
-          .single();
+      // Batch-fetch all creator profiles in a single query (was N sequential queries).
+      // RLS on recipes already enforces is_public visibility, so we no longer need
+      // per-recipe canViewRecipes/isBlockedBy round-trips.
+      const authorIds = Array.from(new Set(recipes.map((r) => r.user_id)));
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, username, avatar_url')
+        .in('id', authorIds);
 
-        filteredRecipes.push({
+      const profileMap = new Map<string, { username: string | null; avatar_url: string | null }>();
+      (profiles || []).forEach((p: any) => profileMap.set(p.id, p));
+
+      return recipes.map((recipe: any) => {
+        const profile = profileMap.get(recipe.user_id);
+        return {
           ...recipe,
           creator_username: profile?.username || 'Anonymous',
           creator_avatar: profile?.avatar_url || null,
-        });
-
-        // Stop at 20 recipes after filtering
-        if (filteredRecipes.length >= 20) break;
-      }
-
-      return filteredRecipes;
+        };
+      });
     } catch (error) {
       console.error('Error loading discover recipes:', error);
       return [];
@@ -197,6 +192,9 @@ export default function DiscoverBartenders() {
   const filteredFeed = filterFeed(unifiedFeed);
   const filteredSuggestedUsers = filterUsers(suggestedUsers);
   const filteredRecipes = filterRecipes(discoverRecipes);
+
+  // Batch share counts for visible recipes (single RPC instead of N).
+  const shareCounts = useBatchShareCounts(filteredRecipes.map((r) => r.id));
 
   return (
     <div className="h-[100dvh] overflow-hidden bg-background">
@@ -340,9 +338,11 @@ export default function DiscoverBartenders() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredRecipes.map((recipe) => (
+              {filteredRecipes.map((recipe, idx) => (
                 <UniversalRecipeCard
                   key={recipe.id}
+                  priority={idx === 0}
+                  shareCount={shareCounts[recipe.id] ?? 0}
                   recipe={{
                     id: recipe.id,
                     name: recipe.name,
