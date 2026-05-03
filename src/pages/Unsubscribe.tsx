@@ -85,6 +85,12 @@ export default function Unsubscribe() {
 
   return (
     <main className="min-h-screen bg-background flex items-center justify-center px-5 py-16">
+      <PageSEO
+        title="Email Preferences | Barbook"
+        description="Manage your Barbook email preferences and unsubscribe from notifications."
+        path="/unsubscribe"
+        noindex
+      />
       <div className="w-full max-w-md text-center space-y-6">
         <Link
           to="/"

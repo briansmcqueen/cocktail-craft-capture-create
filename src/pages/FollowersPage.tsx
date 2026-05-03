@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { followsService, Follow } from '@/services/followsService';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import PageSEO from '@/components/PageSEO';
 
 interface UserProfile {
   id: string;
