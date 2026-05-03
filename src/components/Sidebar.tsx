@@ -42,11 +42,11 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
     )}>
       {/* Header */}
       <div className={cn("flex-shrink-0 mb-8 transition-[padding] duration-300 ease-out", collapsed ? "px-2" : "px-6")}>
-        <div className={cn("relative flex items-center overflow-hidden", collapsed ? "justify-center gap-0" : "justify-between gap-2")}>
+        <div className={cn("relative flex items-center", collapsed ? "justify-center gap-0" : "justify-between gap-2")}>
           <Link
             to="/"
             className={cn(
-              "text-3xl font-medium text-pure-white tracking-tight whitespace-nowrap transition-[opacity,transform] ease-out",
+              "text-2xl font-medium text-pure-white tracking-tight whitespace-nowrap transition-[opacity,transform] ease-out min-w-0",
               collapsed
                 ? "opacity-0 -translate-x-1 duration-150 pointer-events-none absolute left-0 top-1/2 -translate-y-1/2"
                 : "opacity-100 translate-x-0 duration-200 delay-150"
