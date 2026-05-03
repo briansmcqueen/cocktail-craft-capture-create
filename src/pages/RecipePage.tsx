@@ -191,7 +191,7 @@ export default function RecipePage() {
                       className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
                     >
                       {recipe.creatorAvatar ? (
-                        <img src={recipe.creatorAvatar} alt={recipe.creatorUsername}
+                        <img src={recipe.creatorAvatar} alt={recipe.creatorUsername} loading="lazy" decoding="async"
                           className="w-6 h-6 rounded-full object-cover border border-border group-hover:border-primary transition-colors" />
                       ) : (
                         <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -216,7 +216,7 @@ export default function RecipePage() {
               {/* Left column - Image, action buttons, ratings & comments (desktop) */}
               <div className="md:col-span-2">
                 <img
-                  src={recipe.image} alt={recipe.name}
+                  src={recipe.image} alt={recipe.name} fetchPriority="high" decoding="async"
                   className="w-full aspect-square object-cover rounded-organic-lg border border-border shadow-glass"
                 />
                 {recipe.photo_credit && (

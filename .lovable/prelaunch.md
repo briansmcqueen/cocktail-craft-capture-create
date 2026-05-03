@@ -17,9 +17,10 @@
 - [x] PageSEO title/meta on every route (added Terms, Unsubscribe, FollowersPage)
 
 ## 4. Performance & UX
-- [ ] Lighthouse pass (mobile + desktop) on /, /recipes, /discover, /mybar
-- [ ] Image upload validation + compression confirmed
-- [ ] Mobile bottom-nav clearance (pb-24) on all scrollable pages
+- [ ] Lighthouse pass (mobile + desktop) on /, /recipes, /discover, /mybar — manual against barbook.io
+- [x] Image upload validation + compression confirmed (JPEG/PNG/WEBP, 10MB cap, webp output)
+- [x] Mobile bottom-nav clearance (pb-24) on all scrollable pages
+- [x] Image priority hints (eager hero, lazy grid, fetchPriority on recipe page)
 
 ## 5. Legal
 - [ ] Privacy Policy mentions backup retention + 7-day deletion window
