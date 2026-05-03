@@ -60,7 +60,6 @@ Deno.serve(async (req) => {
   // or an authenticated end-user. Reject bare anon callers outright.
   const authHeader = req.headers.get('Authorization') || ''
   const bearer = authHeader.replace(/^Bearer\s+/i, '')
-  let callerUserId: string | null = null
   let callerEmail: string | null = null
   let isServiceRole = false
 
@@ -89,7 +88,6 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-    callerUserId = claimsData.claims.sub as string
     callerEmail = (claimsData.claims.email as string | undefined) ?? null
   }
 

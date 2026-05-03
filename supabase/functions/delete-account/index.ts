@@ -116,6 +116,20 @@ Deno.serve(async (req) => {
     if (action === "cancel") {
       const { error } = await userClient.rpc("cancel_account_deletion");
       if (error) throw error;
+      // Best-effort confirmation email
+      try {
+        if (userData.user.email) {
+          await admin.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "account-deletion-cancelled",
+              recipientEmail: userData.user.email,
+              idempotencyKey: `deletion-cancelled-${userData.user.id}-${Date.now()}`,
+            },
+          });
+        }
+      } catch (e) {
+        console.error("deletion cancel email failed", e);
+      }
       return json({ ok: true });
     }
 
@@ -123,6 +137,24 @@ Deno.serve(async (req) => {
     const { data, error } = await userClient.rpc("request_account_deletion");
     if (error) throw error;
     const row = Array.isArray(data) ? data[0] : data;
+    // Best-effort confirmation email
+    try {
+      if (userData.user.email) {
+        await admin.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "account-deletion-scheduled",
+            recipientEmail: userData.user.email,
+            idempotencyKey: `deletion-scheduled-${userData.user.id}-${row?.deletion_requested_at ?? Date.now()}`,
+            templateData: {
+              scheduledFor: row?.deletion_scheduled_for,
+              cancelUrl: "https://barbook.io/settings",
+            },
+          },
+        });
+      }
+    } catch (e) {
+      console.error("deletion request email failed", e);
+    }
     return json({
       ok: true,
       deletion_requested_at: row?.deletion_requested_at,
