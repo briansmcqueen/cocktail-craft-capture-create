@@ -23,9 +23,9 @@
 - [x] Image priority hints (eager hero, lazy grid, fetchPriority on recipe page)
 
 ## 5. Legal
-- [ ] Privacy Policy mentions backup retention + 7-day deletion window
-- [ ] Terms gate at 18+
-- [ ] Cookie/analytics disclosure if tracking pixels are present
+- [x] Privacy Policy mentions backup retention (30d) + 7-day deletion window
+- [x] Terms gate at legal drinking age (Section 2 of Terms)
+- [x] Cookie/analytics disclosure (PrivacyNotice banner + Privacy Policy "Cookies & tracking" section; Plausible is cookieless)
 
 ## 6. Publish
 - [ ] Publish frontend, attach barbook.io custom domain, verify SPA deep links
