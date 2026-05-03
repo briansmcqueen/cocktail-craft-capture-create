@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Cocktail } from "@/data/classicCocktails";
 import UniversalRecipeCard from "./UniversalRecipeCard";
 import { getAggregatedRatingsBatch, AggregatedRating } from "@/services/ratingsService";
+import { useBatchShareCounts } from "@/hooks/useBatchShareCounts";
 import {
   Carousel,
   CarouselContent,
@@ -29,6 +30,8 @@ export default function CommunityCreationsSection({
       getAggregatedRatingsBatch(ids).then(setRatings);
     }
   }, [recipes]);
+
+  const shareCounts = useBatchShareCounts(recipes.map((r) => r.id));
 
   if (recipes.length === 0) {
     return null;
@@ -58,6 +61,7 @@ export default function CommunityCreationsSection({
                   ratingData={ratings[recipe.id]}
                   onShowAuthModal={onShowAuthModal}
                   className="h-full"
+                  shareCount={shareCounts[recipe.id] ?? 0}
                 />
               </CarouselItem>
             ))}
