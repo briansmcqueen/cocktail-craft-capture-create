@@ -41,14 +41,14 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
       collapsed ? "w-16" : "w-60"
     )}>
       {/* Header */}
-      <div className={cn("flex-shrink-0 mb-8 transition-[padding] duration-300 ease-out", collapsed ? "px-3" : "px-6")}>
-        <div className="flex items-center justify-between gap-2 overflow-hidden">
+      <div className={cn("flex-shrink-0 mb-8 transition-[padding] duration-300 ease-out", collapsed ? "px-2" : "px-6")}>
+        <div className={cn("relative flex items-center overflow-hidden", collapsed ? "justify-center gap-0" : "justify-between gap-2")}>
           <Link
             to="/"
             className={cn(
               "text-3xl font-medium text-pure-white tracking-tight whitespace-nowrap transition-[opacity,transform] ease-out",
               collapsed
-                ? "opacity-0 -translate-x-1 duration-150 pointer-events-none w-0 overflow-hidden"
+                ? "opacity-0 -translate-x-1 duration-150 pointer-events-none absolute left-0 top-1/2 -translate-y-1/2"
                 : "opacity-100 translate-x-0 duration-200 delay-150"
             )}
             aria-hidden={collapsed}
@@ -56,7 +56,7 @@ const Sidebar = memo(function Sidebar({ active, onSelect, onAdd, onCloseForm, us
           >
             BARBOOK
           </Link>
-          <div className={cn("flex items-center gap-1 flex-shrink-0", collapsed && "w-full justify-center")}>
+          <div className="flex items-center gap-1 flex-shrink-0">
             {user && !collapsed && <NotificationsDropdown />}
             {onToggleCollapse && (
               <Button
