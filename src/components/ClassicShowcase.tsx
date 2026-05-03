@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getAggregatedRatingsBatch, AggregatedRating } from "@/services/ratingsService";
+import { useBatchShareCounts } from "@/hooks/useBatchShareCounts";
 import {
   Carousel,
   CarouselContent,
@@ -57,6 +58,8 @@ export default function ClassicShowcase() {
     }
   }, [showcaseRecipes]);
 
+  const shareCounts = useBatchShareCounts(showcaseRecipes.map((r) => r.id));
+
   return (
     <section>
       <div className="mb-4 md:mb-6">
@@ -74,13 +77,15 @@ export default function ClassicShowcase() {
           className="w-full"
         >
           <CarouselContent className="-ml-4">
-            {showcaseRecipes.map((recipe) => (
+            {showcaseRecipes.map((recipe, idx) => (
               <CarouselItem key={recipe.id + recipe.name} className="pl-4 basis-[75%] sm:basis-1/2 lg:basis-1/3">
                 <UniversalRecipeCard
                   recipe={recipe}
                   ratingData={ratings[recipe.id]}
                   hideCreator
                   className="h-full"
+                  priority={idx === 0}
+                  shareCount={shareCounts[recipe.id] ?? 0}
                 />
               </CarouselItem>
             ))}

@@ -8,6 +8,7 @@ import { getUserFavoritesWithVisibility, toggleFavoriteVisibility, FavoriteWithV
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
+import { useBatchShareCounts } from "@/hooks/useBatchShareCounts";
 
 type FavoritesProps = {
   favoriteRecipes: Cocktail[];
@@ -21,6 +22,7 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
   const { user } = useAuth();
   const [favoritesWithVisibility, setFavoritesWithVisibility] = useState<FavoriteWithVisibility[]>([]);
   const [loading, setLoading] = useState(false);
+  const shareCounts = useBatchShareCounts(favoriteRecipes.map((r) => r.id));
 
   useEffect(() => {
     if (user) {
@@ -117,12 +119,16 @@ export default function Favorites({ favoriteRecipes, onRecipeClick, onEditRecipe
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-        {favoriteRecipes.map((recipe) => {
+        {favoriteRecipes.map((recipe, idx) => {
           const visibility = getFavoriteVisibility(recipe.id);
           
           return (
             <div key={recipe.id} className="relative">
-              <UniversalRecipeCard recipe={recipe} />
+              <UniversalRecipeCard
+                recipe={recipe}
+                priority={idx === 0}
+                shareCount={shareCounts[recipe.id] ?? 0}
+              />
               
               {/* Visibility toggle overlay */}
               {visibility && (
