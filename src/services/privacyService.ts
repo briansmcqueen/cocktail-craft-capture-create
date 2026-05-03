@@ -33,12 +33,13 @@ const isFollowing = async (viewerId: string, targetId: string): Promise<boolean>
  */
 const isBlockedBy = async (viewerId: string, targetId: string): Promise<boolean> => {
   try {
-    const { data, error } = await supabase
-      .from('blocked_users')
-      .select('id')
-      .eq('blocker_id', targetId)
-      .eq('blocked_id', viewerId)
-      .maybeSingle();
+    // Uses SECURITY DEFINER RPC because RLS on blocked_users only lets the
+    // blocker read their own rows — a direct query from the blocked viewer
+    // would always return false and silently bypass the block.
+    const { data, error } = await supabase.rpc('is_user_blocked', {
+      p_blocker_id: targetId,
+      p_blocked_id: viewerId,
+    });
 
     if (error) throw error;
     return !!data;
