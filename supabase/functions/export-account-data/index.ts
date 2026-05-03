@@ -195,6 +195,25 @@ stored in your recipes/profile to download them, or contact support.
       } as any);
     } catch (_) { /* audit table is admin-insert-only via service role; ignore */ }
 
+    // Best-effort confirmation email
+    try {
+      if (userData.user.email) {
+        await admin.functions.invoke('send-transactional-email', {
+          body: {
+            templateName: 'data-export-completed',
+            recipientEmail: userData.user.email,
+            idempotencyKey: `data-export-${userId}-${new Date().toISOString().slice(0, 13)}`,
+            templateData: {
+              bytes: zipped.byteLength,
+              tables: Object.keys(data).length,
+            },
+          },
+        });
+      }
+    } catch (e) {
+      console.error('data export email failed', e);
+    }
+
     const filename = `barbook-export-${userId}-${new Date().toISOString().slice(0, 10)}.zip`;
     return new Response(zipped, {
       status: 200,
